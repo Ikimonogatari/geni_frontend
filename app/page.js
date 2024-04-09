@@ -5,7 +5,7 @@ export default function Home() {
     <main className="min-h-screen w-full bg-white">
       <div className="mt-32">
         <div className="container max-w-7xl mx-auto px-7 flex flex-col lg:flex-row justify-start items-start sm:justify-center sm:items-center gap-5 sm:gap-10 lg:gap-20 pt-14 lg:pt-[111px] pb-[158px]">
-          <div className="flex flex-col relative text-black text-4xl sm:text-6xl font-bold">
+          <div className="flex flex-col relative text-[#2D262D] text-4xl sm:text-6xl font-bold">
             <Image
               src={"/hero-image2.png"}
               width={154}
@@ -74,10 +74,79 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="container mx-auto px-7 w-full border-[1px] border-[#2D262D] min-h-[652px] bg-[#F5F4F0] rounded-full pt-24"></div>
-        <div className="container mx-auto px-7 w-full border-t-[1px] border-b-[1px] border-[#2D262D] mt-[133px] flex flex-row">
-          <div className="flex flex-col border-r-[1px] border-[#2D262D] w-1/2"></div>
-          <div className="flex flex-col w-1/2"></div>
+        <div className="container mx-auto px-7 w-full pt-12">
+          <Image
+            src={"/cycle-image.png"}
+            width={1348}
+            height={625}
+            alt="cycle-image"
+            className="hidden md:block mx-auto"
+          />
+          <Image
+            src={"/cycle-image-mobile.png"}
+            width={335}
+            height={725}
+            alt="cycle-image-mobile"
+            className="block md:hidden mx-auto"
+          />
+        </div>
+        <div className="w-full h-full px-7 border-t-[1px] border-b-[1px] border-[#2D262D] bg-[#F5F4F0] mt-[133px]">
+          <div className="py-12 lg:py-0 flex gap-6 lg:gap-0 flex-col lg:flex-row mx-auto container h-full">
+            <div className="lg:py-[144px] flex flex-col gap-8 text-[#2D262D] w-full">
+              <Image
+                src={"/genicreator-logo.png"}
+                width={154}
+                height={28}
+                alt="creator-logo"
+                className=""
+              />
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase">
+                Хэрэглэгчээс бYтээгч болж орлогоо нэмээрэй
+              </span>
+              <span className="">
+                Инфлүүнсэр болж брэндүүдийн санал хүлээлгүйгээр дуртай
+                брэндүүдтэйгээ шууд контент хийн хамтран ажиллаж орлого олж
+                эхлээрэй. Хэн ч хаанаас ч ажиллах боломжтой.
+              </span>
+            </div>
+            <div className="w-[1px] mx-4 bg-[#2D262D] hidden lg:block">
+              &nbsp;
+            </div>
+            <div className="flex flex-col justify-center items-center gap-4 sm:gap-8 lg:gap-14 w-full">
+              <div className="mx-auto flex flex-row items-center relative">
+                <Image
+                  src={"/creator-image1.png"}
+                  alt="creator-image"
+                  width={361}
+                  height={276}
+                />
+                <Image
+                  src={"/creator-image2.png"}
+                  alt="creator-image"
+                  width={160}
+                  height={211}
+                  className="-mx-20 mb-32"
+                />
+                <Image
+                  src={"/creator-image3.png"}
+                  alt="creator-image"
+                  width={335}
+                  height={247}
+                />
+              </div>
+              <div className="relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
+                <button className="absolute -top-[6px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center">
+                  <span>Geni Creator болох</span>
+                  <Image
+                    src={"/arrow-right-icon.png"}
+                    alt="arrow"
+                    width={16}
+                    height={16}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
