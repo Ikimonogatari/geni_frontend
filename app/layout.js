@@ -1,15 +1,13 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import Head from "next/head";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata = {
   title: "GENI",
   description: "GENI",
 };
+import "/public/fonts/font/stylesheet.css";
 
 export default function RootLayout({ children }) {
   return (
@@ -17,7 +15,7 @@ export default function RootLayout({ children }) {
       <Head>
         <title>GENI</title>
       </Head>
-      <body className={inter.className}>
+      <body>
         <Navbar />
         {children}
         <Footer />

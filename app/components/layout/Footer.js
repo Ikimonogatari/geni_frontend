@@ -22,7 +22,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 lg:mt-24 flex flex-row text-sm text-[#2D262D] w-full justify-between items-center py-10 border-t-[1px] border-[#2D262D]">
+        <div className="mt-8 lg:mt-24 font-mabry flex flex-row text-sm text-[#2D262D] w-full justify-between items-center py-10 border-t-[1px] border-[#2D262D]">
           <span>Terms and conditions</span>
           <span>2024 - All rights reserved</span>
         </div>
