@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   try {
     const response = await fetch(
-      "http://0.0.0.0:8055/Items/creator?sort=sort,-date_created&fields=*,Categories.*.*,Collab_Brands.*.*,Contents.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
+      "http://0.0.0.0:8055/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
     );
     if (!response.ok) {
       throw new Error("Response not ok");

@@ -180,7 +180,7 @@ function creators() {
             </div>
           </div>
         </div>
-        <div className="border-t-[1px] border-[#2D262D] flex flex-col xl:flex-row">
+        <div className="border-y-[1px] border-[#2D262D] flex flex-col xl:flex-row">
           <div className="w-full py-10 sm:py-28 px-7 bg-[#CA7FFE] text-white border-r-[1px] border-[#2D262D] flex flex-col gap-7 justify-center items-center">
             <span className=" 2xl:pl-7 text-2xl w-full text-start sm:text-center xl:text-start">
               Geni Creator хөтөлбөрт сууснаар:
