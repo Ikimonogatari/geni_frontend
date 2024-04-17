@@ -1,8 +1,14 @@
-import React from "react";
+"use client";
 import Image from "next/image";
-import Contents from "./Contents";
+import Contents from "../Contents";
+import { useRouter } from "next/router";
 
-function profile() {
+function Profile() {
+  const router = useRouter();
+
+  const { id } = router.query;
+  console.log(path);
+  console.log(id);
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
@@ -106,4 +112,4 @@ function profile() {
   );
 }
 
-export default profile;
+export default Profile;

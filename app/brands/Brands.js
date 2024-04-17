@@ -7,6 +7,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
+import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
 
 function Brands() {
   const [slidesPerView, setSlidesPerView] = useState(4);
@@ -16,7 +17,7 @@ function Brands() {
     (async () => {
       try {
         const r = await fetch(
-          "http://18.138.15.27:8055/Items/brand?sort=sort,-date_created&fields=*,Category.*.*,creators.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
+          "https://cms.geni.mn/Items/brand?sort=sort,-date_created&fields=*,Category.*.*,creators.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
         );
         console.log(r);
         const d = await r.json();
@@ -27,10 +28,7 @@ function Brands() {
       }
     })();
   }, []);
-  function GraphCMSImageLoader({ src }) {
-    const imageUrl = `http://18.138.15.27:8055/assets/${src}`;
-    return imageUrl;
-  }
+
   const checkViewportSize = () => {
     const width = window.innerWidth;
     if (width <= 640) {

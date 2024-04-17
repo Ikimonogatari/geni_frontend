@@ -7,6 +7,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
+import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
 
 function Creators({ apiData }) {
   const [creators, setCreators] = useState([]);
@@ -14,7 +15,7 @@ function Creators({ apiData }) {
     (async () => {
       try {
         const r = await fetch(
-          "http://18.138.15.27:8055/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
+          "https://cms.geni.mn/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
         );
         console.log(r);
         const d = await r.json();
@@ -26,10 +27,7 @@ function Creators({ apiData }) {
     })();
   }, []);
   console.log(apiData);
-  function GraphCMSImageLoader({ src }) {
-    const imageUrl = `http://18.138.15.27:8055/assets/${src}`;
-    return imageUrl;
-  }
+
   const [slidesPerView, setSlidesPerView] = useState(5);
   const [swiper, setSwiper] = useState(null);
 
