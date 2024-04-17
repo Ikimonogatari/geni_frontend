@@ -84,7 +84,7 @@ function Creators({ apiData }) {
         </button>
         {creators ? (
           <Swiper
-            spaceBetween={30}
+            spaceBetween={18}
             slidesPerView={slidesPerView}
             autoplay={{
               delay: 7000,
@@ -99,7 +99,7 @@ function Creators({ apiData }) {
             {creators.map((creator, id) => (
               <SwiperSlide
                 key={id}
-                className="bg-[#F5F4F0] min-w-[211px] rounded-2xl p-4 text-[#2D262D] flex flex-col gap-2"
+                className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] flex flex-col gap-2"
               >
                 <Image
                   src={"/verified-icon.png"}
@@ -110,12 +110,13 @@ function Creators({ apiData }) {
                 />
                 <Image
                   loader={GraphCMSImageLoader}
-                  src={creator.image}
+                  src={creator.image ? creator.image : ""}
                   width={179}
                   height={101}
                   alt="creator-image"
                   className="w-full"
                 />
+
                 <p className="text-base mt-3">{creator.name}</p>
                 <p className="text-[#6F6F6F] text-sm mt-1">
                   Created content: {creator.content.length}

@@ -9,9 +9,28 @@ import "swiper/css/pagination";
 import Image from "next/image";
 
 function Brands() {
-  const [slidesPerView, setSlidesPerView] = useState(5);
+  const [slidesPerView, setSlidesPerView] = useState(4);
   const [swiper, setSwiper] = useState(null);
-
+  const [brands, setBrands] = useState([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch(
+          "http://18.138.15.27:8055/Items/brand?sort=sort,-date_created&fields=*,Category.*.*,creators.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
+        );
+        console.log(r);
+        const d = await r.json();
+        setBrands(d.data);
+        console.log(d.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+  function GraphCMSImageLoader({ src }) {
+    const imageUrl = `http://18.138.15.27:8055/assets/${src}`;
+    return imageUrl;
+  }
   const checkViewportSize = () => {
     const width = window.innerWidth;
     if (width <= 640) {
@@ -22,7 +41,7 @@ function Brands() {
       setSlidesPerView(3);
     } else {
       // Larger devices
-      setSlidesPerView(5);
+      setSlidesPerView(4);
     }
   };
   useEffect(() => {
@@ -62,7 +81,7 @@ function Brands() {
           />
         </button>
         <Swiper
-          spaceBetween={30}
+          spaceBetween={20}
           slidesPerView={slidesPerView}
           autoplay={{
             delay: 7000,
@@ -77,13 +96,14 @@ function Brands() {
           {brands.map((brand, id) => (
             <SwiperSlide
               key={id}
-              className="rounded-2xl text-[#2D262D] flex flex-col gap-2"
+              className="rounded-2xl 2xl:max-w-[267px] w-full text-[#2D262D] flex flex-col gap-2"
             >
               <button className="bg-[#CA7FFE] absolute right-3 top-3 rounded-full px-4 py-2">
-                {brand.category}
+                {brand.Category[0]?.Category_id.name}
               </button>
               <Image
-                src={brand.image}
+                loader={GraphCMSImageLoader}
+                src={brand.image ? brand.image : ""}
                 width={179}
                 height={101}
                 alt="creator-image"
@@ -91,13 +111,14 @@ function Brands() {
               />
               <div className="absolute bottom-4 left-4 flex flex-row items-center gap-5">
                 <Image
-                  src={brand.logo}
+                  loader={GraphCMSImageLoader}
+                  src={brand.logo ? brand.logo : ""}
                   width={56}
                   height={56}
                   alt="lhamour"
                   className="min-w-[56px]"
                 />
-                <span className="text-base text-white">{brand.name}</span>
+                <span className="text-base text-black">{brand.name}</span>
               </div>
             </SwiperSlide>
           ))}
@@ -118,7 +139,7 @@ function Brands() {
 
 export default Brands;
 
-const brands = [
+const dummyBrands = [
   {
     image: "/dummy-brand.png",
     logo: "/lhamour.png",
