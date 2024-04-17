@@ -1,14 +1,8 @@
 "use client";
 import Image from "next/image";
 import Contents from "../Contents";
-import { useRouter } from "next/router";
 
-function Profile() {
-  const router = useRouter();
-
-  const { id } = router.query;
-  console.log(path);
-  console.log(id);
+export default function Profile() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
@@ -111,5 +105,3 @@ function Profile() {
     </div>
   );
 }
-
-export default Profile;
