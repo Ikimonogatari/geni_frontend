@@ -114,9 +114,9 @@ function Brands() {
                   width={56}
                   height={56}
                   alt="lhamour"
-                  className="min-w-[56px]"
+                  className="min-w-[56px] rounded-full"
                 />
-                <span className="text-base text-black">{brand.name}</span>
+                <span className="text-base text-white">{brand.name}</span>
               </div>
             </SwiperSlide>
           ))}
