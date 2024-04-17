@@ -92,7 +92,7 @@ export default function Home() {
         </div>
         <div className="w-full h-full px-7 border-t-[1px] border-b-[1px] border-[#2D262D] bg-[#F5F4F0] mt-[133px]">
           <div className="py-12 lg:py-0 flex gap-6 lg:gap-0 flex-col lg:flex-row mx-auto container max-w-7xl h-full">
-            <div className="lg:py-[144px] flex flex-col gap-8 text-[#2D262D] w-full">
+            <div className="lg:py-[144px] flex flex-col gap-8 text-[#2D262D] lg:w-1/2 w-full">
               <Image
                 src={"/genicreator-logo.png"}
                 width={154}
@@ -112,7 +112,7 @@ export default function Home() {
             <div className="w-[1px] mx-4 bg-[#2D262D] hidden lg:block">
               &nbsp;
             </div>
-            <div className="flex flex-col justify-center items-center gap-4 sm:gap-8 lg:gap-14 w-full">
+            <div className="flex flex-col justify-center items-center gap-4 sm:gap-8 lg:gap-14 lg:w-1/2">
               <div className="mx-auto flex flex-row items-center relative">
                 <Image
                   src={"/creator-image1.png"}

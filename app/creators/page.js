@@ -2,6 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Creators from "./Creators";
 
+export const metadata = {
+  title: "GENI | Creators",
+  description: "GENI Creators",
+};
+
 function creators() {
   return (
     <div className="min-h-screen w-full bg-white text-[#2D262D]">

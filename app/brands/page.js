@@ -2,6 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Brands from "./Brands";
 
+export const metadata = {
+  title: "GENI | Brands",
+  description: "GENI Brands",
+};
+
 function page() {
   return (
     <div className="min-h-screen w-ful bg-white">
