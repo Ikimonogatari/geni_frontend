@@ -64,7 +64,7 @@ function Creators({ apiData }) {
     <div className="container px-7 mx-auto max-w-7xl pt-20">
       <div className="flex flex-row justify-between items-center">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
-          Бүтээгчид / 25
+          Бүтээгчид / {creators.length}
         </span>
         <button className="rounded-full bg-[#CA7FFE] text-white py-2 px-6">
           Бүгд

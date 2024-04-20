@@ -3,8 +3,8 @@ import Image from "next/image";
 import Creators from "./Creators";
 
 export const metadata = {
-  title: "GENI | Creators",
-  description: "GENI Creators",
+  title: "Geni | Creators",
+  description: "Geni Creators",
 };
 
 function creators() {
@@ -57,7 +57,11 @@ function creators() {
               </span>
             </div>
             <div className="relative w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-              <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center">
+              <a
+                target="_blank"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+                className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
+              >
                 <span>Geni Creator болох</span>
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -65,7 +69,7 @@ function creators() {
                   width={16}
                   height={16}
                 />
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -124,7 +128,11 @@ function creators() {
                 хуримтлуулан хэрэглэгчээс бүтээгч болоорой.
               </span>
               <div className="relative hidden lg:block w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-                <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center">
+                <a
+                  target="_blank"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+                  className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
+                >
                   <span>Geni Creator болох</span>
                   <Image
                     src={"/arrow-right-icon.png"}
@@ -132,7 +140,7 @@ function creators() {
                     width={16}
                     height={16}
                   />
-                </button>
+                </a>
               </div>
             </div>
             <Image
@@ -142,7 +150,11 @@ function creators() {
               alt="become-creator"
             />
             <div className="relative block lg:hidden mt-9 w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-              <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center">
+              <a
+                target="_blank"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+                className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
+              >
                 <span>Geni Creator болох</span>
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -150,7 +162,7 @@ function creators() {
                   width={16}
                   height={16}
                 />
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -240,7 +252,11 @@ function creators() {
               />
             </div>
             <div className="mt-10 sm:mt-[110px] relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-              <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center">
+              <a
+                target="_blank"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+                className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
+              >
                 <span>Geni Creator болох</span>
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -248,7 +264,7 @@ function creators() {
                   width={16}
                   height={16}
                 />
-              </button>
+              </a>
             </div>
           </div>
         </div>

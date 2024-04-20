@@ -137,7 +137,11 @@ export default function Home() {
                 />
               </div>
               <div className="relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-                <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center">
+                <a
+                  target="_blank"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+                  className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
+                >
                   <span>Geni Creator болох</span>
                   <Image
                     src={"/arrow-right-icon.png"}
@@ -145,7 +149,7 @@ export default function Home() {
                     width={16}
                     height={16}
                   />
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -245,15 +249,19 @@ export default function Home() {
                 className="lg:ml-10"
               />
               <div className="relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-                <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center">
-                  <span>Geni Creator болох</span>
+                <a
+                  target="_blank"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+                  className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
+                >
+                  <span>Geni Brand болох</span>
                   <Image
                     src={"/arrow-right-icon.png"}
                     alt="arrow"
                     width={16}
                     height={16}
                   />
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -333,7 +341,7 @@ export default function Home() {
             alt="coming-soon"
             className="max-w-[54px] max-h-[54px] sm:max-w-[151px] sm:max-h-[152px]"
           />
-          <span className="text-sm sm:text-xl lg:text-3xl font-normal sm:font-bold">
+          <span className="text-sm sm:text-xl lg:text-3xl font-normal sm:font-bold text-white">
             Платформ Тун Удахгүй...
           </span>
         </div>

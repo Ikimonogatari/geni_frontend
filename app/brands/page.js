@@ -3,8 +3,8 @@ import Image from "next/image";
 import Brands from "./Brands";
 
 export const metadata = {
-  title: "GENI | Brands",
-  description: "GENI Brands",
+  title: "Geni | Brands",
+  description: "Geni Brands",
 };
 
 function page() {
@@ -24,7 +24,11 @@ function page() {
               эхлээрэй.
             </span>
             <div className="hidden lg:block relative w-full max-w-[364px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-              <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[364px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center">
+              <a
+                target="_blank"
+                href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+                className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[364px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
+              >
                 <span>Geni Brand болох</span>
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -32,7 +36,7 @@ function page() {
                   width={16}
                   height={16}
                 />
-              </button>
+              </a>
             </div>
           </div>
           <div className="flex flex-row items-center mx-auto sm:mx-0">
@@ -52,7 +56,11 @@ function page() {
             />
           </div>
           <div className="mt-8 block lg:hidden relative w-full h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-            <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center">
+            <a
+              target="_blank"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+              className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
+            >
               <span>Geni Brand болох</span>
               <Image
                 src={"/arrow-right-icon.png"}
@@ -60,7 +68,7 @@ function page() {
                 width={16}
                 height={16}
               />
-            </button>
+            </a>
           </div>
         </div>
         <div className="container px-7 mx-auto mt-7">
@@ -136,7 +144,11 @@ function page() {
               </span>
             </div>
             <div className="relative w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-              <button className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center">
+              <a
+                target="_blank"
+                href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+                className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
+              >
                 <span>Geni Brand болох</span>
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -144,7 +156,7 @@ function page() {
                   width={16}
                   height={16}
                 />
-              </button>
+              </a>
             </div>
           </div>
         </div>

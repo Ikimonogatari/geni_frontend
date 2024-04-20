@@ -4,8 +4,8 @@ import Footer from "./components/layout/Footer";
 import Head from "next/head";
 
 export const metadata = {
-  title: "GENI",
-  description: "GENI",
+  title: "Geni",
+  description: "Geni",
 };
 import "/public/fonts/font/stylesheet.css";
 

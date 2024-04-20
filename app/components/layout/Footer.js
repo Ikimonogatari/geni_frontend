@@ -18,7 +18,14 @@ function Footer() {
               <a target="_blank" href="https://www.instagram.com/geni.ugc/">
                 <Image src={"/ig-icon.png"} width={40} height={40} alt="logo" />
               </a>
-              <Image src={"/mail-icon.png"} width={40} height={40} alt="logo" />
+              <a target="_blank" href="mailto:geni.ugc@gmail.com">
+                <Image
+                  src={"/mail-icon.png"}
+                  width={40}
+                  height={40}
+                  alt="logo"
+                />
+              </a>
             </div>
           </div>
         </div>
