@@ -41,19 +41,19 @@ export default function Profile() {
             <span className="text-[#6F6F6F] text-[18px]">Collab brands: 3</span>
             <div className="flex flex-row gap-[10px]">
               <Image
-                src={"/dummy-brand-logo.png"}
+                src={"/dummy-brand-logo.svg"}
                 width={54}
                 height={54}
                 alt="dummy-brand-logo"
               />
               <Image
-                src={"/dummy-brand-logo.png"}
+                src={"/dummy-brand-logo.svg"}
                 width={54}
                 height={54}
                 alt="dummy-brand-logo"
               />
               <Image
-                src={"/dummy-brand-logo.png"}
+                src={"/dummy-brand-logo.svg"}
                 width={54}
                 height={54}
                 alt="dummy-brand-logo"

@@ -14,7 +14,7 @@ function page() {
         <div className="container text-[#2D262D] max-w-7xl mx-auto pb-4 pt-14 sm:py-28 px-7 flex flex-col lg:flex-row lg:items-center">
           <div className="flex flex-col gap-12 w-full lg:w-1/2">
             <Image
-              src={"/genibrand-logo.png"}
+              src={"/genibrand-logo.svg"}
               width={160}
               height={30}
               alt="genibrand-logo"
@@ -133,7 +133,7 @@ function page() {
           <div className="rounded-2xl px-6 py-8 sm:p-14 border-[1px] border-[#2D262D] bg-[#F5F4F0] flex flex-col lg:flex-row lg:items-center gap-10 sm:gap-6 lg:gap-0 justify-between">
             <div className="flex flex-col gap-6 lg:gap-4 w-full lg:w-1/2">
               <Image
-                src={"/genibrand-logo.png"}
+                src={"/genibrand-logo.svg"}
                 width={160}
                 height={29}
                 alt="geni-brand-logo"

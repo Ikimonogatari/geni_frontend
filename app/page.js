@@ -94,7 +94,7 @@ export default function Home() {
           <div className="py-12 lg:py-0 flex gap-6 lg:gap-0 flex-col lg:flex-row mx-auto container max-w-7xl h-full">
             <div className="lg:py-[144px] flex flex-col gap-8 text-[#2D262D] lg:w-1/2 w-full">
               <Image
-                src={"/genicreator-logo.png"}
+                src={"/genicreator-logo.svg"}
                 width={154}
                 height={28}
                 alt="creator-logo"
@@ -219,7 +219,7 @@ export default function Home() {
           <div className="py-12 lg:py-0 flex gap-6 lg:gap-0 flex-col lg:flex-row mx-auto container max-w-7xl h-full">
             <div className="lg:py-[144px] flex flex-col gap-8 text-[#2D262D] w-full">
               <Image
-                src={"/genibrand-logo.png"}
+                src={"/genibrand-logo.svg"}
                 width={154}
                 height={28}
                 alt="creator-logo"

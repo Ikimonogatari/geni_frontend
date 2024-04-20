@@ -33,17 +33,17 @@ function Navbar() {
           >
             Brands
           </a>
-          <a
+          {/* <a
             href="/profile"
             className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
           >
             Profile
-          </a>
+          </a> */}
         </div>
         <div className="relative flex flex-row w-full justify-between md:justify-center items-center gap-12 text-base text-[#000000B8]">
           <a href="/">
             <Image
-              src={"/geni-logo.png"}
+              src={"/geni-logo.svg"}
               height={26}
               width={96.2}
               alt="logo"

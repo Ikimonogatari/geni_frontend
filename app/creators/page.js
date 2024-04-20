@@ -13,7 +13,7 @@ function creators() {
       <div className="mt-32">
         <div className="pt-20 container max-w-7xl mx-auto px-7">
           <Image
-            src={"/genicreator-logo.png"}
+            src={"/genicreator-logo.svg"}
             width={160}
             height={29}
             alt="geni-creator-logo"
@@ -47,7 +47,7 @@ function creators() {
           <div className="rounded-2xl px-6 py-8 sm:p-14 border-[1px] border-[#2D262D] bg-[#F5F4F0] mt-6 flex flex-col lg:flex-row gap-6 lg:gap-0 justify-between">
             <div className="flex flex-col gap-4">
               <Image
-                src={"/genicreatorprogram-logo.png"}
+                src={"/genicreatorprogram-logo.svg"}
                 width={160}
                 height={29}
                 alt="geni-creator-logo"
@@ -118,7 +118,7 @@ function creators() {
           <div className="container max-w-7xl px-7 mx-auto flex flex-col lg:flex-row items-center justify-between">
             <div className="flex flex-col gap-9">
               <Image
-                src={"/genicreatorprogram-logo.png"}
+                src={"/genicreatorprogram-logo.svg"}
                 width={160}
                 height={29}
                 alt="geni-creator-logo"
