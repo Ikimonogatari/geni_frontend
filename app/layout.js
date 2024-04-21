@@ -12,6 +12,7 @@ import "/public/fonts/font/stylesheet.css";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <link rel="icon" href="/favicon.ico" sizes="any" />
       <Head>
         <title>GENI</title>
       </Head>
