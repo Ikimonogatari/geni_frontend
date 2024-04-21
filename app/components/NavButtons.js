@@ -22,7 +22,7 @@ function NavButtons() {
         href="/brands"
         className={`${
           pathname === "/brands"
-            ? "text-white  py-2 px-6 rounded-full bg-[#4D55F5]"
+            ? "text-white  py-3 px-5 rounded-full bg-[#4D55F5]"
             : "text-[#000000B8]"
         } hidden md:block`}
       >

@@ -15,7 +15,7 @@ function Creators({ apiData }) {
     (async () => {
       try {
         const r = await fetch(
-          "https://cms.geni.mn/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
+          `${process.env.NEXT_PUBLIC_URL}/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
         );
         console.log(r);
         const d = await r.json();

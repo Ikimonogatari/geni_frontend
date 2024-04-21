@@ -17,7 +17,7 @@ function Brands() {
     (async () => {
       try {
         const r = await fetch(
-          "https://cms.geni.mn/Items/brand?sort=sort,-date_created&fields=*,Category.*.*,creators.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D"
+          `${process.env.NEXT_PUBLIC_URL}/Items/brand?sort=sort,-date_created&fields=*,Category.*.*,creators.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
         );
         console.log(r);
         const d = await r.json();
@@ -28,7 +28,6 @@ function Brands() {
       }
     })();
   }, []);
-
   const checkViewportSize = () => {
     const width = window.innerWidth;
     if (width <= 640) {
