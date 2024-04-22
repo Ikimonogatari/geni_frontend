@@ -84,6 +84,7 @@ function Brands() {
             delay: 7000,
             disableOnInteraction: false,
           }}
+          centeredSlides={true}
           onSwiper={(s) => {
             setSwiper(s);
           }}
@@ -101,10 +102,10 @@ function Brands() {
               <Image
                 loader={GraphCMSImageLoader}
                 src={brand.image ? brand.image : ""}
-                width={179}
-                height={101}
+                width={267}
+                height={267}
                 alt="creator-image"
-                className="w-full"
+                className="w-full rounded-2xl"
               />
               <div className="absolute bottom-4 left-4 flex flex-row items-center gap-5">
                 <Image
@@ -115,7 +116,9 @@ function Brands() {
                   alt="lhamour"
                   className="min-w-[56px] rounded-full"
                 />
-                <span className="text-base text-white">{brand.name}</span>
+                <span className="text-base text-white font-bold">
+                  {brand.name}
+                </span>
               </div>
             </SwiperSlide>
           ))}

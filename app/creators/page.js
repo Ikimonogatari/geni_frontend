@@ -99,7 +99,7 @@ function creators() {
                 дэмжиж, түгээж байгаагаа мэдэх урамтай байдаг.
               </span>
               <span className="text-2xl hidden sm:block">
-                Creator program student: Urtnasan Batsukh{" "}
+                Creator program student: Urtnasan Batsukh
               </span>
             </div>
             <Image
@@ -110,7 +110,7 @@ function creators() {
               className=""
             />
             <span className="text-base block sm:hidden">
-              Creator program alumni: Tsetgee egch
+              Creator program student: Urtnasan Batsukh
             </span>
           </div>
         </div>
