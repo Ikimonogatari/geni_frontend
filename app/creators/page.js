@@ -92,14 +92,14 @@ function creators() {
         <Creators />
         <div className="container max-w-7xl px-7 mx-auto pt-16 pb-20">
           <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#CA7FFE] text-white">
-            <div className="flex flex-col gap-4">
-              <span className="text-2xl sm:text-3xl">
+            <div className="flex flex-col gap-4 lg:gap-10">
+              <span className="text-2xl sm:text-3xl font-bold">
                 Жаахан хүүхдээ харангаа гэрээсээ онлайнаар, дуртай
                 бүтээгдэхүүнээ үнэгүй авч, контентоор хуваалцаад тухайн брэндээ
                 дэмжиж, түгээж байгаагаа мэдэх урамтай байдаг.
               </span>
               <span className="text-2xl hidden sm:block">
-                Creator program alumni: Tsetgee egch
+                Creator program student: Urtnasan Batsukh{" "}
               </span>
             </div>
             <Image

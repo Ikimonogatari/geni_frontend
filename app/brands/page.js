@@ -88,7 +88,7 @@ function page() {
           />
         </div>
         <Brands />
-        <div className="container max-w-7xl px-7 mx-auto py-10">
+        {/* <div className="container max-w-7xl px-7 mx-auto py-10">
           <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#4D55F5] text-white">
             <div className="flex flex-col gap-4">
               <span className="text-2xl sm:text-3xl">
@@ -128,7 +128,7 @@ function page() {
               </span>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="max-w-7xl mx-auto px-7 container pt-4 pb-12">
           <div className="rounded-2xl px-6 py-8 sm:p-14 border-[1px] border-[#2D262D] bg-[#F5F4F0] flex flex-col lg:flex-row lg:items-center gap-10 sm:gap-6 lg:gap-0 justify-between">
             <div className="flex flex-col gap-6 lg:gap-4 w-full lg:w-1/2">

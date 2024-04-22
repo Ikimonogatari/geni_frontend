@@ -119,6 +119,7 @@ export default function Home() {
                   alt="creator-image"
                   width={361}
                   height={276}
+                  m
                   className="max-w-[180px] sm:max-w-[270px] 2xl:max-w-[361px]"
                 />
                 <Image
@@ -165,9 +166,8 @@ export default function Home() {
                 className="absolute -top-10 sm:-top-20 left-0 lg:-left-5 max-w-[31px] max-h-[25px] lg:max-w-[62px] lg:max-h-[50px]"
               />
               <span className="text-2xl lg:text-3xl font-bold">
-                Жаахан хүүхдээ харангаа гэрээсээ онлайнаар, дуртай
-                бүтээгдэхүүнээ үнэгүй авч, контентоор хуваалцаад тухайн брэндээ
-                дэмжиж, түгээж байгаагаа мэдэх урамтай байдаг.
+                Олон ажил давхар эрхэлдэг ч гэсэн өөрийн завд тааруулан контент
+                бүтээж дуртай брэндтэйгээ хамтрах их амар бас урамтай байдаг.
               </span>
 
               <span className="text-sm sm:text-xl lg:text-2xl">

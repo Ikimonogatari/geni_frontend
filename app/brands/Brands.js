@@ -90,13 +90,13 @@ function Brands() {
           modules={[Autoplay, Pagination, Navigation]}
           className=""
         >
-          {brands.map((brand, id) => (
+          {brands?.map((brand, id) => (
             <SwiperSlide
               key={id}
               className="rounded-2xl 2xl:max-w-[267px] w-full text-[#2D262D] flex flex-col gap-2"
             >
               <button className="bg-[#CA7FFE] absolute right-3 top-3 rounded-full px-4 py-2">
-                {brand.Category[0]?.Category_id.name}
+                {brand.Category ? brand.Category[0]?.Category_id.name : <></>}
               </button>
               <Image
                 loader={GraphCMSImageLoader}
