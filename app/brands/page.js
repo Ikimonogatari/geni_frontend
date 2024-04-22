@@ -100,7 +100,7 @@ function page() {
               </span>
               <div className="hidden sm:flex flex-row items-center gap-5">
                 <Image
-                  src={"/lhamour.png"}
+                  src={"/titem.png"}
                   width={56}
                   height={56}
                   alt="lhamour"
@@ -111,7 +111,7 @@ function page() {
               </div>
             </div>
             <Image
-              src={"/creator-alumni-image.png"}
+              src={"/brand-alumni-image.png"}
               width={302}
               height={302}
               alt="creator-alumni"
@@ -119,10 +119,10 @@ function page() {
             />
             <div className="flex sm:hidden flex-row items-center gap-5">
               <Image
-                src={"/lhamour.png"}
+                src={"/titem.png"}
                 width={56}
                 height={56}
-                alt="lhamour"
+                alt="titem"
                 className="min-w-[56px]"
               />
               <span className="text-base">
