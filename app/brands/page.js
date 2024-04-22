@@ -126,7 +126,7 @@ function page() {
                 className="min-w-[56px]"
               />
               <span className="text-base">
-                Creator program alumni: Tsetgee egch
+                Erkhbayar Founder of Titem Brand
               </span>
             </div>
           </div>
