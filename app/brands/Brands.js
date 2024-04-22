@@ -84,7 +84,6 @@ function Brands() {
             delay: 7000,
             disableOnInteraction: false,
           }}
-          centeredSlides={true}
           onSwiper={(s) => {
             setSwiper(s);
           }}
