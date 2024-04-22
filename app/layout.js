@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <link rel="icon" href="/favicon.ico" sizes="any" />
-      <meta property="og:image" content="/geni-logo.svg" />
+      <meta property="og:image" content="/meta-logo.png" />
       <Head>
         <title>GENI</title>
       </Head>
