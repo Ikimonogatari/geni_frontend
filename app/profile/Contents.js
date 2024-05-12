@@ -39,11 +39,12 @@ function Contents({ creatorData }) {
               key={id}
             >
               <video
-                // preload="metadata"
+                preload="metadata"
                 className="rounded-2xl"
                 muted
-                // loop
-                playsInline
+                poster={`https://cms.geni.mn/assets/${content.content_id?.thumbnail}`}
+                loop
+                // playsInline
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
@@ -81,8 +82,8 @@ function Contents({ creatorData }) {
                   className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] xl:w-[480px] xl:h-[852px] rounded-2xl"
                   autoPlay
                   loop
-                  playsInline
-                  preload="auto"
+                  // playsInline
+                  preload="metadata"
                   controls="controls"
                 >
                   <source
