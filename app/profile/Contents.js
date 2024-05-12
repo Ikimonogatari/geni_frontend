@@ -1,12 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
-import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
 
 function Contents({ creatorData }) {
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +14,8 @@ function Contents({ creatorData }) {
     const vid = e.target;
     vid.muted = true;
     vid.play();
+    // Set the poster to the thumbnail URL when mouse enters
+    vid.poster = vid.dataset.thumbnail;
   };
 
   // handle mouse leave
@@ -42,11 +43,10 @@ function Contents({ creatorData }) {
                 preload="metadata"
                 className="rounded-2xl"
                 muted
-                poster={`https://cms.geni.mn/assets/${content.content_id?.thumbnail}`}
                 loop
-                // playsInline
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                // onMouseEnter={handleMouseEnter}
+                // onMouseLeave={handleMouseLeave}
+                poster={`https://cms.geni.mn/assets/${content.content_id?.thumbnail}`}
               >
                 <source
                   type="video/mp4"

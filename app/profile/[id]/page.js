@@ -82,9 +82,9 @@ export default function Profile() {
               {creatorData?.brand?.map((b, i) => (
                 <Image
                   key={i}
-                  src={b.brand_id.image}
+                  src={b.brand_id.logo}
                   loader={GraphCMSImageLoader}
-                  className="rounded-full w-16 h-16"
+                  className="rounded-full w-16 h-16 border-[1px] border-black/50"
                   width={54}
                   height={54}
                   alt="brand-logo"
