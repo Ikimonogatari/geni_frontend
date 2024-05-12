@@ -39,7 +39,7 @@ function Contents({ creatorData }) {
               key={id}
             >
               <video
-                preload="auto"
+                preload="metadata"
                 className="rounded-2xl"
                 muted
                 loop
@@ -82,7 +82,7 @@ function Contents({ creatorData }) {
                   autoPlay
                   loop
                   playsInline
-                  preload="auto"
+                  preload="metadata"
                   controls="controls"
                 >
                   <source src={`https://cms.geni.mn/assets/${selectedReel}`} />
