@@ -11,15 +11,20 @@ export default function Profile() {
 
   // console.log(id);
   const [creatorData, setCreatorData] = useState([]);
+  const [reviewData, setReviewData] = useState(null);
   useEffect(() => {
     (async () => {
       try {
         const r = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,Cacontent.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
+          `${process.env.NEXT_PUBLIC_URL}/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,review.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
         );
         console.log(r);
         const d = await r.json();
-        setCreatorData(d.data.find((item) => item.id === id));
+        const c = d.data.find((item) => item.id === id);
+        setCreatorData(c);
+        if (c.review) {
+          setReviewData(c.review.find((item) => item.isFeatured === true));
+        }
         console.log(d.data.find((item) => item.id === id));
       } catch (error) {
         console.log(error);
@@ -94,37 +99,39 @@ export default function Profile() {
             <button className="hidden lg:block absolute top-6 right-6 px-10 py-[10px] text-2xl rounded-full bg-[#4FB755] border-[1px] border-[#2D262D] text-white">
               Review
             </button>
-            <Image
-              src={"/review-image.png"}
-              width={172}
-              height={306}
-              alt="review-image"
-              className="relative lg:static"
-            />
+            {reviewData?.image ? (
+              <Image
+                src={reviewData?.image.id}
+                loader={GraphCMSImageLoader}
+                width={172}
+                height={306}
+                alt="review-image"
+                className="relative lg:static rounded-2xl"
+              />
+            ) : (
+              <></>
+            )}
             <button className="block lg:hidden w-full sm:w-1/2 px-10 py-[10px] text-2xl rounded-full bg-[#4FB755] border-[1px] border-[#2D262D] text-white">
               Review
             </button>
             <div className="flex flex-col text-[#2D262D] text-[18px]">
-              <div className="flex flex-row items-center gap-6">
-                <Image
-                  src={"/lhamour.png"}
-                  width={56}
-                  height={56}
-                  alt="lhamour"
-                />
-                <span className="">Founder & CEO: Khulan Davaadorj</span>
+              <div className="flex flex-row items-center gap-3">
+                {reviewData?.brand_logo ? (
+                  <Image
+                    src={reviewData?.brand_logo.id}
+                    loader={GraphCMSImageLoader}
+                    width={56}
+                    height={56}
+                    alt="review-image"
+                    className="rounded-full w-[56px] h-[56px]"
+                  />
+                ) : (
+                  <></>
+                )}
+                <span className="">{reviewData?.reviewed_brand}</span>
               </div>
-              <span className="mt-5">Brand review:</span>
-              <span className="mt-6">
-                Lily's video review of the I'm Prep! Balm - Corner in Corner
-                color by I'M MEME highlights the product's impressive
-                performance. She mentions that the balm provides a flawless
-                finish, with long-lasting wear that stays intact even during
-                dancing. The color payoff is excellent, and the balm's ability
-                to adhere well to the skin is commendable. Lily also appreciates
-                the product's versatility, as it can be used for both day and
-                night looks.
-              </span>
+              <span className="mt-3">Brand review:</span>
+              <span className="mt-3">{reviewData?.reviewed_text}</span>
             </div>
           </div>
         </div>
