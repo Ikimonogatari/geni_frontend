@@ -39,7 +39,7 @@ function Contents({ creatorData }) {
               key={id}
             >
               <video
-                preload="metadata"
+                preload="auto"
                 className="rounded-2xl"
                 muted
                 loop
@@ -72,7 +72,7 @@ function Contents({ creatorData }) {
                     src={"/cross-button.png"}
                     width={32}
                     height={32}
-                    className="absolute right-[35px] top-[35px]"
+                    className="absolute right-[35px] top-[35px] w-6 h-6 sm:w-8 sm:h-8"
                     alt="close"
                   />
                 </button>
@@ -82,6 +82,7 @@ function Contents({ creatorData }) {
                   autoPlay
                   loop
                   playsInline
+                  preload="auto"
                   controls="controls"
                 >
                   <source src={`https://cms.geni.mn/assets/${selectedReel}`} />
