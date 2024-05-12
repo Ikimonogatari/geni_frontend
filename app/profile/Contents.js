@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
 
-function Contents() {
+function Contents({ creatorData }) {
   const [slidesPerView, setSlidesPerView] = useState(4);
   const [swiper, setSwiper] = useState(null);
 
@@ -46,7 +46,9 @@ function Contents() {
 
   return (
     <div className="container max-w-7xl px-7 mx-auto mt-10 sm:mt-7">
-      <span className="text-[#6F6F6F] text-[18px]">Created content: 12</span>
+      <span className="text-[#6F6F6F] text-[18px]">
+        Created content: {creatorData?.content?.length}
+      </span>
       <div className="relative flex flex-row gap-3 items-center mt-9">
         <button onClick={goPrev}>
           <Image
