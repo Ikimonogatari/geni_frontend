@@ -30,7 +30,7 @@ function CreatorsMobile() {
     })();
   }, []);
   return (
-    <div className="block sm:hidden container px-7 mx-auto max-w-7xl pt-20">
+    <div className="block sm:hidden container mx-auto max-w-7xl pt-20">
       <div className="flex flex-row justify-between items-center">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
           Бүтээгчид / {creators.length}
