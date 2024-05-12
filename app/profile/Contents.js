@@ -24,7 +24,7 @@ function Contents({ creatorData }) {
     vid.pause();
   };
   return (
-    <div className="">
+    <div className="pb-10">
       <div className="container max-w-7xl px-7 mx-auto mt-10 sm:mt-7">
         <span className="text-[#6F6F6F] text-[18px]">
           Created content: {creatorData?.content?.length}

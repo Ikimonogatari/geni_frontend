@@ -39,7 +39,7 @@ function CreatorsMobile() {
           Бүгд
         </button>
       </div>
-      <div className="mt-9 px-10">
+      <div className="mt-9 px-11">
         {creators ? (
           <Swiper
             effect={"cards"}

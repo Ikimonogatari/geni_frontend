@@ -39,7 +39,7 @@ function BrandsMobile() {
           Бүгд
         </button>
       </div>
-      <div className="px-10 mt-9">
+      <div className="px-11 mt-9">
         <Swiper
           effect={"cards"}
           slidesPerView={"1"}
