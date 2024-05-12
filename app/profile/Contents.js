@@ -39,10 +39,10 @@ function Contents({ creatorData }) {
               key={id}
             >
               <video
-                preload="metadata"
+                // preload="metadata"
                 className="rounded-2xl"
                 muted
-                loop
+                // loop
                 playsInline
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -82,10 +82,13 @@ function Contents({ creatorData }) {
                   autoPlay
                   loop
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                   controls="controls"
                 >
-                  <source src={`https://cms.geni.mn/assets/${selectedReel}`} />
+                  <source
+                    src={`https://cms.geni.mn/assets/${selectedReel}`}
+                    type="video/mp4"
+                  />
                 </video>
               </div>
             </motion.div>
