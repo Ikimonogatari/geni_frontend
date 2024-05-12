@@ -1,122 +1,100 @@
 "use client";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
+import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
 
 function Contents({ creatorData }) {
-  const [slidesPerView, setSlidesPerView] = useState(4);
-  const [swiper, setSwiper] = useState(null);
-
-  const checkViewportSize = () => {
-    const width = window.innerWidth;
-    if (width <= 640) {
-      // Mobile
-      setSlidesPerView(1);
-    } else if (width >= 640 && width <= 1068) {
-      // Tablet or medium devices
-      setSlidesPerView(2);
-    } else if (width >= 1068 && width <= 1300) {
-      // Tablet or medium devices
-      setSlidesPerView(3);
-    } else {
-      // Larger devices
-      setSlidesPerView(4);
-    }
-  };
-  useEffect(() => {
-    checkViewportSize();
-
-    window.addEventListener("resize", checkViewportSize);
-
-    return () => {
-      window.removeEventListener("resize", checkViewportSize);
-    };
-  }, []);
-  const goNext = () => {
-    swiper.slideNext();
-  };
-  const goPrev = () => {
-    swiper.slidePrev();
+  const [showModal, setShowModal] = useState(false);
+  const [selectedReel, setSelectedReel] = useState(null);
+  const handleMouseEnter = (e) => {
+    const vid = e.target;
+    vid.muted = true;
+    vid.play();
   };
 
+  // handle mouse leave
+  const handleMouseLeave = (e) => {
+    const vid = e.target;
+    vid.muted = false;
+    vid.currentTime = 0;
+    vid.pause();
+  };
   return (
-    <div className="container max-w-7xl px-7 mx-auto mt-10 sm:mt-7">
-      <span className="text-[#6F6F6F] text-[18px]">
-        Created content: {creatorData?.content?.length}
-      </span>
-      <div className="relative flex flex-row gap-3 items-center mt-9">
-        <button onClick={goPrev}>
-          <Image
-            src={"/creators-swipe-button.png"}
-            width={42}
-            height={42}
-            alt="swipe-button"
-            className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-          />
-        </button>
-        <Swiper
-          spaceBetween={30}
-          slidesPerView={slidesPerView}
-          autoplay={{
-            delay: 7000,
-            disableOnInteraction: false,
-          }}
-          onSwiper={(s) => {
-            setSwiper(s);
-          }}
-          modules={[Autoplay, Pagination, Navigation]}
-          className=""
-        >
-          {contents.map((content, id) => (
-            <SwiperSlide key={id} className="">
-              <Image
-                src={content.image}
-                width={260}
-                height={462}
-                alt="creator-image"
-                className=" min-w-[260px] mih-h-[462px] w-full"
-              />
-            </SwiperSlide>
+    <div className="">
+      <div className="container max-w-7xl px-7 mx-auto mt-10 sm:mt-7">
+        <span className="text-[#6F6F6F] text-[18px]">
+          Created content: {creatorData?.content?.length}
+        </span>
+        <div className="relative grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 items-center mt-9">
+          {creatorData?.content?.map((content, id) => (
+            <button
+              onClick={() => (
+                setShowModal(true), setSelectedReel(content.content_id?.video)
+              )}
+              key={id}
+            >
+              <video
+                preload="metadata"
+                className="rounded-2xl"
+                muted
+                loop
+                playsInline
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <source
+                  type="video/mp4"
+                  src={`https://cms.geni.mn/assets/${content.content_id?.video}`}
+                />
+              </video>
+            </button>
           ))}
-        </Swiper>
-        <button onClick={goNext}>
-          <Image
-            src={"/creators-swipe-button.png"}
-            width={42}
-            height={42}
-            alt="swipe-button"
-            className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-          />
-        </button>
+        </div>
+        {showModal ? (
+          <div className="justify-center items-center flex fixed inset-0 z-50 outline-none focus:outline-none bg-black/60">
+            <motion.div
+              animate={{
+                opacity: showModal ? 1 : 0,
+                transition: {
+                  delay: 1000,
+                },
+              }}
+              className="rounded-2xl"
+            >
+              <div className="flex flex-col items-center px-7 rounded-2xl">
+                <button onClick={() => setShowModal(false)}>
+                  <Image
+                    src={"/cross-button.png"}
+                    width={32}
+                    height={32}
+                    className="absolute right-[35px] top-[35px]"
+                    alt="close"
+                  />
+                </button>
+
+                <video
+                  className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] xl:w-[480px] xl:h-[852px] rounded-2xl"
+                  autoPlay
+                  loop
+                  playsInline
+                  controls="controls"
+                >
+                  <source src={`https://cms.geni.mn/assets/${selectedReel}`} />
+                </video>
+              </div>
+            </motion.div>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
 }
 
 export default Contents;
-
-const contents = [
-  {
-    image: "/dummy-content.png",
-  },
-  {
-    image: "/dummy-content.png",
-  },
-  {
-    image: "/dummy-content.png",
-  },
-  {
-    image: "/dummy-content.png",
-  },
-  {
-    image: "/dummy-content.png",
-  },
-  {
-    image: "/dummy-content.png",
-  },
-];

@@ -94,47 +94,51 @@ export default function Profile() {
           </div>
         </div>
         {creatorData ? <Contents creatorData={creatorData} /> : <></>}
-        <div className="container max-w-7xl px-7 mx-auto pb-20 mt-6">
-          <div className="static lg:relative bg-[#F5F4F0] flex flex-col lg:flex-row items-center gap-10 px-10 py-6 rounded-2xl border-[1px] border-[#2D262D]">
-            <button className="hidden lg:block absolute top-6 right-6 px-10 py-[10px] text-2xl rounded-full bg-[#4FB755] border-[1px] border-[#2D262D] text-white">
-              Review
-            </button>
-            {reviewData?.image ? (
-              <Image
-                src={reviewData?.image.id}
-                loader={GraphCMSImageLoader}
-                width={172}
-                height={306}
-                alt="review-image"
-                className="relative lg:static rounded-2xl"
-              />
-            ) : (
-              <></>
-            )}
-            <button className="block lg:hidden w-full sm:w-1/2 px-10 py-[10px] text-2xl rounded-full bg-[#4FB755] border-[1px] border-[#2D262D] text-white">
-              Review
-            </button>
-            <div className="flex flex-col text-[#2D262D] text-[18px]">
-              <div className="flex flex-row items-center gap-3">
-                {reviewData?.brand_logo ? (
-                  <Image
-                    src={reviewData?.brand_logo.id}
-                    loader={GraphCMSImageLoader}
-                    width={56}
-                    height={56}
-                    alt="review-image"
-                    className="rounded-full w-[56px] h-[56px]"
-                  />
-                ) : (
-                  <></>
-                )}
-                <span className="">{reviewData?.reviewed_brand}</span>
+        {reviewData ? (
+          <div className="container max-w-7xl px-7 mx-auto pb-20 mt-6">
+            <div className="static lg:relative bg-[#F5F4F0] flex flex-col lg:flex-row items-center gap-10 px-10 py-6 rounded-2xl border-[1px] border-[#2D262D]">
+              <button className="hidden lg:block absolute top-6 right-6 px-10 py-[10px] text-2xl rounded-full bg-[#4FB755] border-[1px] border-[#2D262D] text-white">
+                Review
+              </button>
+              {reviewData?.image ? (
+                <Image
+                  src={reviewData?.image.id}
+                  loader={GraphCMSImageLoader}
+                  width={172}
+                  height={306}
+                  alt="review-image"
+                  className="relative lg:static rounded-2xl"
+                />
+              ) : (
+                <></>
+              )}
+              <button className="block lg:hidden w-full sm:w-1/2 px-10 py-[10px] text-2xl rounded-full bg-[#4FB755] border-[1px] border-[#2D262D] text-white">
+                Review
+              </button>
+              <div className="flex flex-col text-[#2D262D] text-[18px]">
+                <div className="flex flex-row items-center gap-3">
+                  {reviewData?.brand_logo ? (
+                    <Image
+                      src={reviewData?.brand_logo.id}
+                      loader={GraphCMSImageLoader}
+                      width={56}
+                      height={56}
+                      alt="review-image"
+                      className="rounded-full w-[56px] h-[56px]"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  <span className="">{reviewData?.reviewed_brand}</span>
+                </div>
+                <span className="mt-3">Brand review:</span>
+                <span className="mt-3">{reviewData?.reviewed_text}</span>
               </div>
-              <span className="mt-3">Brand review:</span>
-              <span className="mt-3">{reviewData?.reviewed_text}</span>
             </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
