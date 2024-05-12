@@ -61,7 +61,7 @@ function Creators({ apiData }) {
   };
 
   return (
-    <div className="container px-7 mx-auto max-w-7xl pt-20">
+    <div className="hidden sm:block container px-7 mx-auto max-w-7xl pt-20">
       <div className="flex flex-row justify-between items-center">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
           Бүтээгчид / {creators.length}
@@ -105,7 +105,7 @@ function Creators({ apiData }) {
                     width={24}
                     height={24}
                     alt="verified-icon"
-                    className="absolute right-6 top-6"
+                    className="absolute right-6 top-6 w-6 h-6"
                   />
                   <Image
                     loader={GraphCMSImageLoader}

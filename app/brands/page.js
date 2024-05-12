@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Brands from "./Brands";
+import BrandsMobile from "./BrandsMobile";
 
 export const metadata = {
   title: "Geni | Brands",
@@ -88,6 +89,7 @@ function page() {
           />
         </div>
         <Brands />
+        <BrandsMobile />
         <div className="container max-w-7xl px-7 mx-auto py-10">
           <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#4D55F5] text-white">
             <div className="flex flex-col gap-4">

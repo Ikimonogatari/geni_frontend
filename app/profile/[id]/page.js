@@ -78,7 +78,7 @@ export default function Profile() {
             <span className="text-[#6F6F6F] text-[18px]">
               Collab brands: {creatorData?.brand?.length}
             </span>
-            <div className="flex flex-row gap-[10px]">
+            <div className="flex flex-wrap items-center gap-[10px]">
               {creatorData?.brand?.map((b, i) => (
                 <Image
                   key={i}

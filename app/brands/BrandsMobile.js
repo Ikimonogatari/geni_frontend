@@ -1,17 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay, EffectCards } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/effect-cards";
+
 import Image from "next/image";
 import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
 
-function Brands() {
-  const [slidesPerView, setSlidesPerView] = useState(4);
-  const [swiper, setSwiper] = useState(null);
+function BrandsMobile() {
   const [brands, setBrands] = useState([]);
   useEffect(() => {
     (async () => {
@@ -28,37 +28,9 @@ function Brands() {
       }
     })();
   }, []);
-  const checkViewportSize = () => {
-    const width = window.innerWidth;
-    if (width <= 640) {
-      // Mobile
-      setSlidesPerView(1);
-    } else if (width >= 640 && width <= 1068) {
-      // Tablet or medium devices
-      setSlidesPerView(3);
-    } else {
-      // Larger devices
-      setSlidesPerView(4);
-    }
-  };
-  useEffect(() => {
-    checkViewportSize();
-
-    window.addEventListener("resize", checkViewportSize);
-
-    return () => {
-      window.removeEventListener("resize", checkViewportSize);
-    };
-  }, []);
-  const goNext = () => {
-    swiper.slideNext();
-  };
-  const goPrev = () => {
-    swiper.slidePrev();
-  };
 
   return (
-    <div className="hidden sm:block container px-7 mx-auto max-w-7xl pt-20">
+    <div className="block sm:hidden container px-7 mx-auto max-w-7xl pt-20">
       <div className="flex flex-row justify-between items-center">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
           Брэндүүд / {brands.length}
@@ -67,33 +39,21 @@ function Brands() {
           Бүгд
         </button>
       </div>
-      <div className="relative flex flex-row gap-3 items-center mt-9">
-        <button onClick={goPrev}>
-          <Image
-            src={"/creators-swipe-button.png"}
-            width={42}
-            height={42}
-            alt="swipe-button"
-            className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-          />
-        </button>
+      <div className="px-7 mt-9">
         <Swiper
-          spaceBetween={20}
-          slidesPerView={slidesPerView}
+          effect={"cards"}
+          slidesPerView={"1"}
           autoplay={{
             delay: 7000,
             disableOnInteraction: false,
           }}
-          onSwiper={(s) => {
-            setSwiper(s);
-          }}
-          modules={[Autoplay, Pagination, Navigation]}
+          modules={[EffectCards, Autoplay]}
           className=""
         >
           {brands?.map((brand, id) => (
             <SwiperSlide
               key={id}
-              className="rounded-2xl 2xl:max-w-[267px] w-full text-[#2D262D] flex flex-col gap-2"
+              className="rounded-2xl 2xl:max-w-[267px] text-[#2D262D] flex flex-col gap-2"
             >
               <button className="bg-[#CA7FFE] absolute right-3 top-3 rounded-full px-4 py-2">
                 {brand.Category ? brand.Category[0]?.Category_id.name : <></>}
@@ -122,18 +82,9 @@ function Brands() {
             </SwiperSlide>
           ))}
         </Swiper>
-        <button onClick={goNext}>
-          <Image
-            src={"/creators-swipe-button.png"}
-            width={42}
-            height={42}
-            alt="swipe-button"
-            className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-          />
-        </button>
       </div>
     </div>
   );
 }
 
-export default Brands;
+export default BrandsMobile;
