@@ -89,7 +89,7 @@ function creators() {
             className="block lg:hidden mx-auto"
           />
         </div>
-        {/* <Creators /> */}
+        <Creators />
         <div className="container max-w-7xl px-7 mx-auto pt-16 pb-20">
           <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#CA7FFE] text-white">
             <div className="flex flex-col gap-4 lg:gap-10">

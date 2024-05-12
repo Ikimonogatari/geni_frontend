@@ -95,33 +95,35 @@ function Creators({ apiData }) {
             className=""
           >
             {creators.map((creator, id) => (
-              <SwiperSlide
-                key={id}
-                className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] flex flex-col gap-2"
-              >
-                <Image
-                  src={"/verified-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="verified-icon"
-                  className="absolute right-6 top-6"
-                />
-                <Image
-                  loader={GraphCMSImageLoader}
-                  src={creator.image ? creator.image : ""}
-                  width={179}
-                  height={101}
-                  alt="creator-image"
-                  className="w-full"
-                />
+              <SwiperSlide key={id} className="">
+                <a
+                  href={`/profile/${creator.id}`}
+                  className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] flex flex-col gap-2"
+                >
+                  <Image
+                    src={"/verified-icon.png"}
+                    width={24}
+                    height={24}
+                    alt="verified-icon"
+                    className="absolute right-6 top-6"
+                  />
+                  <Image
+                    loader={GraphCMSImageLoader}
+                    src={creator.image ? creator.image : ""}
+                    width={179}
+                    height={101}
+                    alt="creator-image"
+                    className="w-full rounded-2xl"
+                  />
 
-                <p className="text-base mt-3">{creator.name}</p>
-                <p className="text-[#6F6F6F] text-sm mt-1">
-                  Created content: {creator.content.length}
-                </p>
-                <p className="text-[#6F6F6F] text-sm mt-1">
-                  Collab brands: {creator.brand.length}
-                </p>
+                  <p className="text-base mt-3">{creator.name}</p>
+                  <p className="text-[#6F6F6F] text-sm mt-1">
+                    Created content: {creator.content.length}
+                  </p>
+                  <p className="text-[#6F6F6F] text-sm mt-1">
+                    Collab brands: {creator.brand.length}
+                  </p>
+                </a>
               </SwiperSlide>
             ))}
           </Swiper>
