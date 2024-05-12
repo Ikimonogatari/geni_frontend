@@ -14,11 +14,9 @@ function Contents({ creatorData }) {
     const vid = e.target;
     vid.muted = true;
     vid.play();
-    // Set the poster to the thumbnail URL when mouse enters
     vid.poster = vid.dataset.thumbnail;
   };
 
-  // handle mouse leave
   const handleMouseLeave = (e) => {
     const vid = e.target;
     vid.muted = false;
@@ -41,7 +39,7 @@ function Contents({ creatorData }) {
             >
               <video
                 preload="metadata"
-                className="rounded-2xl"
+                className="rounded-2xl border-[1px] border-black/15"
                 muted
                 loop
                 // onMouseEnter={handleMouseEnter}

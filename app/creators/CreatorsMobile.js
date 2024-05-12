@@ -39,7 +39,7 @@ function CreatorsMobile() {
           Бүгд
         </button>
       </div>
-      <div className="mt-9 px-7">
+      <div className="mt-9 px-10">
         {creators ? (
           <Swiper
             effect={"cards"}
@@ -53,7 +53,7 @@ function CreatorsMobile() {
             className=""
           >
             {creators.map((creator, id) => (
-              <SwiperSlide key={id} className="">
+              <SwiperSlide key={id} className="rounded-2xl">
                 <a
                   href={`/profile/${creator.id}`}
                   className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] flex flex-col gap-2"
