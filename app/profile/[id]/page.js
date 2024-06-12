@@ -12,20 +12,26 @@ export default function Profile() {
   // console.log(id);
   const [creatorData, setCreatorData] = useState([]);
   const [reviewData, setReviewData] = useState(null);
+  const [getReviewBrand, setReviewBrand] = useState(null);
   useEffect(() => {
     (async () => {
       try {
         const r = await fetch(
           `${process.env.NEXT_PUBLIC_URL}/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,review.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
         );
-        console.log(r);
         const d = await r.json();
         const c = d.data.find((item) => item.id === id);
+
         setCreatorData(c);
         if (c.review) {
-          setReviewData(c.review.find((item) => item.isFeatured === true));
+          const reviewData = c.review.find((item) => item.isFeatured === true);
+          setReviewData(reviewData);
+          const reviewBrand =
+            await fetch(`${process.env.NEXT_PUBLIC_URL}/Items/brand?filter=%7B%22id%22:%7B%22_eq%22:%22${c?.reviewBrand?.brand?.key}%22%7D%7D
+        `);
+          const brand = reviewBrand.json();
+          console.log(reviewBrand);
         }
-        console.log(d.data.find((item) => item.id === id));
       } catch (error) {
         console.log(error);
       }
