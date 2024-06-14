@@ -73,7 +73,7 @@ function ContentProgress({ currentContents }) {
           </div>
           <div>
             {p.stage === 4 ? (
-              <button className="bg-[#4D55F5] px-5 py-2 rounded-lg text-white font-bold">
+              <button className="bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
                 Контент авах
               </button>
             ) : (

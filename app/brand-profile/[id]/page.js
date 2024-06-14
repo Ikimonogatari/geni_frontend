@@ -138,7 +138,10 @@ function page() {
             </div>
             <div className="flex flex-row items-center gap-5">
               {icons.map((r, i) => (
-                <button key={i} className="rounded-xl bg-[#F5F4F0] p-2 gap-5">
+                <button
+                  key={i}
+                  className="rounded-xl border-[1px] border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
+                >
                   <Image key={i} src={r} width={24} height={24} alt="icon" />
                 </button>
               ))}
@@ -161,7 +164,7 @@ function page() {
                 </button>
               ))}
             </div>
-            <button className="flex flex-row items-center gap-2 bg-[#4D55F5] px-5 py-3 rounded-lg text-white font-bold">
+            <button className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold">
               Шинэ бүтээгдэхүүн нэмэх
               <Image
                 src={"/arrow-right-icon.png"}
@@ -179,7 +182,7 @@ function page() {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="flex flex-row items-center gap-2 bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
+                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
               >
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -211,7 +214,7 @@ function page() {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="flex flex-row items-center gap-2 bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
+                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
               >
                 Next
                 <Image
