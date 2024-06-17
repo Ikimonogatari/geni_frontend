@@ -164,7 +164,10 @@ function page() {
                 </button>
               ))}
             </div>
-            <button className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold">
+            <a
+              href="/add-product"
+              className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
+            >
               Шинэ бүтээгдэхүүн нэмэх
               <Image
                 src={"/arrow-right-icon.png"}
@@ -172,7 +175,7 @@ function page() {
                 height={14}
                 alt="arrow"
               />
-            </button>
+            </a>
           </div>
           {renderBrandProfile()}
         </div>
