@@ -20,6 +20,7 @@ import {
 } from "../components/ui/select";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -327,6 +328,38 @@ function Page() {
                       height={220}
                       alt="product-added"
                     />
+                    <div className="flex flex-col gap-5">
+                      <div className="flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-5">
+                        <div className="flex flex-row items-center gap-5">
+                          <Image
+                            src={"/lhamour.png"}
+                            width={77}
+                            height={77}
+                            alt="lhamour"
+                            className="rounded-full border border-[#2D262D]"
+                          />
+                          <div className="flex flex-col gap-2">
+                            <span className="font-bold">lhamour</span>
+                            <span className="text-lg">
+                              Нүүрний чийгшүүлэг тос
+                            </span>
+                          </div>
+                        </div>
+                        <div className="bg-[#CA7FFE] text-xs rounded-full px-4 py-2">
+                          Beauty
+                        </div>
+                      </div>
+                      <span className="bg-[#F49D19] text-white rounded-2xl text-lg p-4">
+                        Geni танай бүтээгдэхүүнийг дээрх тоо ширхэгийн дагуу
+                        баталгаажуулж, агуулахдаа хүлээн авсны дараа платформ
+                        дээр бүтээгчдэд санал болгох болно. Баярлалаа.
+                      </span>
+                      <DialogClose>
+                        <button className="w-full py-4 text-white font-bold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
+                          Баярлалаа
+                        </button>
+                      </DialogClose>
+                    </div>
                   </DialogContent>
                 </Dialog>
               </div>
