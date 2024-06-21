@@ -203,7 +203,7 @@ function page() {
                 <button
                   key={index}
                   onClick={() => pageNumber !== "..." && paginate(pageNumber)}
-                  className={`w-10 h-10 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
+                  className={`w-10 h-10 transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
                     pageNumber === currentPage
                       ? "border-[#CA7FFE]"
                       : "border-none"
