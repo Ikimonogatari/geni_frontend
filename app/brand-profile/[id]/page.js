@@ -138,10 +138,7 @@ function page() {
             </div>
             <div className="flex flex-row items-center gap-5">
               {icons.map((r, i) => (
-                <button
-                  key={i}
-                  className="rounded-xl border-[1px] border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
-                >
+                <button key={i} className="rounded-xl bg-[#F5F4F0] p-2 gap-5">
                   <Image key={i} src={r} width={24} height={24} alt="icon" />
                 </button>
               ))}

@@ -29,7 +29,7 @@ function ContentProgress({ currentContents }) {
             alt="arrow"
           />
         </div>
-        <span className="col-span-1">Бүтээгч</span>
+        <span className="col-span-1">Брэнд</span>
         <span className="col-span-1">Үе шат</span>
         <div className="col-span-1 flex flex-row items-center justify-between">
           <span>Статус</span>
@@ -48,15 +48,9 @@ function ContentProgress({ currentContents }) {
           className="w-full grid grid-cols-[3fr,2fr,1fr,3fr,2fr] gap-6 items-center p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
         >
           <span className="col-span-1">{p.name}</span>
-          <div className="col-span-1 flex flex-row items-center gap-3">
-            <span>{p.creator}</span>
-            <Image
-              src={"/verified-icon.png"}
-              width={24}
-              height={24}
-              alt="verified"
-            />
-          </div>
+
+          <span className="col-span-1">{p.brand}</span>
+
           <span className="col-span-1">{p.stage}/5</span>
           <div
             className={`${getColorClass(

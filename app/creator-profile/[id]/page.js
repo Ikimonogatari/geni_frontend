@@ -25,7 +25,7 @@ function page() {
         const c = d.data.find((item) => item.id === id);
 
         setCreatorData(c);
-        console.log(c)
+        console.log(c);
         if (c.review) {
           const reviewData = c.review.find((item) => item.isFeatured === true);
           setReviewData(reviewData);
@@ -79,7 +79,7 @@ function page() {
         contents = contentsProgress;
         break;
       case "content-gallery":
-        contents = creatorData;
+        contents = creatorData?.content;
         break;
 
       default:
@@ -94,7 +94,12 @@ function page() {
       case "content-progress":
         return <ContentProgress currentContents={currentContents} />;
       case "content-gallery":
-        return <ContentGallery creatorData={creatorData} contentsGallery={currentContents} />;
+        return (
+          <ContentGallery
+            creatorData={creatorData}
+            contentsGallery={currentContents}
+          />
+        );
 
       default:
         return <ContentProgress currentContents={currentContents} />;
@@ -159,7 +164,7 @@ function page() {
                 className="rounded-xl"
                 alt="creator"
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-[#2D262D] text-2xl font-bold">
                     {creatorData ? creatorData.name : <></>}
@@ -172,10 +177,40 @@ function page() {
                     className="w-6 h-6"
                   />
                 </div>
-                <span className="mt-2 text-[#6F6F6F] text-base">
+                <div className="flex flex-row items-center gap-3">
+                  <span className="text-lg">1020 xp</span>
+                  <button>
+                    <Image
+                      src={"/Info.png"}
+                      width={24}
+                      height={24}
+                      alt="info"
+                      className="w-6 h-6"
+                    />
+                  </button>
+                  <button>
+                    <Image
+                      src={"/Instagram.png"}
+                      width={24}
+                      height={24}
+                      alt="ig"
+                      className="w-6 h-6"
+                    />
+                  </button>
+                  <button>
+                    <Image
+                      src={"/Facebook.png"}
+                      width={24}
+                      height={24}
+                      alt="fb"
+                      className="w-6 h-6"
+                    />
+                  </button>
+                </div>
+                <span className="text-[#6F6F6F] text-base">
                   {creatorData ? creatorData.bio : <></>}
                 </span>
-                <div className="mt-3 flex flex-wrap items-center gap-2 text-[#2D262D]">
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-[#2D262D]">
                   {creatorData?.Category?.map((c, i) => (
                     <button
                       key={i}
@@ -191,9 +226,16 @@ function page() {
               {icons.map((r, i) => (
                 <button
                   key={i}
-                  className="rounded-xl border-[1px] border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
+                  className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
                 >
-                  <Image key={i} src={r} width={24} height={24} alt="icon" />
+                  <Image
+                    key={i}
+                    src={r}
+                    width={24}
+                    height={24}
+                    alt="icon"
+                    className="min-w-6 min-h-6"
+                  />
                 </button>
               ))}
             </div>
@@ -205,10 +247,11 @@ function page() {
                 <button
                   key={i}
                   onClick={() => setProfileState(b.value)}
-                  className={`${b.value === profileState
-                    ? "bg-[#4D55F5] text-white"
-                    : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
-                    } px-5 py-3 rounded-lg font-bold`}
+                  className={`${
+                    b.value === profileState
+                      ? "bg-[#4D55F5] text-white"
+                      : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
+                  } px-5 py-3 rounded-lg font-bold`}
                 >
                   {b.title}
                 </button>
@@ -218,7 +261,7 @@ function page() {
               href="/add-product"
               className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
             >
-              Шинэ бүтээгдэхүүн нэмэх
+              Бүтээгдэхүүн үзэх
               <Image
                 src={"/arrow-right-icon.png"}
                 width={14}
@@ -253,10 +296,11 @@ function page() {
                 <button
                   key={index}
                   onClick={() => pageNumber !== "..." && paginate(pageNumber)}
-                  className={`w-10 h-10 transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${pageNumber === currentPage
-                    ? "border-[#CA7FFE]"
-                    : "border-none"
-                    }`}
+                  className={`w-10 h-10 transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
+                    pageNumber === currentPage
+                      ? "border-[#CA7FFE]"
+                      : "border-none"
+                  }`}
                 >
                   {pageNumber}
                 </button>
@@ -289,7 +333,7 @@ function page() {
 export default page;
 
 const icons = [
-  "/brand-profile-icon1.png",
+  // "/brand-profile-icon1.png",
   "/brand-profile-icon2.png",
   "/brand-profile-icon3.png",
   "/brand-profile-icon4.png",
@@ -306,1702 +350,362 @@ const brandProfileButtons = [
   },
 ];
 
-const brandProducts = [
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Идэвхтэй",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    amount: "13/50",
-    status: "Дууссан",
-  },
-];
-
-const contentsGallery = [
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-  {
-    profile: "/content-creator-dummy.png",
-    name: "Solongoo",
-    content: "/brand-dummy-content.png",
-  },
-];
 const contentsProgress = [
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
+    stage: 3,
+    status: "Контент хийгдэж байна",
+    interaction: "",
+  },
+  {
+    name: "Нүүрний чийгшүүлэгч тос",
+    brand: "Lhamour",
     stage: 2,
     status: "Geni шалгаж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 4,
     status: "Контент илгээсэн",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 1,
     status: "Бүтээгдэхүүн хүргэж байна",
     interaction: "",
   },
   {
     name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
+    brand: "Lhamour",
     stage: 3,
     status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    creator: "Уртнасан",
-    stage: 4,
-    status: "Контент илгээсэн",
     interaction: "",
   },
 ];
