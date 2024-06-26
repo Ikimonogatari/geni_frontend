@@ -11,17 +11,6 @@ function page() {
     <div className="w-full h-full bg-white">
       <div className="pt-32 pb-12">
         <div className="container text-[#2D262D] max-w-5xl mx-auto px-7 py-20 flex flex-col">
-          <button
-            onClick={() => router.back()}
-            className="w-14 h-14 bg-[#F5F4F0] rounded-lg p-4"
-          >
-            <Image
-              src={"/arrow-left.png"}
-              width={24}
-              height={24}
-              alt="arrow-left"
-            />
-          </button>
           <span className="text-[#2D262D] font-bold text-4xl sm:text-5xl xl:text-6xl mt-7 pb-4 border-b border-[#CDCDCD]">
             Feedback & Reject
           </span>
