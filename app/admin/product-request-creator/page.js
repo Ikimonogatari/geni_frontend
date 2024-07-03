@@ -1,12 +1,8 @@
-"use client";
 import React from "react";
-import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 
 function page() {
-  const router = useRouter();
-
   return (
     <div className="w-full h-full bg-white">
       <div className="pt-32 pb-12">
@@ -70,7 +66,7 @@ function page() {
                 Reject
               </button>
               <button className="py-4 w-[268px] text-center bg-[#4FB755] border border-[#2D262D] rounded-lg">
-                Reject
+                Approve
               </button>
             </div>
           </div>
@@ -93,12 +89,3 @@ function page() {
 }
 
 export default page;
-
-const advices = [
-  "Өөр брэндүүдийн бүтээгдэхүүнийг оруулсан байна.",
-  "Агуулга ойлгомжгүй байна.",
-  "+18 утга агуулгатай байна.",
-  "Бичлэгийн чанар муу",
-  "Бичлэг дуугүй байна",
-  "Хэтэрхий урт",
-];

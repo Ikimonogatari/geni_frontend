@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <Head>
         <title>GENI</title>
       </Head>
-      <body>
+      <body className="bg-white text-[#2D262D]">
         <Navbar />
         {children}
         <Footer />
