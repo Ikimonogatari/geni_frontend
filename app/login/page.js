@@ -3,22 +3,23 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useLoginMutation } from "../services/service";
 
 function Page() {
   const [userType, setUserType] = useState("creator");
+  const [login, { data, error, isLoading }] = useLoginMutation();
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-
-      files: [],
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      // Handle form submission
-      console.log(values);
+      login(values);
     },
   });
 
@@ -35,7 +36,7 @@ function Page() {
                 src={"/login-image.svg"}
                 width={584}
                 height={378}
-                alt="lgn"
+                alt="login"
                 className="lg:min-w-[584px] lg:min-h-[378px]"
               />
             </div>
@@ -65,23 +66,42 @@ function Page() {
               </div>
               <span className="text-lg">И-мэйл</span>
               <input
+                id="email"
+                name="email"
                 type="email"
                 placeholder=""
                 className="border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4"
+                onChange={formik.handleChange}
+                value={formik.values.email}
               />
+              {formik.touched.email && formik.errors.email ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.email}
+                </div>
+              ) : null}
               <span className="text-lg">Нууц үг</span>
               <input
-                type="text"
+                name="password"
+                id="password"
+                type="password"
                 placeholder=""
                 className="border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4"
+                onChange={formik.handleChange}
+                value={formik.values.password}
               />
+              {formik.touched.password && formik.errors.password ? (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.password}
+                </div>
+              ) : null}
               <button
-                className={`ml-[6px] mt-3 relative w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
+                type="submit"
+                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
                   userType === "creator" ? "bg-[#9c44da]" : "bg-[#1920B4]"
                 }`}
               >
                 <div
-                  className={`absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] ${
+                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] ${
                     userType === "creator" ? "bg-[#CA7FFE]" : "bg-[#4D55F5]"
                   } flex flex-row gap-2 items-center justify-center`}
                 >
@@ -94,6 +114,9 @@ function Page() {
                   />
                 </div>
               </button>
+              {isLoading && <p>Loading...</p>}
+              {error && <p>Error: {error.message}</p>}
+              {data && <p>Success: {JSON.stringify(data)}</p>}
             </div>
           </form>
         </div>
