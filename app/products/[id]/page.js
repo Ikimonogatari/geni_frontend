@@ -13,13 +13,6 @@ import "swiper/css/pagination";
 import { useRouter } from "next/navigation";
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/app/components/ui/select";
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -45,14 +38,9 @@ function Page() {
     },
   });
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      formik.setFieldValue("files", [...formik.values.files, ...acceptedFiles]);
-    },
-  });
-
   const [contentTypeOption, setContentTypeOption] = useState("");
   const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+  const [requestState, setRequestState] = useState("not-sent");
   const [swiper, setSwiper] = useState(null);
   const goNext = () => {
     swiper.slideNext();
@@ -201,9 +189,9 @@ function Page() {
                 {contentOptions2.map((c, i) => (
                   <div
                     key={i}
-                    onClick={() => setContentTypeOption(c)}
+                    onClick={() => setContentOutcomeOption(c)}
                     className={`${
-                      contentTypeOption === c
+                      contentOutcomeOption === c
                         ? "border-[#4D55F5] border-[2px]"
                         : "border-[#CDCDCD] border-[2px]"
                     } rounded-lg p-4 cursor-pointer transition-all duration-150`}
@@ -228,57 +216,79 @@ function Page() {
               <div className="mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9C44DA]">
                 <Dialog>
                   <DialogTrigger
+                    onClick={() => setRequestState("not-sent")}
                     type="submit"
                     className="absolute -top-[8px] -left-[6px] z-50 text-white text-xl font-bold w-full h-[70px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex items-center justify-center"
                   >
                     Бүтээгдэхүүн авах
                   </DialogTrigger>
-                  <DialogContent className="flex flex-col items-center gap-2">
-                    <span className="text-[#4FB755] text-5xl text-center font-bold">
-                      ХҮСЭЛТ ХҮЛЭЭН АВЛАА
-                    </span>
-                    <Image
-                      src={"/request-received.png"}
-                      width={209}
-                      height={220}
-                      alt="recieved"
-                    />
-                    <div className="flex flex-col gap-5">
-                      <div className="flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-5">
-                        <div className="flex flex-row items-center gap-5">
-                          <Image
-                            src={"/dummy-creator.png"}
-                            width={128}
-                            height={128}
-                            alt="lhamour"
-                            className="w-[128px] h-[128px] rounded-2xl"
-                          />
-                          <div className="flex flex-col gap-2">
-                            <div className="flex flex-row items-center gap-3">
-                              <span className="font-bold text-xl">
-                                Davaanaa Bayraa
-                              </span>
-                              <Image
-                                src={"/verified-icon.png"}
-                                width={24}
-                                height={24}
-                                alt="verified"
-                                className="w-6 h-6"
-                              />
-                            </div>
+                  {requestState === "sent" ? (
+                    <DialogContent className="flex flex-col items-center gap-2">
+                      <span className="text-[#4FB755] text-5xl text-center font-bold">
+                        ХҮСЭЛТ ХҮЛЭЭН АВЛАА
+                      </span>
+                      <Image
+                        src={"/request-received.png"}
+                        width={209}
+                        height={220}
+                        alt="recieved"
+                      />
+                      <div className="flex flex-col gap-5">
+                        <div className="flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-5">
+                          <div className="flex flex-row items-center gap-5">
+                            <Image
+                              src={"/dummy-creator.png"}
+                              width={128}
+                              height={128}
+                              alt="lhamour"
+                              className="w-[128px] h-[128px] rounded-2xl"
+                            />
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-row items-center gap-3">
+                                <span className="font-bold text-xl">
+                                  Davaanaa Bayraa
+                                </span>
+                                <Image
+                                  src={"/verified-icon.png"}
+                                  width={24}
+                                  height={24}
+                                  alt="verified"
+                                  className="w-6 h-6"
+                                />
+                              </div>
 
-                            <span className="text-lg">1020 xp</span>
+                              <span className="text-lg">1020 xp</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <DialogClose>
-                        <button className="w-full py-4 text-white font-bold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
-                          Баярлалаа
-                        </button>
-                      </DialogClose>
-                    </div>
-                  </DialogContent>
+                        <DialogClose>
+                          <button className="w-full py-4 text-white font-bold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
+                            Баярлалаа
+                          </button>
+                        </DialogClose>
+                      </div>
+                    </DialogContent>
+                  ) : (
+                    <DialogContent className="flex flex-col">
+                      <span className="text-2xl font-bold">Хүсэлт илгээх</span>
+                      <span className="text-xl mt-6">
+                        Бүтээгдэхүүнийг сонирхож буй шалтгаан болон тухайн
+                        бүтээгдэхүүнд зориулан хийх контент санаагаа товч
+                        хуваалцаарай.
+                      </span>
+                      <textarea
+                        placeholder="Энд бичнэ үү"
+                        className="bg-[#F5F4F0] rounded-lg mt-4 w-full p-4 min-h-[203px]"
+                      />
+                      <button
+                        onClick={() => setRequestState("sent")}
+                        className="mt-3 bg-[#CA7FFE] border-[#2D262D] border rounded-lg text-center py-4 text-xl text-white w-full"
+                      >
+                        Хүсэлт илгээх
+                      </button>
+                    </DialogContent>
+                  )}
                 </Dialog>
               </div>
             </div>
