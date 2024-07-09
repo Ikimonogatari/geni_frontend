@@ -1,16 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useLoginMutation } from "../services/service";
+import { useCreatorLoginMutation, useLoginMutation } from "../services/service";
+import Cookies from "js-cookie";
+import toast, { Toaster } from "react-hot-toast";
 
 function Page() {
   const [userType, setUserType] = useState("creator");
-  const [login, { data, error, isLoading }] = useLoginMutation();
+  const [login, { data, error, isLoading }] = useCreatorLoginMutation();
 
   const formik = useFormik({
     initialValues: {
+      UserType: "Creator",
       email: "",
       password: "",
     },
@@ -18,10 +21,20 @@ function Page() {
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
     }),
+
     onSubmit: (values) => {
       login(values);
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      Cookies.set("auth", data.JWT);
+    }
+    if (error) {
+      console.log("Error:", error);
+    }
+  }, [data, error]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -114,9 +127,6 @@ function Page() {
                   />
                 </div>
               </button>
-              {isLoading && <p>Loading...</p>}
-              {error && <p>Error: {error.message}</p>}
-              {data && <p>Success: {JSON.stringify(data)}</p>}
             </div>
           </form>
         </div>

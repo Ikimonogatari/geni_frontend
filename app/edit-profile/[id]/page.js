@@ -7,66 +7,57 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import GraphCMSImageLoader from "@/app/components/GraphCMSImageLoader";
+import { useEditCreatorProfileMutation } from "@/app/services/service";
 
 function Page() {
   const pathname = usePathname();
   const segments = pathname.split("/");
   const id = segments.pop();
-
   const router = useRouter();
 
-  const [creatorData, setCreatorData] = useState([]);
-  const [reviewData, setReviewData] = useState(null);
-  const [getReviewBrand, setReviewBrand] = useState(null);
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,review.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
-        );
-        const d = await r.json();
-        const c = d.data.find((item) => item.id === id);
+  const [creatorData, setCreatorData] = useState(null);
+  const [editCreatorProfile, { data, error, isLoading }] =
+    useEditCreatorProfileMutation();
 
-        setCreatorData(c);
-        console.log(c);
-        if (c.review) {
-          const reviewData = c.review.find((item) => item.isFeatured === true);
-          setReviewData(reviewData);
-          const reviewBrand =
-            await fetch(`${process.env.NEXT_PUBLIC_URL}/Items/brand?filter=%7B%22id%22:%7B%22_eq%22:%22${c?.reviewBrand?.brand?.key}%22%7D%7D
-        `);
-          const brand = reviewBrand.json();
-          console.log(reviewBrand);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
   const formik = useFormik({
     initialValues: {
-      name: "",
       firstName: "",
       lastName: "",
-      username: "",
+      nickName: "",
       email: "",
       bio: "",
-      instagram: "",
-      facebook: "",
-      password: "",
-      address: "",
-      files: [],
+      RegNo: "123456129",
+      PhoneNumber: "+1234567890",
+      AdditionalPhoneNum: "",
+      location: "",
+      EbarimtConsumerNo: "987654321",
+      Birthday: "1990-01-01",
+      EduId: 3,
+      Gender: "M",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Required"),
+      firstName: Yup.string().required("Required"),
+      lastName: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email").required("Required"),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        await editCreatorProfile(values).unwrap();
+        alert("Profile updated successfully");
+      } catch (err) {
+        alert("Failed to update profile");
+      }
     },
   });
 
-  const [contentTypeOption, setContentTypeOption] = useState("");
-  const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+  useEffect(() => {
+    if (data) {
+      console.log("Success:", data);
+    }
+    if (error) {
+      console.log("Error:", error);
+    }
+  }, [data, error]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -89,15 +80,19 @@ function Page() {
 
           <div className="flex flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
-              <Image
-                src={creatorData ? creatorData.image : null}
-                loader={GraphCMSImageLoader}
-                width={194}
-                height={194}
-                loading="lazy"
-                className="rounded-xl"
-                alt="creator"
-              />
+              {creatorData?.image ? (
+                <Image
+                  src={creatorData ? creatorData.image : null}
+                  loader={GraphCMSImageLoader}
+                  width={194}
+                  height={194}
+                  loading="lazy"
+                  className="rounded-xl"
+                  alt="creator"
+                />
+              ) : (
+                <></>
+              )}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-lg">Creator point: &nbsp; 1020 xp</span>
@@ -143,14 +138,13 @@ function Page() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.firstName}
-                  placeholder={creatorData ? creatorData.name : ""}
                   className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
                 />
-                {formik.touched.firstName && formik.errors.firstName ? (
+                {formik.touched.firstName && formik.errors.firstName && (
                   <div className="text-red-500 text-sm">
                     {formik.errors.firstName}
                   </div>
-                ) : null}
+                )}
               </div>
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-[#6F6F6F] text-lg" htmlFor="lastName">
@@ -165,188 +159,87 @@ function Page() {
                   value={formik.values.lastName}
                   className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
                 />
-                {formik.touched.lastName && formik.errors.lastName ? (
+                {formik.touched.lastName && formik.errors.lastName && (
                   <div className="text-red-500 text-sm">
                     {formik.errors.lastName}
                   </div>
-                ) : null}
+                )}
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full sm:w-1/2">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="username">
-                Username
+              <label className="text-[#6F6F6F] text-lg" htmlFor="nickName">
+                Nickname
               </label>
               <input
-                id="username"
-                name="username"
+                id="nickName"
+                name="nickName"
                 type="text"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.username}
+                value={formik.values.nickName}
                 className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
               />
-              {formik.touched.username && formik.errors.username ? (
+              {formik.touched.nickName && formik.errors.nickName && (
                 <div className="text-red-500 text-sm">
-                  {formik.errors.username}
+                  {formik.errors.nickName}
                 </div>
-              ) : null}
+              )}
             </div>
-
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="email">
                 Email
               </label>
-              <div className="flex flex-row gap-4 w-full">
-                <div className="flex flex-col gap-3 w-1/2">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                    className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
-                  />
-                  {formik.touched.email && formik.errors.email ? (
-                    <div className="text-red-500 text-sm">
-                      {formik.errors.email}
-                    </div>
-                  ) : null}
+              <input
+                id="email"
+                name="email"
+                type="email"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.email}
                 </div>
-                <button className="bg-[#F5F4F0] w-[158px] text-center rounded-lg border border-[#2D262D] py-4 text-xl">
-                  Change
-                </button>
-              </div>
+              )}
             </div>
-
-            <div className="flex flex-col gap-3 w-full sm:w-1/2">
+            <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="bio">
                 Bio
               </label>
               <textarea
                 id="bio"
                 name="bio"
-                placeholder="Bio"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.bio}
-                rows={4} // Adjust the number of rows as needed
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl" // You can adjust other styles as needed
+                rows={4}
+                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
               />
-              {formik.touched.bio && formik.errors.bio ? (
+              {formik.touched.bio && formik.errors.bio && (
                 <div className="text-red-500 text-sm">{formik.errors.bio}</div>
-              ) : null}
-            </div>
-            <div className="flex flex-row gap-4 w-full">
-              <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
-                  Social channels
-                </label>
-                <div className="flex flex-row gap-4 w-full">
-                  <div className="flex flex-col gap-3 w-1/2">
-                    <div className="p-4 bg-[#F5F4F0] rounded-lg border text-xl flex flex-row items-center gap-3">
-                      <Image
-                        src={"/Instagram.png"}
-                        width={24}
-                        height={24}
-                        alt="fb"
-                        className="w-6 h-6"
-                      />
-                      <input
-                        id="instagram"
-                        name="instagram"
-                        type="text"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.instagram}
-                        className="bg-transparent outline-none"
-                      />
-                    </div>
-                    {formik.touched.instagram && formik.errors.instagram ? (
-                      <div className="text-red-500 text-sm">
-                        {formik.errors.instagram}
-                      </div>
-                    ) : null}
-                  </div>
-                  <button className="bg-[#F5F4F0] w-[158px] text-center rounded-lg border border-[#2D262D] py-4 text-xl">
-                    Add channel
-                  </button>
-                </div>
-                <div className="flex flex-col gap-3 w-1/2">
-                  <div className="p-4 bg-[#F5F4F0] rounded-lg border text-xl flex flex-row items-center gap-3">
-                    <Image
-                      src={"/Facebook.png"}
-                      width={24}
-                      height={24}
-                      alt="fb"
-                      className="w-6 h-6"
-                    />
-                    <input
-                      id="facebook"
-                      name="facebook"
-                      type="text"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.facebook}
-                      className="bg-transparent outline-none"
-                    />
-                  </div>
-                  {formik.touched.facebook && formik.errors.facebook ? (
-                    <div className="text-red-500 text-sm">
-                      {formik.errors.facebook}
-                    </div>
-                  ) : null}
-                </div>
-              </div>
+              )}
             </div>
             <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="password">
-                Password
-              </label>
-              <div className=" flex flex-row gap-4 w-full">
-                <div className="flex flex-col gap-3 w-1/2">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
-                    className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
-                  />
-                  {formik.touched.password && formik.errors.password ? (
-                    <div className="text-red-500 text-sm">
-                      {formik.errors.password}
-                    </div>
-                  ) : null}
-                </div>
-                <button className="bg-[#F5F4F0] w-[158px] text-center rounded-lg border border-[#2D262D] py-4 text-xl">
-                  Change
-                </button>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="name">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="location">
                 Address
               </label>
               <textarea
-                id="address"
-                name="address"
-                placeholder=""
+                id="location"
+                name="location"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.address}
-                rows={4} // Adjust the number of rows as needed
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl" // You can adjust other styles as needed
+                value={formik.values.location}
+                rows={4}
+                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
               />
-              {formik.touched.address && formik.errors.address ? (
+              {formik.touched.location && formik.errors.location && (
                 <div className="text-red-500 text-sm">
-                  {formik.errors.address}
+                  {formik.errors.location}
                 </div>
-              ) : null}
+              )}
             </div>
-
             <button
               type="submit"
               className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 text-xl"
