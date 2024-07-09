@@ -113,7 +113,7 @@ export default function Home() {
               &nbsp;
             </div>
             <div className="flex flex-col justify-center items-center gap-4 sm:gap-8 lg:gap-14 lg:w-1/2">
-              <div className="mx-auto flex flex-row items-center relative">
+              <div className="mx-auto hidden sm:flex flex-row items-center relative">
                 <Image
                   src={"/creator-image1.png"}
                   alt="creator-image"
@@ -137,6 +137,12 @@ export default function Home() {
                   className="max-w-[164px] sm:max-w-[252px] 2xl:max-w-[335px]"
                 />
               </div>
+              <Image
+                src={"/creator-image-grouped.png"}
+                width={335}
+                height={160}
+                alt="creators"
+              />
               <div className="relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
                 <a
                   target="_blank"

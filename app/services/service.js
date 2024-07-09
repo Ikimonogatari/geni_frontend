@@ -30,10 +30,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    createProduct: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/private/product",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useCreatorLoginMutation, useEditCreatorProfileMutation } =
-  geniApi;
+export const {
+  useCreatorLoginMutation,
+  useEditCreatorProfileMutation,
+  useCreateProductMutation,
+} = geniApi;

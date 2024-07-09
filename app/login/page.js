@@ -8,12 +8,12 @@ import Cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
 
 function Page() {
-  const [userType, setUserType] = useState("creator");
+  const [userType, setUserType] = useState("Creator");
   const [login, { data, error, isLoading }] = useCreatorLoginMutation();
 
   const formik = useFormik({
     initialValues: {
-      UserType: "Creator",
+      UserType: userType,
       email: "",
       password: "",
     },
@@ -36,6 +36,12 @@ function Page() {
     }
   }, [data, error]);
 
+  const handleUserType = (value) => {
+    setUserType(value);
+    formik.setFieldValue("UserType", value);
+    console.log(value);
+  };
+
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
@@ -57,9 +63,9 @@ function Page() {
               <span className="text-xl font-bold">Нэвтрэх</span>
               <div className="flex flex-row items-center gap-6">
                 <div
-                  onClick={() => setUserType("creator")}
+                  onClick={() => handleUserType("Creator")}
                   className={`transition-all duration-150 ${
-                    userType === "creator"
+                    userType === "Creator"
                       ? "border-[#CA7FFE]"
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-8 rounded-lg border-[2px] w-full text-center`}
@@ -67,9 +73,9 @@ function Page() {
                   Geni Creator
                 </div>
                 <div
-                  onClick={() => setUserType("brand")}
+                  onClick={() => handleUserType("Brand")}
                   className={`transition-all duration-150 ${
-                    userType === "brand"
+                    userType === "Brand"
                       ? "border-[#CA7FFE]"
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-8 rounded-lg  border-[2px] w-full text-center`}
@@ -110,12 +116,12 @@ function Page() {
               <button
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
-                  userType === "creator" ? "bg-[#9c44da]" : "bg-[#1920B4]"
+                  userType === "Creator" ? "bg-[#9c44da]" : "bg-[#1920B4]"
                 }`}
               >
                 <div
                   className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] ${
-                    userType === "creator" ? "bg-[#CA7FFE]" : "bg-[#4D55F5]"
+                    userType === "Creator" ? "bg-[#CA7FFE]" : "bg-[#4D55F5]"
                   } flex flex-row gap-2 items-center justify-center`}
                 >
                   <span>Нэвтрэх</span>
