@@ -142,6 +142,7 @@ export default function Home() {
                 width={335}
                 height={160}
                 alt="creators"
+                className="block sm:hidden"
               />
               <div className="relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
                 <a
