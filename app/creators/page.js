@@ -54,7 +54,7 @@ function creators() {
                 alt="geni-creator-logo"
               />
               <span className="text-2xl font-bold text-[#6F6F6F]">
-                2-р ээлжийн өргөдөл хүлээн авч байна.
+                3-р ээлжийн өргөдөл хүлээн авч байна.
               </span>
             </div>
             <div className="relative w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">

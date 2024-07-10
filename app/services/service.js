@@ -37,6 +37,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    uploadFile: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/private/file",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -46,4 +53,5 @@ export const {
   useCreatorLoginMutation,
   useEditCreatorProfileMutation,
   useCreateProductMutation,
+  useUploadFileMutation,
 } = geniApi;

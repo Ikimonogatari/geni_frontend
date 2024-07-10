@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -26,32 +26,65 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../components/ui/dialog";
+import { useUploadFileMutation } from "../services/service";
 
 function Page() {
   const router = useRouter();
+  const [contentTypeOption, setContentTypeOption] = useState("");
+  const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+
   const formik = useFormik({
     initialValues: {
-      name: "",
-
-      files: [],
+      brandId: "",
+      productName: "",
+      information: "",
+      requestForCreators: "",
+      quantity: "",
+      price: "",
+      contentInfo: "",
+      productTypes: [],
+      productPics: [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      // Handle form submission
       console.log(values);
     },
   });
 
+  const [
+    uploadFile,
+    {
+      data: uploadFileData,
+      error: uploadFileError,
+      isLoading: uploadFileLoading,
+    },
+  ] = useUploadFileMutation();
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
-      formik.setFieldValue("files", [...formik.values.files, ...acceptedFiles]);
+      console.log(acceptedFiles);
+      acceptedFiles.forEach((file) => {
+        uploadFile({ acceptedFiles, folder: "product-pic" }).then(
+          (response) => {
+            if (response.data) {
+              formik.setFieldValue("files", [
+                ...formik.values.files,
+                response.data.file, // Assuming response.data.file contains the uploaded file info
+              ]);
+            }
+          }
+        );
+      });
     },
   });
 
-  const [contentTypeOption, setContentTypeOption] = useState("");
-  const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+  useEffect(() => {
+    if (uploadFileError) {
+      console.log("Error:", uploadFileError);
+    }
+  }, [uploadFileError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -256,7 +289,7 @@ function Page() {
                     <SelectValue placeholder="Сонгох" />
                   </SelectTrigger>
                   <SelectContent>
-                    {contentOptions1.map((c, i) => (
+                    {contentOptions2.map((c, i) => (
                       <SelectItem
                         key={i}
                         value={c}
