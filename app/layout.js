@@ -7,6 +7,7 @@ import Head from "next/head";
 import "/public/fonts/font/stylesheet.css";
 import { store } from "./store";
 import { Provider } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function RootLayout({ children }) {
   return (
@@ -18,6 +19,13 @@ export default function RootLayout({ children }) {
           <title>GENI</title>
         </Head>
         <body className="bg-white text-[#2D262D]">
+          <Toaster
+            toastOptions={{
+              className: "text-lg",
+            }}
+            position="top-right"
+            reverseOrder="false"
+          />
           <Navbar />
           {children}
           <Footer />

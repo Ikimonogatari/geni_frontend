@@ -151,8 +151,8 @@ function page() {
 
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="pt-32 pb-24">
-        <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-20">
+      <div className="pt-32 pb-16 sm:pb-24">
+        <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
           <div className="flex flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
               <Image

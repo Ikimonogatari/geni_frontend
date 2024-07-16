@@ -8,7 +8,7 @@ import BrandProducts from "../BrandProducts";
 function page() {
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 8;
+  const contentsPerPage = 12;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -76,13 +76,13 @@ function page() {
   const totalPages = getTotalPages();
 
   const getPageNumbers = () => {
-    const totalNumbers = 5; // Number of page numbers to show
+    const totalNumbers = 3; // Number of page numbers to show
     const totalBlocks = totalNumbers + 2; // Including first and last page
 
     if (totalPages > totalBlocks) {
       let pages = [];
-      const leftBound = Math.max(1, currentPage - 2);
-      const rightBound = Math.min(totalPages, currentPage + 2);
+      const leftBound = Math.max(1, currentPage - 1);
+      const rightBound = Math.min(totalPages, currentPage + 1);
       const beforeLastPage = totalPages - 1;
 
       const startPage = leftBound > 2 ? leftBound : 1;
@@ -118,89 +118,115 @@ function page() {
 
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="pt-32 pb-24">
-        <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-20">
-          <div className="flex flex-row items-start justify-between w-full">
-            <div className="flex flex-row items-center gap-7">
+      <div className="pt-32 pb-16 sm:pb-24">
+        <div className=" text-[#2D262D] max-w-7xl min-h-screen mx-auto py-10 sm:py-20">
+          <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
+            <div className="flex flex-row items-center gap-4 sm:gap-7">
               <Image
                 src={"/brand-dummy.png"}
                 alt="dummy-brand"
                 width={130}
                 height={130}
-                className="rounded-full"
+                className="rounded-full w-[90px] sm:w-[130px] h-[90px] sm:h-[130px] border border-[#2D262D]"
               />
               <div className="flex flex-col gap-2">
-                <span className="font-bold text-2xl">Lhamour</span>
-                <button className="bg-[#CA7FFE] rounded-full px-4 py-2">
+                <span className="font-bold text-base sm:text-xl xl:text-2xl">
+                  Lhamour
+                </span>
+                <button className="bg-[#CA7FFE] rounded-full px-2 text-sm sm:text-base sm:px-4 py-1 sm:py-2">
                   Beauty
                 </button>
               </div>
             </div>
-            <div className="flex flex-row items-center gap-5">
+            <div className="flex flex-row items-center gap-2 sm:gap-5 mt-5 md:mt-0">
               {icons.map((r, i) => (
-                <button key={i} className="rounded-xl bg-[#F5F4F0] p-2 gap-5">
-                  <Image key={i} src={r} width={24} height={24} alt="icon" />
+                <button key={i} className="rounded-xl bg-[#F5F4F0] p-2">
+                  <Image
+                    key={i}
+                    src={r}
+                    width={24}
+                    height={24}
+                    alt="icon"
+                    className="w-5 sm:w-6 h-5 sm:h-6"
+                  />
                 </button>
               ))}
+              <a
+                href="/add-product"
+                className="flex md:hidden flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+              >
+                Шинэ бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </a>
             </div>
           </div>
 
-          <div className="mt-16 w-full flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center gap-3">
-              {brandProfileButtons.map((b, i) => (
-                <button
-                  key={i}
-                  onClick={() => setProfileState(b.value)}
-                  className={`${
-                    b.value === profileState
-                      ? "bg-[#4D55F5] text-white"
-                      : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
-                  } px-5 py-3 rounded-lg font-bold`}
-                >
-                  {b.title}
-                </button>
-              ))}
+          <div className="pl-7 md:px-7 mt-10 sm:mt-16 w-full flex flex-row items-center justify-between">
+            <div className="overflow-x-auto w-full">
+              <div className="flex flex-row items-center min-w-[448px] gap-3">
+                {brandProfileButtons.map((b, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setProfileState(b.value)}
+                    className={`${
+                      b.value === profileState
+                        ? "bg-[#4D55F5] text-white"
+                        : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
+                    } px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
+                  >
+                    {b.title}
+                  </button>
+                ))}
+              </div>
             </div>
+            {/* <a
+              href="/add-product"
+              className="w-auto hidden whitespace-nowrap md:flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
+            >
+              <span>Шинэ бүтээгдэхүүн нэмэх</span>
+              <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
+            </a> */}
             <a
               href="/add-product"
-              className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
+              className="w-full max-w-[270px] hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
             >
               Шинэ бүтээгдэхүүн нэмэх
-              <Image
-                src={"/arrow-right-icon.png"}
-                width={14}
-                height={14}
-                alt="arrow"
-              />
+              <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
             </a>
           </div>
+
           {renderBrandProfile()}
         </div>
+
         {totalPages !== 1 ? (
-          <div className="container px-7 mx-auto text-[#2D262D] flex flex-row gap-3 items-end justify-end mt-5">
+          <div className="container px-7 mx-auto text-[#2D262D] flex flex-row items-center gap-2 sm:gap-3 justify-center lg:justify-end mt-5 w-full">
             {currentPage !== 1 && (
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
+                className="min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 flex flex-row items-center justify-center gap-2 bg-[#CA7FFE] rounded-full"
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
+                  width={10}
+                  height={10}
                   alt="arrow"
-                  className="rotate-180"
+                  className="rotate-180 w-[10px] h-[10px]"
                 />
-                Prev
               </button>
             )}
 
-            <div className="flex flex-row items-center gap-3">
+            <div className="flex flex-row items-center gap-2 sm:gap-3">
               {getPageNumbers().map((pageNumber, index) => (
                 <button
                   key={index}
                   onClick={() => pageNumber !== "..." && paginate(pageNumber)}
-                  className={`w-10 h-10 transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
+                  className={`min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 text-xs md:text-base transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
                     pageNumber === currentPage
                       ? "border-[#CA7FFE]"
                       : "border-none"
@@ -214,14 +240,14 @@ function page() {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
+                className="min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 flex flex-row items-center justify-center gap-2 bg-[#CA7FFE] rounded-full"
               >
-                Next
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
+                  width={10}
+                  height={10}
                   alt="arrow"
+                  className="w-[10px] h-[10px]"
                 />
               </button>
             )}
@@ -240,7 +266,7 @@ const icons = [
   "/brand-profile-icon1.png",
   "/brand-profile-icon2.png",
   "/brand-profile-icon3.png",
-  "/brand-profile-icon4.png",
+  // "/brand-profile-icon4.png",
 ];
 
 const brandProfileButtons = [

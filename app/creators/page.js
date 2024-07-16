@@ -216,7 +216,7 @@ function creators() {
               <li>Өөрийн гэсэн Geni creator portfolio-той болох</li>
             </ul>
           </div>
-          <div className="bg-[#F5F4F0] px-7 py-20 w-full flex flex-col justify-center items-center">
+          <div className="bg-[#F5F4F0] px-7 py-10 sm:py-20 w-full flex flex-col justify-center items-center">
             <div className="relative w-[307px] h-[270px] sm:w-[587px] sm:h-[485px] flex justify-center items-center">
               <Image
                 src={"/creator-pros-icon1.png"}

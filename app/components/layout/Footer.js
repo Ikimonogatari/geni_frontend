@@ -3,9 +3,9 @@ import Image from "next/image";
 
 function Footer() {
   return (
-    <div className="bg-[#F5F4F0] w-full pt-28 px-7 sm:px-20">
+    <div className="bg-[#F5F4F0] w-full pt-16 sm:pt-28 px-7 sm:px-20">
       <div className="mx-auto rounded-t-3xl">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-0 justify-between items-start lg:items-center container">
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-0 justify-between items-start lg:items-center px-0">
           <a href="/">
             <Image src={"/geni-logo.png"} width={96} height={26} alt="logo" />
           </a>
@@ -29,7 +29,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 lg:mt-24 font-mabry flex flex-row text-sm text-[#2D262D] w-full justify-between items-center py-10 border-t-[1px] border-[#2D262D]">
+        <div className="mt-8 lg:mt-24 font-mabry flex flex-row text-xs sm:text-sm text-[#2D262D] w-full justify-between items-center py-10 border-t-[1px] border-[#2D262D]">
           <span>Terms and conditions</span>
           <span>2024 - All rights reserved</span>
         </div>

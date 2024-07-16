@@ -6,8 +6,10 @@ import * as Yup from "yup";
 import { useCreatorLoginMutation, useLoginMutation } from "../services/service";
 import Cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function Page() {
+  const router = useRouter();
   const [userType, setUserType] = useState("Creator");
   const [login, { data, error, isLoading }] = useCreatorLoginMutation();
 
@@ -30,16 +32,17 @@ function Page() {
   useEffect(() => {
     if (data) {
       Cookies.set("auth", data.JWT);
+      router.push("/");
+      toast.success("Success");
     }
     if (error) {
-      console.log("Error:", error);
+      toast.error("Error");
     }
   }, [data, error]);
 
   const handleUserType = (value) => {
     setUserType(value);
     formik.setFieldValue("UserType", value);
-    console.log(value);
   };
 
   return (
@@ -50,13 +53,13 @@ function Page() {
             onSubmit={formik.handleSubmit}
             className="mt-11 flex flex-col xl:flex-row items-center gap-16"
           >
-            <div className="bg-[#F5F4F0] rounded-2xl px-24 py-32">
+            <div className="bg-[#F5F4F0] rounded-2xl px-12 py-16 lg:px-24 lg:py-32">
               <Image
                 src={"/login-image.svg"}
                 width={584}
                 height={378}
                 alt="login"
-                className="lg:min-w-[584px] lg:min-h-[378px]"
+                className="w-full h-full lg:min-w-[584px] lg:min-h-[378px]"
               />
             </div>
             <div className="flex flex-col gap-4 w-full max-w-3xl xl:max-w-sm">
@@ -68,7 +71,7 @@ function Page() {
                     userType === "Creator"
                       ? "border-[#CA7FFE]"
                       : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-8 rounded-lg border-[2px] w-full text-center`}
+                  } cursor-pointer py-3 px-4 sm:px-8 rounded-lg border-[2px] w-full text-center`}
                 >
                   Geni Creator
                 </div>
@@ -78,7 +81,7 @@ function Page() {
                     userType === "Brand"
                       ? "border-[#CA7FFE]"
                       : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-8 rounded-lg  border-[2px] w-full text-center`}
+                  } cursor-pointer py-3 px-4 sm:px-8 rounded-lg  border-[2px] w-full text-center`}
                 >
                   Geni brand
                 </div>

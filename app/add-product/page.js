@@ -4,13 +4,12 @@ import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDropzone } from "react-dropzone";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -19,19 +18,16 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../components/ui/dialog";
-import { useUploadFileMutation } from "../services/service";
+  useUploadFileMutation,
+  useCreateProductMutation,
+} from "../services/service";
+import toast from "react-hot-toast";
 
 function Page() {
   const router = useRouter();
   const [contentTypeOption, setContentTypeOption] = useState("");
   const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
 
   const formik = useFormik({
     initialValues: {
@@ -43,12 +39,13 @@ function Page() {
       price: "",
       contentInfo: "",
       productTypes: [],
-      productPics: [],
+      files: [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
+      createPro;
       console.log(values);
     },
   });
@@ -62,29 +59,49 @@ function Page() {
     },
   ] = useUploadFileMutation();
 
+  const [
+    createProduct,
+    {
+      data: createProductData,
+      error: createProductError,
+      isLoading: createProductLoading,
+    },
+  ] = useCreateProductMutation();
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
-      console.log(acceptedFiles);
-      acceptedFiles.forEach((file) => {
-        uploadFile({ acceptedFiles, folder: "product-pic" }).then(
-          (response) => {
-            if (response.data) {
-              formik.setFieldValue("files", [
-                ...formik.values.files,
-                response.data.file, // Assuming response.data.file contains the uploaded file info
-              ]);
-            }
-          }
-        );
+      const fileUploadPromises = acceptedFiles.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "product-pic");
+
+        const response = await uploadFile(formData);
+        if (response.data) {
+          return response.data.Url; // Assuming response.data.fileUrl contains the uploaded file URL
+        } else {
+          return null;
+        }
+      });
+
+      Promise.all(fileUploadPromises).then((urls) => {
+        const validUrls = urls.filter((url) => url !== null);
+        setImageUrls((prev) => [...prev, ...validUrls]);
+        formik.setFieldValue("files", [...formik.values.files, ...validUrls]);
       });
     },
   });
 
   useEffect(() => {
     if (uploadFileError) {
+      toast.error(uploadFileError.error);
       console.log("Error:", uploadFileError);
     }
-  }, [uploadFileError]);
+    if (uploadFileData) {
+      toast.success("");
+      console.log("Success", uploadFileData);
+      console.log(imageUrls);
+    }
+  }, [uploadFileData, uploadFileError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -92,7 +109,7 @@ function Page() {
         <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
           <button
             onClick={() => router.back()}
-            className="w-14 h-14 bg-[#F5F4F0] rounded-lg p-4"
+            className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
           >
             <Image
               src={"/arrow-left.png"}
@@ -106,10 +123,10 @@ function Page() {
             className="mt-11 flex flex-col lg:flex-row gap-4"
           >
             <div className="flex flex-col w-full">
-              {formik.values.files.length < 1 && (
+              {imageUrls.length < 1 && (
                 <div
                   {...getRootProps()}
-                  className="bg-[#F5F4F0] rounded-2xl sm:max-w-[554px] lg:max-h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
+                  className="bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:max-w-[554px] lg:max-h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
                 >
                   <input {...getInputProps()} />
                   <Image
@@ -122,7 +139,7 @@ function Page() {
                 </div>
               )}
 
-              {formik.values.files.length > 0 && (
+              {imageUrls.length > 0 && (
                 <div className="flex flex-col gap-10 w-full">
                   <div className="w-full max-w-[554px]">
                     <Swiper
@@ -138,11 +155,11 @@ function Page() {
                       pagination={{ clickable: true }}
                       modules={[Pagination]}
                     >
-                      {formik.values.files.map((file) => (
-                        <SwiperSlide key={file.name}>
+                      {imageUrls.map((url, index) => (
+                        <SwiperSlide key={index}>
                           <Image
-                            src={URL.createObjectURL(file)}
-                            alt={file.name}
+                            src={url}
+                            alt={`Uploaded image ${index + 1}`}
                             layout="responsive"
                             width={554}
                             height={554}
@@ -180,7 +197,6 @@ function Page() {
                 />
                 <span className="text-xl font-bold">lhamour</span>
               </div>
-
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
                   Бүтээгдэхүүний нэр
@@ -261,29 +277,13 @@ function Page() {
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
-                  Контент бүтээгчээс хүсэх хүсэлт
+                  Контентийн гаралт
                 </label>
-                <textarea
-                  id="request"
-                  name="request"
-                  placeholder="Бүтээгчээс хүсэх нэмэлт зүйлс"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.request}
-                  rows={4} // Adjust the number of rows as needed
-                  className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
-                />
-                {formik.touched.request && formik.errors.request ? (
-                  <div className="text-red-500 text-sm">
-                    {formik.errors.request}
-                  </div>
-                ) : null}
-              </div>
-              <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
-                  Контентоос хүлээж буй гол үр дүн
-                </label>
-
+                <p className="underline text-sm">
+                  Та нэг болон түүнээс дээш гаралт сонгох боломжтой бөгөөд
+                  бүтээгч таны илүүд үзсэн контент хийцлэлийн төрлийг харгалзан
+                  контентоо бүтээнэ.
+                </p>
                 <Select>
                   <SelectTrigger>
                     <SelectValue placeholder="Сонгох" />
@@ -293,7 +293,7 @@ function Page() {
                       <SelectItem
                         key={i}
                         value={c}
-                        className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 text-start p-4`}
+                        className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
                       >
                         <div onClick={() => setContentOutcomeOption(c)}>
                           {c}
@@ -308,94 +308,73 @@ function Page() {
                   Тоо ширхэг
                 </label>
                 <input
-                  id="amount"
-                  name="amount"
+                  id="quantity"
+                  name="quantity"
                   type="text"
-                  placeholder="0"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.amount}
+                  value={formik.values.quantity}
                   className="p-2 border border-[#CDCDCD] rounded-lg h-12"
                 />
-                {formik.touched.amount && formik.errors.amount ? (
+                {formik.touched.quantity && formik.errors.quantity ? (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.amount}
+                    {formik.errors.quantity}
                   </div>
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
-                  Үнэ
+                  Үнийн санал
                 </label>
-                <input
-                  id="value"
-                  name="value"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.value}
-                  className="p-2 border border-[#CDCDCD] rounded-lg h-12"
-                />
-                {formik.touched.value && formik.errors.value ? (
+
+                <div className="flex flex-row gap-1 items-center border border-[#CDCDCD] rounded-lg h-12 p-2">
+                  <span className="">₮</span>
+                  <input
+                    id="price"
+                    name="price"
+                    type="text"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.price}
+                    className="flex-grow h-full border-none outline-none focus:ring-0"
+                  />
+                </div>
+                {formik.touched.price && formik.errors.price ? (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.value}
+                    {formik.errors.price}
                   </div>
                 ) : null}
               </div>
-
-              <div className="mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-                <Dialog>
-                  <DialogTrigger
-                    type="submit"
-                    className="absolute -top-[8px] -left-[6px] z-50 text-white text-xl font-bold w-full h-[70px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center"
-                  >
-                    Бүтээгдэхүүн нэмэх
-                  </DialogTrigger>
-                  <DialogContent className="flex flex-col items-center gap-2">
-                    <span className="text-[#4FB755] text-5xl text-center font-bold">
-                      БҮТЭЭГДЭХҮҮН НЭМЭГДЛЭЭ
-                    </span>
-                    <Image
-                      src={"/product-added-alert-image.png"}
-                      width={209}
-                      height={220}
-                      alt="product-added"
-                    />
-                    <div className="flex flex-col gap-5">
-                      <div className="flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-5">
-                        <div className="flex flex-row items-center gap-5">
-                          <Image
-                            src={"/lhamour.png"}
-                            width={77}
-                            height={77}
-                            alt="lhamour"
-                            className="rounded-full border border-[#2D262D]"
-                          />
-                          <div className="flex flex-col gap-2">
-                            <span className="font-bold">lhamour</span>
-                            <span className="text-lg">
-                              Нүүрний чийгшүүлэг тос
-                            </span>
-                          </div>
-                        </div>
-                        <div className="bg-[#CA7FFE] text-xs rounded-full px-4 py-2">
-                          Beauty
-                        </div>
-                      </div>
-                      <span className="bg-[#F49D19] text-white rounded-2xl text-lg p-4">
-                        Geni танай бүтээгдэхүүнийг дээрх тоо ширхэгийн дагуу
-                        баталгаажуулж, агуулахдаа хүлээн авсны дараа платформ
-                        дээр бүтээгчдэд санал болгох болно. Баярлалаа.
-                      </span>
-                      <DialogClose>
-                        <button className="w-full py-4 text-white font-bold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
-                          Баярлалаа
-                        </button>
-                      </DialogClose>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
+              <div className="flex flex-col gap-3">
+                <label className="font-bold" htmlFor="name">
+                  Контентийн дэлгэрэнгүй мэдээлэл
+                </label>
+                <textarea
+                  id="contentInfo"
+                  name="contentInfo"
+                  placeholder="Хэрхэн пост болгох санаа, хүлээлт зэргээ дэлгэрэнгүй тайлбарлана уу."
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.contentInfo}
+                  rows={4} // Adjust the number of rows as needed
+                  className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
+                />
+                {formik.touched.contentInfo && formik.errors.contentInfo ? (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.contentInfo}
+                  </div>
+                ) : null}
+              </div>{" "}
+              <button
+                type="submit"
+                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#1920B4]`}
+              >
+                <div
+                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center`}
+                >
+                  <span>Бүтээгдэхүүн нэмэх</span>
+                </div>
+              </button>
             </div>
           </form>
         </div>

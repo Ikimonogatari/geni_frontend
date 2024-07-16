@@ -1,6 +1,7 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import build from "next/dist/build";
 
 // Define a service using a base URL and expected endpoints
 const auth = Cookies.get("auth");
