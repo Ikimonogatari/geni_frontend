@@ -44,6 +44,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    listProductTypes: builder.query({
+      query: (body) => ({
+        url: "/api/admin/private/producttype",
+        method: "GET",
+        body,
+      }),
+    }),
+    createProductTypes: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/private/producttype",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -54,4 +68,6 @@ export const {
   useEditCreatorProfileMutation,
   useCreateProductMutation,
   useUploadFileMutation,
+  useListProductTypesQuery,
+  useCreateProductTypesMutation,
 } = geniApi;

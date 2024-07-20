@@ -20,6 +20,9 @@ import {
 import {
   useUploadFileMutation,
   useCreateProductMutation,
+  useListProductTypesMutation,
+  useListProductTypesQuery,
+  useCreateProductTypesMutation,
 } from "../services/service";
 import toast from "react-hot-toast";
 
@@ -27,25 +30,30 @@ function Page() {
   const router = useRouter();
   const [contentTypeOption, setContentTypeOption] = useState("");
   const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+  const [dropdownOpen, setdropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
 
   const formik = useFormik({
     initialValues: {
-      brandId: "",
+      brandId: 1,
       productName: "",
-      information: "",
-      requestForCreators: "",
+      information: "123",
+      requestForCreators: "123",
       quantity: "",
       price: "",
-      contentInfo: "",
+      contentInfo: ["ProductInUse", "InterestingStor", "IncrseSales"],
       productTypes: [],
-      files: [],
+      productPics: [],
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Required"),
+      productName: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      createPro;
+      const modifiedValues = {
+        ...values,
+        quantity: parseInt(values.quantity, 10), // Ensure quantity is an integer
+      };
+      createProduct(modifiedValues);
       console.log(values);
     },
   });
@@ -68,6 +76,23 @@ function Page() {
     },
   ] = useCreateProductMutation();
 
+  // Using a query hook automatically fetches data and returns query values
+  const {
+    data: listProductTypesData,
+    error: listProductTypesError,
+    isLoading: listProductTypesLoading,
+  } = useListProductTypesQuery();
+
+  const [
+    createProductType,
+    {
+      data: createProductTypeData,
+      error: createProductTypeError,
+      isLoading: createProductTypeLoading,
+    },
+  ] = useCreateProductMutation();
+
+  const [productTypes, setProductTypes] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       const fileUploadPromises = acceptedFiles.map(async (file) => {
@@ -77,16 +102,30 @@ function Page() {
 
         const response = await uploadFile(formData);
         if (response.data) {
-          return response.data.Url; // Assuming response.data.fileUrl contains the uploaded file URL
+          console.log(response.data);
+          return response.data; // Ensure this contains both the URL and the ID
         } else {
           return null;
         }
       });
 
-      Promise.all(fileUploadPromises).then((urls) => {
-        const validUrls = urls.filter((url) => url !== null);
-        setImageUrls((prev) => [...prev, ...validUrls]);
-        formik.setFieldValue("files", [...formik.values.files, ...validUrls]);
+      Promise.all(fileUploadPromises).then((responses) => {
+        const validResponses = responses.filter(
+          (response) => response !== null
+        );
+        console.log(validResponses);
+        const urls = validResponses.map((response) => response.Url); // Adjust this based on your API response structure
+        console.log("Extracted URLs:", urls); // Debugging log to inspect URLs
+
+        const ids = validResponses.map((response) => response.FileId); // Adjust this based on your API response structure
+        console.log("Extracted IDs:", ids); // Debugging log to inspect IDs
+
+        setImageUrls((prev) => [...prev, ...urls]);
+        formik.setFieldValue("productPics", [
+          ...formik.values.productPics,
+          ...ids,
+        ]);
+        v;
       });
     },
   });
@@ -102,6 +141,19 @@ function Page() {
       console.log(imageUrls);
     }
   }, [uploadFileData, uploadFileError]);
+
+  const handleProductType = (value) => {
+    setProductTypes((prev) => {
+      if (!prev.some((type) => type.TypeName === value.TypeName)) {
+        return [...prev, value];
+      }
+      return prev;
+    });
+    formik.setFieldValue("productTypes", [
+      ...formik.values.productTypes,
+      value.ProductTypeId,
+    ]);
+  };
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -172,7 +224,7 @@ function Page() {
 
                   <div
                     {...getRootProps()}
-                    className="bg-[#F5F4F0] rounded-2xl p-5 max-w-[554px] max-h-[554px] w-full flex flex-col justify-center items-center gap-4"
+                    className="bg-[#F5F4F0] rounded-2xl p-5 max-w-[554px] max-h-[554px] min-h-[227px] w-full flex flex-col justify-center items-center gap-4"
                   >
                     <input {...getInputProps()} />
                     <Image
@@ -202,17 +254,17 @@ function Page() {
                   Бүтээгдэхүүний нэр
                 </label>
                 <input
-                  id="name"
-                  name="name"
+                  id="productName"
+                  name="productName"
                   type="text"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.name}
+                  value={formik.values.productName}
                   className="p-2 border border-[#CDCDCD] rounded-lg h-12"
                 />
-                {formik.touched.name && formik.errors.name ? (
+                {formik.touched.productName && formik.errors.productName ? (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.name}
+                    {formik.errors.productName}
                   </div>
                 ) : null}
               </div>
@@ -220,13 +272,42 @@ function Page() {
                 <label className="font-bold" htmlFor="name">
                   Бүтээгдэхүүний төрөл
                 </label>
-                <div className="flex flex-row items-center gap-2">
-                  <div className="bg-[#CA7FFE] text-xs rounded-full px-4 py-2">
-                    Beauty
-                  </div>
-                  <button className="bg-[#CA7FFE] text-xs rounded-full w-8 h-8 flex items-center justify-center">
+                <div className="relative flex flex-row flex-wrap items-center gap-2">
+                  {productTypes?.map((p, i) => (
+                    <div
+                      key={i}
+                      className="bg-[#CA7FFE] text-center text-xs rounded-full px-4 py-2"
+                    >
+                      {p.TypeName}
+                    </div>
+                  ))}
+                  <div
+                    onClick={() => setdropdownOpen(!dropdownOpen)}
+                    className="cursor-pointer outline-none bg-[#CA7FFE] text-xs rounded-full w-8 h-8 flex items-center justify-center"
+                  >
                     <Image src={"/plus.png"} width={7} height={16} alt="+" />
-                  </button>
+                  </div>
+                  <div
+                    className={`${
+                      dropdownOpen
+                        ? `top-full opacity-100 visible`
+                        : "top-[110%] invisible opacity-0"
+                    } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
+                  >
+                    {!listProductTypesError ? (
+                      listProductTypesData?.map((p, i) => (
+                        <div
+                          onClick={() => handleProductType(p)}
+                          key={i}
+                          className="cursor-pointer mt-1 bg-[#CA7FFE] text-center text-xs rounded-full px-4 py-2"
+                        >
+                          {p.TypeName}
+                        </div>
+                      ))
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col gap-3">
@@ -364,7 +445,7 @@ function Page() {
                     {formik.errors.contentInfo}
                   </div>
                 ) : null}
-              </div>{" "}
+              </div>
               <button
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#1920B4]`}
@@ -372,7 +453,7 @@ function Page() {
                 <div
                   className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center`}
                 >
-                  <span>Бүтээгдэхүүн нэмэх</span>
+                  <span>Бүтээгдхүүн нэмэх</span>
                 </div>
               </button>
             </div>
