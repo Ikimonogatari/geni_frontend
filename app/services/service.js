@@ -65,11 +65,16 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    listProducts: builder.query({
+      query: (body) => ({
+        url: "/api/admin/private/product",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
 export const {
   useCreatorLoginMutation,
   useEditCreatorProfileMutation,
@@ -78,4 +83,5 @@ export const {
   useListProductTypesQuery,
   useCreateProductTypesMutation,
   useGetUserInfoQuery,
+  useListProductsQuery,
 } = geniApi;
