@@ -31,12 +31,12 @@ function Page() {
 
   useEffect(() => {
     if (data) {
-      Cookies.set("auth", data.JWT);
+      Cookies.set("auth", data.JWT, { expires: 1 });
       router.push("/");
-      toast.success("Success");
+      toast.success("Амжилттай");
     }
     if (error) {
-      toast.error("Error");
+      toast.error("Алдаа гарлаа");
     }
   }, [data, error]);
 

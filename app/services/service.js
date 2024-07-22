@@ -58,6 +58,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getUserInfo: builder.query({
+      query: (body) => ({
+        url: "/api/web/private/user",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -70,4 +77,5 @@ export const {
   useUploadFileMutation,
   useListProductTypesQuery,
   useCreateProductTypesMutation,
+  useGetUserInfoQuery,
 } = geniApi;

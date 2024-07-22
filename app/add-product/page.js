@@ -20,11 +20,12 @@ import {
 import {
   useUploadFileMutation,
   useCreateProductMutation,
-  useListProductTypesMutation,
   useListProductTypesQuery,
-  useCreateProductTypesMutation,
+  useGetUserInfoQuery,
 } from "../services/service";
 import toast from "react-hot-toast";
+
+import { ClipLoader } from "react-spinners";
 
 function Page() {
   const router = useRouter();
@@ -32,10 +33,11 @@ function Page() {
   const [contentOutcomeOption, setContentOutcomeOption] = useState("");
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
+  const [userId, setUserId] = useState(null);
 
   const formik = useFormik({
     initialValues: {
-      brandId: 1,
+      brandId: userId,
       productName: "",
       information: "123",
       requestForCreators: "123",
@@ -51,10 +53,9 @@ function Page() {
     onSubmit: (values) => {
       const modifiedValues = {
         ...values,
-        quantity: parseInt(values.quantity, 10), // Ensure quantity is an integer
+        quantity: parseInt(values.quantity, 10),
       };
       createProduct(modifiedValues);
-      console.log(values);
     },
   });
 
@@ -76,21 +77,17 @@ function Page() {
     },
   ] = useCreateProductMutation();
 
-  // Using a query hook automatically fetches data and returns query values
   const {
     data: listProductTypesData,
     error: listProductTypesError,
     isLoading: listProductTypesLoading,
   } = useListProductTypesQuery();
 
-  const [
-    createProductType,
-    {
-      data: createProductTypeData,
-      error: createProductTypeError,
-      isLoading: createProductTypeLoading,
-    },
-  ] = useCreateProductMutation();
+  const {
+    data: getUserInfoData,
+    error: getUserInfoError,
+    isLoading: getUserInfoLoading,
+  } = useGetUserInfoQuery();
 
   const [productTypes, setProductTypes] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
@@ -102,8 +99,7 @@ function Page() {
 
         const response = await uploadFile(formData);
         if (response.data) {
-          console.log(response.data);
-          return response.data; // Ensure this contains both the URL and the ID
+          return response.data;
         } else {
           return null;
         }
@@ -113,34 +109,39 @@ function Page() {
         const validResponses = responses.filter(
           (response) => response !== null
         );
-        console.log(validResponses);
-        const urls = validResponses.map((response) => response.Url); // Adjust this based on your API response structure
-        console.log("Extracted URLs:", urls); // Debugging log to inspect URLs
+        const urls = validResponses.map((response) => response.Url);
 
-        const ids = validResponses.map((response) => response.FileId); // Adjust this based on your API response structure
-        console.log("Extracted IDs:", ids); // Debugging log to inspect IDs
+        const ids = validResponses.map((response) => response.FileId);
 
         setImageUrls((prev) => [...prev, ...urls]);
         formik.setFieldValue("productPics", [
           ...formik.values.productPics,
           ...ids,
         ]);
-        v;
       });
     },
   });
 
   useEffect(() => {
     if (uploadFileError) {
-      toast.error(uploadFileError.error);
-      console.log("Error:", uploadFileError);
-    }
-    if (uploadFileData) {
-      toast.success("");
-      console.log("Success", uploadFileData);
-      console.log(imageUrls);
+      toast.error("Зураг оруулахад алдаа гарлаа");
     }
   }, [uploadFileData, uploadFileError]);
+
+  useEffect(() => {
+    if (createProductError) {
+      toast.error("Алдаа гарлаа");
+    }
+    if (createProductData) {
+      toast.success("Амжилттай");
+    }
+  }, [createProductData, createProductError]);
+
+  useEffect(() => {
+    if (getUserInfoData) {
+      setUserId(getUserInfoData.UserId);
+    }
+  }, [getUserInfoData, getUserInfoError]);
 
   const handleProductType = (value) => {
     setProductTypes((prev) => {
@@ -172,10 +173,10 @@ function Page() {
           </button>
           <form
             onSubmit={formik.handleSubmit}
-            className="mt-11 flex flex-col lg:flex-row gap-4"
+            className="mt-11 flex flex-col lg:flex-row gap-10"
           >
             <div className="flex flex-col w-full">
-              {imageUrls.length < 1 && (
+              {imageUrls.length < 1 && !uploadFileLoading ? (
                 <div
                   {...getRootProps()}
                   className="bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:max-w-[554px] lg:max-h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
@@ -189,52 +190,67 @@ function Page() {
                   />
                   <p>Зураг оруулах</p>
                 </div>
+              ) : (
+                <></>
               )}
 
-              {imageUrls.length > 0 && (
-                <div className="flex flex-col gap-10 w-full">
-                  <div className="w-full max-w-[554px]">
-                    <Swiper
-                      style={{
-                        "--swiper-pagination-color": "#CA7FFE",
-                        "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
-                        "--swiper-pagination-bullet-inactive-opacity": "1",
-                        "--swiper-pagination-bullet-size": "10px",
-                        "--swiper-pagination-bullet-horizontal-gap": "6px",
-                      }}
-                      spaceBetween={10}
-                      slidesPerView={1}
-                      pagination={{ clickable: true }}
-                      modules={[Pagination]}
-                    >
-                      {imageUrls.map((url, index) => (
-                        <SwiperSlide key={index}>
-                          <Image
-                            src={url}
-                            alt={`Uploaded image ${index + 1}`}
-                            layout="responsive"
-                            width={554}
-                            height={554}
-                            className="object-cover rounded-lg max-w-[554px] max-h-[554px]"
-                          />
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </div>
+              {!uploadFileLoading ? (
+                imageUrls.length > 0 && (
+                  <div className="flex flex-col gap-10 w-full">
+                    <div className="w-full max-w-[554px]">
+                      <Swiper
+                        style={{
+                          "--swiper-pagination-color": "#CA7FFE",
+                          "--swiper-pagination-bullet-inactive-color":
+                            "#CDCDCD",
+                          "--swiper-pagination-bullet-inactive-opacity": "1",
+                          "--swiper-pagination-bullet-size": "10px",
+                          "--swiper-pagination-bullet-horizontal-gap": "6px",
+                        }}
+                        spaceBetween={10}
+                        slidesPerView={1}
+                        pagination={{ clickable: true }}
+                        modules={[Pagination]}
+                      >
+                        {imageUrls.map((url, index) => (
+                          <SwiperSlide key={index}>
+                            <Image
+                              src={url}
+                              alt={`Uploaded image ${index + 1}`}
+                              layout="responsive"
+                              width={554}
+                              height={554}
+                              className="object-cover rounded-lg max-w-[554px] max-h-[554px]"
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
 
-                  <div
-                    {...getRootProps()}
-                    className="bg-[#F5F4F0] rounded-2xl p-5 max-w-[554px] max-h-[554px] min-h-[227px] w-full flex flex-col justify-center items-center gap-4"
-                  >
-                    <input {...getInputProps()} />
-                    <Image
-                      src={"/add-product-button.png"}
-                      width={54}
-                      height={54}
-                      alt="add-product-button"
-                    />
-                    <p>Нэмэлт зураг оруулах</p>
+                    <div
+                      {...getRootProps()}
+                      className="bg-[#F5F4F0] rounded-2xl p-5 max-w-[554px] max-h-[554px] min-h-[227px] w-full flex flex-col justify-center items-center gap-4"
+                    >
+                      <input {...getInputProps()} />
+                      <Image
+                        src={"/add-product-button.png"}
+                        width={54}
+                        height={54}
+                        alt="add-product-button"
+                      />
+                      <p>Нэмэлт зураг оруулах</p>
+                    </div>
                   </div>
+                )
+              ) : (
+                <div className="max-w-[554px] max-h-[554px] w-full h-full flex justify-center items-center">
+                  <ClipLoader
+                    loading={uploadFileLoading}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                    className=""
+                    size={50}
+                  />
                 </div>
               )}
             </div>
