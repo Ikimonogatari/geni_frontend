@@ -1,10 +1,35 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import NavButtons from "../NavButtons";
+import { useGetUserInfoQuery } from "@/app/services/service";
+import Cookies from "js-cookie";
 
 function Navbar() {
   const [dropdownOpen, setdropdownOpen] = useState(false);
+  const [shouldFetchUserInfo, setShouldFetchUserInfo] = useState(false);
+
+  useEffect(() => {
+    const userInfo = Cookies.get("user-info");
+    if (!userInfo) {
+      setShouldFetchUserInfo(true);
+    }
+  }, []);
+
+  const {
+    data: getUserInfoData,
+    error: getUserInfoError,
+    isLoading: getUserInfoLoading,
+  } = useGetUserInfoQuery(undefined, {
+    skip: !shouldFetchUserInfo, // Skip the query if shouldFetchUserInfo is false
+  });
+
+  useEffect(() => {
+    if (getUserInfoData && !Cookies.get("user-info")) {
+      Cookies.set("user-info", JSON.stringify(getUserInfoData), { expires: 7 }); // Cookie expires in 7 days
+    }
+  }, [getUserInfoData]);
+
   return (
     <div className="w-full bg-[#F5F4F0] top-0 absolute">
       <div className="w-full py-[52px] px-7 sm:px-20">

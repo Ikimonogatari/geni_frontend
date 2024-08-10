@@ -21,29 +21,31 @@ import {
   useUploadFileMutation,
   useCreateProductMutation,
   useListProductTypesQuery,
-  useGetUserInfoQuery,
+  useListProductDictsQuery,
 } from "../services/service";
 import toast from "react-hot-toast";
 
 import { ClipLoader } from "react-spinners";
+import Cookies from "js-cookie";
 
 function Page() {
   const router = useRouter();
-  const [contentTypeOption, setContentTypeOption] = useState("");
-  const [contentOutcomeOption, setContentOutcomeOption] = useState("");
+  const [contentTypeOption, setContentTypeOption] = useState([]);
+  const [contentOutcomeOption, setContentOutcomeOption] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
-  const [userId, setUserId] = useState(null);
+
+  const userInfo = Cookies.get("user-info");
 
   const formik = useFormik({
     initialValues: {
-      brandId: userId,
+      brandId: userInfo ? JSON.parse(userInfo)?.UserId : null,
       productName: "",
-      information: "123",
-      requestForCreators: "123",
+      information: "",
+      requestForCreators: "",
       quantity: "",
       price: "",
-      contentInfo: ["ProductInUse", "InterestingStor", "IncrseSales"],
+      contentInfo: [],
       productTypes: [],
       productPics: [],
     },
@@ -84,10 +86,16 @@ function Page() {
   } = useListProductTypesQuery();
 
   const {
-    data: getUserInfoData,
-    error: getUserInfoError,
-    isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery();
+    data: listProductDictsTypeData,
+    error: listProductDictsTypeError,
+    isLoading: listProductDictsTypeLoading,
+  } = useListProductDictsQuery("Type");
+
+  const {
+    data: listProductDictsResultData,
+    error: listProductDictsResultError,
+    isLoading: listProductDictsResultLoading,
+  } = useListProductDictsQuery("Result");
 
   const [productTypes, setProductTypes] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
@@ -137,12 +145,6 @@ function Page() {
     }
   }, [createProductData, createProductError]);
 
-  useEffect(() => {
-    if (getUserInfoData) {
-      setUserId(getUserInfoData.UserId);
-    }
-  }, [getUserInfoData, getUserInfoError]);
-
   const handleProductType = (value) => {
     setProductTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {
@@ -154,6 +156,24 @@ function Page() {
       ...formik.values.productTypes,
       value.ProductTypeId,
     ]);
+  };
+
+  const handleContentTypeOption = (option) => {
+    setContentTypeOption((prev) => {
+      if (!prev.some((o) => o.Val === option.Val)) {
+        return [...prev, option];
+      }
+      return prev;
+    });
+  };
+
+  const handleContentOutcomeOption = (option) => {
+    setContentOutcomeOption((prev) => {
+      if (!prev.some((o) => o.Val === option.Val)) {
+        return [...prev, option];
+      }
+      return prev;
+    });
   };
 
   return (
@@ -331,18 +351,18 @@ function Page() {
                   Бүтээгдэхүүний дэлгэрэнгүй мэдээлэл
                 </label>
                 <textarea
-                  id="details"
-                  name="details"
+                  id="information"
+                  name="information"
                   placeholder="Хэрэглэх зориулалт болон заавар, орц найрлага, ач холбогдол, анхаарах зүйлс"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.details}
+                  value={formik.values.information}
                   rows={4} // Adjust the number of rows as needed
                   className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
                 />
-                {formik.touched.details && formik.errors.details ? (
+                {formik.touched.information && formik.errors.information ? (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.details}
+                    {formik.errors.information}
                   </div>
                 ) : null}
               </div>
@@ -360,17 +380,46 @@ function Page() {
                     <SelectValue placeholder="Сонгох" />
                   </SelectTrigger>
                   <SelectContent>
-                    {contentOptions1.map((c, i) => (
-                      <SelectItem
-                        key={i}
-                        value={c}
-                        className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
-                      >
-                        <div onClick={() => setContentTypeOption(c)}>{c}</div>
-                      </SelectItem>
-                    ))}
+                    {listProductDictsTypeData ? (
+                      listProductDictsTypeData
+                        .filter((c) => c.Type === "Type")
+                        .map((c, i) => (
+                          <SelectItem
+                            key={i}
+                            value={c.Val}
+                            className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
+                          >
+                            <div onClick={() => handleContentTypeOption(c)}>
+                              {c.Name}
+                            </div>
+                          </SelectItem>
+                        ))
+                    ) : (
+                      <></>
+                    )}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex flex-col gap-3">
+                <label className="font-bold" htmlFor="name">
+                  Контент бүтээгчээс хүсэх хүсэлт
+                </label>
+                <textarea
+                  id="requestForCreators"
+                  name="requestForCreators"
+                  placeholder="Хэрэглэх зориулалт болон заавар, орц найрлага, ач холбогдол, анхаарах зүйлс"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.requestForCreators}
+                  rows={4} // Adjust the number of rows as needed
+                  className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
+                />
+                {formik.touched.requestForCreators &&
+                formik.errors.requestForCreators ? (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.requestForCreators}
+                  </div>
+                ) : null}
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
@@ -386,17 +435,23 @@ function Page() {
                     <SelectValue placeholder="Сонгох" />
                   </SelectTrigger>
                   <SelectContent>
-                    {contentOptions2.map((c, i) => (
-                      <SelectItem
-                        key={i}
-                        value={c}
-                        className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
-                      >
-                        <div onClick={() => setContentOutcomeOption(c)}>
-                          {c}
-                        </div>
-                      </SelectItem>
-                    ))}
+                    {listProductDictsResultData ? (
+                      listProductDictsResultData
+                        .filter((c) => c.Type === "Result")
+                        .map((c, i) => (
+                          <SelectItem
+                            key={i}
+                            value={c.Val}
+                            className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
+                          >
+                            <div onClick={() => handleContentOutcomeOption(c)}>
+                              {c.Name}
+                            </div>
+                          </SelectItem>
+                        ))
+                    ) : (
+                      <></>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -442,26 +497,7 @@ function Page() {
                   </div>
                 ) : null}
               </div>
-              <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
-                  Контентийн дэлгэрэнгүй мэдээлэл
-                </label>
-                <textarea
-                  id="contentInfo"
-                  name="contentInfo"
-                  placeholder="Хэрхэн пост болгох санаа, хүлээлт зэргээ дэлгэрэнгүй тайлбарлана уу."
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.contentInfo}
-                  rows={4} // Adjust the number of rows as needed
-                  className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
-                />
-                {formik.touched.contentInfo && formik.errors.contentInfo ? (
-                  <div className="text-red-500 text-sm">
-                    {formik.errors.contentInfo}
-                  </div>
-                ) : null}
-              </div>
+
               <button
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#1920B4]`}
@@ -481,27 +517,3 @@ function Page() {
 }
 
 export default Page;
-
-const contentOptions1 = [
-  "Хэрэглэгчийн сэтгэгдэл яриа",
-  "Хэрэглэгчийн сэтгэгдлээ бичгэн хэлбэрээр илэрхийлсэн",
-  "Бүтээгдэхүүний үзэмжит дүрсээс бүтсэн",
-  "Хэрэглэж буй үе шат харуулсан",
-  "Бүтээгдэхүүний ач холбогдол тайлбарласан",
-  "Өөр хэрэгтэй мэдээлэлтэй холбосон",
-  "Шинэлэг сошиал трэнд ая ашигласан",
-  "Сонирхолтой зохиолтой",
-  "Unboxing",
-  "Чөлөөт",
-  "Бусад",
-];
-
-const contentOptions2 = [
-  "Бүтээгдэхүүн үйлчилгээгээ таниулах",
-  "Анхаарал татах",
-  "Сошиал дагагчаа өсгөх",
-  "Контентоо олон хүнд хүргэх",
-  "Шинэлэг хэрэгцээт мэдээлэл өгөх",
-  "Борлуулалтаа өсгөх",
-  "Бусад",
-];

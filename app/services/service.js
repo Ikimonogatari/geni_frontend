@@ -72,6 +72,12 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    listProductDicts: builder.query({
+      query: (Type) => ({
+        url: `/api/admin/private/productdict?dictType=${Type}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -84,4 +90,5 @@ export const {
   useCreateProductTypesMutation,
   useGetUserInfoQuery,
   useListProductsQuery,
+  useListProductDictsQuery,
 } = geniApi;
