@@ -10,7 +10,7 @@ import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 import {
   Dialog,
@@ -20,13 +20,34 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
+import {
+  useGetPublicProductByIdQuery,
+  useRequestProductContentMutation,
+} from "@/app/services/service";
 
 function Page() {
   const router = useRouter();
+  const params = useParams();
+  const { id } = params;
+  const [productContentRequestMsg, setProductContentRequestMsg] = useState("");
+  const {
+    data: getPublicProductByIdData,
+    error: getPublicProductByIdError,
+    isLoading: getPublicProductByIdLoading,
+  } = useGetPublicProductByIdQuery(id);
+
+  const [
+    requestProductContent,
+    {
+      data: requestProductContentData,
+      error: requestProductContentError,
+      isLoading: requestProductContentLoading,
+    },
+  ] = useRequestProductContentMutation();
+
   const formik = useFormik({
     initialValues: {
       name: "",
-
       files: [],
     },
     validationSchema: Yup.object({
@@ -48,6 +69,15 @@ function Page() {
   const goPrev = () => {
     swiper.slidePrev();
   };
+
+  const handleProductContentRequest = () => {
+    requestProductContent({
+      ProductId: id,
+      RequestReason: productContentRequestMsg,
+    });
+    setRequestState("sent");
+  };
+
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
@@ -93,20 +123,22 @@ function Page() {
                 }}
                 modules={[Pagination]}
               >
-                {Array(5)
-                  .fill(0)
-                  .map((_, i) => (
+                {getPublicProductByIdData ? (
+                  getPublicProductByIdData?.ProductPics.map((p, i) => (
                     <SwiperSlide key={i}>
                       <Image
-                        src={"/dummy-brand.png"}
-                        alt={"brand"}
+                        src={p.Url}
+                        alt={""}
                         layout="responsive"
                         width={554}
                         height={554}
-                        className="object-cover rounded-lg max-w-[554px] max-h-[554px]"
+                        className="object-cover rounded-2xl max-w-[554px] max-h-[554px]"
                       />
                     </SwiperSlide>
-                  ))}
+                  ))
+                ) : (
+                  <></>
+                )}
               </Swiper>
               <button onClick={goNext}>
                 <Image
@@ -129,11 +161,34 @@ function Page() {
                   className="border border-[#2D262D] rounded-full"
                 />
                 <div className="flex flex-col gap-2">
-                  <span className="text-xl font-bold">lhamour</span>
-                  <span className="text-lg">Нүүрний чийгшүүлэг тос</span>
+                  <span className="text-xl font-bold">
+                    {getPublicProductByIdData ? (
+                      getPublicProductByIdData.CreatedBy
+                    ) : (
+                      <></>
+                    )}
+                  </span>
+                  <span className="text-lg">
+                    {getPublicProductByIdData ? (
+                      getPublicProductByIdData.ProductName
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                 </div>
-                <div className="bg-[#CA7FFE] text-xs rounded-full px-4 py-2">
-                  Beauty
+                <div className="flex flex-wrap gap-2">
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData?.ProductTypes.map((t, i) => (
+                      <div
+                        key={i}
+                        className="bg-[#CA7FFE] text-xs rounded-full px-4 py-2"
+                      >
+                        {t.TypeName}
+                      </div>
+                    ))
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
 
@@ -142,15 +197,11 @@ function Page() {
                   Бүтээгдэхүүний дэлгэрэнгүй мэдээлэл
                 </span>
                 <span className="text-[#757575]">
-                  Brow Pencil + Brow Cara 2in1 хоёр бүтээгдэхүүнийг нэг дор
-                  Гурвалжин хошуутай хатуу хөмсөгний харандаагаар хүссэн
-                  хөмсөгний хэлбэрээ зурах боломжтой.Brow Cara -гаар хөмсөгний
-                  өнгөө өөрчлөх болон хөмсөгөө өргөөд будаад үзээрэй. Удаан
-                  тогтоцтой учир сэргээж будах шаардлаггүй. Хар бор (dark brown
-                  ) , Цайвар бор (light brown) гэсэн хоёр өнгөний сонголттой.Хар
-                  бор (dark brown ) нь хар бордуу өнгөтэй бөгөөд үсний өнгө нь
-                  төрөлхийн хар үстэй хүмүүст зохимжтой. Цайвар бор (light
-                  brown) нь арай цайвар хүрэн үстэй хүмүүст илүү зохимжтой.
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData.Information
+                  ) : (
+                    <></>
+                  )}
                 </span>
               </div>
               <div className="flex flex-col gap-3 text-lg max-w-sm">
@@ -158,19 +209,23 @@ function Page() {
                   Брэндийн хүсэж буй контентийн төрөл
                 </span>
                 <div className="flex flex-col gap-3">
-                  {contentOptions1.map((c, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setContentTypeOption(c)}
-                      className={`${
-                        contentTypeOption === c
-                          ? "border-[#4D55F5] border-[2px]"
-                          : "border-[#CDCDCD] border-[2px]"
-                      } rounded-lg p-4 cursor-pointer transition-all duration-150`}
-                    >
-                      {c}
-                    </div>
-                  ))}
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData?.ContentType.map((c, i) => (
+                      <div
+                        key={i}
+                        onClick={() => setContentTypeOption(c.Val)}
+                        className={`${
+                          contentTypeOption === c.Val
+                            ? "border-[#4D55F5] border-[2px]"
+                            : "border-[#CDCDCD] border-[2px]"
+                        } rounded-lg p-4 cursor-pointer transition-all duration-150`}
+                      >
+                        {c.Name}
+                      </div>
+                    ))
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col gap-3 text-lg max-w-sm">
@@ -178,38 +233,54 @@ function Page() {
                   Контент бүтээгчээс хүсэх хүсэлт
                 </label>
                 <p className="p-4 border border-[#CDCDCD] rounded-lg">
-                  Контент агуулга болон хийцлэлтэй холбоотой бүтээгчээс хүсэх
-                  нэмэлт зүйлс
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData.RequestForCreators
+                  ) : (
+                    <></>
+                  )}
                 </p>
               </div>
               <div className="flex flex-col gap-3 text-lg max-w-sm">
                 <span className="font-bold">
                   Контентоос хүлээж буй гол үр дүн
                 </span>
-                {contentOptions2.map((c, i) => (
-                  <div
-                    key={i}
-                    onClick={() => setContentOutcomeOption(c)}
-                    className={`${
-                      contentOutcomeOption === c
-                        ? "border-[#4D55F5] border-[2px]"
-                        : "border-[#CDCDCD] border-[2px]"
-                    } rounded-lg p-4 cursor-pointer transition-all duration-150`}
-                  >
-                    {c}
-                  </div>
-                ))}
+                {getPublicProductByIdData ? (
+                  getPublicProductByIdData?.ContentResult.map((c, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setContentOutcomeOption(c.Val)}
+                      className={`${
+                        contentOutcomeOption === c.Val
+                          ? "border-[#4D55F5] border-[2px]"
+                          : "border-[#CDCDCD] border-[2px]"
+                      } rounded-lg p-4 cursor-pointer transition-all duration-150`}
+                    >
+                      {c.Name}
+                    </div>
+                  ))
+                ) : (
+                  <></>
+                )}
               </div>
               <div className="flex flex-col gap-3 text-lg max-w-sm">
                 <span className="font-bold">Тоо ширхэг</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
-                  45
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData.Quantity
+                  ) : (
+                    <></>
+                  )}
                 </span>
               </div>
               <div className="flex flex-col gap-3 text-lg max-w-sm">
                 <span className="font-bold">Үнэ</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
-                  ₮45’000
+                  ₮
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData.Price
+                  ) : (
+                    <></>
+                  )}
                 </span>
               </div>
 
@@ -278,11 +349,14 @@ function Page() {
                         хуваалцаарай.
                       </span>
                       <textarea
+                        onChange={(e) =>
+                          setProductContentRequestMsg(e.target.value)
+                        }
                         placeholder="Энд бичнэ үү"
                         className="bg-[#F5F4F0] rounded-lg mt-4 w-full p-4 min-h-[203px]"
                       />
                       <button
-                        onClick={() => setRequestState("sent")}
+                        onClick={handleProductContentRequest}
                         className="mt-3 bg-[#CA7FFE] border-[#2D262D] border rounded-lg text-center py-4 text-xl text-white w-full"
                       >
                         Хүсэлт илгээх

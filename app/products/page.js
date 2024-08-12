@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useListProductsQuery } from "../services/service";
+import { useListPublicProductsQuery } from "../services/service";
 
 function Page() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,27 +13,34 @@ function Page() {
     data: listProductsData,
     error: listProductsError,
     isLoading: listProductsLoading,
-  } = useListProductsQuery();
+  } = useListPublicProductsQuery();
 
   useEffect(() => {
-    let filtered = listProductsData;
-    console.log(filtered);
+    if (listProductsData) {
+      let filtered = [...listProductsData.Data]; // Ensure it's an array
+      console.log(filtered);
+      if (selectedCategory) {
+        filtered = filtered.filter(
+          (product) => product.category === selectedCategory
+        );
+      }
 
-    // if (selectedCategory) {
-    //   filtered = filtered.filter(
-    //     (product) => product.category === selectedCategory
-    //   );
-    // }
+      if (searchQuery) {
+        filtered = filtered.filter(
+          (product) =>
+            product.ProductName.toLowerCase().includes(
+              searchQuery.toLowerCase()
+            ) ||
+            product.Information.toLowerCase().includes(
+              searchQuery.toLowerCase()
+            )
+        );
+      }
 
-    // if (searchQuery) {
-    //   filtered = filtered.filter(
-    //     (product) =>
-    //       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //       product.description.toLowerCase().includes(searchQuery.toLowerCase())
-    //   );
-    // }
-
-    setFilteredProducts(filtered);
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts([]); // Set to an empty array if listProductsData is not an array or is undefined
+    }
   }, [searchQuery, selectedCategory, listProductsData]);
 
   return (
@@ -73,19 +80,19 @@ function Page() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-11">
             {listProductsData ? (
-              filteredProducts?.map((product) => (
+              filteredProducts.map((product) => (
                 <Link
-                  href={`/products/${product.id}`}
-                  key={product.id}
+                  href={`/products/${product.ProductId}`}
+                  key={product.ProductId}
                   className="flex flex-col rounded-2xl shadow-md"
                 >
                   <div className="relative w-full h-full rounded-t-2xl">
                     <Image
-                      src={product.ImageUrl}
+                      src={product.ProductPics[0].Url}
                       width={280}
                       height={280}
                       alt=""
-                      className="w-full h-full"
+                      className="max-w-[280px] max-h-[280px] rounded-t-2xl"
                     />
                     <div className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2 absolute top-2 right-2 sm:top-3 sm:right-3">
                       {product.category}
@@ -93,7 +100,7 @@ function Page() {
                   </div>
                   <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col gap-2 rounded-b-2xl">
                     <span className="font-bold text-sm sm:text-xl">
-                      {product.ProductName}
+                      {product.CreatedBy}
                     </span>
                     <span className="text-xs sm:text-lg">
                       {product.ProductName}

@@ -25,14 +25,21 @@ export const geniApi = createApi({
     }),
     editCreatorProfile: builder.mutation({
       query: (body) => ({
-        url: "/api/web/private/user",
+        url: "/api/web/private/user/creator",
+        method: "PUT",
+        body,
+      }),
+    }),
+    editBrandProfile: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/brand",
         method: "PUT",
         body,
       }),
     }),
     createProduct: builder.mutation({
       query: (body) => ({
-        url: "/api/admin/private/product",
+        url: "/api/web/private/product",
         method: "POST",
         body,
       }),
@@ -46,7 +53,7 @@ export const geniApi = createApi({
     }),
     listProductTypes: builder.query({
       query: (body) => ({
-        url: "/api/admin/private/producttype",
+        url: "/api/web/public/producttype",
         method: "GET",
         body,
       }),
@@ -78,12 +85,61 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    changeProfilePicture: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/user/pfp`,
+        method: "PUT",
+        body,
+      }),
+    }),
+    listSocialChannels: builder.query({
+      query: (body) => ({
+        url: `/api/admin/private/socialplatform`,
+        method: "GET",
+        body,
+      }),
+    }),
+    updateSocialChannel: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/social-channel`,
+        method: "PUT",
+        body,
+      }),
+    }),
+    listCreatorContents: builder.query({
+      query: (body) => ({
+        url: `/api/web/private/content`,
+        method: "GET",
+        body,
+      }),
+    }),
+    listPublicProducts: builder.query({
+      query: (body) => ({
+        url: `/api/web/public/product?searchKey=&limit=100&offset=0`,
+        method: "GET",
+        body,
+      }),
+    }),
+    getPublicProductById: builder.query({
+      query: (productId) => ({
+        url: `/api/web/public/product/${productId}`,
+        method: "GET",
+      }),
+    }),
+    requestProductContent: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/content/prod-request`,
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
   useCreatorLoginMutation,
   useEditCreatorProfileMutation,
+  useEditBrandProfileMutation,
   useCreateProductMutation,
   useUploadFileMutation,
   useListProductTypesQuery,
@@ -91,4 +147,11 @@ export const {
   useGetUserInfoQuery,
   useListProductsQuery,
   useListProductDictsQuery,
+  useChangeProfilePictureMutation,
+  useListSocialChannelsQuery,
+  useUpdateSocialChannelMutation,
+  useListCreatorContentsQuery,
+  useListPublicProductsQuery,
+  useGetPublicProductByIdQuery,
+  useRequestProductContentMutation,
 } = geniApi;
