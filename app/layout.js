@@ -7,7 +7,7 @@ import Head from "next/head";
 import "/public/fonts/font/stylesheet.css";
 import { store } from "./store";
 import { Provider } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({ children }) {
   return (

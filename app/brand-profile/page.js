@@ -1,11 +1,28 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import ContentProgress from "../ContentProgress";
-import ContentGallery from "../ContentGallery";
-import BrandProducts from "../BrandProducts";
+import ContentProgress from "./ContentProgress";
+import ContentGallery from "./ContentGallery";
+import BrandProducts from "./BrandProducts";
+import Cookies from "js-cookie";
+import {
+  useListBrandContentsQuery,
+  useListCreatorContentsQuery,
+} from "@/app/services/service";
+import Link from "next/link";
 
 function page() {
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const [brandData, setBrandData] = useState(
+    parsedUserInfo ? parsedUserInfo : null
+  );
+  console.log(parsedUserInfo);
+  const {
+    data: listBrandContentsData,
+    error: listBrandContentsError,
+    isLoading: listBrandContentsLoading,
+  } = useListBrandContentsQuery();
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 12;
@@ -24,16 +41,31 @@ function page() {
     let contents;
     switch (profileState) {
       case "content-progress":
-        contents = contentsProgress;
+        contents =
+          listBrandContentsData && listBrandContentsData.Data != null
+            ? listBrandContentsData.Data.filter(
+                (item) => item.BrandName === brandData?.Name
+              )
+            : [];
         break;
       case "content-gallery":
-        contents = contentsGallery;
+        contents =
+          listBrandContentsData && listBrandContentsData.Data != null
+            ? listBrandContentsData.Data.filter(
+                (item) => item.BrandName === brandData?.Name
+              )
+            : [];
         break;
       case "brand-products":
         contents = brandProducts;
         break;
       default:
-        contents = contentsProgress;
+        contents =
+          listBrandContentsData && listBrandContentsData.Data != null
+            ? listBrandContentsData.Data.filter(
+                (item) => item.BrandName === brandData?.Name
+              )
+            : [];
     }
 
     const indexOfLastContent = currentPage * contentsPerPage;
@@ -45,16 +77,31 @@ function page() {
     let contents;
     switch (profileState) {
       case "content-progress":
-        contents = contentsProgress;
+        contents =
+          listBrandContentsData && listBrandContentsData.Data != null
+            ? listBrandContentsData.Data.filter(
+                (item) => item.BrandName === brandData?.Name
+              )
+            : [];
         break;
       case "content-gallery":
-        contents = contentsGallery;
+        contents =
+          listBrandContentsData && listBrandContentsData.Data != null
+            ? listBrandContentsData.Data.filter(
+                (item) => item.BrandName === brandData?.Name
+              )
+            : [];
         break;
       case "brand-products":
         contents = brandProducts;
         break;
       default:
-        contents = contentsProgress;
+        contents =
+          listBrandContentsData && listBrandContentsData.Data != null
+            ? listBrandContentsData.Data.filter(
+                (item) => item.BrandName === brandData?.Name
+              )
+            : [];
     }
     return Math.ceil(contents.length / contentsPerPage);
   };
@@ -123,15 +170,15 @@ function page() {
           <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-4 sm:gap-7">
               <Image
-                src={"/brand-dummy.png"}
-                alt="dummy-brand"
+                src={brandData ? brandData.image : ""}
+                alt=""
                 width={130}
                 height={130}
                 className="rounded-full w-[90px] sm:w-[130px] h-[90px] sm:h-[130px] border border-[#2D262D]"
               />
               <div className="flex flex-col gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
-                  Lhamour
+                  {brandData ? brandData.Name : ""}
                 </span>
                 <button className="bg-[#CA7FFE] rounded-full px-2 text-sm sm:text-base sm:px-4 py-1 sm:py-2">
                   Beauty
@@ -139,18 +186,31 @@ function page() {
               </div>
             </div>
             <div className="flex flex-row items-center gap-2 sm:gap-5 mt-5 md:mt-0">
-              {icons.map((r, i) => (
-                <button key={i} className="rounded-xl bg-[#F5F4F0] p-2">
-                  <Image
-                    key={i}
-                    src={r}
-                    width={24}
-                    height={24}
-                    alt="icon"
-                    className="w-5 sm:w-6 h-5 sm:h-6"
-                  />
-                </button>
-              ))}
+              <Link
+                href="/notifications"
+                className="rounded-xl bg-[#F5F4F0] p-2"
+              >
+                <Image
+                  src={"/brand-profile-icon2.png"}
+                  width={24}
+                  height={24}
+                  alt="icon"
+                  className="w-5 sm:w-6 h-5 sm:h-6"
+                />
+              </Link>
+              <Link
+                href="/edit-profile-brand"
+                className="rounded-xl bg-[#F5F4F0] p-2"
+              >
+                <Image
+                  src={"/brand-profile-icon3.png"}
+                  width={24}
+                  height={24}
+                  alt="icon"
+                  className="w-5 sm:w-6 h-5 sm:h-6"
+                />
+              </Link>
+
               <a
                 href="/add-product"
                 className="flex md:hidden flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
@@ -184,13 +244,7 @@ function page() {
                 ))}
               </div>
             </div>
-            {/* <a
-              href="/add-product"
-              className="w-auto hidden whitespace-nowrap md:flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
-            >
-              <span>Шинэ бүтээгдэхүүн нэмэх</span>
-              <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
-            </a> */}
+
             <a
               href="/add-product"
               className="w-full max-w-[270px] hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"

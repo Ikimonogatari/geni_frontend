@@ -72,7 +72,6 @@ function Page() {
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-
   const [socials, setSocials] = useState({
     instagram: "",
     facebook: "",

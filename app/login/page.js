@@ -25,6 +25,9 @@ function Page() {
     }),
 
     onSubmit: (values) => {
+      Cookies.remove("auth");
+      Cookies.remove("userType");
+      Cookies.remove("user-info");
       login(values);
     },
   });
@@ -32,11 +35,11 @@ function Page() {
   useEffect(() => {
     if (data) {
       Cookies.set("auth", data.JWT, { expires: 1 });
+      Cookies.set("userType", userType, { expires: 1 });
       router.push("/");
-      toast.success("Амжилттай");
     }
     if (error) {
-      toast.error("Алдаа гарлаа");
+      toast.error(error.data.error);
     }
   }, [data, error]);
 

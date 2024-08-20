@@ -2,6 +2,32 @@ import React from "react";
 import Image from "next/image";
 
 function ContentGallery({ contentsGallery }) {
+  console.log(contentsGallery);
+
+  const getColorClass = (status) => {
+    switch (status) {
+      case "Request":
+        return "text-[#4D55F5]";
+      case "ProdApproved":
+        return "text-[#4FB755]";
+      case "ProdRejected":
+        return "text-[#F41919]";
+      case "ProdDelivering":
+        return "text-[#F49D19]";
+      case "ContentInProgress":
+        return "text-[#F49D19]";
+      case "ContentInReview":
+        return "text-[#4D55F5]";
+      case "ContentSent":
+        return "text-[#4FB755]";
+      case "ContentRejected":
+        return "text-[#F41919]";
+      case "ContentReceived":
+        return "text-[#4FB755]";
+      default:
+        return "text-[#4D55F5]";
+    }
+  };
   return (
     <div className="mt-7 px-3 pt-6 border-t-[1px] border-[#CDCDCD] w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
       {contentsGallery.map((c, i) => (

@@ -153,7 +153,7 @@ function page() {
                 Төлбөр хийх
               </DialogTrigger>
 
-              <DialogContent>
+              <DialogContent className={"max-w-lg"}>
                 {!isPaymentSuccess && (
                   <DialogHeader>
                     <DialogTitle className="text-3xl">QPay Payment</DialogTitle>

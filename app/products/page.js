@@ -20,8 +20,10 @@ function Page() {
       let filtered = [...listProductsData.Data]; // Ensure it's an array
       console.log(filtered);
       if (selectedCategory) {
-        filtered = filtered.filter(
-          (product) => product.category === selectedCategory
+        filtered = filtered.filter((product) =>
+          product.ProductTypes?.some(
+            (type) => type.TypeName === selectedCategory
+          )
         );
       }
 
@@ -78,7 +80,7 @@ function Page() {
               className="w-5 h-5 sm:w-6 sm:h-6"
             />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-11">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-11">
             {listProductsData ? (
               filteredProducts.map((product) => (
                 <Link
@@ -86,21 +88,28 @@ function Page() {
                   key={product.ProductId}
                   className="flex flex-col rounded-2xl shadow-md"
                 >
-                  <div className="relative w-full h-full rounded-t-2xl">
+                  <div className="relative w-full rounded-t-2xl">
                     <Image
                       src={product.ProductPics[0].Url}
                       width={280}
                       height={280}
                       alt=""
-                      className="max-w-[280px] max-h-[280px] rounded-t-2xl"
+                      className="max-h-[290px] lg:max-h-[324px] xl:max-w-[324px] inset-0 w-full rounded-t-2xl"
                     />
-                    <div className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2 absolute top-2 right-2 sm:top-3 sm:right-3">
-                      {product.category}
+                    <div className="flex flex-row items-center gap-2">
+                      {product.ProductTypes?.map((t, i) => (
+                        <div
+                          key={i}
+                          className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2 absolute top-2 right-2 sm:top-3 sm:right-3"
+                        >
+                          {t.TypeName}
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col gap-2 rounded-b-2xl">
+                  <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col gap-2 rounded-b-2xl h-full">
                     <span className="font-bold text-sm sm:text-xl">
-                      {product.CreatedBy}
+                      {product.BrandName}
                     </span>
                     <span className="text-xs sm:text-lg">
                       {product.ProductName}

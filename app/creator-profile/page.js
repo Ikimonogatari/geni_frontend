@@ -1,34 +1,43 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import ContentProgress from "../ContentProgress";
-import ContentGallery from "../ContentGallery";
-import { usePathname } from "next/navigation";
+import ContentProgress from "./ContentProgress";
+import ContentGallery from "./ContentGallery";
+
 import Contents from "@/app/profile/Contents";
 import GraphCMSImageLoader from "@/app/components/GraphCMSImageLoader";
-import { useListCreatorContentsQuery } from "@/app/services/service";
+import {
+  useListCreatorContentsQuery,
+  useUploadFileMutation,
+} from "@/app/services/service";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import Link from "next/link";
+
 function page() {
-  const pathname = usePathname();
-  const segments = pathname.split("/");
-  const id = segments.pop();
-
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  console.log(parsedUserInfo);
   // console.log(id);
-  const [creatorData, setCreatorData] = useState([]);
-  const [reviewData, setReviewData] = useState(null);
-  const [getReviewBrand, setReviewBrand] = useState(null);
 
+  const [creatorData, setCreatorData] = useState(
+    parsedUserInfo ? parsedUserInfo : null
+  );
   const {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
   } = useListCreatorContentsQuery();
 
-  useEffect(() => {
-    if (listCreatorContentsError) {
-      toast.error("Алдаа гарлаа");
-    }
-  }, []);
+  const [
+    uploadFile,
+    {
+      data: uploadFileData,
+      error: uploadFileError,
+      isLoading: uploadFileLoading,
+    },
+  ] = useUploadFileMutation();
+
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 8;
@@ -44,17 +53,11 @@ function page() {
   };
 
   const getCurrentContents = () => {
-    let contents;
-    switch (profileState) {
-      case "content-progress":
-        contents = contentsProgress;
-        break;
-      case "content-gallery":
-        contents = creatorData?.content;
-        break;
-      default:
-        contents = contentsProgress;
-    }
+    const contents = listCreatorContentsData
+      ? listCreatorContentsData.Data != null
+        ? listCreatorContentsData.Data
+        : []
+      : [];
 
     const indexOfLastContent = currentPage * contentsPerPage;
     const indexOfFirstContent = indexOfLastContent - contentsPerPage;
@@ -62,18 +65,11 @@ function page() {
   };
 
   const getTotalPages = () => {
-    let contents;
-    switch (profileState) {
-      case "content-progress":
-        contents = contentsProgress;
-        break;
-      case "content-gallery":
-        contents = creatorData?.content;
-        break;
-
-      default:
-        contents = contentsProgress;
-    }
+    const contents = listCreatorContentsData
+      ? listCreatorContentsData.Data != null
+        ? listCreatorContentsData.Data
+        : []
+      : [];
     return Math.ceil(contents.length / contentsPerPage);
   };
 
@@ -85,7 +81,7 @@ function page() {
       case "content-gallery":
         return (
           <ContentGallery
-            creatorData={creatorData}
+            creatorData={currentContents}
             contentsGallery={currentContents}
           />
         );
@@ -145,19 +141,20 @@ function page() {
           <div className="flex flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
               <Image
-                src={creatorData ? creatorData.image : null}
-                loader={GraphCMSImageLoader}
-                width={261}
+                src={creatorData ? creatorData.image : ""}
+                // loader={GraphCMSImageLoader}
+                width={194}
                 height={194}
                 loading="lazy"
-                className="rounded-xl"
-                alt="creator"
+                className="rounded-xl max-w-[194px] max-h-[194px]"
+                alt=""
               />
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-[#2D262D] text-2xl font-bold">
-                    {creatorData ? creatorData.name : <></>}
+                    {creatorData?.FirstName} {creatorData?.LastName}
                   </span>
+
                   <Image
                     src={"/verified-icon.png"}
                     width={24}
@@ -167,8 +164,10 @@ function page() {
                   />
                 </div>
                 <div className="flex flex-row items-center gap-3">
-                  <span className="text-lg">1020 xp</span>
-                  <button>
+                  <span className="text-lg">
+                    {creatorData ? creatorData.Point : ""} xp
+                  </span>
+                  <a>
                     <Image
                       src={"/Info.png"}
                       width={24}
@@ -176,8 +175,8 @@ function page() {
                       alt="info"
                       className="w-6 h-6"
                     />
-                  </button>
-                  <button>
+                  </a>
+                  <a>
                     <Image
                       src={"/Instagram.png"}
                       width={24}
@@ -185,8 +184,8 @@ function page() {
                       alt="ig"
                       className="w-6 h-6"
                     />
-                  </button>
-                  <button>
+                  </a>
+                  <a>
                     <Image
                       src={"/Facebook.png"}
                       width={24}
@@ -194,10 +193,10 @@ function page() {
                       alt="fb"
                       className="w-6 h-6"
                     />
-                  </button>
+                  </a>
                 </div>
                 <span className="text-[#6F6F6F] text-base">
-                  {creatorData ? creatorData.bio : <></>}
+                  {creatorData ? creatorData.Bio : ""}
                 </span>
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-[#2D262D]">
                   {creatorData?.Category?.map((c, i) => (
@@ -212,21 +211,30 @@ function page() {
               </div>
             </div>
             <div className="flex flex-row items-center gap-5">
-              {icons.map((r, i) => (
-                <button
-                  key={i}
-                  className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
-                >
-                  <Image
-                    key={i}
-                    src={r}
-                    width={24}
-                    height={24}
-                    alt="icon"
-                    className="min-w-6 min-h-6"
-                  />
-                </button>
-              ))}
+              <Link
+                href={"/notifications"}
+                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
+              >
+                <Image
+                  src={"/brand-profile-icon2.png"}
+                  width={24}
+                  height={24}
+                  alt="icon"
+                  className="min-w-6 min-h-6"
+                />
+              </Link>
+              <Link
+                href={"/edit-profile-creator"}
+                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
+              >
+                <Image
+                  src={"/brand-profile-icon3.png"}
+                  width={24}
+                  height={24}
+                  alt="icon"
+                  className="min-w-6 min-h-6"
+                />
+              </Link>
             </div>
           </div>
 
@@ -246,8 +254,8 @@ function page() {
                 </button>
               ))}
             </div>
-            <a
-              href="/add-product"
+            <Link
+              href="/products"
               className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
             >
               Бүтээгдэхүүн үзэх
@@ -257,7 +265,7 @@ function page() {
                 height={14}
                 alt="arrow"
               />
-            </a>
+            </Link>
           </div>
           {renderBrandProfile()}
         </div>

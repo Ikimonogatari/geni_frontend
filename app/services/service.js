@@ -51,6 +51,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    uploadByPresignUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/private/file/presign",
+        method: "POST",
+        body,
+      }),
+    }),
     listProductTypes: builder.query({
       query: (body) => ({
         url: "/api/web/public/producttype",
@@ -68,13 +75,6 @@ export const geniApi = createApi({
     getUserInfo: builder.query({
       query: (body) => ({
         url: "/api/web/private/user",
-        method: "GET",
-        body,
-      }),
-    }),
-    listProducts: builder.query({
-      query: (body) => ({
-        url: "/api/admin/private/product",
         method: "GET",
         body,
       }),
@@ -133,6 +133,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    updateContentStatus: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/content/prod-request/status",
+        method: "PUT",
+        body,
+      }),
+    }),
+    listBrandContents: builder.query({
+      query: (body) => ({
+        url: `/api/admin/private/content?offset=0`,
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -145,7 +159,6 @@ export const {
   useListProductTypesQuery,
   useCreateProductTypesMutation,
   useGetUserInfoQuery,
-  useListProductsQuery,
   useListProductDictsQuery,
   useChangeProfilePictureMutation,
   useListSocialChannelsQuery,
@@ -154,4 +167,7 @@ export const {
   useListPublicProductsQuery,
   useGetPublicProductByIdQuery,
   useRequestProductContentMutation,
+  useUpdateContentStatusMutation,
+  useListBrandContentsQuery,
+  useUploadByPresignUrlMutation,
 } = geniApi;

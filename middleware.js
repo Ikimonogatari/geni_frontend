@@ -23,7 +23,8 @@ export function middleware(req) {
 export const config = {
   matcher: [
     "/add-product",
-    "/edit-profile",
+    "/edit-profile-brand",
+    "/edit-profile-creator",
     "/brand-profile/:path*",
     "/creator-profile/:path*",
     "/notifications/:path*",
