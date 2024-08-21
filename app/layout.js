@@ -8,6 +8,7 @@ import "/public/fonts/font/stylesheet.css";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
+import { UserInfoProvider } from "./context/UserInfoContext";
 
 export default function RootLayout({ children }) {
   return (
@@ -26,9 +27,11 @@ export default function RootLayout({ children }) {
             position="top-right"
             reverseOrder="false"
           />
-          <Navbar />
-          {children}
-          <Footer />
+          <UserInfoProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </UserInfoProvider>
         </body>
       </html>
     </Provider>

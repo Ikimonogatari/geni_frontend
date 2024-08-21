@@ -4,31 +4,39 @@ import Image from "next/image";
 import NavButtons from "../NavButtons";
 import { useGetUserInfoQuery } from "@/app/services/service";
 import Cookies from "js-cookie";
+import { useUserInfo } from "@/app/context/UserInfoContext";
 
 function Navbar() {
-  const [dropdownOpen, setdropdownOpen] = useState(false);
-  const [shouldFetchUserInfo, setShouldFetchUserInfo] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { shouldRefetchUserInfo, setShouldRefetchUserInfo } =
+    useUserInfo(false);
 
   useEffect(() => {
     const userInfo = Cookies.get("user-info");
     if (!userInfo) {
-      setShouldFetchUserInfo(true);
+      setShouldRefetchUserInfo(true); // Set global state to trigger refetch
     }
   }, []);
-
+  console.log(shouldRefetchUserInfo, "SHoULD WE REFETCH ?");
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
   } = useGetUserInfoQuery(undefined, {
-    skip: !shouldFetchUserInfo, // Skip the query if shouldFetchUserInfo is false
+    skip: !shouldRefetchUserInfo, // Use global state to control skipping
   });
 
   useEffect(() => {
-    if (getUserInfoData && !Cookies.get("user-info")) {
-      Cookies.set("user-info", JSON.stringify(getUserInfoData), { expires: 7 }); // Cookie expires in 7 days
+    if (getUserInfoData) {
+      Cookies.set("user-info", JSON.stringify(getUserInfoData), { expires: 7 }); // Set the cookie with a 7-day expiration
     }
   }, [getUserInfoData]);
+
+  useEffect(() => {
+    if (getUserInfoError) {
+      console.error("Failed to fetch user info:", getUserInfoError);
+    }
+  }, [getUserInfoError]);
 
   return (
     <div className="w-full bg-[#F5F4F0] top-0 absolute">

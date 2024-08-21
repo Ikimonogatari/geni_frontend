@@ -15,6 +15,7 @@ export const geniApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["UserInfo"],
   endpoints: (builder) => ({
     creatorLogin: builder.mutation({
       query: (body) => ({
@@ -29,6 +30,7 @@ export const geniApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     editBrandProfile: builder.mutation({
       query: (body) => ({
@@ -36,6 +38,7 @@ export const geniApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     createProduct: builder.mutation({
       query: (body) => ({
@@ -73,11 +76,11 @@ export const geniApi = createApi({
       }),
     }),
     getUserInfo: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: "/api/web/private/user",
         method: "GET",
-        body,
       }),
+      providesTags: ["UserInfo"],
     }),
     listProductDicts: builder.query({
       query: (Type) => ({
@@ -91,13 +94,23 @@ export const geniApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserInfo"],
     }),
-    listSocialChannels: builder.query({
+    changeEmail: builder.mutation({
       query: (body) => ({
-        url: `/api/admin/private/socialplatform`,
-        method: "GET",
+        url: "/api/web/private/user/change-email",
+        method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserInfo"], // Invalidate the tag
+    }),
+    changePassword: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/change-pass",
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["UserInfo"], // Invalidate the tag
     }),
     updateSocialChannel: builder.mutation({
       query: (body) => ({
@@ -105,6 +118,15 @@ export const geniApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserInfo"],
+    }),
+    createSocialChannel: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/social-channel`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["UserInfo"],
     }),
     listCreatorContents: builder.query({
       query: (body) => ({
@@ -161,7 +183,8 @@ export const {
   useGetUserInfoQuery,
   useListProductDictsQuery,
   useChangeProfilePictureMutation,
-  useListSocialChannelsQuery,
+  useChangePasswordMutation,
+  useCreateSocialChannelMutation,
   useUpdateSocialChannelMutation,
   useListCreatorContentsQuery,
   useListPublicProductsQuery,
