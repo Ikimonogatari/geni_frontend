@@ -88,29 +88,30 @@ function Page() {
 
   const formik = useFormik({
     initialValues: {
-      firstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      lastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
-      bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      RegNo: "temp-regno",
-      phoneNumber: "temp-phone",
-      AdditionalPhoneNum: "temp-additionalPhone",
-      location: parsedUserInfo ? parsedUserInfo?.Location : "",
-      EbarimtConsumerNo: "temp-ebarimtNumber",
-      Birthday: "temb-bday",
-      eduId: 1,
-      Gender: "temp-gender",
+      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
+      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
+      Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
+      Email: parsedUserInfo ? parsedUserInfo.Email : "",
+      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
+      RegNo: "1234561291",
+      PhoneNumber: "+12345678901",
+      AdditionalPhoneNum: "+12345678902",
+      Location: parsedUserInfo ? parsedUserInfo?.Location : "",
+      EbarimtConsumerNo: "9876543211",
+      Birthday: "1990-01-11",
+      EduId: 3,
+      Gender: "M",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("Required"),
-      lastName: Yup.string().required("Required"),
-      email: Yup.string().email("Invalid email").required("Required"),
-      bio: Yup.string().required("Required"),
-      location: Yup.string().required("Required"),
+      FirstName: Yup.string().required("Required"),
+      LastName: Yup.string().required("Required"),
+      Bio: Yup.string().required("Required"),
+      Location: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       console.log(values);
       editCreatorProfile(values).unwrap();
+      setShouldRefetchUserInfo(true);
     },
   });
 
@@ -137,6 +138,8 @@ function Page() {
 
   useEffect(() => {
     if (data) {
+      console.log(data);
+      setShouldRefetchUserInfo(true);
       toast.success("Амжилттай");
     }
     if (error) {
@@ -313,71 +316,71 @@ function Page() {
           >
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
+                <label className="text-[#6F6F6F] text-lg" htmlFor="FirstName">
                   First name
                 </label>
                 <input
-                  id="firstName"
-                  name="firstName"
+                  id="FirstName"
+                  name="FirstName"
                   type="text"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.firstName}
+                  value={formik.values.FirstName}
                   className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
                 />
-                {formik.touched.firstName && formik.errors.firstName && (
+                {formik.touched.FirstName && formik.errors.FirstName && (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.firstName}
+                    {formik.errors.FirstName}
                   </div>
                 )}
               </div>
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="lastName">
+                <label className="text-[#6F6F6F] text-lg" htmlFor="LastName">
                   Last name
                 </label>
                 <input
-                  id="lastName"
-                  name="lastName"
+                  id="LastName"
+                  name="LastName"
                   type="text"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.lastName}
+                  value={formik.values.LastName}
                   className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
                 />
-                {formik.touched.lastName && formik.errors.lastName && (
+                {formik.touched.LastName && formik.errors.LastName && (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.lastName}
+                    {formik.errors.LastName}
                   </div>
                 )}
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full sm:w-1/2">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="nickname">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="Nickname">
                 Username
               </label>
               <input
-                id="nickname"
-                name="nickname"
+                id="Nickname"
+                name="Nickname"
                 type="text"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.nickname}
+                value={formik.values.Nickname}
                 className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
               />
-              {formik.touched.nickname && formik.errors.nickname && (
+              {formik.touched.Nickname && formik.errors.Nickname && (
                 <div className="text-red-500 text-sm">
-                  {formik.errors.nickname}
+                  {formik.errors.Nickname}
                 </div>
               )}
             </div>
             <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="email">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="Email">
                 Email
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
-                  id="email"
-                  name="email"
+                  id="Email"
+                  name="Email"
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) => setEmail(e.target.value)}
@@ -393,25 +396,28 @@ function Page() {
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="bio">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="Bio">
                 Bio
               </label>
               <textarea
-                id="bio"
-                name="bio"
+                id="Bio"
+                name="Bio"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.bio}
+                value={formik.values.Bio}
                 rows={4}
                 className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
               />
-              {formik.touched.bio && formik.errors.bio && (
-                <div className="text-red-500 text-sm">{formik.errors.bio}</div>
+              {formik.touched.Bio && formik.errors.Bio && (
+                <div className="text-red-500 text-sm">{formik.errors.Bio}</div>
               )}
             </div>
             <div className="flex flex-row gap-4 w-full">
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
+                <label
+                  className="text-[#6F6F6F] text-lg"
+                  htmlFor="SocialChannels"
+                >
                   Social channels
                 </label>
                 <div className="flex flex-row gap-4 w-full items-start">
@@ -509,21 +515,21 @@ function Page() {
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="location">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="Location">
                 Address
               </label>
               <textarea
-                id="location"
-                name="location"
+                id="Location"
+                name="Location"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.location}
+                value={formik.values.Location}
                 rows={4}
                 className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
               />
-              {formik.touched.location && formik.errors.location && (
+              {formik.touched.Location && formik.errors.location && (
                 <div className="text-red-500 text-sm">
-                  {formik.errors.location}
+                  {formik.errors.Location}
                 </div>
               )}
             </div>

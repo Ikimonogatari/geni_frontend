@@ -110,6 +110,7 @@ function Page() {
     }),
     onSubmit: async (values) => {
       editBrandProfile(values).unwrap();
+      setShouldRefetchUserInfo(true);
     },
   });
 
