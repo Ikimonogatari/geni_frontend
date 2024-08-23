@@ -169,6 +169,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    listPaymentPlans: builder.query({
+      query: (body) => ({
+        url: "/api/web/private/subscription-plan",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -193,4 +200,5 @@ export const {
   useUpdateContentStatusMutation,
   useListBrandContentsQuery,
   useUploadByPresignUrlMutation,
+  useListPaymentPlansQuery,
 } = geniApi;

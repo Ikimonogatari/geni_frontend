@@ -28,15 +28,11 @@ function Navbar() {
 
   useEffect(() => {
     if (getUserInfoData) {
-      Cookies.set("user-info", JSON.stringify(getUserInfoData), { expires: 7 }); // Set the cookie with a 7-day expiration
+      Cookies.set("user-info", JSON.stringify(getUserInfoData), {
+        expires: 0.5,
+      });
     }
   }, [getUserInfoData]);
-
-  useEffect(() => {
-    if (getUserInfoError) {
-      console.error("Failed to fetch user info:", getUserInfoError);
-    }
-  }, [getUserInfoError]);
 
   return (
     <div className="w-full bg-[#F5F4F0] top-0 absolute">

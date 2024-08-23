@@ -239,6 +239,13 @@ function Page() {
     }
   };
 
+  const handleLogout = () => {
+    Cookies.remove("auth");
+    Cookies.remove("userType");
+    Cookies.remove("user-info");
+    router.push("/");
+  };
+
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32 mb-12">
@@ -540,6 +547,19 @@ function Page() {
               Save changes
             </button>
           </form>
+          <button
+            onClick={handleLogout}
+            className="flex flex-row justify-center items-center gap-2 mt-3 w-full bg-[#F5F4F0] rounded-2xl border border-[#2D262D] py-4 text-xl"
+          >
+            <Image
+              src={"/logout-icon.png"}
+              width={26}
+              height={26}
+              className="w-6 h-6"
+              alt=""
+            />
+            Гарах
+          </button>
         </div>
       </div>
     </div>

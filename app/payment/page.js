@@ -1,10 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useListPaymentPlansQuery } from "../services/service";
 
 function page() {
   const router = useRouter();
+
+  const {
+    data: listPaymentPlansData,
+    error: listPaymentPlansError,
+    isLoading: listPaymentPlansLoading,
+  } = useListPaymentPlansQuery();
+
+  useEffect(() => {
+    if (listPaymentPlansData) {
+      console.log(listPaymentPlansData);
+    }
+  }, [listPaymentPlansData]);
 
   return (
     <div className="min-h-screen w-full h-full bg-white">

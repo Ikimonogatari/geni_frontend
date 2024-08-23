@@ -34,8 +34,9 @@ function Page() {
 
   useEffect(() => {
     if (data) {
-      Cookies.set("auth", data.JWT, { expires: 1 });
-      Cookies.set("userType", userType, { expires: 1 });
+      Cookies.set("auth", data.JWT, { expires: 1 / 48 });
+      Cookies.set("userType", userType, { expires: 1 / 48 });
+
       router.push("/");
     }
     if (error) {
