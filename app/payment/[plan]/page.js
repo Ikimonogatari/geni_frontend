@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 import Image from "next/image";
@@ -11,11 +11,17 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/app/components/ui/dialog";
+import {
+  useListPaymentPlansQuery,
+  useSubscribePlanMutation,
+} from "@/app/services/service";
+import toast from "react-hot-toast";
 
 function page() {
   const router = useRouter();
   const params = useParams();
   const { plan } = params; // assuming the URL parameter is named 'plan'
+  console.log(plan);
 
   const planMap = {
     Trial: 0,
@@ -26,13 +32,60 @@ function page() {
 
   const id = planMap[plan] !== undefined ? planMap[plan] : 0;
 
-  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState("");
+  const {
+    data: listPaymentPlansData,
+    error: listPaymentPlansError,
+    isLoading: listPaymentPlansLoading,
+  } = useListPaymentPlansQuery();
 
-  const handleSelectPlan = (planType) => {
-    setSelectedPlan(planType);
+  const [
+    subscribePlan,
+    {
+      data: subscribePlanData,
+      error: subscribePlanError,
+      isLoading: subscribePlanLoading,
+    },
+  ] = useSubscribePlanMutation();
+
+  const [selectedType, setSelectedType] = useState();
+
+  useEffect(() => {
+    if (listPaymentPlansData) {
+      console.log(listPaymentPlansData);
+      const sortedPlans = [...listPaymentPlansData].sort((a, b) => {
+        return planOrder.indexOf(a.type) - planOrder.indexOf(b.type);
+      });
+
+      setSelectedType(sortedPlans[id]);
+      console.log(sortedPlans[id]);
+    }
+  }, [listPaymentPlansData]);
+
+  useEffect(() => {
+    if (subscribePlanData) {
+      setIsPaymentRequested(true);
+    }
+    if (subscribePlanError) {
+      toast.error("Алдаа гарлаа");
+    }
+  }, [subscribePlanData]);
+
+  const planOrder = ["Trial", "Beginner", "Pro", "Enterprise"];
+
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+  const [isPaymentRequested, setIsPaymentRequested] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(0);
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const [qrCodeSrc, setQrCodeSrc] = useState("");
+
+  const handleSelectPlan = (planId) => {
+    setSelectedPlan(planId);
   };
+
+  const handlePayment = () => {
+    subscribePlan({ planId: selectedPlan });
+  };
+
   return (
     <div className="w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
@@ -71,31 +124,51 @@ function page() {
                     className="block lg:hidden"
                   />
                   <span className="text-3xl font-bold">
-                    {subPlans[id].title}
+                    {selectedType ? selectedType.type : <></>}
                   </span>
                   <span className="text-lg">{subPlans[id].desc}</span>
                 </div>
                 <div className="flex flex-col md:flex-row gap-7 h-full">
-                  {subPlans[id].singlePlan ? (
+                  {selectedType && selectedType.plans && id != 3 ? (
                     <div
-                      onClick={() => handleSelectPlan("single")}
+                      onClick={() =>
+                        handleSelectPlan(selectedType.plans[0].planId)
+                      }
                       className={`transition-all duration-150 cursor-pointer min-h-[184px] md:w-1/2 border-[2px] ${
-                        selectedPlan === "single"
+                        selectedPlan == selectedType.plans[0].planId
                           ? "border-[#4D55F5]"
                           : "border-[#CDCDCD]"
                       } transition-all duration-150 h-full rounded-3xl w-full px-7 py-4 flex flex-col`}
                     >
                       <span className="text-lg mx-auto">
-                        {subPlans[id].singlePlan.time}
+                        {selectedType ? (
+                          selectedType.plans[0].planDurationInMonth
+                        ) : (
+                          <></>
+                        )}{" "}
+                        month
                       </span>
                       <span className="text-3xl mx-auto text-nowrap font-bold">
-                        {subPlans[id].singlePlan.total}
+                        {selectedType ? selectedType.plans[0].price : <></>} MNT
                       </span>
                       <span className="text-sm mt-5">
-                        Content limit: &nbsp;{subPlans[id].singlePlan.limit}
+                        Content limit: &nbsp;
+                        {selectedType ? (
+                          selectedType.plans[0].contentLimit
+                        ) : (
+                          <></>
+                        )}
                       </span>
                       <span className="text-sm mt-1">
-                        Content price: {subPlans[id].singlePlan.price}
+                        Content price:{" "}
+                        {selectedType ? (
+                          (
+                            selectedType.plans[0].price /
+                            selectedType.plans[0].contentLimit
+                          ).toFixed(1)
+                        ) : (
+                          <></>
+                        )}
                       </span>
                     </div>
                   ) : (
@@ -103,28 +176,54 @@ function page() {
                       {subPlans[id].text}
                     </div>
                   )}
-                  {subPlans[id].bundlePlan && (
+                  {selectedType && selectedType.plans.length > 1 ? (
                     <div
-                      onClick={() => handleSelectPlan("bundle")}
+                      onClick={() =>
+                        handleSelectPlan(selectedType.plans[1].planId)
+                      }
                       className={`transition-all duration-150 cursor-pointer min-h-[184px] h-full md:w-1/2 border-[2px] ${
-                        selectedPlan === "bundle"
+                        selectedPlan == selectedType.plans[1].planId
                           ? "border-[#4D55F5]"
                           : "border-[#CDCDCD]"
                       } transition-all duration-150 rounded-3xl w-full px-7 py-4 flex flex-col items-center justify-between`}
                     >
                       <span className="text-lg">
-                        {subPlans[id].bundlePlan.time}
+                        {selectedType ? (
+                          selectedType.plans[1].planDurationInMonth
+                        ) : (
+                          <></>
+                        )}{" "}
+                        month
                       </span>
                       <span className="text-3xl font-bold">
-                        {subPlans[id].bundlePlan.price}
+                        {selectedType ? selectedType.plans[1].price : <></>} MNT
                       </span>
                       <div className="mt-5 bg-[#4FB755] text-white text-sm rounded-3xl flex flex-col items-center w-full px-5 py-3">
-                        <span>Saved: {subPlans[id].bundlePlan.savedPrice}</span>
                         <span>
-                          + {subPlans[id].bundlePlan.freeContent} free content
+                          Saved:{" "}
+                          {selectedType ? (
+                            selectedType.plans[1].savedPrice
+                          ) : (
+                            <></>
+                          )}
+                        </span>
+                        <span>
+                          +
+                          {selectedType ? (
+                            selectedType.plans[1].freeContent ? (
+                              s.plans[1].freeContent
+                            ) : (
+                              6
+                            )
+                          ) : (
+                            <></>
+                          )}{" "}
+                          контент үнэгүй
                         </span>
                       </div>
                     </div>
+                  ) : (
+                    <></>
                   )}
                 </div>
               </div>
@@ -148,8 +247,11 @@ function page() {
                 className=""
               />
             </button>
-            <Dialog>
-              <DialogTrigger className="hover:bg-[#4D55F5] transition-all duration-250 mt-3 bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-xl w-full text-center py-4">
+            <Dialog isOpen={isPaymentRequested}>
+              <DialogTrigger
+                onClick={handlePayment}
+                className="hover:bg-[#4D55F5] transition-all duration-250 mt-3 bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-xl w-full text-center py-4"
+              >
                 Төлбөр хийх
               </DialogTrigger>
 
@@ -161,13 +263,17 @@ function page() {
                 )}
                 {!isPaymentSuccess ? (
                   <div className="flex flex-col gap-6">
-                    <Image
-                      src={"/qr-dummy.png"}
-                      width={394}
-                      height={394}
-                      alt="dummy-qr"
-                      className="w-[394px] h-[394px] rounded-2xl"
-                    />
+                    {subscribePlanData ? (
+                      <Image
+                        src={`data:image/png;base64,${subscribePlanData.QrImage}`}
+                        width={394}
+                        height={394}
+                        alt="dummy-qr"
+                        className="w-[394px] h-[394px] rounded-2xl"
+                      />
+                    ) : (
+                      <></>
+                    )}
 
                     <button
                       onClick={() => setIsPaymentSuccess(true)}

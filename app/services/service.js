@@ -176,6 +176,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    subscribePlan: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/subscribe",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -201,4 +208,5 @@ export const {
   useListBrandContentsQuery,
   useUploadByPresignUrlMutation,
   useListPaymentPlansQuery,
+  useSubscribePlanMutation,
 } = geniApi;
