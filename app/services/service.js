@@ -183,6 +183,27 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    creatorContentSubmit: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/content/submit",
+        method: "POST",
+        body,
+      }),
+    }),
+    getImagePresignedUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/private/file/url",
+        method: "POST",
+        body,
+      }),
+    }),
+    getVideoPresignedUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/private/file/url",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -209,4 +230,7 @@ export const {
   useUploadByPresignUrlMutation,
   useListPaymentPlansQuery,
   useSubscribePlanMutation,
+  useCreatorContentSubmitMutation,
+  useGetVideoPresignedUrlMutation,
+  useGetImagePresignedUrlMutation,
 } = geniApi;

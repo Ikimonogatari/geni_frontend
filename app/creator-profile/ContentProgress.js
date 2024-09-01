@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
+  useCreatorContentSubmitMutation,
+  useGetImagePresignedUrlMutation,
+  useGetVideoPresignedUrlMutation,
   useUpdateContentStatusMutation,
   useUploadByPresignUrlMutation,
 } from "../services/service";
@@ -8,10 +11,13 @@ import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 import axios from "axios";
+import { Captions } from "lucide-react";
 
 function ContentProgress({ currentContents }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
+  const [contentVideoId, setContentVideoId] = useState(null);
+  const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
 
   const [
@@ -24,27 +30,69 @@ function ContentProgress({ currentContents }) {
   ] = useUploadByPresignUrlMutation();
 
   const [
-    updateContentStatus,
+    getImagePresignedUrl,
     {
-      data: updateContentStatusData,
-      error: updateContentStatusError,
-      isLoading: updateContentStatusLoading,
+      data: getImagePresignedUrlData,
+      error: getImagePresignedUrlError,
+      isLoading: getImagePresignedUrlLoading,
     },
-  ] = useUpdateContentStatusMutation();
+  ] = useGetImagePresignedUrlMutation();
+
+  const [
+    getVideoPresignedUrl,
+    {
+      data: getVideoPresignedUrlData,
+      error: getVideoPresignedUrlError,
+      isLoading: getVideoPresignedUrlLoading,
+    },
+  ] = useGetVideoPresignedUrlMutation();
+
+  const [
+    creatorContentSubmit,
+    {
+      data: creatorContentSubmitData,
+      error: creatorContentSubmitError,
+      isLoading: creatorContentLoading,
+    },
+  ] = useCreatorContentSubmitMutation();
 
   useEffect(() => {
-    if (updateContentStatusError) {
+    if (getImagePresignedUrlError) {
       toast.error("Алдаа гарлаа");
     }
-    if (updateContentStatusData) {
+    if (getImagePresignedUrlData) {
+      setContentThumbnail(getImagePresignedUrlData.url);
+      console.log(getImagePresignedUrlData.url);
       toast.success("Амжилттай");
     }
-  }, [updateContentStatusData, updateContentStatusError]);
+  }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 
-  const handleUpdateContentStatus = (contentId, status) => {
-    updateContentStatus({
+  useEffect(() => {
+    if (getVideoPresignedUrlError) {
+      toast.error("Алдаа гарлаа");
+    }
+    if (getVideoPresignedUrlData) {
+      console.log(getVideoPresignedUrlData.url);
+      setContentVideo(getVideoPresignedUrlData.url);
+      toast.success("Амжилттай");
+    }
+  }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
+
+  useEffect(() => {
+    if (creatorContentSubmitError) {
+      toast.error("Алдаа гарлаа");
+    }
+    if (creatorContentSubmitData) {
+      toast.success("Амжилттай");
+    }
+  }, [creatorContentSubmitData, creatorContentSubmitError]);
+
+  const handleContentSubmit = (contentId) => {
+    creatorContentSubmit({
       ContentId: contentId,
-      Status: status,
+      Caption: caption,
+      ContentThumbnailFileId: contentThumbnailId,
+      ContentVideoFileId: contentVideoId,
     });
   };
 
@@ -59,9 +107,12 @@ function ContentProgress({ currentContents }) {
         uploadFile({ FolderName: "content-thumbnail" })
           .then((response) => {
             if (response.data) {
-              const { uploadURL, objectKey } = response.data;
+              const { fileId, uploadURL } = response.data;
+              setContentThumbnailId(fileId);
               uploadToS3(uploadURL, file).then(() => {
-                setContentThumbnail(objectKey);
+                getImagePresignedUrl({
+                  FileId: fileId,
+                });
               });
             }
           })
@@ -76,16 +127,19 @@ function ContentProgress({ currentContents }) {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
   } = useDropzone({
-    accept: "video/*",
+    accept: "video/mp4",
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
         uploadFile({ FolderName: "content-video" })
           .then((response) => {
             if (response.data) {
-              const { uploadURL, objectKey } = response.data;
+              const { fileId, uploadURL } = response.data;
+              setContentVideoId(fileId);
               uploadToS3(uploadURL, file).then(() => {
-                setContentVideo(objectKey);
+                getVideoPresignedUrl({
+                  FileId: fileId,
+                });
               });
             }
           })
@@ -96,26 +150,37 @@ function ContentProgress({ currentContents }) {
     },
   });
 
+  const uploadToS3 = async (url, file) => {
+    console.log(url);
+    console.log(file);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.put(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status == 200) {
+        console.log(response);
+      } else {
+        throw new Error(`HTTP error! status: ${response}`);
+      }
+    } catch (error) {
+      console.error("Error uploading to S3:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     if (uploadFileError) {
       toast.error("Файл оруулахад алдаа гарлаа");
     }
   }, [uploadFileData, uploadFileError]);
-  const uploadToS3 = async (url, file) => {
-    console.log(url);
-    console.log(file);
-    const response = await axios.put(url, file, {
-      headers: {
-        "Content-Type": "video/mp4",
-      },
-    });
-    if (response.ok) {
-      console.log(response);
-    }
-    if (!response.ok) {
-      throw new Error(response.data);
-    }
-  };
+
   const getColorClass = (status) => {
     switch (status) {
       case "Request":
@@ -255,16 +320,16 @@ function ContentProgress({ currentContents }) {
                     <div className="flex flex-col gap-4">
                       <span className="text-lg">Content</span>
                       <div
-                        {...getRootPropsForImage()}
+                        {...getRootPropsForVideo()}
                         className="h-[484px] w-[272px]"
                       >
-                        <input {...getInputPropsForImage()} />
-                        {contentThumbnail ? (
-                          <img
-                            src={contentThumbnail}
-                            alt="Thumbnail Preview"
-                            className="w-full h-auto"
-                          />
+                        <input {...getInputPropsForVideo()} />
+
+                        {contentVideo ? (
+                          <video controls className="w-full h-auto">
+                            <source src={contentVideo} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
                         ) : (
                           <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
                             <Image
@@ -282,15 +347,16 @@ function ContentProgress({ currentContents }) {
                     <div className="flex flex-col gap-4">
                       <span className="text-lg">Thumbnail</span>
                       <div
-                        {...getRootPropsForVideo()}
+                        {...getRootPropsForImage()}
                         className="h-[484px] w-[272px]"
                       >
-                        <input {...getInputPropsForVideo()} />
-                        {contentVideo ? (
-                          <video controls className="w-full h-auto">
-                            <source src={contentVideo} type="video/mp4" />
-                            Your browser does not support the video tag.
-                          </video>
+                        <input {...getInputPropsForImage()} />
+                        {contentThumbnail ? (
+                          <img
+                            src={contentThumbnail}
+                            alt="Thumbnail Preview"
+                            className="w-full h-auto"
+                          />
                         ) : (
                           <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
                             <Image
@@ -316,14 +382,16 @@ function ContentProgress({ currentContents }) {
                           className="p-2 h-[112px] w-[272px] border border-gray-300 rounded-md"
                         />
                       </div>
-                      <button
-                        onClick={() =>
-                          handleUpdateContentStatus(p.ContentId, "ContentSent")
-                        }
-                        className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
-                      >
-                        Илгээх
-                      </button>
+                      {contentThumbnail && contentVideo && caption ? (
+                        <button
+                          onClick={() => handleContentSubmit(p.ContentId)}
+                          className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                        >
+                          Илгээх
+                        </button>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </DialogContent>
