@@ -7,6 +7,9 @@ import Cookies from "js-cookie";
 import { useUserInfo } from "@/app/context/UserInfoContext";
 
 function Navbar() {
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const userType = Cookies.get("userType");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { shouldRefetchUserInfo, setShouldRefetchUserInfo } =
     useUserInfo(false);
@@ -62,32 +65,63 @@ function Navbar() {
           >
             Brands
           </a>
-          {/* <a
-            href="/profile"
+          <a
+            href={
+              userType === "Creator" ? "/creator-profile" : "/brand-profile"
+            }
             className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
           >
             Profile
-          </a> */}
+          </a>
         </div>
-        <div className="relative flex flex-row w-full justify-between md:justify-center items-center gap-12 text-base text-[#000000B8]">
-          <a href="/">
+        <div className="w-full flex flex-row justify-between items-center gap-12 text-base text-[#000000B8]">
+          <a
+            href="/"
+            className="flex flex-row items-start justify-center gap-2 w-auto"
+          >
             <Image
               src={"/geni-logo.svg"}
               height={26}
               width={96.2}
               alt="logo"
-              className="static md:absolute left-0"
+              className=""
             />
+            <span className="bg-[#2D262D] px-3 py-1 rounded-3xl text-xs text-white">
+              beta
+            </span>
           </a>
           <NavButtons />
-          <button onClick={() => setdropdownOpen(!dropdownOpen)}>
-            <Image
-              src={"/menu-icon.png"}
-              width={24}
-              height={24}
-              alt="menu"
-              className="block md:hidden"
-            />
+
+          {userType && userInfo ? (
+            <a
+              href={
+                userType === "Creator" ? "/creator-profile" : "/brand-profile"
+              }
+              className={`hidden md:flex flex-row items-center gap-1 ${
+                userType === "Creator" ? "bg-[#CA7FFE]" : "bg-[#4D55F5]"
+              } rounded-2xl px-2 sm:px-7 py-2 border-[1px] border-[#2D262D]`}
+            >
+              <Image
+                src={"/user-icon.png"}
+                width={24}
+                height={24}
+                alt=""
+                className="w-6 h-6"
+              />
+              <span className="text-white text-base font-semibold">
+                {userType === "Creator"
+                  ? parsedUserInfo?.FirstName
+                  : parsedUserInfo?.Name}
+              </span>
+            </a>
+          ) : (
+            <div className="w-[123px] h-[42px]"></div>
+          )}
+          <button
+            className="block md:hidden"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <Image src={"/menu-icon.png"} width={32} height={32} alt="menu" />
           </button>
         </div>
       </div>

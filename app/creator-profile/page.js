@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "./ContentGallery";
-
 import Contents from "@/app/profile/Contents";
 import GraphCMSImageLoader from "@/app/components/GraphCMSImageLoader";
 import {
@@ -16,6 +15,7 @@ import Link from "next/link";
 
 function page() {
   const userInfo = Cookies.get("user-info");
+  console.log(userInfo);
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   console.log(parsedUserInfo);
   // console.log(id);

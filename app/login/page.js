@@ -36,6 +36,7 @@ function Page() {
     if (data) {
       Cookies.set("auth", data.JWT, { expires: 1 / 48 });
       Cookies.set("userType", userType, { expires: 1 / 48 });
+
       if (userType === "Creator") {
         router.push("/creator-profile");
       } else if (userType === "Brand") {

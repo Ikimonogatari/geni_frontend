@@ -6,7 +6,7 @@ function NavButtons() {
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="flex flex-row items-center gap-6 lg:gap-12">
       <a
         href="/creators"
         className={`${
@@ -28,7 +28,7 @@ function NavButtons() {
       >
         Geni Brands
       </a>
-    </>
+    </div>
   );
 }
 
