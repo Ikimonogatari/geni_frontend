@@ -36,8 +36,11 @@ function Page() {
     if (data) {
       Cookies.set("auth", data.JWT, { expires: 1 / 48 });
       Cookies.set("userType", userType, { expires: 1 / 48 });
-
-      router.push("/");
+      if (userType === "Creator") {
+        router.push("/creator-profile");
+      } else if (userType === "Brand") {
+        router.push("/brand-profile");
+      }
     }
     if (error) {
       toast.error(error.data.error);
