@@ -29,7 +29,7 @@ function Navbar() {
   useEffect(() => {
     if (getUserInfoData) {
       Cookies.set("user-info", JSON.stringify(getUserInfoData), {
-        expires: 0.5,
+        expires: 1 / 48,
       });
     }
   }, [getUserInfoData]);
