@@ -213,7 +213,7 @@ function page() {
             <div className="flex flex-row items-center gap-5">
               <Link
                 href={"/notifications"}
-                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
+                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
                 <Image
                   src={"/brand-profile-icon2.png"}
@@ -225,7 +225,7 @@ function page() {
               </Link>
               <Link
                 href={"/edit-profile-creator"}
-                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5"
+                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
                 <Image
                   src={"/brand-profile-icon3.png"}

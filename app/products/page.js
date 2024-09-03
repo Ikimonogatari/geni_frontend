@@ -15,9 +15,30 @@ function Page() {
     isLoading: listProductsLoading,
   } = useListPublicProductsQuery();
 
+  const getStockStatus = (leftStock, quantity, createdAt) => {
+    const ratio = leftStock / quantity;
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    let statusText = "";
+    let className = "";
+
+    if (new Date(createdAt).getTime() > twentyFourHoursAgo.getTime())
+      return { status: "Шинэ", className: "bg-[#4FB755]" };
+    else if (leftStock === 0) {
+      return { status: "Дууссан", className: "bg-[#4FB755]" };
+    } else if (ratio <= 0.2) {
+      return { status: "Цөөхөн үлдсэн", className: "bg-[#F49D19]" };
+    } else {
+      return { status: "Хангалттай", className: "bg-[#4FB755]" };
+    }
+
+    return { statusText, className };
+  };
+
   useEffect(() => {
     if (listProductsData) {
-      let filtered = [...listProductsData.Data]; // Ensure it's an array
+      let filtered = [...listProductsData.Data];
       console.log(filtered);
       if (selectedCategory) {
         filtered = filtered.filter((product) =>
@@ -38,7 +59,6 @@ function Page() {
             )
         );
       }
-
       setFilteredProducts(filtered);
     } else {
       setFilteredProducts([]); // Set to an empty array if listProductsData is not an array or is undefined
@@ -82,41 +102,55 @@ function Page() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-11">
             {listProductsData ? (
-              filteredProducts.map((product) => (
-                <Link
-                  href={`/products/${product.ProductId}`}
-                  key={product.ProductId}
-                  className="flex flex-col rounded-2xl shadow-md"
-                >
-                  <div className="relative w-full rounded-t-2xl">
-                    <Image
-                      src={product.ProductPics[0].Url}
-                      width={280}
-                      height={280}
-                      alt=""
-                      className="max-h-[290px] lg:max-h-[324px] xl:max-w-[324px] inset-0 w-full rounded-t-2xl"
-                    />
-                    <div className="flex flex-row items-center gap-2">
-                      {product.ProductTypes?.map((t, i) => (
-                        <div
-                          key={i}
-                          className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2 absolute top-2 right-2 sm:top-3 sm:right-3"
-                        >
-                          {t.TypeName}
+              filteredProducts.map((product) => {
+                const stockStatus = getStockStatus(
+                  product.LeftStock,
+                  product.Quantity,
+                  product.CreatedAt
+                );
+                return (
+                  <Link
+                    href={`/products/${product.ProductId}`}
+                    key={product.ProductId}
+                    className="flex flex-col rounded-2xl shadow-md"
+                  >
+                    <div className="relative w-full rounded-t-2xl">
+                      <Image
+                        src={product.ProductPics[0].Url}
+                        width={280}
+                        height={280}
+                        alt=""
+                        className="max-h-[290px] lg:max-h-[324px] xl:max-w-[324px] inset-0 w-full rounded-t-2xl"
+                      />
+                      <div className="flex flex-row items-center justify-between w-full absolute top-2 px-3 sm:top-3">
+                        <div className="flex flex-row items-center w-full gap-2">
+                          {product.ProductTypes?.map((t, i) => (
+                            <div
+                              key={i}
+                              className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2"
+                            >
+                              {t.TypeName}
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                        <div
+                          className={`${stockStatus.className} text-white whitespace-nowrap text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2`}
+                        >
+                          <span className="">{stockStatus.status}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col gap-2 rounded-b-2xl h-full">
-                    <span className="font-bold text-sm sm:text-xl">
-                      {product.BrandName}
-                    </span>
-                    <span className="text-xs sm:text-lg">
-                      {product.ProductName}
-                    </span>
-                  </div>
-                </Link>
-              ))
+                    <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col gap-2 rounded-b-2xl h-full">
+                      <span className="font-bold text-sm sm:text-xl">
+                        {product.BrandName}
+                      </span>
+                      <span className="text-xs sm:text-lg">
+                        {product.ProductName}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })
             ) : (
               <></>
             )}

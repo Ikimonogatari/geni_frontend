@@ -65,14 +65,23 @@ function Navbar() {
           >
             Brands
           </a>
-          <a
-            href={
-              userType === "Creator" ? "/creator-profile" : "/brand-profile"
-            }
-            className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
-          >
-            Profile
-          </a>
+          {userType && userInfo ? (
+            <a
+              href={
+                userType === "Creator" ? "/creator-profile" : "/brand-profile"
+              }
+              className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
+            >
+              Profile
+            </a>
+          ) : (
+            <a
+              href={"/login"}
+              className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
+            >
+              Login
+            </a>
+          )}
         </div>
         <div className="w-full flex flex-row justify-between items-center gap-12 text-base text-[#000000B8]">
           <a
@@ -115,7 +124,12 @@ function Navbar() {
               </span>
             </a>
           ) : (
-            <div className="w-[123px] h-[42px]"></div>
+            <a
+              href={"/login"}
+              className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-2xl text-white px-2 sm:px-8 py-2 border-[1px] border-[#2D262D]`}
+            >
+              Нэвтрэх
+            </a>
           )}
           <button
             className="block md:hidden"
