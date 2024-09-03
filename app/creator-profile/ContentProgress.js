@@ -275,8 +275,8 @@ function ContentProgress({ currentContents }) {
 
   return (
     <div className="w-full overflow-x-auto">
-      <div className="min-w-[768px] mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
-        <div className="p-5 grid grid-cols-[3fr,2fr,1fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
+      <div className="min-w-[1068px] mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,1fr,2fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
           <div className="col-span-1 flex flex-row items-center justify-between">
             <span className="">Бүтээгдэхүүн</span>
             <Image
@@ -302,7 +302,7 @@ function ContentProgress({ currentContents }) {
         {currentContents.map((p, i) => (
           <div
             key={i}
-            className="w-full grid grid-cols-[3fr,2fr,1fr,4fr,2fr] gap-6 items-center p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
+            className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,1fr,2fr,4fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
           >
             <span className="col-span-1">{p.ProductName}</span>
             <span className="col-span-1">{p.BrandName}</span>
@@ -321,7 +321,7 @@ function ContentProgress({ currentContents }) {
               />
               <span className="">{getStatusName(p.Status)}</span>
             </div>
-            <div>
+            <div className="col-span-1">
               {p.Status === "ProdApproved" ? (
                 <button
                   onClick={() =>
@@ -340,19 +340,19 @@ function ContentProgress({ currentContents }) {
                   >
                     Контент илгээх
                   </DialogTrigger>
-                  <DialogContent className="flex flex-col p-6 h-[739px] max-w-[1000px]">
+                  <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
                     <span className="text-3xl font-bold">Контент илгээх</span>
-                    <div className="flex flex-row gap-6">
+                    <div className="flex flex-col lg:flex-row gap-6">
                       <div className="flex flex-col gap-4">
                         <span className="text-lg">Content</span>
                         <div
                           {...getRootPropsForVideo()}
-                          className="h-[484px] w-[272px]"
+                          className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
                         >
                           <input {...getInputPropsForVideo()} />
 
                           {contentVideo ? (
-                            <video controls className="w-full h-auto">
+                            <video controls className="w-full h-full lg:h-auto">
                               <source src={contentVideo} type="video/mp4" />
                               Your browser does not support the video tag.
                             </video>
@@ -374,7 +374,7 @@ function ContentProgress({ currentContents }) {
                         <span className="text-lg">Thumbnail</span>
                         <div
                           {...getRootPropsForImage()}
-                          className="h-[484px] w-[272px]"
+                          className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
                         >
                           <input {...getInputPropsForImage()} />
                           {contentThumbnail ? (
@@ -405,7 +405,7 @@ function ContentProgress({ currentContents }) {
                             value={caption}
                             onChange={(e) => setCaption(e.target.value)}
                             placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-                            className="p-2 h-[112px] w-[272px] border border-gray-300 rounded-md"
+                            className="p-2 h-[112px] w-full lg:w-[272px] border border-gray-300 rounded-md"
                           />
                         </div>
                         {contentThumbnail && contentVideo && caption ? (

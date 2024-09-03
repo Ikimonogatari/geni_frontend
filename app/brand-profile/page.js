@@ -211,9 +211,9 @@ function page() {
                 />
               </Link>
 
-              <a
+              <Link
                 href="/add-product"
-                className="flex md:hidden flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+                className="flex md:hidden flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
               >
                 Шинэ бүтээгдэхүүн нэмэх
                 <Image
@@ -222,11 +222,11 @@ function page() {
                   height={14}
                   alt="arrow"
                 />
-              </a>
+              </Link>
             </div>
           </div>
 
-          <div className="pl-7 md:px-7 mt-10 sm:mt-16 w-full flex flex-row items-center justify-between">
+          <div className="pl-7 md:px-7 mt-4 sm:mt-16 w-full flex flex-row items-center justify-between">
             <div className="overflow-x-auto w-full">
               <div className="flex flex-row items-center min-w-[448px] gap-3">
                 {brandProfileButtons.map((b, i) => (
