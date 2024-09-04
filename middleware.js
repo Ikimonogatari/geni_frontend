@@ -18,14 +18,9 @@ export function middleware(req) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Check user type and restrict access accordingly
-
-  console.log(userType.value, "user type shude");
-  console.log("Is Creator:", userType); // Add these logs
-
   // Redirect Creator users trying to access Brand-specific pages
   if (
-    userType.value !== "Brand" &&
+    userType?.value !== "Brand" &&
     (url.pathname === "/brand-profile" ||
       url.pathname === "/edit-profile-brand" ||
       url.pathname === "/add-product")

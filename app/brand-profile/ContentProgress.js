@@ -1,10 +1,56 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useUpdateContentStatusMutation } from "../services/service";
+import {
+  useBrandReceiveContentMutation,
+  useUpdateContentStatusMutation,
+  useGetImagePresignedUrlMutation,
+  useGetVideoPresignedUrlMutation,
+} from "../services/service";
 import toast from "react-hot-toast";
+import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 
 function ContentProgress({ currentContents }) {
+  const [contentThumbnail, setContentThumbnail] = useState(null);
+  const [contentVideo, setContentVideo] = useState(null);
+  const [score, setScore] = useState("");
+  const [comment, setComment] = useState("");
+
   console.log(currentContents);
+
+  const [
+    getImagePresignedUrl,
+    {
+      data: getImagePresignedUrlData,
+      error: getImagePresignedUrlError,
+      isLoading: getImagePresignedUrlLoading,
+    },
+  ] = useGetImagePresignedUrlMutation();
+
+  const [
+    getVideoPresignedUrl,
+    {
+      data: getVideoPresignedUrlData,
+      error: getVideoPresignedUrlError,
+      isLoading: getVideoPresignedUrlLoading,
+    },
+  ] = useGetVideoPresignedUrlMutation();
+
+  useEffect(() => {
+    if (getImagePresignedUrlError) {
+    }
+    if (getImagePresignedUrlData) {
+      setContentThumbnail(getImagePresignedUrlData.url);
+      console.log(getImagePresignedUrlData.url);
+    }
+  }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
+
+  useEffect(() => {
+    if (getVideoPresignedUrlError) {
+    }
+    if (getVideoPresignedUrlData) {
+      setContentVideo(getVideoPresignedUrlData.url);
+    }
+  }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
   const [
     updateContentStatus,
@@ -15,6 +61,15 @@ function ContentProgress({ currentContents }) {
     },
   ] = useUpdateContentStatusMutation();
 
+  const [
+    brandReceiveContent,
+    {
+      data: brandReceiveContentData,
+      error: brandReceiveContentError,
+      isLoading: brandReceiveContentLoading,
+    },
+  ] = useBrandReceiveContentMutation();
+
   useEffect(() => {
     if (updateContentStatusError) {
       toast.error("Алдаа гарлаа");
@@ -24,6 +79,27 @@ function ContentProgress({ currentContents }) {
     }
   }, [updateContentStatusData, updateContentStatusError]);
 
+  useEffect(() => {
+    if (brandReceiveContentError) {
+      toast.error("Алдаа гарлаа");
+    }
+    if (!brandReceiveContentError) {
+      toast.success("Амжилттай");
+    }
+  }, [brandReceiveContentData, brandReceiveContentError]);
+
+  const handleDialogTrigger = (thumbnailId, contentId) => {
+    getImagePresignedUrl({ FileId: thumbnailId });
+    getVideoPresignedUrl({ FileId: contentId });
+  };
+
+  const handleContentReceive = (contentId) => {
+    brandReceiveContent({
+      ContentId: contentId,
+      Comment: comment,
+      Point: score,
+    });
+  };
   const getColorClass = (status) => {
     switch (status) {
       case "Request":
@@ -149,18 +225,107 @@ function ContentProgress({ currentContents }) {
               <span className="">{getStatusName(p.Status)}</span>
             </div>
             <div>
-              {p.Status === "ContentSent" ? (
-                <button
-                  onClick={() =>
-                    updateContentStatus({
-                      ContentId: p.ContentId,
-                      Status: "ContentReceived",
-                    })
-                  }
-                  className="bg-[#4D55F5] border-[1px] border-[#2D262D] whitespace-nowrap px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  Контент авах
-                </button>
+              {p.Status === "ContentApproved" ? (
+                <Dialog>
+                  <DialogTrigger
+                    onClick={() =>
+                      handleDialogTrigger(
+                        p.ContentThumbnailFileId,
+                        p.ContentVideoFileId
+                      )
+                    }
+                    type="submit"
+                    className="bg-[#4D55F5] border-[1px] border-[#2D262D] whitespace-nowrap px-5 py-2 rounded-lg text-white font-bold"
+                  >
+                    Контент авах
+                  </DialogTrigger>
+                  <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
+                    <span className="text-3xl font-bold">Контент авах</span>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      <div className="flex flex-col gap-4">
+                        <span className="text-lg">Контент</span>
+
+                        {contentVideo ? (
+                          <video
+                            controls
+                            className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
+                          >
+                            <source src={contentVideo} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-4">
+                        <span className="text-lg">Thumbnail зураг</span>
+
+                        {contentThumbnail ? (
+                          <img
+                            src={contentThumbnail}
+                            alt=""
+                            className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-4 h-full justify-between">
+                        <div className="flex flex-col gap-4">
+                          <span className="text-lg">Тайлбар</span>
+                        </div>
+                        <div className="flex flex-col gap-6">
+                          <span className="text-sm text-[#6F6F6F]">
+                            {p.Caption}
+                          </span>
+                          <div className="flex flex-col gap-2">
+                            <span className="text-sm">
+                              Та контент бүтээгчид оноо өгнө үү
+                            </span>
+                            <div className="flex flex-row items-center gap-[6px]">
+                              {scores.map((s, i) => (
+                                <span
+                                  onClick={() => setScore(s)}
+                                  key={i}
+                                  className={`transition-all duration-150 cursor-pointer py-2 px-4 ${
+                                    score == s
+                                      ? "bg-[#4FB755] text-white border-[1px] border-white"
+                                      : "bg-none text-[#CDCDCD] border-[#CDCDCD] border-[1px]"
+                                  } text-sm rounded-xl`}
+                                >
+                                  {s}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <span className="text-sm">
+                              Та контент бүтээгчид сэтгэгдэлээ үлдээнэ үү
+                            </span>
+                            <textarea
+                              type="text"
+                              value={comment}
+                              onChange={(e) => setComment(e.target.value)}
+                              className="text-sm p-2 h-[127px] w-full lg:max-w-[445px] bg-[#F5F4F0] outline-none border rounded-md"
+                            />
+                          </div>
+                        </div>
+                        {comment && score ? (
+                          <button
+                            onClick={() => handleContentReceive(p.ContentId)}
+                            className="mt-6 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                          >
+                            Хүлээж авлаа
+                          </button>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               ) : (
                 <></>
               )}
@@ -189,9 +354,4 @@ function ContentProgress({ currentContents }) {
 
 export default ContentProgress;
 
-const stages = [
-  "/stage-icon1.png",
-  "/stage-icon2.png",
-  "/stage-icon3.png",
-  "/stage-icon4.png",
-];
+const scores = ["20", "40", "60", "80", "100"];

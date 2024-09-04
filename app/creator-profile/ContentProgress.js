@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 import axios from "axios";
-import { Captions } from "lucide-react";
 
 function ContentProgress({ currentContents }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
@@ -76,23 +75,19 @@ function ContentProgress({ currentContents }) {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
-      toast.error("Алдаа гарлаа");
     }
     if (getImagePresignedUrlData) {
       setContentThumbnail(getImagePresignedUrlData.url);
       console.log(getImagePresignedUrlData.url);
-      toast.success("Амжилттай");
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
-      toast.error("Алдаа гарлаа");
     }
     if (getVideoPresignedUrlData) {
       console.log(getVideoPresignedUrlData.url);
       setContentVideo(getVideoPresignedUrlData.url);
-      toast.success("Амжилттай");
     }
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
@@ -100,7 +95,7 @@ function ContentProgress({ currentContents }) {
     if (creatorContentSubmitError) {
       toast.error("Алдаа гарлаа");
     }
-    if (creatorContentSubmitData) {
+    if (!creatorContentSubmitError) {
       toast.success("Амжилттай");
     }
   }, [creatorContentSubmitData, creatorContentSubmitError]);
@@ -179,13 +174,10 @@ function ContentProgress({ currentContents }) {
     console.log(url);
     console.log(file);
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const response = await axios.put(url, formData, {
+      const response = await axios.put(url, file, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/octet-stream",
         },
       });
 
@@ -344,7 +336,7 @@ function ContentProgress({ currentContents }) {
                     <span className="text-3xl font-bold">Контент илгээх</span>
                     <div className="flex flex-col lg:flex-row gap-6">
                       <div className="flex flex-col gap-4">
-                        <span className="text-lg">Content</span>
+                        <span className="text-lg">Контент</span>
                         <div
                           {...getRootPropsForVideo()}
                           className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
@@ -371,7 +363,7 @@ function ContentProgress({ currentContents }) {
                       </div>
 
                       <div className="flex flex-col gap-4">
-                        <span className="text-lg">Thumbnail</span>
+                        <span className="text-lg">Thumbnail зураг</span>
                         <div
                           {...getRootPropsForImage()}
                           className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
@@ -399,7 +391,7 @@ function ContentProgress({ currentContents }) {
 
                       <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col gap-4">
-                          <span className="text-lg">Caption</span>
+                          <span className="text-lg">Тайлбар</span>
                           <textarea
                             type="text"
                             value={caption}

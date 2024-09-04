@@ -204,6 +204,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    brandReceiveContent: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/content/receive",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -233,4 +240,5 @@ export const {
   useCreatorContentSubmitMutation,
   useGetVideoPresignedUrlMutation,
   useGetImagePresignedUrlMutation,
+  useBrandReceiveContentMutation,
 } = geniApi;
