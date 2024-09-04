@@ -95,7 +95,7 @@ function ContentProgress({ currentContents }) {
     if (creatorContentSubmitError) {
       toast.error("Алдаа гарлаа");
     }
-    if (!creatorContentSubmitError) {
+    if (creatorContentSubmitData) {
       toast.success("Амжилттай");
     }
   }, [creatorContentSubmitData, creatorContentSubmitError]);
@@ -268,7 +268,7 @@ function ContentProgress({ currentContents }) {
   return (
     <div className="w-full overflow-x-auto">
       <div className="min-w-[1068px] mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
-        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,1fr,2fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
+        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
           <div className="col-span-1 flex flex-row items-center justify-between">
             <span className="">Бүтээгдэхүүн</span>
             <Image
@@ -294,7 +294,7 @@ function ContentProgress({ currentContents }) {
         {currentContents.map((p, i) => (
           <div
             key={i}
-            className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,1fr,2fr,4fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
+            className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
           >
             <span className="col-span-1">{p.ProductName}</span>
             <span className="col-span-1">{p.BrandName}</span>

@@ -23,7 +23,8 @@ export function middleware(req) {
     userType?.value !== "Brand" &&
     (url.pathname === "/brand-profile" ||
       url.pathname === "/edit-profile-brand" ||
-      url.pathname === "/add-product")
+      url.pathname === "/add-product" ||
+      url.pathname === "/payment")
   ) {
     console.log("Redirecting Creator to login"); // Add this log
     return NextResponse.redirect(new URL("/login", req.nextUrl));

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
-import ContentGallery from "./ContentGallery";
+import ContentGallery from "../components/ContentGallery";
 import Contents from "@/app/profile/Contents";
 import GraphCMSImageLoader from "@/app/components/GraphCMSImageLoader";
 import {
@@ -78,12 +78,7 @@ function page() {
       case "content-progress":
         return <ContentProgress currentContents={currentContents} />;
       case "content-gallery":
-        return (
-          <ContentGallery
-            creatorData={currentContents}
-            contentsGallery={currentContents}
-          />
-        );
+        return <ContentGallery contentsGallery={currentContents} />;
 
       default:
         return <ContentProgress currentContents={currentContents} />;

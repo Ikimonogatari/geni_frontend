@@ -130,7 +130,7 @@ export const geniApi = createApi({
     }),
     listCreatorContents: builder.query({
       query: (body) => ({
-        url: `/api/web/private/content`,
+        url: `/api/web/private/content?offset=0`,
         method: "GET",
         body,
       }),
@@ -211,6 +211,12 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    checkPayment: builder.query({
+      query: (txId) => ({
+        url: `/api/admin/qpay/callback/${txId}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -241,4 +247,5 @@ export const {
   useGetVideoPresignedUrlMutation,
   useGetImagePresignedUrlMutation,
   useBrandReceiveContentMutation,
+  useCheckPaymentQuery,
 } = geniApi;

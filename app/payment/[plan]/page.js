@@ -12,6 +12,7 @@ import {
   DialogClose,
 } from "@/app/components/ui/dialog";
 import {
+  useCheckPaymentQuery,
   useListPaymentPlansQuery,
   useSubscribePlanMutation,
 } from "@/app/services/service";
@@ -22,6 +23,7 @@ function page() {
   const params = useParams();
   const { plan } = params; // assuming the URL parameter is named 'plan'
   console.log(plan);
+  const [txId, setTxId] = useState(null);
 
   const planMap = {
     Trial: 0,
@@ -49,6 +51,12 @@ function page() {
 
   const [selectedType, setSelectedType] = useState();
 
+  const {
+    data: checkPaymentData,
+    error: checkPaymentError,
+    isLoading: checkPaymentLoading,
+  } = useCheckPaymentQuery();
+
   useEffect(() => {
     if (listPaymentPlansData) {
       console.log(listPaymentPlansData);
@@ -62,8 +70,16 @@ function page() {
   }, [listPaymentPlansData]);
 
   useEffect(() => {
+    if (checkPaymentData && checkPaymentData?.IsPaid) {
+      console.log(checkPaymentData);
+      setIsPaymentSuccess(true);
+    }
+  }, [checkPaymentData]);
+
+  useEffect(() => {
     if (subscribePlanData) {
       setIsPaymentRequested(true);
+      setTxId(subscribePlanData.UserTxnId);
     }
     if (subscribePlanError) {
       toast.error("Алдаа гарлаа");
@@ -275,12 +291,12 @@ function page() {
                       <></>
                     )}
 
-                    <button
+                    {/* <button
                       onClick={() => setIsPaymentSuccess(true)}
                       className="bg-[#4D55F5] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
                     >
                       Төлбөр шалгах
-                    </button>
+                    </button> */}
                   </div>
                 ) : (
                   <div className="flex flex-col gap-6">

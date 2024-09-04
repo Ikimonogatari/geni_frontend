@@ -83,7 +83,7 @@ function ContentProgress({ currentContents }) {
     if (brandReceiveContentError) {
       toast.error("Алдаа гарлаа");
     }
-    if (!brandReceiveContentError) {
+    if (brandReceiveContentData) {
       toast.success("Амжилттай");
     }
   }, [brandReceiveContentData, brandReceiveContentError]);
@@ -169,7 +169,7 @@ function ContentProgress({ currentContents }) {
   return (
     <div className="w-full overflow-x-auto">
       <div className="min-w-[768px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
-        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,2fr,2fr,4fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
+        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
           <div className="col-span-1 flex flex-row items-center justify-between">
             <span className="">Бүтээгдэхүүн</span>
 
@@ -196,7 +196,7 @@ function ContentProgress({ currentContents }) {
         {currentContents.map((p, i) => (
           <div
             key={i}
-            className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,2fr,4fr,1fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
+            className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-[1px] rounded-3xl"
           >
             <span className="col-span-1">{p.ProductName}</span>
             <div className="col-span-1 flex flex-row items-center gap-3">
@@ -224,7 +224,7 @@ function ContentProgress({ currentContents }) {
               />
               <span className="">{getStatusName(p.Status)}</span>
             </div>
-            <div>
+            <div className="col-span-1">
               {p.Status === "ContentApproved" ? (
                 <Dialog>
                   <DialogTrigger
@@ -326,21 +326,6 @@ function ContentProgress({ currentContents }) {
                     </div>
                   </DialogContent>
                 </Dialog>
-              ) : (
-                <></>
-              )}
-              {p.Status === "ProdApproved" ? (
-                <button
-                  onClick={() =>
-                    updateContentStatus({
-                      ContentId: p.ContentId,
-                      Status: "ProdDelivering",
-                    })
-                  }
-                  className="bg-[#4D55F5] border-[1px] border-[#2D262D] whitespace-nowrap px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  Хүргэх
-                </button>
               ) : (
                 <></>
               )}

@@ -2,13 +2,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
-import ContentGallery from "./ContentGallery";
+import ContentGallery from "../components/ContentGallery";
 import BrandProducts from "./BrandProducts";
 import Cookies from "js-cookie";
-import {
-  useListBrandContentsQuery,
-  useListCreatorContentsQuery,
-} from "@/app/services/service";
+import { useListBrandContentsQuery } from "@/app/services/service";
 import Link from "next/link";
 
 function page() {
