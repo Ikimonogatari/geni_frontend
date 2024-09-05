@@ -55,7 +55,8 @@ function page() {
     data: checkPaymentData,
     error: checkPaymentError,
     isLoading: checkPaymentLoading,
-  } = useCheckPaymentQuery();
+    refetch: checkPayment,
+  } = useCheckPaymentQuery(txId);
 
   useEffect(() => {
     if (listPaymentPlansData) {
@@ -74,22 +75,23 @@ function page() {
       console.log(checkPaymentData);
       setIsPaymentSuccess(true);
     }
-  }, [checkPaymentData]);
+    if (checkPaymentError) {
+      toast.error("Алдаа гарлаа");
+    }
+  }, [checkPaymentData, checkPaymentError, subscribePlanData]);
 
   useEffect(() => {
     if (subscribePlanData) {
-      setIsPaymentRequested(true);
       setTxId(subscribePlanData.UserTxnId);
     }
     if (subscribePlanError) {
       toast.error("Алдаа гарлаа");
     }
-  }, [subscribePlanData]);
+  }, [subscribePlanData, subscribePlanError]);
 
   const planOrder = ["Trial", "Beginner", "Pro", "Enterprise"];
 
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
-  const [isPaymentRequested, setIsPaymentRequested] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(0);
   const [selectedPayment, setSelectedPayment] = useState("");
   const [qrCodeSrc, setQrCodeSrc] = useState("");
@@ -100,6 +102,10 @@ function page() {
 
   const handlePayment = () => {
     subscribePlan({ planId: selectedPlan });
+  };
+
+  const handleCheckOayment = (txId) => {
+    checkPayment(txId);
   };
 
   return (
@@ -263,7 +269,7 @@ function page() {
                 className=""
               />
             </button>
-            <Dialog isOpen={isPaymentRequested}>
+            <Dialog>
               <DialogTrigger
                 onClick={handlePayment}
                 className="hover:bg-[#4D55F5] transition-all duration-250 mt-3 bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-xl w-full text-center py-4"
@@ -291,12 +297,12 @@ function page() {
                       <></>
                     )}
 
-                    {/* <button
-                      onClick={() => setIsPaymentSuccess(true)}
+                    <button
+                      onClick={() => checkPayment(subscribePlanData.UserTxnId)}
                       className="bg-[#4D55F5] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
                     >
                       Төлбөр шалгах
-                    </button> */}
+                    </button>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-6">

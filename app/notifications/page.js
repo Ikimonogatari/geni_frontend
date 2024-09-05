@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Image from "next/image";
+import { useListNotificationQuery } from "../services/service";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -10,9 +11,17 @@ function Page() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(notifications.length / ITEMS_PER_PAGE);
+  const {
+    data: listNotificationData,
+    error: listNotificationError,
+    isLoading: listNotificationLoading,
+  } = useListNotificationQuery();
 
-  const paginatedNotifications = notifications.slice(
+  const totalPages = Math.ceil(listNotificationData?.length / ITEMS_PER_PAGE);
+  if (listNotificationData) {
+    console.log(listNotificationData);
+  }
+  const paginatedNotifications = listNotificationData?.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -44,6 +53,19 @@ function Page() {
     return pageNumbers;
   };
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    // Get month, day, year, hour, and minutes
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${month}/${day}/${year} ${hours}:${minutes}`;
+  }
+
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
@@ -60,45 +82,50 @@ function Page() {
             />
           </button>
           <span className="text-[#2D262D] font-bold text-4xl sm:text-5xl xl:text-6xl my-7">
-            Notification
+            Мэдэгдэл
           </span>
           <div className="flex flex-col gap-4 w-full">
-            {paginatedNotifications.map((n, i) => (
+            {paginatedNotifications?.map((n, i) => (
               <div
                 key={i}
                 onClick={() => router.push(`/notifications/${i}`)}
-                className="cursor-pointer rounded-3xl bg-[#F5F4F0] p-6 flex flex-row gap-4"
+                className="cursor-pointer rounded-3xl bg-[#F5F4F0] p-6 flex flex-col sm:flex-row gap-3 sm:gap-4"
               >
                 <Image
                   src={
-                    n.status === "unread"
+                    n.IsSeen === false
                       ? "/not-status-unread.png"
                       : "/not-status-read.png"
                   }
                   width={17}
                   height={17}
                   alt="status"
-                  className="rounded-full w-[17px] h-[17px]"
+                  className="rounded-full w-3 h-3 sm:w-[17px] sm:h-[17px]"
                 />
-                <div className="w-full flex flex-col sm:flex-row gap-8">
+                <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-8">
                   <Image
                     src={"/dummy-notification.png"}
                     width={190}
                     height={170}
                     alt="not"
-                    className="rounded-2xl"
+                    className="rounded-2xl w-full h-full max-h-[170px] sm:w-[190px] sm:h-[170px]"
                   />
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-row justify-between items-center">
-                      <span className="font-bold text-2xl">{n.title}</span>
-                      <span className="text-[#6F6F6F] text-lg">
-                        {n.date} {n.time}
+                  <div className="w-full flex flex-col">
+                    <div className="w-full flex flex-row justify-between items-center">
+                      <span className="font-bold text-2xl">{n.Title}</span>
+                      <span className="hidden sm:block text-[#6F6F6F] text-lg">
+                        {formatDate(n.CreatedAt)}
                       </span>
                     </div>
 
-                    <span className="text-[#6F6F6F] text-lg">{n.tag}</span>
-                    <span className="line-clamp-4 text-[#6F6F6F] text-lg mt-3">
-                      {n.desc}
+                    <div className="text-xs sm:text-lg flex flex-row items-center justify-between w-full sm:w-auto">
+                      <span className="text-[#6F6F6F]">@geni.team</span>
+                      <span className="block sm:hidden text-[#6F6F6F]">
+                        {formatDate(n.CreatedAt)}
+                      </span>
+                    </div>
+                    <span className="line-clamp-4 text-[#6F6F6F] mt-3 text-xs sm:text-lg">
+                      {n.Body}
                     </span>
                   </div>
                 </div>
@@ -149,330 +176,3 @@ function Page() {
 }
 
 export default Page;
-
-const notifications = [
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "unread",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-  {
-    status: "read",
-    image: "/dummy-notification.png",
-    title: "Platform new feature update",
-    tag: "@geni.team",
-    desc: "Бид олон нийтэд нээлттэй компаниудын хувьцаа эзэмшигчдийн хурлаар яригдсан зүйлсийг уншигчдадаа ойлгомжтой, дэлгэрэнгүй хүргэх зорилгоор “LP Transcript” буюу хурлын тэмдэглэлийн контент гаргаж байгаа билээ. LP Transcript-н ээлжит дугаараар АПУ ХК (APU)-ийн хувьцаа эзэмшигчдийн хурлын тэмдэглэлийг хүргэж байна. Тухлан сууж, таалан уншина уу!",
-    date: "05/16/2024",
-    time: "14:00",
-  },
-];

@@ -217,6 +217,13 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    listNotification: builder.query({
+      query: (body) => ({
+        url: "/api/web/private/notif",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -248,4 +255,5 @@ export const {
   useGetImagePresignedUrlMutation,
   useBrandReceiveContentMutation,
   useCheckPaymentQuery,
+  useListNotificationQuery,
 } = geniApi;
