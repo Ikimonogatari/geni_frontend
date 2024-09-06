@@ -99,7 +99,7 @@ function ContentGallery({ contentsGallery }) {
               </button>
 
               <video
-                className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] xl:w-[480px] xl:h-[852px] rounded-2xl"
+                className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] rounded-2xl"
                 autoPlay
                 loop
                 preload="metadata"

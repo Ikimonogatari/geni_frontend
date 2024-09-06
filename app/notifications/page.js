@@ -88,7 +88,7 @@ function Page() {
             {paginatedNotifications?.map((n, i) => (
               <div
                 key={i}
-                onClick={() => router.push(`/notifications/${i}`)}
+                onClick={() => router.push(`/notifications/${n.NotifId}`)}
                 className="cursor-pointer rounded-3xl bg-[#F5F4F0] p-6 flex flex-col sm:flex-row gap-3 sm:gap-4"
               >
                 <Image
@@ -132,7 +132,7 @@ function Page() {
               </div>
             ))}
           </div>
-          {totalPages !== 1 && (
+          {totalPages !== 1 && paginatedNotifications && (
             <div className="flex justify-center gap-2 mt-8">
               {currentPage !== 1 && (
                 <button
