@@ -3,13 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "../components/ContentGallery";
-import Contents from "@/app/profile/Contents";
-import GraphCMSImageLoader from "@/app/components/GraphCMSImageLoader";
-import {
-  useListCreatorContentsQuery,
-  useUploadFileMutation,
-} from "@/app/services/service";
-import toast from "react-hot-toast";
+import { useListCreatorContentsQuery } from "@/app/services/service";
 import Cookies from "js-cookie";
 import Link from "next/link";
 
@@ -27,15 +21,6 @@ function page() {
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
   } = useListCreatorContentsQuery();
-
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadFileMutation();
 
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);

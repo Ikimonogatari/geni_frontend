@@ -3,12 +3,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
 // Define a service using a base URL and expected endpoints
-const auth = Cookies.get("auth");
+
 export const geniApi = createApi({
   reducerPath: "geniApi",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_AWS_URL,
     prepareHeaders: (headers) => {
+      const auth = Cookies.get("auth");
       if (auth) {
         headers.set("Authorization", `Bearer ${auth}`);
       }
