@@ -225,6 +225,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    listBrandProducts: builder.query({
+      query: (body) => ({
+        url: "/api/web/public/product",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -257,4 +264,5 @@ export const {
   useBrandReceiveContentMutation,
   useCheckPaymentQuery,
   useListNotificationQuery,
+  useListBrandProductsQuery,
 } = geniApi;
