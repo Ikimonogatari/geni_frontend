@@ -74,7 +74,7 @@ function Page() {
               <div
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`cursor-pointer rounded-full px-2 py-1 sm:px-4 sm:py-2 ${
+                className={`cursor-pointer rounded-full px-4 py-2 ${
                   selectedCategory === category
                     ? "bg-[#CA7FFE] text-white"
                     : "bg-[#F5F4F0]"
@@ -84,7 +84,7 @@ function Page() {
               </div>
             ))}
           </div>
-          <div className="mt-4 bg-[#F2F2F2] rounded-2xl w-full flex flex-row items-center justify-between gap-2 px-4 py-3 sm:pl-10 sm:pr-6 sm:py-6">
+          <div className="mt-4 bg-[#F2F2F2] rounded-xl w-full flex flex-row items-center justify-between gap-2 px-4 py-3 sm:pl-10 sm:pr-6 sm:py-6">
             <input
               className="bg-inherit outline-none w-full placeholder:text-[#6F6F6F] placeholder:text-sm sm:placeholder:text-base"
               placeholder="Бүтээгдэхүүн хайх"
@@ -120,11 +120,11 @@ function Page() {
                         width={280}
                         height={280}
                         alt=""
-                        className="max-h-[290px] lg:max-h-[324px] xl:max-w-[324px] inset-0 w-full rounded-t-2xl"
+                        className="aspect-square inset-0 w-full rounded-t-2xl"
                       />
                       <div className="flex flex-row items-center justify-between w-full absolute top-2 px-3 sm:top-3">
                         <div className="flex flex-row items-center w-full gap-2">
-                          {product.ProductTypes?.map((t, i) => (
+                          {product.ProductTypes?.slice(0, 1).map((t, i) => (
                             <div
                               key={i}
                               className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2"

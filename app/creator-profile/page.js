@@ -142,7 +142,7 @@ function page() {
                     className="w-4 h-4 sm:w-6 sm:h-6"
                   />
                 </div>
-                <div className="flex flex-row items-center gap-3">
+                <div className="flex flex-row items-center gap-2 sm:gap-3">
                   <span className="text-sm sm:text-lg">
                     {creatorData ? creatorData.Point : 0} xp
                   </span>
@@ -155,7 +155,10 @@ function page() {
                       className="w-4 h-4 sm:w-6 sm:h-6"
                     />
                   </a>
-                  <a>
+                  <a
+                    target="_blank"
+                    href={`https://www.instagram.com/${creatorData?.SocialChannels[1].SocialAddress}`}
+                  >
                     <Image
                       src={"/Instagram.png"}
                       width={24}
@@ -164,7 +167,10 @@ function page() {
                       className="w-4 h-4 sm:w-6 sm:h-6"
                     />
                   </a>
-                  <a>
+                  <a
+                    target="_blank"
+                    href={`https://www.facebook.com/${creatorData?.SocialChannels[0].SocialAddress}`}
+                  >
                     <Image
                       src={"/Facebook.png"}
                       width={24}
@@ -261,7 +267,7 @@ function page() {
           </div>
           {renderBrandProfile()}
         </div>
-        {totalPages !== 1 ? (
+        {listCreatorContentsData && totalPages !== 1 ? (
           <div className="container px-7 mx-auto text-[#2D262D] flex flex-row gap-3 items-end justify-end mt-5">
             {currentPage !== 1 && (
               <button

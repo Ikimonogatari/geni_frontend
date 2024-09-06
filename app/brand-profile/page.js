@@ -198,6 +198,32 @@ function page() {
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
                   {brandData ? brandData.Name : ""}
                 </span>
+                <div className="flex flex-row items-center gap-2 sm:gap-3">
+                  <a
+                    target="_blank"
+                    href={`https://www.instagram.com/${brandData?.SocialChannels[1].SocialAddress}`}
+                  >
+                    <Image
+                      src={"/Instagram.png"}
+                      width={24}
+                      height={24}
+                      alt="ig"
+                      className="w-5 h-5 sm:w-6 sm:h-6"
+                    />
+                  </a>
+                  <a
+                    target="_blank"
+                    href={`https://www.facebook.com/${brandData?.SocialChannels[0].SocialAddress}`}
+                  >
+                    <Image
+                      src={"/Facebook.png"}
+                      width={24}
+                      height={24}
+                      alt="fb"
+                      className="w-5 h-5 sm:w-6 sm:h-6"
+                    />
+                  </a>
+                </div>
                 <button className="bg-[#CA7FFE] rounded-full px-2 text-sm sm:text-base sm:px-4 py-1 sm:py-2">
                   Beauty
                 </button>
@@ -275,7 +301,7 @@ function page() {
           {renderBrandProfile()}
         </div>
 
-        {totalPages !== 1 ? (
+        {listBrandContentsData && totalPages !== 1 ? (
           <div className="container px-7 mx-auto text-[#2D262D] flex flex-row items-center gap-2 sm:gap-3 justify-center lg:justify-end mt-5 w-full">
             {currentPage !== 1 && (
               <button

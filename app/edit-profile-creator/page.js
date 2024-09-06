@@ -140,7 +140,7 @@ function Page() {
     if (data) {
       console.log(data);
       setShouldRefetchUserInfo(true);
-      toast.success("Амжилттай");
+      toast.success("Амжилттай хадгаллаа");
     }
     if (error) {
       toast.error("Алдаа гарлаа");
@@ -262,7 +262,7 @@ function Page() {
             />
           </button>
           <p className="text-4xl sm:text-5xl xl:text-6xl font-bold my-7">
-            Edit profile
+            Профайл засах
           </p>
 
           <div className="flex flex-row items-start justify-between w-full">
@@ -273,7 +273,7 @@ function Page() {
                   width={194}
                   height={194}
                   loading="lazy"
-                  className="rounded-xl w-[194px] h-[194px] xl:w-[258px] xl:h-[258px]"
+                  className="rounded-full sm:rounded-xl border-[1px] border-[#2D262D] w-[100px] h-[100px] aspect-square sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"
                   alt=""
                 />
               ) : (
@@ -281,9 +281,9 @@ function Page() {
               )}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
-                  <span className="text-lg">
-                    Creator point: &nbsp;
-                    {parsedUserInfo ? parsedUserInfo.Point : ""} xp
+                  <span className="text-sm sm:text-lg">
+                    Бүтээгчийн оноо: &nbsp;
+                    {parsedUserInfo ? parsedUserInfo.Point : 0} xp
                   </span>
                   <button>
                     <Image
@@ -296,7 +296,9 @@ function Page() {
                   </button>
                 </div>
                 <div className="flex flex-row items-center gap-3">
-                  <span className="text-lg">Verified creator</span>
+                  <span className="text-sm sm:text-lg">
+                    Баталгаажсан бүтээгч
+                  </span>
                   <Image
                     src={"/verified-icon.png"}
                     width={24}
@@ -307,12 +309,12 @@ function Page() {
                 </div>
                 <div
                   {...getRootProps()}
-                  className="cursor-pointer mt-2 py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-xl font-bold"
+                  className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                 >
                   <input {...getInputProps()} />
                   {parsedUserInfo && parsedUserInfo.ProfileLink
-                    ? "Change picture"
-                    : "Add picture"}
+                    ? "Зургаа солих"
+                    : "Зураг оруулах"}
                 </div>
               </div>
             </div>
@@ -324,7 +326,7 @@ function Page() {
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-[#6F6F6F] text-lg" htmlFor="FirstName">
-                  First name
+                  Нэр
                 </label>
                 <input
                   id="FirstName"
@@ -333,7 +335,7 @@ function Page() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.FirstName}
-                  className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 {formik.touched.FirstName && formik.errors.FirstName && (
                   <div className="text-red-500 text-sm">
@@ -343,7 +345,7 @@ function Page() {
               </div>
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-[#6F6F6F] text-lg" htmlFor="LastName">
-                  Last name
+                  Овог
                 </label>
                 <input
                   id="LastName"
@@ -352,7 +354,7 @@ function Page() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.LastName}
-                  className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 {formik.touched.LastName && formik.errors.LastName && (
                   <div className="text-red-500 text-sm">
@@ -363,7 +365,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full sm:w-1/2">
               <label className="text-[#6F6F6F] text-lg" htmlFor="Nickname">
-                Username
+                Хэрэглэгчийн нэр
               </label>
               <input
                 id="Nickname"
@@ -372,7 +374,7 @@ function Page() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.Nickname}
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
               {formik.touched.Nickname && formik.errors.Nickname && (
                 <div className="text-red-500 text-sm">
@@ -382,7 +384,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="Email">
-                Email
+                Имэйл
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
@@ -392,11 +394,11 @@ function Page() {
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) => setEmail(e.target.value)}
                   value={email}
-                  className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="w-2/3 sm:w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 <div
                   onClick={handleChangeEmail}
-                  className="cursor-pointer py-4 w-[128px] text-center bg-[#F5F4F0] rounded-lg text-xl border border-[#2D262D]"
+                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
                 >
                   Өөрчлөх
                 </div>
@@ -404,7 +406,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="Bio">
-                Bio
+                Миний тухай
               </label>
               <textarea
                 id="Bio"
@@ -413,7 +415,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.Bio}
                 rows={4}
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
               {formik.touched.Bio && formik.errors.Bio && (
                 <div className="text-red-500 text-sm">{formik.errors.Bio}</div>
@@ -425,11 +427,11 @@ function Page() {
                   className="text-[#6F6F6F] text-lg"
                   htmlFor="SocialChannels"
                 >
-                  Social channels
+                  Сошиал хаягууд
                 </label>
                 <div className="flex flex-row gap-4 w-full items-start">
-                  <div className="flex flex-col gap-3 w-1/2">
-                    <div className="p-4 bg-[#F5F4F0] rounded-lg border text-xl flex flex-row items-center gap-3">
+                  <div className="flex flex-col gap-3 w-2/3 sm:w-1/2">
+                    <div className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl flex flex-row items-center gap-3">
                       <Image
                         src={"/Instagram.png"}
                         width={24}
@@ -451,7 +453,7 @@ function Page() {
                         }
                       />
                     </div>
-                    <div className="p-4 bg-[#F5F4F0] rounded-lg border text-xl flex flex-row items-center gap-3">
+                    <div className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl flex flex-row items-center gap-3">
                       <Image
                         src={"/Facebook.png"}
                         width={24}
@@ -476,7 +478,7 @@ function Page() {
                   </div>
                   <div
                     onClick={handleSaveOrUpdateSocialChannels}
-                    className="cursor-pointer bg-[#F5F4F0] h-auto py-4 w-[128px] text-center rounded-lg border border-[#2D262D] text-xl"
+                    className="cursor-pointer bg-[#F5F4F0] h-auto py-4 w-1/3 sm:w-[128px] text-center rounded-lg border border-[#2D262D] text-sm sm:text-xl"
                   >
                     Хадгалах
                   </div>
@@ -485,7 +487,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="oldPassword">
-                Old Password
+                Хуучин нууц үг
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
@@ -495,13 +497,13 @@ function Page() {
                   onChange={(e) => setOldPassword(e.target.value)}
                   onBlur={(e) => setOldPassword(e.target.value)}
                   value={oldPassword}
-                  className="w-1/2 p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="w-2/3 sm:w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="newPassword">
-                New Password
+                Шинэ нууц үг
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
@@ -511,11 +513,11 @@ function Page() {
                   onChange={(e) => setNewPassword(e.target.value)}
                   onBlur={(e) => setNewPassword(e.target.value)}
                   value={newPassword}
-                  className="w-1/2 p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="w-2/3 sm:w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 <div
                   onClick={handleChangePassword}
-                  className="cursor-pointer py-4 w-[128px] text-center bg-[#F5F4F0] rounded-lg text-xl border border-[#2D262D]"
+                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
                 >
                   Өөрчлөх
                 </div>
@@ -523,7 +525,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="Location">
-                Address
+                Хаяг
               </label>
               <textarea
                 id="Location"
@@ -532,7 +534,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.Location}
                 rows={4}
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
               {formik.touched.Location && formik.errors.location && (
                 <div className="text-red-500 text-sm">
@@ -542,20 +544,20 @@ function Page() {
             </div>
             <button
               type="submit"
-              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 text-xl"
+              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
             >
-              Save changes
+              Хадгалах
             </button>
           </form>
           <button
             onClick={handleLogout}
-            className="flex flex-row justify-center items-center gap-2 mt-3 w-full bg-[#F5F4F0] rounded-2xl border border-[#2D262D] py-4 text-xl"
+            className="flex flex-row justify-center items-center gap-2 mt-3 w-full bg-[#F5F4F0] rounded-2xl border border-[#2D262D] py-4 text-base sm:text-xl"
           >
             <Image
               src={"/logout-icon.png"}
               width={26}
               height={26}
-              className="w-6 h-6"
+              className="w-5 h-5 sm:w-6 sm:h-6"
               alt=""
             />
             Гарах
