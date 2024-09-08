@@ -98,13 +98,14 @@ function Page() {
       name: parsedUserInfo ? parsedUserInfo?.name : "",
       bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
       website: "temp-web",
-      phoneNumber: "temp-phone",
+      phoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       address: parsedUserInfo ? parsedUserInfo?.Address : "",
       brandAoADescription: "temp-desc",
       productTypes: [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
+      phoneNumber: Yup.string().required("Required"),
       bio: Yup.string().required("Required"),
       address: Yup.string().required("Required"),
     }),
@@ -285,7 +286,7 @@ function Page() {
                   width={194}
                   height={194}
                   loading="lazy"
-                  className="rounded-xl w-[194px] h-[194px] xl:w-[258px] xl:h-[258px]"
+                  className="rounded-full sm:rounded-xl border-[1px] border-[#2D262D] w-[100px] h-[100px] aspect-square sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"
                   alt=""
                 />
               ) : (
@@ -293,7 +294,7 @@ function Page() {
               )}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
-                  <span className="text-lg">Verified creator</span>
+                  <span className="text-sm sm:text-lg">Verified creator</span>
                   <Image
                     src={"/verified-icon.png"}
                     width={24}
@@ -304,7 +305,7 @@ function Page() {
                 </div>
                 <div
                   {...getRootProps()}
-                  className="cursor-pointer mt-2 py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-xl font-bold"
+                  className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                 >
                   <input {...getInputProps()} />
                   {parsedUserInfo && parsedUserInfo.ProfileLink
@@ -330,7 +331,7 @@ function Page() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.name}
-                  className="p-4 bg-[#F5F4F0] rounded-lg border text-xl w-full"
+                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl w-full"
                 />
                 {formik.touched.name && formik.errors.name && (
                   <div className="text-red-500 text-sm">
@@ -347,14 +348,14 @@ function Page() {
                     {productTypes?.map((p, i) => (
                       <div
                         key={i}
-                        className="bg-[#CA7FFE] text-center text-xl rounded-full px-8 py-4"
+                        className="bg-[#CA7FFE] text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
                       >
                         {p.TypeName}
                       </div>
                     ))}
                     <div
                       onClick={() => setdropdownOpen(!dropdownOpen)}
-                      className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-[62px] h-[62px] flex items-center justify-center"
+                      className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center"
                     >
                       <Image
                         src={"/plus-icon-black.png"}
@@ -402,15 +403,35 @@ function Page() {
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) => setEmail(e.target.value)}
                   value={email}
-                  className="w-1/2 p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 <div
                   onClick={handleChangeEmail}
-                  className="cursor-pointer py-4 w-[128px] text-center bg-[#F5F4F0] rounded-lg text-xl border border-[#2D262D]"
+                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
                 >
                   Өөрчлөх
                 </div>
               </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="phoneNumber">
+                Phone Number
+              </label>
+              <input
+                id="phoneNumber"
+                name="phoneNumber"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.phoneNumber}
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+              />
+              {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.phoneNumber}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col gap-3 w-full">
@@ -424,7 +445,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.bio}
                 rows={4}
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
               {formik.touched.bio && formik.errors.bio && (
                 <div className="text-red-500 text-sm">{formik.errors.bio}</div>
@@ -437,7 +458,7 @@ function Page() {
                 </label>
                 <div className="flex flex-row gap-4 w-full items-start">
                   <div className="flex flex-col gap-3 w-1/2">
-                    <div className="p-4 bg-[#F5F4F0] rounded-lg border text-xl flex flex-row items-center gap-3">
+                    <div className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl flex flex-row items-center gap-3">
                       <Image
                         src={"/Instagram.png"}
                         width={24}
@@ -459,7 +480,7 @@ function Page() {
                         }
                       />
                     </div>
-                    <div className="p-4 bg-[#F5F4F0] rounded-lg border text-xl flex flex-row items-center gap-3">
+                    <div className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl flex flex-row items-center gap-3">
                       <Image
                         src={"/Facebook.png"}
                         width={24}
@@ -484,7 +505,7 @@ function Page() {
                   </div>
                   <div
                     onClick={handleSaveOrUpdateSocialChannels}
-                    className="cursor-pointer bg-[#F5F4F0] h-auto py-4 w-[128px] text-center rounded-lg border border-[#2D262D] text-xl"
+                    className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
                   >
                     Хадгалах
                   </div>
@@ -503,7 +524,7 @@ function Page() {
                   onChange={(e) => setOldPassword(e.target.value)}
                   onBlur={(e) => setOldPassword(e.target.value)}
                   value={oldPassword}
-                  className="w-1/2 p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
               </div>
             </div>
@@ -519,11 +540,11 @@ function Page() {
                   onChange={(e) => setNewPassword(e.target.value)}
                   onBlur={(e) => setNewPassword(e.target.value)}
                   value={newPassword}
-                  className="w-1/2 p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 <div
                   onClick={handleChangePassword}
-                  className="cursor-pointer py-4 w-[128px] text-center bg-[#F5F4F0] rounded-lg text-xl border border-[#2D262D]"
+                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
                 >
                   Өөрчлөх
                 </div>
@@ -540,7 +561,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.address}
                 rows={4}
-                className="p-4 bg-[#F5F4F0] rounded-lg border text-xl"
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
               {formik.touched.address && formik.errors.address && (
                 <div className="text-red-500 text-sm">
@@ -550,14 +571,14 @@ function Page() {
             </div>
             <button
               type="submit"
-              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 text-xl"
+              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
             >
               Хадгалах
             </button>
           </form>
           <button
             onClick={handleLogout}
-            className="flex flex-row justify-center items-center gap-2 mt-3 w-full bg-[#F5F4F0] rounded-2xl border border-[#2D262D] py-4 text-xl"
+            className="flex flex-row justify-center items-center gap-2 mt-3 w-full bg-[#F5F4F0] rounded-2xl border border-[#2D262D] py-4 text-base sm:text-xl"
           >
             <Image
               src={"/logout-icon.png"}

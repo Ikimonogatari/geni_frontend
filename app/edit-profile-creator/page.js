@@ -94,7 +94,7 @@ function Page() {
       Email: parsedUserInfo ? parsedUserInfo.Email : "",
       Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
       RegNo: "1234561291",
-      PhoneNumber: "+12345678901",
+      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       AdditionalPhoneNum: "+12345678902",
       Location: parsedUserInfo ? parsedUserInfo?.Location : "",
       EbarimtConsumerNo: "9876543211",
