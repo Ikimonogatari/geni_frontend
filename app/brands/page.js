@@ -27,7 +27,7 @@ function page() {
             <div className="hidden lg:block relative w-full max-w-[364px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
               <a
                 target="_blank"
-                href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+                href="https://forms.gle/snf9FWo5WKXaqb2C8"
                 className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[364px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
               >
                 <span>Geni Brand болох</span>
@@ -59,7 +59,7 @@ function page() {
           <div className="mt-8 block lg:hidden relative w-full h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
             <a
               target="_blank"
-              href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+              href="https://forms.gle/snf9FWo5WKXaqb2C8"
               className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
             >
               <span>Geni Brand болох</span>
@@ -150,7 +150,7 @@ function page() {
             <div className="relative w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
               <a
                 target="_blank"
-                href="https://docs.google.com/forms/d/e/1FAIpQLScJw4vWyiKFErCKmIwrmFFCjTsnXfXIEuuNPlVkg4l3U7xjCg/viewform?usp=send_form"
+                href="https://forms.gle/snf9FWo5WKXaqb2C8"
                 className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
               >
                 <span>Geni Brand болох</span>

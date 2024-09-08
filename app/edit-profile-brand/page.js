@@ -95,19 +95,19 @@ function Page() {
 
   const formik = useFormik({
     initialValues: {
-      name: parsedUserInfo ? parsedUserInfo?.name : "",
-      bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      website: "temp-web",
-      phoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
-      address: parsedUserInfo ? parsedUserInfo?.Address : "",
-      brandAoADescription: "temp-desc",
-      productTypes: [],
+      Name: parsedUserInfo ? parsedUserInfo?.Name : "",
+      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
+      Website: "temp-web",
+      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
+      Address: parsedUserInfo ? parsedUserInfo?.Address : "",
+      BrandAoADescription: "temp-desc",
+      ProductTypes: [],
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Required"),
-      phoneNumber: Yup.string().required("Required"),
-      bio: Yup.string().required("Required"),
-      address: Yup.string().required("Required"),
+      Name: Yup.string().required("Required"),
+      PhoneNumber: Yup.string().required("Required"),
+      Bio: Yup.string().required("Required"),
+      Address: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       editBrandProfile(values).unwrap();
@@ -275,7 +275,7 @@ function Page() {
             />
           </button>
           <p className="text-4xl sm:text-5xl xl:text-6xl font-bold my-7">
-            Edit profile
+            Профайл засах
           </p>
 
           <div className="flex flex-row items-start justify-between w-full">
@@ -294,7 +294,7 @@ function Page() {
               )}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
-                  <span className="text-sm sm:text-lg">Verified creator</span>
+                  <span className="text-sm sm:text-lg">Баталгаажсан брэнд</span>
                   <Image
                     src={"/verified-icon.png"}
                     width={24}
@@ -309,8 +309,8 @@ function Page() {
                 >
                   <input {...getInputProps()} />
                   {parsedUserInfo && parsedUserInfo.ProfileLink
-                    ? "Change picture"
-                    : "Add picture"}
+                    ? "Зургаа солих"
+                    : "Зураг оруулах"}
                 </div>
               </div>
             </div>
@@ -320,29 +320,29 @@ function Page() {
             className="mt-11 flex flex-col gap-4"
           >
             <div className="flex flex-col sm:flex-row gap-5 w-full">
-              <div className="flex flex-col gap-3 w-1/2">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="name">
-                  Brand name
+              <div className="flex flex-col gap-3 w-full sm:w-1/2">
+                <label className="text-[#6F6F6F] text-lg" htmlFor="Name">
+                  Брэндийн нэр
                 </label>
                 <input
-                  id="name"
-                  name="name"
+                  id="Name"
+                  name="Name"
                   type="text"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.name}
+                  value={formik.values.Name}
                   className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl w-full"
                 />
-                {formik.touched.name && formik.errors.name && (
+                {formik.touched.Name && formik.errors.Name && (
                   <div className="text-red-500 text-sm">
-                    {formik.errors.name}
+                    {formik.errors.Name}
                   </div>
                 )}
               </div>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-3">
                   <label className="text-[#6F6F6F] text-lg" htmlFor="type">
-                    Brand type
+                    Брэндийн төрөл
                   </label>
                   <div className="relative flex flex-row flex-wrap items-center gap-2">
                     {productTypes?.map((p, i) => (
@@ -393,7 +393,7 @@ function Page() {
 
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="email">
-                Email
+                Имэйл
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
@@ -416,45 +416,45 @@ function Page() {
 
             <div className="flex flex-col gap-3">
               <label className="text-[#6F6F6F] text-lg" htmlFor="phoneNumber">
-                Phone Number
+                Утасны дугаар
               </label>
               <input
-                id="phoneNumber"
-                name="phoneNumber"
+                id="PhoneNumber"
+                name="PhoneNumber"
                 type="text"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.phoneNumber}
+                value={formik.values.PhoneNumber}
                 className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
-              {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+              {formik.touched.PhoneNumber && formik.errors.PhoneNumber && (
                 <div className="text-red-500 text-sm">
-                  {formik.errors.phoneNumber}
+                  {formik.errors.PhoneNumber}
                 </div>
               )}
             </div>
 
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="bio">
-                Bio
+                Брэндийн тухай
               </label>
               <textarea
-                id="bio"
-                name="bio"
+                id="Bio"
+                name="Bio"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.bio}
+                value={formik.values.Bio}
                 rows={4}
                 className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
-              {formik.touched.bio && formik.errors.bio && (
-                <div className="text-red-500 text-sm">{formik.errors.bio}</div>
+              {formik.touched.Bio && formik.errors.Bio && (
+                <div className="text-red-500 text-sm">{formik.errors.Bio}</div>
               )}
             </div>
             <div className="flex flex-row gap-4 w-full">
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
-                  Social channels
+                  Сошиал хаягууд
                 </label>
                 <div className="flex flex-row gap-4 w-full items-start">
                   <div className="flex flex-col gap-3 w-1/2">
@@ -514,7 +514,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="oldPassword">
-                Old Password
+                Хуучин нууц үг
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
@@ -530,7 +530,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="newPassword">
-                New Password
+                Шинэ нууц үг
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
                 <input
@@ -552,20 +552,20 @@ function Page() {
             </div>
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="address">
-                Address
+                Хаяг
               </label>
               <textarea
-                id="address"
-                name="address"
+                id="Address"
+                name="Address"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.address}
+                value={formik.values.Address}
                 rows={4}
                 className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
-              {formik.touched.address && formik.errors.address && (
+              {formik.touched.Address && formik.errors.Address && (
                 <div className="text-red-500 text-sm">
-                  {formik.errors.address}
+                  {formik.errors.Address}
                 </div>
               )}
             </div>

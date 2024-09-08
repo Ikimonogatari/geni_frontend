@@ -30,7 +30,7 @@ function Page() {
   });
 
   const [email, setEmail] = useState(
-    parsedUserInfo ? parsedUserInfo?.BusinessEmail : ""
+    parsedUserInfo ? parsedUserInfo?.Email : ""
   );
 
   const [oldPassword, setOldPassword] = useState("");
@@ -105,6 +105,7 @@ function Page() {
     validationSchema: Yup.object({
       FirstName: Yup.string().required("Required"),
       LastName: Yup.string().required("Required"),
+      PhoneNumber: Yup.string().required("Required"),
       Bio: Yup.string().required("Required"),
       Location: Yup.string().required("Required"),
     }),
@@ -404,6 +405,27 @@ function Page() {
                 </div>
               </div>
             </div>
+
+            <div className="flex flex-col gap-3">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="PhoneNumber">
+                Утасны дугаар
+              </label>
+              <input
+                id="PhoneNumber"
+                name="PhoneNumber"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.PhoneNumber}
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+              />
+              {formik.touched.PhoneNumber && formik.errors.PhoneNumber && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.PhoneNumber}
+                </div>
+              )}
+            </div>
+
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="Bio">
                 Миний тухай
