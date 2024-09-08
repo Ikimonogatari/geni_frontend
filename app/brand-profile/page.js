@@ -188,11 +188,11 @@ function page() {
           <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-4 sm:gap-7">
               <Image
-                src={brandData ? brandData.image : ""}
+                src={brandData?.image ? brandData?.image : "/dummy-profile.jpg"}
                 alt=""
-                width={130}
-                height={130}
-                className="rounded-full w-[90px] sm:w-[130px] h-[90px] sm:h-[130px] border border-[#2D262D]"
+                width={194}
+                height={194}
+                className="rounded-full sm:rounded-xl w-[90px] sm:w-[194px] h-[90px] sm:h-[194px] border border-[#2D262D]"
               />
               <div className="flex flex-col gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">

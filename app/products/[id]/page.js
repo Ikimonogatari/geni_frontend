@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -29,6 +29,9 @@ import Cookies from "js-cookie";
 function Page() {
   const router = useRouter();
   const params = useParams();
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+
   const userType = Cookies.get("userType");
   const { id } = params;
   const [productContentRequestMsg, setProductContentRequestMsg] = useState("");
@@ -37,7 +40,9 @@ function Page() {
     error: getPublicProductByIdError,
     isLoading: getPublicProductByIdLoading,
   } = useGetPublicProductByIdQuery(id);
-
+  if (getPublicProductByIdData) {
+    console.log(getPublicProductByIdData);
+  }
   const [
     requestProductContent,
     {
@@ -77,8 +82,13 @@ function Page() {
       ProductId: id,
       RequestReason: productContentRequestMsg,
     });
-    setRequestState("sent");
   };
+
+  useEffect(() => {
+    if (requestProductContentData) {
+      setRequestState("sent");
+    }
+  }, [requestProductContentData, requestProductContentError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -165,7 +175,7 @@ function Page() {
                 <div className="flex flex-col gap-2">
                   <span className="text-xl font-bold">
                     {getPublicProductByIdData ? (
-                      getPublicProductByIdData.CreatedBy
+                      getPublicProductByIdData.BrandName
                     ) : (
                       <></>
                     )}
@@ -304,7 +314,7 @@ function Page() {
                     {requestState === "sent" ? (
                       <DialogContent className="max-w-lg flex flex-col items-center gap-2">
                         <span className="text-[#4FB755] text-5xl text-center font-bold">
-                          ХҮСЭЛТ ХҮЛЭЭН АВЛАА
+                          ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
                         </span>
                         <Image
                           src={"/request-received.png"}
@@ -315,18 +325,28 @@ function Page() {
 
                         <div className="flex flex-col gap-5">
                           <div className="flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-5">
-                            <div className="flex flex-row items-center gap-5">
-                              <Image
-                                src={"/dummy-creator.png"}
-                                width={128}
-                                height={128}
-                                alt="lhamour"
-                                className="w-[128px] h-[128px] rounded-2xl"
-                              />
-                              <div className="flex flex-col gap-2">
-                                <div className="flex flex-row items-center gap-3">
+                            <div className="w-full flex flex-row items-center gap-5">
+                              {parsedUserInfo ? (
+                                <Image
+                                  src={
+                                    parsedUserInfo.ProfilePic
+                                      ? "/dummy-creator.png"
+                                      : "/dummy-profile.jpg"
+                                  }
+                                  width={128}
+                                  height={128}
+                                  alt=""
+                                  className="w-[128px] h-[128px] rounded-2xl"
+                                />
+                              ) : (
+                                <></>
+                              )}
+
+                              <div className="w-full flex flex-col gap-2">
+                                <div className="w-full flex flex-row items-center gap-3">
                                   <span className="font-bold text-xl">
-                                    Davaanaa Bayraa
+                                    {parsedUserInfo?.FirstName}
+                                    {parsedUserInfo?.Name}
                                   </span>
                                   <Image
                                     src={"/verified-icon.png"}
@@ -337,20 +357,23 @@ function Page() {
                                   />
                                 </div>
 
-                                <span className="text-lg">1020 xp</span>
+                                <span className="text-lg">
+                                  {parsedUserInfo ? parsedUserInfo?.Point : 0}{" "}
+                                  xp
+                                </span>
                               </div>
                             </div>
                           </div>
 
                           <DialogClose>
-                            <button className="w-full py-4 text-white font-bold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
+                            <button className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
                               Баярлалаа
                             </button>
                           </DialogClose>
                         </div>
                       </DialogContent>
                     ) : (
-                      <DialogContent className="flex flex-col">
+                      <DialogContent className="flex flex-col max-w-2xl">
                         <span className="text-2xl font-bold">
                           Хүсэлт илгээх
                         </span>
@@ -368,7 +391,7 @@ function Page() {
                         />
                         <button
                           onClick={handleProductContentRequest}
-                          className="mt-3 bg-[#CA7FFE] border-[#2D262D] border rounded-lg text-center py-4 text-xl text-white w-full"
+                          className="mt-3 bg-[#CA7FFE] border-[#2D262D] border font-semibold rounded-lg text-center py-4 text-xl text-white w-full"
                         >
                           Хүсэлт илгээх
                         </button>

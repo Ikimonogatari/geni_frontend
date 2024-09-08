@@ -120,12 +120,14 @@ function page() {
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
               <Image
-                src={creatorData ? creatorData.image : ""}
+                src={
+                  creatorData?.image ? creatorData?.image : "/dummy-profile.jpg"
+                }
                 // loader={GraphCMSImageLoader}
                 width={194}
                 height={194}
                 loading="lazy"
-                className="rounded-xl w-[90px] h-[90px] sm:max-w-[194px] sm:max-h-[194px]"
+                className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
                 alt=""
               />
               <div className="flex flex-col gap-1 sm:gap-2">
