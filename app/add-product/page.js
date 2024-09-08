@@ -30,8 +30,8 @@ import Cookies from "js-cookie";
 
 function Page() {
   const router = useRouter();
-  const [contentTypeOption, setContentTypeOption] = useState([]);
-  const [contentOutcomeOption, setContentOutcomeOption] = useState([]);
+  const [selectedContentTypes, setSelectedContentTypes] = useState([]);
+  const [selectedContentOutcomes, setSelectedContentOutcomes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
 
@@ -51,6 +51,10 @@ function Page() {
     },
     validationSchema: Yup.object({
       productName: Yup.string().required("Required"),
+      contentInfo: Yup.array()
+        .of(Yup.string())
+        .min(1, "At least one content type must be selected")
+        .required("Content info is required"),
     }),
     onSubmit: (values) => {
       const modifiedValues = {
@@ -158,22 +162,32 @@ function Page() {
     ]);
   };
 
-  const handleContentTypeOption = (option) => {
-    setContentTypeOption((prev) => {
-      if (!prev.some((o) => o.Val === option.Val)) {
-        return [...prev, option];
-      }
-      return prev;
-    });
+  const handleContentTypeOption = (value) => {
+    const selectedItem = listProductDictsTypeData.find((c) => c.Val === value);
+    if (selectedItem && !selectedContentTypes.includes(selectedItem.Name)) {
+      setSelectedContentTypes((prev) => [...prev, selectedItem.Name]);
+    }
+    if (!formik.values.contentInfo.includes(value)) {
+      formik.setFieldValue("contentInfo", [
+        ...formik.values?.contentInfo,
+        value,
+      ]);
+    }
   };
 
-  const handleContentOutcomeOption = (option) => {
-    setContentOutcomeOption((prev) => {
-      if (!prev.some((o) => o.Val === option.Val)) {
-        return [...prev, option];
-      }
-      return prev;
-    });
+  const handleContentOutcomeOption = (value) => {
+    const selectedItem = listProductDictsResultData.find(
+      (c) => c.Val === value
+    );
+    if (selectedItem && !selectedContentOutcomes.includes(selectedItem.Name)) {
+      setSelectedContentOutcomes((prev) => [...prev, selectedItem.Name]);
+    }
+    if (!formik.values.contentInfo.includes(value)) {
+      formik.setFieldValue("contentInfo", [
+        ...formik.values?.contentInfo,
+        value,
+      ]);
+    }
   };
 
   return (
@@ -375,7 +389,9 @@ function Page() {
                   бүтээгч таны илүүд үзсэн контент хийцлэлийн төрлийг харгалзан
                   контентоо бүтээнэ.
                 </p>
-                <Select>
+                <Select
+                  onValueChange={(value) => handleContentTypeOption(value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Сонгох" />
                   </SelectTrigger>
@@ -389,9 +405,7 @@ function Page() {
                             value={c.Val}
                             className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
                           >
-                            <div onClick={() => handleContentTypeOption(c)}>
-                              {c.Name}
-                            </div>
+                            {c.Name}
                           </SelectItem>
                         ))
                     ) : (
@@ -399,6 +413,14 @@ function Page() {
                     )}
                   </SelectContent>
                 </Select>
+                {selectedContentTypes.map((c, i) => (
+                  <div
+                    key={i}
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[1px] border-[#4D55F5] rounded-md"
+                  >
+                    {c}
+                  </div>
+                ))}
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
@@ -430,7 +452,9 @@ function Page() {
                   бүтээгч таны илүүд үзсэн контент хийцлэлийн төрлийг харгалзан
                   контентоо бүтээнэ.
                 </p>
-                <Select>
+                <Select
+                  onValueChange={(value) => handleContentOutcomeOption(value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Сонгох" />
                   </SelectTrigger>
@@ -444,9 +468,7 @@ function Page() {
                             value={c.Val}
                             className={`border-[#CDCDCD] border rounded-lg min-h-12 my-1 w-full text-start p-4`}
                           >
-                            <div onClick={() => handleContentOutcomeOption(c)}>
-                              {c.Name}
-                            </div>
+                            {c.Name}
                           </SelectItem>
                         ))
                     ) : (
@@ -454,6 +476,14 @@ function Page() {
                     )}
                   </SelectContent>
                 </Select>
+                {selectedContentOutcomes.map((c, i) => (
+                  <div
+                    key={i}
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[2px] border-[#CA7FFE] rounded-md"
+                  >
+                    {c}
+                  </div>
+                ))}
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">

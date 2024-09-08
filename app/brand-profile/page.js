@@ -301,9 +301,9 @@ function page() {
           {renderBrandProfile()}
         </div>
 
-        {listBrandContentsData && totalPages !== 1 ? (
+        {listBrandContentsData && totalPages > 1 ? (
           <div className="container px-7 mx-auto text-[#2D262D] flex flex-row items-center gap-2 sm:gap-3 justify-center lg:justify-end mt-5 w-full">
-            {currentPage !== 1 && (
+            {currentPage > 1 && (
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
