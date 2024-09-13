@@ -4,7 +4,7 @@ export function middleware(req) {
   const { cookies } = req;
   const authToken = cookies.get("auth");
   const userType = cookies.get("userType");
-  console.log("User Type:", userType); // Add this log statement
+  console.log("User Type:", userType); // Log userType for debugging
 
   const url = req.nextUrl.clone();
 
@@ -18,26 +18,36 @@ export function middleware(req) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Redirect Creator users trying to access Brand-specific pages
-  if (
-    userType?.value !== "Brand" &&
-    (url.pathname === "/brand-profile" ||
+  // Handle role-specific redirection
+  if (userType?.value === "Creator") {
+    if (
+      url.pathname === "/brand-profile" ||
+      url.pathname === "/edit-profile-brand" ||
+      url.pathname === "/add-product"
+    ) {
+      console.log("Redirecting Creator to login"); // Log redirection for debugging
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
+  } else if (userType?.value === "Brand") {
+    if (
+      url.pathname === "/creator-profile" ||
+      url.pathname === "/edit-profile-creator"
+    ) {
+      console.log("Redirecting Brand to login"); // Log redirection for debugging
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
+  } else if (userType?.value === "Student") {
+    // Add specific conditions for Student role if needed
+    if (
+      url.pathname === "/brand-profile" ||
       url.pathname === "/edit-profile-brand" ||
       url.pathname === "/add-product" ||
-      url.pathname === "/payment")
-  ) {
-    console.log("Redirecting Creator to login"); // Add this log
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
-  }
-
-  // Redirect Brand users trying to access Creator-specific pages
-  if (
-    userType.value !== "Creator" &&
-    (url.pathname === "/creator-profile" ||
-      url.pathname === "/edit-profile-creator")
-  ) {
-    console.log("Redirecting Brand to login"); // Add this log
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+      url.pathname === "/creator-profile" ||
+      url.pathname === "/edit-profile-creator"
+    ) {
+      console.log("Redirecting Student to login"); // Log redirection for debugging
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
   }
 
   // Proceed to the requested page if conditions are met
@@ -49,6 +59,7 @@ export const config = {
     "/add-product",
     "/edit-profile-brand",
     "/edit-profile-creator",
+    "/edit-profile-student",
     "/brand-profile",
     "/creator-profile",
     "/notifications/:path*",

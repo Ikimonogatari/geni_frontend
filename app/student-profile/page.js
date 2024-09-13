@@ -4,19 +4,18 @@ import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "../components/ContentGallery";
 import {
-  useBrandReceiveContentMutation,
-  useCreatorContentSubmitMutation,
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
   useListCreatorContentsQuery,
-  useUpdateContentStatusMutation,
   useUploadByPresignUrlMutation,
+  useUploadHomeworkMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 function page() {
   const userInfo = Cookies.get("user-info");
@@ -131,6 +130,15 @@ function page() {
   ] = useUploadByPresignUrlMutation();
 
   const [
+    uploadHomework,
+    {
+      data: uploadHomeworkData,
+      error: uploadHomeworkError,
+      isLoading: uploadHomeworkLoading,
+    },
+  ] = useUploadHomeworkMutation();
+
+  const [
     getImagePresignedUrl,
     {
       data: getImagePresignedUrlData,
@@ -147,33 +155,6 @@ function page() {
       isLoading: getVideoPresignedUrlLoading,
     },
   ] = useGetVideoPresignedUrlMutation();
-
-  const [
-    creatorContentSubmit,
-    {
-      data: creatorContentSubmitData,
-      error: creatorContentSubmitError,
-      isLoading: creatorContentLoading,
-    },
-  ] = useCreatorContentSubmitMutation();
-
-  const [
-    updateContentStatus,
-    {
-      data: updateContentStatusData,
-      error: updateContentStatusError,
-      isLoading: updateContentStatusLoading,
-    },
-  ] = useUpdateContentStatusMutation();
-
-  useEffect(() => {
-    if (updateContentStatusError) {
-      toast.error("Алдаа гарлаа");
-    }
-    if (updateContentStatusData) {
-      toast.success("Амжилттай");
-    }
-  }, [updateContentStatusData, updateContentStatusError]);
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -194,27 +175,19 @@ function page() {
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
   useEffect(() => {
-    if (creatorContentSubmitError) {
+    if (uploadHomeworkError) {
       toast.error("Алдаа гарлаа");
     }
-    if (creatorContentSubmitData) {
+    if (uploadHomeworkData) {
       toast.success("Амжилттай");
     }
-  }, [creatorContentSubmitData, creatorContentSubmitError]);
+  }, [uploadHomeworkData, uploadHomeworkError]);
 
-  const handleContentSubmit = (contentId) => {
-    creatorContentSubmit({
-      ContentId: contentId,
+  const handleContentSubmit = () => {
+    uploadHomework({
       Caption: caption,
       ContentThumbnailFileId: contentThumbnailId,
       ContentVideoFileId: contentVideoId,
-    });
-  };
-
-  const handleUpdateContentStatus = (contentId, status) => {
-    updateContentStatus({
-      ContentId: contentId,
-      Status: status,
     });
   };
 
@@ -397,7 +370,7 @@ function page() {
                 />
               </Link>
               <Link
-                href={"/edit-profile-creator"}
+                href={"/edit-profile-student"}
                 className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
                 <Image
@@ -412,7 +385,6 @@ function page() {
                 href="/products"
                 className="flex sm:hidden flex-row items-center gap-2 text-xs sm:text-base bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
               >
-                Бүтээгдэхүүн үзэх
                 <Image
                   src={"/arrow-right-icon.png"}
                   width={14}
@@ -439,10 +411,10 @@ function page() {
             <Dialog>
               <DialogTrigger
                 type="submit"
-                className="flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
+                className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4FB755] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
               >
-                Гэрийн даалгавар илгээх{" "}
-                <Image src={"/plus.png"} width={14} height={14} alt="arrow" />
+                Гэрийн даалгавар илгээх
+                {/* <Image src={"/plus.png"} width={14} height={14} alt="arrow" /> */}
               </DialogTrigger>
 
               <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
@@ -514,7 +486,7 @@ function page() {
                     </div>
                     {contentThumbnail && contentVideo && caption ? (
                       <button
-                        onClick={() => handleContentSubmit(p.ContentId)}
+                        onClick={handleContentSubmit}
                         className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
                       >
                         Илгээх

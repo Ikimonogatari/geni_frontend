@@ -124,12 +124,12 @@ function Page() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("folder", "profile-pic");
-
+        console.log(formData);
         uploadFile(formData).then((response) => {
           if (response.data) {
             const id = response.data.FileId;
             changeProfilePicture({
-              FileType: id,
+              FileId: id,
             });
           }
         });

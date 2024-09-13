@@ -232,6 +232,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    uploadHomework: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student/homework",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -265,4 +272,5 @@ export const {
   useCheckPaymentQuery,
   useListNotificationQuery,
   useListBrandProductsQuery,
+  useUploadHomeworkMutation,
 } = geniApi;

@@ -107,7 +107,11 @@ function Navbar() {
                 userType === "Creator" ? "/creator-profile" : "/brand-profile"
               }
               className={`hidden md:flex flex-row items-center gap-[6px] ${
-                userType === "Creator" ? "bg-[#CA7FFE]" : "bg-[#4D55F5]"
+                userType === "Creator"
+                  ? "bg-[#CA7FFE]"
+                  : userType === "Brand"
+                  ? "bg-[#4D55F5]"
+                  : "bg-[#4FB755]"
               } rounded-2xl px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
             >
               <Image
