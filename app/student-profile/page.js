@@ -135,6 +135,7 @@ function page() {
       data: uploadHomeworkData,
       error: uploadHomeworkError,
       isLoading: uploadHomeworkLoading,
+      isSuccess,
     },
   ] = useUploadHomeworkMutation();
 
@@ -178,7 +179,7 @@ function page() {
     if (uploadHomeworkError) {
       toast.error("Алдаа гарлаа");
     }
-    if (uploadHomeworkData) {
+    if (isSuccess) {
       toast.success("Амжилттай");
     }
   }, [uploadHomeworkData, uploadHomeworkError]);
@@ -280,7 +281,9 @@ function page() {
             <div className="flex flex-row items-center gap-7">
               <Image
                 src={
-                  creatorData?.image ? creatorData?.image : "/dummy-profile.jpg"
+                  creatorData?.ProfileLink
+                    ? creatorData?.ProfileLink
+                    : "/dummy-profile.jpg"
                 }
                 // loader={GraphCMSImageLoader}
                 width={194}
@@ -417,7 +420,7 @@ function page() {
                 {/* <Image src={"/plus.png"} width={14} height={14} alt="arrow" /> */}
               </DialogTrigger>
 
-              <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
+              <DialogContent className="overflow-y-auto flex flex-col p-6 max-w-[1000px]">
                 <span className="text-3xl font-bold">Контент илгээх</span>
                 <div className="flex flex-col lg:flex-row gap-6">
                   <div className="flex flex-col gap-4">

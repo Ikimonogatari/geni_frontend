@@ -38,7 +38,7 @@ function Page() {
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const { setShouldRefetchUserInfo } = useUserInfo();
 
-  const [editCreatorProfile, { data, error, isLoading }] =
+  const [editCreatorProfile, { data, error, isLoading, isSuccess }] =
     useEditCreatorProfileMutation();
 
   const [
@@ -138,8 +138,7 @@ function Page() {
   });
 
   useEffect(() => {
-    if (data) {
-      console.log(data);
+    if (isSuccess) {
       setShouldRefetchUserInfo(true);
       toast.success("Амжилттай хадгаллаа");
     }
