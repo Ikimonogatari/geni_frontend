@@ -93,7 +93,7 @@ function Page() {
       Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
       Email: parsedUserInfo ? parsedUserInfo.Email : "",
       Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      RegNo: "1234561291",
+      RegNo: parsedUserInfo ? parsedUserInfo?.Bio : "",
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       AdditionalPhoneNum: "+12345678902",
       Location: parsedUserInfo ? parsedUserInfo?.Location : "",
@@ -108,6 +108,7 @@ function Page() {
       PhoneNumber: Yup.string().required("Required"),
       Bio: Yup.string().required("Required"),
       Location: Yup.string().required("Required"),
+      RegNo: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       console.log(values);
@@ -404,6 +405,26 @@ function Page() {
                   Өөрчлөх
                 </div>
               </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="RegNo">
+                Регистрийн дугаар
+              </label>
+              <input
+                id="RegNo"
+                name="RegNo"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.RegNo}
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+              />
+              {formik.touched.RegNo && formik.errors.RegNo && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.RegNo}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col gap-3">

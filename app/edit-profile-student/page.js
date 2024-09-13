@@ -108,6 +108,7 @@ function Page() {
       PhoneNumber: Yup.string().required("Required"),
       Bio: Yup.string().required("Required"),
       Location: Yup.string().required("Required"),
+      RegNo: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       console.log(values);

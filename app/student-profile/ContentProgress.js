@@ -90,7 +90,7 @@ function ContentProgress({ currentContents }) {
           <span className="col-span-1">Geni</span>
           <a
             className="underline"
-            href="https://meirapage.gumroad.com/l/hxwkma"
+            href="https://meirapage.gumroad.com/l/hxwkma/hic5m2k"
           >
             Үзэх
           </a>
