@@ -45,6 +45,8 @@ function Page() {
         router.push("/creator-profile");
       } else if (userType === "Brand" && data) {
         router.push("/brand-profile");
+      } else if (userType === "Student" && data) {
+        router.push("/student-profile");
       }
     }
     if (error) {
@@ -65,16 +67,16 @@ function Page() {
             onSubmit={formik.handleSubmit}
             className="mt-11 flex flex-col xl:flex-row items-center gap-16"
           >
-            <div className="bg-[#F5F4F0] rounded-2xl px-12 py-16 lg:px-24 lg:py-32">
+            <div className="bg-[#F5F4F0] rounded-2xl px-12 py-16 lg:px-10 lg:py-32 max-w-3xl w-full">
               <Image
                 src={"/login-image.svg"}
                 width={584}
                 height={378}
                 alt="login"
-                className="w-full h-full lg:min-w-[584px] lg:min-h-[378px]"
+                className="w-full h-full lg:min-h-[378px]"
               />
             </div>
-            <div className="flex flex-col gap-4 w-full max-w-3xl xl:max-w-sm">
+            <div className="flex flex-col gap-4 w-full max-w-3xl xl:max-w-md">
               <span className="text-xl font-bold">Нэвтрэх</span>
               <div className="flex flex-row items-center gap-6">
                 <div
@@ -83,7 +85,7 @@ function Page() {
                     userType === "Creator"
                       ? "border-[#CA7FFE]"
                       : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-4 sm:px-8 rounded-lg border-[2px] w-full text-center`}
+                  } cursor-pointer py-3 px-4 rounded-lg border-[2px] w-full text-center`}
                 >
                   Geni Creator
                 </div>
@@ -91,11 +93,21 @@ function Page() {
                   onClick={() => handleUserType("Brand")}
                   className={`transition-all duration-150 ${
                     userType === "Brand"
-                      ? "border-[#CA7FFE]"
+                      ? "border-[#4D55F5]"
                       : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-4 sm:px-8 rounded-lg  border-[2px] w-full text-center`}
+                  } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
                 >
                   Geni brand
+                </div>
+                <div
+                  onClick={() => handleUserType("Student")}
+                  className={`transition-all duration-150 ${
+                    userType === "Student"
+                      ? "border-[#4FB755]"
+                      : "border-[#CDCDCD]"
+                  } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
+                >
+                  Geni student
                 </div>
               </div>
               <span className="text-lg">И-мэйл</span>
@@ -130,13 +142,21 @@ function Page() {
               ) : null}
               <button
                 type="submit"
-                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
-                  userType === "Creator" ? "bg-[#9c44da]" : "bg-[#1920B4]"
+                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-md h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
+                  userType === "Creator"
+                    ? "bg-[#9c44da]"
+                    : userType === "Brand"
+                    ? "bg-[#1920B4]"
+                    : "bg-[#3A8F44]"
                 }`}
               >
                 <div
-                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] ${
-                    userType === "Creator" ? "bg-[#CA7FFE]" : "bg-[#4D55F5]"
+                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-md h-[90px] rounded-xl border-[1px] border-[#2D262D] ${
+                    userType === "Creator"
+                      ? "bg-[#CA7FFE]"
+                      : userType === "Brand"
+                      ? "bg-[#4D55F5]"
+                      : "bg-[#4FB755]"
                   } flex flex-row gap-2 items-center justify-center`}
                 >
                   <span>Нэвтрэх</span>

@@ -147,6 +147,12 @@ function Page() {
                       <span className="text-xs sm:text-lg">
                         {product.ProductName}
                       </span>
+                      <div className="text-[#6F6F6F] flex flex-col text-sm">
+                        <span className="">
+                          Үлдэгдэл: {product.LeftStock}/{product.Quantity}
+                        </span>
+                        <span className="">Үнэ: ₮{product.Price}</span>
+                      </div>
                     </div>
                   </Link>
                 );

@@ -109,58 +109,70 @@ function Page() {
             onSubmit={formik.handleSubmit}
             className="mt-11 flex flex-col lg:flex-row items-start gap-10"
           >
-            <div className="flex flex-row items-center gap-4 w-1/2">
-              <button onClick={goPrev}>
-                <Image
-                  src={"/creators-swipe-button.png"}
-                  width={42}
-                  height={42}
-                  alt="swipe-button"
-                  className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-                />
-              </button>
-              <Swiper
-                style={{
-                  "--swiper-pagination-color": "#CA7FFE",
-                  "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
-                  "--swiper-pagination-bullet-inactive-opacity": "1",
-                  "--swiper-pagination-bullet-size": "10px",
-                  "--swiper-pagination-bullet-horizontal-gap": "6px",
-                }}
-                spaceBetween={10}
-                slidesPerView={1}
-                pagination={{ clickable: true }}
-                onSwiper={(s) => {
-                  setSwiper(s);
-                }}
-                modules={[Pagination]}
-              >
-                {getPublicProductByIdData ? (
-                  getPublicProductByIdData?.ProductPics.map((p, i) => (
-                    <SwiperSlide key={i}>
-                      <Image
-                        src={p.Url}
-                        alt={""}
-                        layout="responsive"
-                        width={554}
-                        height={554}
-                        className="object-cover rounded-2xl max-w-[554px] max-h-[554px]"
-                      />
-                    </SwiperSlide>
-                  ))
-                ) : (
-                  <></>
-                )}
-              </Swiper>
-              <button onClick={goNext}>
-                <Image
-                  src={"/creators-swipe-button.png"}
-                  width={42}
-                  height={42}
-                  alt="swipe-button"
-                  className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-                />
-              </button>
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-row items-center gap-4 w-1/2">
+                <button onClick={goPrev}>
+                  <Image
+                    src={"/creators-swipe-button.png"}
+                    width={42}
+                    height={42}
+                    alt="swipe-button"
+                    className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+                  />
+                </button>
+                <Swiper
+                  style={{
+                    "--swiper-pagination-color": "#CA7FFE",
+                    "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
+                    "--swiper-pagination-bullet-inactive-opacity": "1",
+                    "--swiper-pagination-bullet-size": "10px",
+                    "--swiper-pagination-bullet-horizontal-gap": "6px",
+                  }}
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  pagination={{ clickable: true }}
+                  onSwiper={(s) => {
+                    setSwiper(s);
+                  }}
+                  modules={[Pagination]}
+                >
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData?.ProductPics.map((p, i) => (
+                      <SwiperSlide key={i}>
+                        <Image
+                          src={p.Url}
+                          alt={""}
+                          layout="responsive"
+                          width={554}
+                          height={554}
+                          className="object-cover rounded-2xl max-w-[554px] max-h-[554px]"
+                        />
+                      </SwiperSlide>
+                    ))
+                  ) : (
+                    <></>
+                  )}
+                </Swiper>
+                <button onClick={goNext}>
+                  <Image
+                    src={"/creators-swipe-button.png"}
+                    width={42}
+                    height={42}
+                    alt="swipe-button"
+                    className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+                  />
+                </button>
+              </div>
+              <div className="flex flex-row items-center gap-4">
+                <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
+                  <b>Үлдэгдэл: </b>
+                  {getPublicProductByIdData?.LeftStock}/
+                  {getPublicProductByIdData?.Quantity}
+                </span>
+                <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
+                  <b>Үнэ:</b> ₮{getPublicProductByIdData?.Price}
+                </span>
+              </div>
             </div>
 
             <div className="flex flex-col gap-4 w-full lg:w-1/2">
@@ -358,7 +370,7 @@ function Page() {
                                 </div>
 
                                 <span className="text-lg">
-                                  {parsedUserInfo ? parsedUserInfo?.Point : 0}{" "}
+                                  {parsedUserInfo ? parsedUserInfo?.Point : 0}
                                   xp
                                 </span>
                               </div>
