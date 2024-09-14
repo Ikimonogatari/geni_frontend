@@ -4,16 +4,25 @@ import Image from "next/image";
 import NavButtons from "../NavButtons";
 import { useGetUserInfoQuery } from "@/app/services/service";
 import Cookies from "js-cookie";
+import { useUserInfo } from "@/app/context/UserInfoContext";
 
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const { shouldRefetchUserInfo, setShouldRefetchUserInfo } =
+    useUserInfo(false);
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
+    refetch,
   } = useGetUserInfoQuery();
 
+  useEffect(() => {
+    if (shouldRefetchUserInfo) {
+      refetch();
+      setShouldRefetchUserInfo(false);
+    }
+  }, [shouldRefetchUserInfo, refetch, setShouldRefetchUserInfo]);
   useEffect(() => {
     if (getUserInfoData) {
       Cookies.set("user-info", JSON.stringify(getUserInfoData), {
@@ -87,7 +96,7 @@ function Navbar() {
           </a>
           <NavButtons />
 
-          {!getUserInfoLoading && !getUserInfoData ? (
+          {!getUserInfoLoading && getUserInfoError && !userType ? (
             <a
               href={"/login"}
               className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-2xl text-white px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
@@ -98,7 +107,7 @@ function Navbar() {
             <></>
           )}
 
-          {getUserInfoData ? (
+          {!getUserInfoError && getUserInfoData ? (
             <a
               href={
                 userType === "Creator"
@@ -112,7 +121,9 @@ function Navbar() {
                   ? "bg-[#CA7FFE]"
                   : userType === "Brand"
                   ? "bg-[#4D55F5]"
-                  : "bg-[#4FB755]"
+                  : userType === "Student"
+                  ? "bg-[#4FB755]"
+                  : "opacity-0"
               } rounded-2xl px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
             >
               <Image

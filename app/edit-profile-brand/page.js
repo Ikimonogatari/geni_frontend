@@ -13,6 +13,7 @@ import {
   useCreateSocialChannelMutation,
   useUploadFileMutation,
   useChangePasswordMutation,
+  geniApi,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
@@ -21,6 +22,7 @@ import { useUserInfo } from "../context/UserInfoContext";
 
 function Page() {
   const router = useRouter();
+  const { setShouldRefetchUserInfo } = useUserInfo();
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -259,6 +261,9 @@ function Page() {
     Cookies.remove("auth");
     Cookies.remove("userType");
     Cookies.remove("user-info");
+    geniApi.util.invalidateTags(["UserInfo"]);
+    setShouldRefetchUserInfo(true);
+
     router.refresh();
     router.replace("/");
   };
