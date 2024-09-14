@@ -144,7 +144,12 @@ function Navbar() {
               </span>
             </a>
           ) : getUserInfoLoading ? (
-            <div></div>
+            <a
+              href={"/login"}
+              className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-2xl text-white px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
+            >
+              Нэвтрэх
+            </a>
           ) : (
             <></>
           )}

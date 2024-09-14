@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -8,6 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../components/ui/dialog";
+import { useAddProductSupplyMutation } from "../services/service";
+import toast from "react-hot-toast";
 
 function BrandProducts({ brandProducts, brandData }) {
   console.log(brandData);
@@ -16,6 +18,31 @@ function BrandProducts({ brandProducts, brandData }) {
 
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count > 0 ? count - 1 : 0);
+
+  const [
+    addProductSupply,
+    {
+      data: addProductSupplyData,
+      error: addProductSupplyError,
+      isLoading: addProductSupplyLoading,
+      isSuccess: addProductSupplySuccess,
+    },
+  ] = useAddProductSupplyMutation();
+
+  useEffect(() => {
+    if (addProductSupplySuccess) {
+      toast.success("Амжилттай");
+    } else if (addProductSupplyError) {
+      toast.error(addProductSupplyError.data.error);
+    }
+  }, [addProductSupplySuccess, addProductSupplyError]);
+
+  const addSupply = (productId) => {
+    addProductSupply({
+      ProductId: productId,
+      SupplyCnt: count,
+    });
+  };
 
   const getStockStatus = (leftStock, quantity) => {
     const ratio = leftStock / quantity;
@@ -124,7 +151,10 @@ function BrandProducts({ brandProducts, brandData }) {
                         {count}
                         <button onClick={increment}>+</button>
                       </div>
-                      <button className="bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4">
+                      <button
+                        onClick={() => addSupply(p.ProductId)}
+                        className="bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
+                      >
                         Нэмэх
                       </button>
                     </DialogContent>

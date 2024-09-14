@@ -241,6 +241,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    addProductSupply: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/product/supply",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -275,4 +282,5 @@ export const {
   useCheckPaymentQuery,
   useListNotificationQuery,
   useListBrandProductsQuery,
+  useAddProductSupplyMutation,
 } = geniApi;
