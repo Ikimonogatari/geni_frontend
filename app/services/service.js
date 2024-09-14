@@ -24,6 +24,7 @@ export const geniApi = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     editCreatorProfile: builder.mutation({
       query: (body) => ({
@@ -163,13 +164,7 @@ export const geniApi = createApi({
         body,
       }),
     }),
-    listBrandContents: builder.query({
-      query: (body) => ({
-        url: `/api/admin/private/content?offset=0`,
-        method: "GET",
-        body,
-      }),
-    }),
+
     listPaymentPlans: builder.query({
       query: (body) => ({
         url: "/api/web/private/subscription-plan",
@@ -232,10 +227,10 @@ export const geniApi = createApi({
         body,
       }),
     }),
-    uploadHomework: builder.mutation({
+    listBrandContents: builder.query({
       query: (body) => ({
-        url: "/api/web/private/student/homework",
-        method: "POST",
+        url: `/api/web/private/content?offset=0`,
+        method: "GET",
         body,
       }),
     }),
@@ -272,5 +267,4 @@ export const {
   useCheckPaymentQuery,
   useListNotificationQuery,
   useListBrandProductsQuery,
-  useUploadHomeworkMutation,
 } = geniApi;

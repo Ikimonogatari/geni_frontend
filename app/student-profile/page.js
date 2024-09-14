@@ -351,7 +351,7 @@ function page() {
                   {creatorData?.Category?.map((c, i) => (
                     <button
                       key={i}
-                      className="bg-[#CA7FFE] font-semibold rounded-full px-4 py-2"
+                      className="bg-[#4FB755] font-semibold rounded-full px-4 py-2"
                     >
                       {c.Category_id.name}
                     </button>
@@ -510,7 +510,7 @@ function page() {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
+                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#4FB755] px-5 py-2 rounded-lg text-white font-bold"
               >
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -530,7 +530,7 @@ function page() {
                   onClick={() => pageNumber !== "..." && paginate(pageNumber)}
                   className={`w-10 h-10 transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
                     pageNumber === currentPage
-                      ? "border-[#CA7FFE]"
+                      ? "border-[#4FB755]"
                       : "border-none"
                   }`}
                 >
@@ -542,7 +542,7 @@ function page() {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
+                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#4FB755] px-5 py-2 rounded-lg text-white font-bold"
               >
                 Next
                 <Image

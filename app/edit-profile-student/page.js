@@ -299,7 +299,7 @@ function Page() {
 
                 <div
                   {...getRootProps()}
-                  className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
+                  className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#4FB755] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                 >
                   <input {...getInputProps()} />
                   {parsedUserInfo && parsedUserInfo.ProfileLink
@@ -575,7 +575,7 @@ function Page() {
             </div>
             <button
               type="submit"
-              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+              className="bg-[#4FB755] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
             >
               Хадгалах
             </button>

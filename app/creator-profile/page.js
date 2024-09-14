@@ -119,17 +119,22 @@ function page() {
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
-              <Image
-                src={
-                  creatorData?.image ? creatorData?.image : "/dummy-profile.jpg"
-                }
-                // loader={GraphCMSImageLoader}
-                width={194}
-                height={194}
-                loading="lazy"
-                className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
-                alt=""
-              />
+              {creatorData ? (
+                <Image
+                  src={
+                    creatorData?.ProfileLink
+                      ? creatorData?.ProfileLink
+                      : "/dummy-profile.jpg"
+                  }
+                  width={194}
+                  height={194}
+                  loading="lazy"
+                  className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
+                  alt=""
+                />
+              ) : (
+                <div className="w-[90px] h-[90px] sm:w-[194px] sm:h-[194px]"></div>
+              )}
               <div className="flex flex-col gap-1 sm:gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
@@ -224,7 +229,7 @@ function page() {
               </Link>
               <Link
                 href="/products"
-                className="flex sm:hidden flex-row items-center gap-2 text-xs sm:text-base bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+                className="flex sm:hidden flex-row items-center gap-2 text-xs sm:text-base bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
               >
                 Бүтээгдэхүүн үзэх
                 <Image
@@ -246,7 +251,7 @@ function page() {
                   onClick={() => setProfileState(b.value)}
                   className={`${
                     b.value === profileState
-                      ? "bg-[#4D55F5] text-white"
+                      ? "bg-[#CA7FFE] text-white border-[1px] border-[#2D262D]"
                       : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
                   } px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
                 >
@@ -256,7 +261,7 @@ function page() {
             </div>
             <Link
               href="/products"
-              className="hidden sm:flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
+              className="hidden sm:flex flex-row items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-5 py-3 rounded-lg text-white font-bold"
             >
               Бүтээгдэхүүн үзэх
               <Image
@@ -329,13 +334,6 @@ function page() {
 
 export default page;
 
-const icons = [
-  // "/brand-profile-icon1.png",
-  "/brand-profile-icon2.png",
-  "/brand-profile-icon3.png",
-  "/brand-profile-icon4.png",
-];
-
 const brandProfileButtons = [
   {
     title: "Content progress",
@@ -344,365 +342,5 @@ const brandProfileButtons = [
   {
     title: "Content gallery",
     value: "content-gallery",
-  },
-];
-
-const contentsProgress = [
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 2,
-    status: "Geni шалгаж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 4,
-    status: "Контент илгээсэн",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 1,
-    status: "Бүтээгдэхүүн хүргэж байна",
-    interaction: "",
-  },
-  {
-    name: "Нүүрний чийгшүүлэгч тос",
-    brand: "Lhamour",
-    stage: 3,
-    status: "Контент хийгдэж байна",
-    interaction: "",
   },
 ];

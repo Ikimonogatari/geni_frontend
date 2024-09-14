@@ -9,7 +9,8 @@ import {
   DialogTrigger,
 } from "../components/ui/dialog";
 
-function BrandProducts({ brandProducts }) {
+function BrandProducts({ brandProducts, brandData }) {
+  console.log(brandData);
   console.log(brandProducts);
   const [count, setCount] = useState(0);
 
@@ -64,7 +65,7 @@ function BrandProducts({ brandProducts }) {
                 key={i}
                 className="text-[10px] sm:text-base px-5 py-1 sm:p-5 grid grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
               >
-                <span className="col-span-1">{p.BrandName}</span>
+                <span className="col-span-1">{p.ProductName}</span>
 
                 <span className="col-span-1">
                   {p.LeftStock} / {p.Quantity}
@@ -97,7 +98,7 @@ function BrandProducts({ brandProducts }) {
                           src={p.ProductPics[0].Url}
                           width={445}
                           height={239}
-                          alt="dummy-brand"
+                          alt=""
                           className="w-[445px] h-[239px] rounded-2xl mt-11"
                         />
                       ) : (
@@ -105,10 +106,11 @@ function BrandProducts({ brandProducts }) {
                       )}
                       <div className="flex flex-row items-center gap-6">
                         <Image
-                          src={"/brand-dummy.png"}
+                          src={brandData ? brandData.ProfileLink : ""}
                           width="84"
                           height="84"
-                          alt="dummy"
+                          alt=""
+                          className="rounded-full border-[1px] border-[#2D262D]"
                         />
                         <div className="flex flex-col gap-2">
                           <span className="text-xl font-bold">

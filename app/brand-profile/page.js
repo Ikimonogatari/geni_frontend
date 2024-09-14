@@ -132,7 +132,12 @@ function page() {
       case "content-gallery":
         return <ContentGallery contentsGallery={currentContents} />;
       case "brand-products":
-        return <BrandProducts brandProducts={currentContents} />;
+        return (
+          <BrandProducts
+            brandProducts={currentContents}
+            brandData={brandData ? parsedUserInfo : null}
+          />
+        );
       default:
         return <ContentProgress currentContents={currentContents} />;
     }
@@ -187,13 +192,21 @@ function page() {
         <div className=" text-[#2D262D] max-w-7xl min-h-screen mx-auto py-10 sm:py-20">
           <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-4 sm:gap-7">
-              <Image
-                src={brandData?.image ? brandData?.image : "/dummy-profile.jpg"}
-                alt=""
-                width={194}
-                height={194}
-                className="rounded-full sm:rounded-xl w-[90px] sm:w-[194px] h-[90px] sm:h-[194px] border border-[#2D262D]"
-              />
+              {brandData ? (
+                <Image
+                  src={
+                    brandData?.ProfileLink
+                      ? brandData?.ProfileLink
+                      : "/dummy-profile.jpg"
+                  }
+                  alt=""
+                  width={194}
+                  height={194}
+                  className="rounded-full sm:rounded-xl w-[90px] sm:w-[194px] h-[90px] sm:h-[194px] border border-[#2D262D]"
+                />
+              ) : (
+                <div className="w-[90px] sm:w-[194px] h-[90px] sm:h-[194px]"></div>
+              )}
               <div className="flex flex-col gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
                   {brandData ? brandData.Name : ""}
@@ -224,7 +237,7 @@ function page() {
                     />
                   </a>
                 </div>
-                <button className="bg-[#CA7FFE] rounded-full px-2 text-sm sm:text-base sm:px-4 py-1 sm:py-2">
+                <button className="bg-[#4D55F5] text-white rounded-full px-2 text-sm sm:text-base sm:px-4 py-1 sm:py-2">
                   Beauty
                 </button>
               </div>
@@ -307,7 +320,7 @@ function page() {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 flex flex-row items-center justify-center gap-2 bg-[#CA7FFE] rounded-full"
+                className="min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 flex flex-row items-center justify-center gap-2 bg-[#4D55F5] rounded-full"
               >
                 <Image
                   src={"/arrow-right-icon.png"}
@@ -326,7 +339,7 @@ function page() {
                   onClick={() => pageNumber !== "..." && paginate(pageNumber)}
                   className={`min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 text-xs md:text-base transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
                     pageNumber === currentPage
-                      ? "border-[#CA7FFE]"
+                      ? "border-[#4D55F5]"
                       : "border-none"
                   }`}
                 >
@@ -338,7 +351,7 @@ function page() {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 flex flex-row items-center justify-center gap-2 bg-[#CA7FFE] rounded-full"
+                className="min-w-7 sm:min-w-10 min-h-7 sm:min-h-10 flex flex-row items-center justify-center gap-2 bg-[#4D55F5] rounded-full"
               >
                 <Image
                   src={"/arrow-right-icon.png"}

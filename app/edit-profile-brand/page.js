@@ -39,7 +39,7 @@ function Page() {
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const { setShouldRefetchUserInfo } = useUserInfo();
 
-  const [editBrandProfile, { data, error, isLoading }] =
+  const [editBrandProfile, { data, error, isLoading, isSuccess }] =
     useEditBrandProfileMutation();
 
   const [
@@ -48,6 +48,7 @@ function Page() {
       data: uploadFileData,
       error: uploadFileError,
       isLoading: uploadFileLoading,
+      isSuccess: uploadFileSuccess,
     },
   ] = useUploadFileMutation();
 
@@ -57,6 +58,7 @@ function Page() {
       data: changeProfilePictureData,
       error: changeProfilePictureError,
       isLoading: changeProfilePictureLoading,
+      isSuccess: changeProfilePictureSuccess,
     },
   ] = useChangeProfilePictureMutation();
 
@@ -66,6 +68,7 @@ function Page() {
       data: changePasswordData,
       error: changePasswordError,
       isLoading: changePasswordLoading,
+      isSuccess: changePasswordSuccess,
     },
   ] = useChangePasswordMutation();
 
@@ -81,6 +84,7 @@ function Page() {
       data: updateSocialChannelData,
       error: updateSocialChannelError,
       isLoading: updateSocialChannelLoading,
+      isSuccess: updateSocialChannelSuccess,
     },
   ] = useUpdateSocialChannelMutation();
 
@@ -90,6 +94,7 @@ function Page() {
       data: createSocialChannelData,
       error: createSocialChannelError,
       isLoading: createSocialChannelLoading,
+      isSuccess: createSocialChannelSuccess,
     },
   ] = useCreateSocialChannelMutation();
 
@@ -99,6 +104,7 @@ function Page() {
       Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
       Website: "temp-web",
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
+      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       Address: parsedUserInfo ? parsedUserInfo?.Address : "",
       BrandAoADescription: "temp-desc",
       ProductTypes: [],
@@ -139,7 +145,7 @@ function Page() {
   });
 
   useEffect(() => {
-    if (data) {
+    if (isSuccess) {
       toast.success("Амжилттай");
     }
     if (error) {
@@ -154,7 +160,7 @@ function Page() {
   }, [uploadFileData, uploadFileError]);
 
   useEffect(() => {
-    if (changeProfilePictureData) {
+    if (changeProfilePictureSuccess) {
       setShouldRefetchUserInfo(true);
       toast.success("Амжилттай");
     }
@@ -164,7 +170,7 @@ function Page() {
   }, [changeProfilePictureData, changeProfilePictureError]);
 
   useEffect(() => {
-    if (changePasswordData) {
+    if (changePasswordSuccess) {
       console.log("Success:", data);
       toast.success("Амжилттай");
     }
@@ -180,8 +186,8 @@ function Page() {
       }
       return prev;
     });
-    formik.setFieldValue("productTypes", [
-      ...formik.values.productTypes,
+    formik.setFieldValue("ProductTypes", [
+      ...formik.values.ProductTypes,
       value.ProductTypeId,
     ]);
   };
@@ -282,7 +288,11 @@ function Page() {
             <div className="flex flex-row items-center gap-7">
               {parsedUserInfo ? (
                 <Image
-                  src={parsedUserInfo?.ProfileLink}
+                  src={
+                    parsedUserInfo?.ProfileLink
+                      ? parsedUserInfo?.ProfileLink
+                      : "/dummy-profile.jpg"
+                  }
                   width={194}
                   height={194}
                   loading="lazy"
@@ -290,7 +300,7 @@ function Page() {
                   alt=""
                 />
               ) : (
-                <></>
+                <div className="w-[100px] h-[100px] sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"></div>
               )}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
@@ -305,7 +315,7 @@ function Page() {
                 </div>
                 <div
                   {...getRootProps()}
-                  className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
+                  className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#4D55F5] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                 >
                   <input {...getInputProps()} />
                   {parsedUserInfo && parsedUserInfo.ProfileLink
@@ -348,7 +358,7 @@ function Page() {
                     {productTypes?.map((p, i) => (
                       <div
                         key={i}
-                        className="bg-[#CA7FFE] text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
+                        className="bg-[#4D55F5] text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
                       >
                         {p.TypeName}
                       </div>
@@ -377,7 +387,7 @@ function Page() {
                           <div
                             onClick={() => handleProductType(p)}
                             key={i}
-                            className="cursor-pointer mt-1 bg-[#CA7FFE] text-center text-xs rounded-full px-4 py-2"
+                            className="cursor-pointer mt-1 bg-[#4D55F5] text-center text-xs rounded-full px-4 py-2"
                           >
                             {p.TypeName}
                           </div>
@@ -430,6 +440,26 @@ function Page() {
               {formik.touched.PhoneNumber && formik.errors.PhoneNumber && (
                 <div className="text-red-500 text-sm">
                   {formik.errors.PhoneNumber}
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="RegNo">
+                Регистрийн дугаар
+              </label>
+              <input
+                id="RegNo"
+                name="RegNo"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.RegNo}
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+              />
+              {formik.touched.RegNo && formik.errors.RegNo && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.RegNo}
                 </div>
               )}
             </div>
@@ -571,7 +601,7 @@ function Page() {
             </div>
             <button
               type="submit"
-              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+              className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
             >
               Хадгалах
             </button>

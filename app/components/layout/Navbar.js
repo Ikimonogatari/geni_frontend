@@ -10,6 +10,7 @@ function Navbar() {
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   const userType = Cookies.get("userType");
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { shouldRefetchUserInfo, setShouldRefetchUserInfo } =
     useUserInfo(false);
@@ -135,6 +136,7 @@ function Navbar() {
               Нэвтрэх
             </a>
           )}
+
           <button
             className="block md:hidden"
             onClick={() => setDropdownOpen(!dropdownOpen)}

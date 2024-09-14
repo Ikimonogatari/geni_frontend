@@ -271,7 +271,11 @@ function Page() {
             <div className="flex flex-row items-center gap-7">
               {parsedUserInfo ? (
                 <Image
-                  src={parsedUserInfo?.ProfileLink}
+                  src={
+                    parsedUserInfo?.ProfileLink
+                      ? parsedUserInfo?.ProfileLink
+                      : "/dummy-profile.jpg"
+                  }
                   width={194}
                   height={194}
                   loading="lazy"
@@ -279,7 +283,7 @@ function Page() {
                   alt=""
                 />
               ) : (
-                <></>
+                <div className="w-[100px] h-[100px] sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"></div>
               )}
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row items-center gap-3">
