@@ -62,6 +62,7 @@ export const config = {
     "/edit-profile-student",
     "/brand-profile",
     "/creator-profile",
+    "/student-profile",
     "/notifications/:path*",
     "/notifications",
     "/payment/:path*",

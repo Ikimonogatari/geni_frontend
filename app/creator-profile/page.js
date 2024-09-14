@@ -3,19 +3,18 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "../components/ContentGallery";
-import { useListCreatorContentsQuery } from "@/app/services/service";
-import Cookies from "js-cookie";
+import {
+  useGetUserInfoQuery,
+  useListCreatorContentsQuery,
+} from "@/app/services/service";
 import Link from "next/link";
 
 function page() {
-  const userInfo = Cookies.get("user-info");
-  console.log(userInfo);
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
-
-  const [creatorData, setCreatorData] = useState(
-    parsedUserInfo ? parsedUserInfo : null
-  );
+  const {
+    data: getUserInfoData,
+    error: getUserInfoError,
+    isLoading: getUserInfoLoading,
+  } = useGetUserInfoQuery();
   const {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
@@ -24,7 +23,7 @@ function page() {
 
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 8;
+  const contentsPerPage = 12;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -119,11 +118,11 @@ function page() {
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
-              {creatorData ? (
+              {getUserInfoData ? (
                 <Image
                   src={
-                    creatorData?.ProfileLink
-                      ? creatorData?.ProfileLink
+                    getUserInfoData?.ProfileLink
+                      ? getUserInfoData?.ProfileLink
                       : "/dummy-profile.jpg"
                   }
                   width={194}
@@ -138,7 +137,7 @@ function page() {
               <div className="flex flex-col gap-1 sm:gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                    {creatorData?.FirstName} {creatorData?.LastName}
+                    {getUserInfoData?.FirstName} {getUserInfoData?.LastName}
                   </span>
 
                   <Image
@@ -151,7 +150,7 @@ function page() {
                 </div>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   <span className="text-sm sm:text-lg">
-                    {creatorData ? creatorData.Point : 0} xp
+                    {getUserInfoData ? getUserInfoData.Point : 0} xp
                   </span>
                   <a>
                     <Image
@@ -164,7 +163,7 @@ function page() {
                   </a>
                   <a
                     target="_blank"
-                    href={`https://www.instagram.com/${creatorData?.SocialChannels[1].SocialAddress}`}
+                    href={`https://www.instagram.com/${getUserInfoData?.SocialChannels[1].SocialAddress}`}
                   >
                     <Image
                       src={"/Instagram.png"}
@@ -176,7 +175,7 @@ function page() {
                   </a>
                   <a
                     target="_blank"
-                    href={`https://www.facebook.com/${creatorData?.SocialChannels[0].SocialAddress}`}
+                    href={`https://www.facebook.com/${getUserInfoData?.SocialChannels[0].SocialAddress}`}
                   >
                     <Image
                       src={"/Facebook.png"}
@@ -188,10 +187,10 @@ function page() {
                   </a>
                 </div>
                 <span className="text-[#6F6F6F] text-xs sm:text-base">
-                  {creatorData ? creatorData.Bio : ""}
+                  {getUserInfoData ? getUserInfoData.Bio : ""}
                 </span>
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-[#2D262D]">
-                  {creatorData?.Category?.map((c, i) => (
+                  {getUserInfoData?.Category?.map((c, i) => (
                     <button
                       key={i}
                       className="bg-[#CA7FFE] font-semibold rounded-full px-4 py-2"

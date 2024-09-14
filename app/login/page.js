@@ -34,21 +34,23 @@ function Page() {
 
   useEffect(() => {
     if (data) {
+      // Set cookies first
       Cookies.set("auth", data.JWT, { expires: 1 / 48 });
       Cookies.set("userType", userType, { expires: 1 / 48 });
+
+      // Invalidate cache after cookies are set
       geniApi.util.invalidateTags(["UserInfo"]);
-      if (userType === "Creator" && data) {
-        router.refresh();
+
+      // Ensure navigation only after cookies are set
+
+      if (userType === "Creator") {
         router.push("/creator-profile");
-      } else if (userType === "Brand" && data) {
-        router.refresh();
+      } else if (userType === "Brand") {
         router.push("/brand-profile");
-      } else if (userType === "Student" && data) {
-        router.refresh();
+      } else if (userType === "Student") {
         router.push("/student-profile");
       }
-    }
-    if (error) {
+    } else if (error) {
       toast.error(error.data.error);
     }
   }, [data, error]);

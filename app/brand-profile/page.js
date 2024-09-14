@@ -4,20 +4,19 @@ import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "../components/ContentGallery";
 import BrandProducts from "./BrandProducts";
-import Cookies from "js-cookie";
 import {
+  useGetUserInfoQuery,
   useListBrandContentsQuery,
   useListBrandProductsQuery,
 } from "@/app/services/service";
 import Link from "next/link";
 
 function page() {
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  const [brandData, setBrandData] = useState(
-    parsedUserInfo ? parsedUserInfo : null
-  );
-  console.log(parsedUserInfo);
+  const {
+    data: getUserInfoData,
+    error: getUserInfoError,
+    isLoading: getUserInfoLoading,
+  } = useGetUserInfoQuery();
 
   const {
     data: listBrandContentsData,
@@ -51,34 +50,30 @@ function page() {
       case "content-progress":
         contents =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandContentsData.Data
             : [];
+        console.log(contents);
         break;
       case "content-gallery":
         contents =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandContentsData.Data
             : [];
+        console.log(contents);
         break;
       case "brand-products":
         contents =
           listBrandProductsData && listBrandProductsData.Data != null
-            ? listBrandProductsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandProductsData.Data
             : [];
+        console.log(contents);
         break;
       default:
         contents =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandContentsData.Data
             : [];
+        console.log(contents);
     }
 
     const indexOfLastContent = currentPage * contentsPerPage;
@@ -92,33 +87,25 @@ function page() {
       case "content-progress":
         contents =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandContentsData.Data
             : [];
         break;
       case "content-gallery":
         contents =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandContentsData.Data
             : [];
         break;
       case "brand-products":
         contents =
           listBrandProductsData && listBrandProductsData.Data != null
-            ? listBrandProductsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandProductsData.Data
             : [];
         break;
       default:
         contents =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data.filter(
-                (item) => item.BrandName === brandData?.Name
-              )
+            ? listBrandContentsData.Data
             : [];
     }
     return Math.ceil(contents.length / contentsPerPage);
@@ -135,7 +122,7 @@ function page() {
         return (
           <BrandProducts
             brandProducts={currentContents}
-            brandData={brandData ? parsedUserInfo : null}
+            brandData={getUserInfoData ? getUserInfoData : null}
           />
         );
       default:
@@ -192,11 +179,11 @@ function page() {
         <div className=" text-[#2D262D] max-w-7xl min-h-screen mx-auto py-10 sm:py-20">
           <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-4 sm:gap-7">
-              {brandData ? (
+              {getUserInfoData ? (
                 <Image
                   src={
-                    brandData?.ProfileLink
-                      ? brandData?.ProfileLink
+                    getUserInfoData?.ProfileLink
+                      ? getUserInfoData?.ProfileLink
                       : "/dummy-profile.jpg"
                   }
                   alt=""
@@ -209,12 +196,12 @@ function page() {
               )}
               <div className="flex flex-col gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
-                  {brandData ? brandData.Name : ""}
+                  {getUserInfoData ? getUserInfoData.Name : ""}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   <a
                     target="_blank"
-                    href={`https://www.instagram.com/${brandData?.SocialChannels[1].SocialAddress}`}
+                    href={`https://www.instagram.com/${getUserInfoData?.SocialChannels[1].SocialAddress}`}
                   >
                     <Image
                       src={"/Instagram.png"}
@@ -226,7 +213,7 @@ function page() {
                   </a>
                   <a
                     target="_blank"
-                    href={`https://www.facebook.com/${brandData?.SocialChannels[0].SocialAddress}`}
+                    href={`https://www.facebook.com/${getUserInfoData?.SocialChannels[0].SocialAddress}`}
                   >
                     <Image
                       src={"/Facebook.png"}
