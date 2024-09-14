@@ -37,7 +37,6 @@ function Page() {
 
   const [productTypes, setProductTypes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
-  const { setShouldRefetchUserInfo } = useUserInfo();
 
   const [editBrandProfile, { data, error, isLoading, isSuccess }] =
     useEditBrandProfileMutation();
@@ -117,7 +116,6 @@ function Page() {
     }),
     onSubmit: async (values) => {
       editBrandProfile(values).unwrap();
-      setShouldRefetchUserInfo(true);
     },
   });
 
@@ -161,7 +159,6 @@ function Page() {
 
   useEffect(() => {
     if (changeProfilePictureSuccess) {
-      setShouldRefetchUserInfo(true);
       toast.success("Амжилттай");
     }
     if (changeProfilePictureError) {
@@ -250,7 +247,6 @@ function Page() {
           }).unwrap();
         }
       }
-      setShouldRefetchUserInfo(true);
 
       toast.success("Амжилттай хадгаллаа");
     } catch (err) {
@@ -262,7 +258,8 @@ function Page() {
     Cookies.remove("auth");
     Cookies.remove("userType");
     Cookies.remove("user-info");
-    router.push("/");
+    router.refresh();
+    router.replace("/");
   };
 
   return (

@@ -3,11 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  geniApi,
-  useCreatorLoginMutation,
-  useLoginMutation,
-} from "../services/service";
+import { geniApi, useCreatorLoginMutation } from "../services/service";
 import Cookies from "js-cookie";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -42,10 +38,13 @@ function Page() {
       Cookies.set("userType", userType, { expires: 1 / 48 });
       geniApi.util.invalidateTags(["UserInfo"]);
       if (userType === "Creator" && data) {
+        router.refresh();
         router.push("/creator-profile");
       } else if (userType === "Brand" && data) {
+        router.refresh();
         router.push("/brand-profile");
       } else if (userType === "Student" && data) {
+        router.refresh();
         router.push("/student-profile");
       }
     }

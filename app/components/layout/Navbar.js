@@ -7,28 +7,17 @@ import Cookies from "js-cookie";
 import { useUserInfo } from "@/app/context/UserInfoContext";
 
 function Navbar() {
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  const userType = Cookies.get("userType");
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { shouldRefetchUserInfo, setShouldRefetchUserInfo } =
-    useUserInfo(false);
 
   useEffect(() => {
     const userInfo = Cookies.get("user-info");
-    if (!userInfo) {
-      setShouldRefetchUserInfo(true); // Set global state to trigger refetch
-    }
   }, []);
-  console.log(shouldRefetchUserInfo, "SHoULD WE REFETCH ?");
+
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery(undefined, {
-    skip: !shouldRefetchUserInfo, // Use global state to control skipping
-  });
+  } = useGetUserInfoQuery();
 
   useEffect(() => {
     if (getUserInfoData) {
@@ -38,6 +27,9 @@ function Navbar() {
     }
   }, [getUserInfoData]);
 
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const userType = Cookies.get("userType");
   return (
     <div className="w-full bg-[#F5F4F0] top-0 absolute">
       <div className="w-full py-[52px] px-7 sm:px-20">
@@ -102,10 +94,25 @@ function Navbar() {
           </a>
           <NavButtons />
 
-          {userType && userInfo ? (
+          {!getUserInfoLoading && !getUserInfoData ? (
+            <a
+              href={"/login"}
+              className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-2xl text-white px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
+            >
+              Нэвтрэх
+            </a>
+          ) : (
+            <></>
+          )}
+
+          {getUserInfoData ? (
             <a
               href={
-                userType === "Creator" ? "/creator-profile" : "/brand-profile"
+                userType === "Creator"
+                  ? "/creator-profile"
+                  : userType === "Brand"
+                  ? "/brand-profile"
+                  : "/student-profile"
               }
               className={`hidden md:flex flex-row items-center gap-[6px] ${
                 userType === "Creator"
@@ -128,13 +135,10 @@ function Navbar() {
                   : parsedUserInfo?.Name}
               </span>
             </a>
+          ) : getUserInfoLoading ? (
+            <div></div>
           ) : (
-            <a
-              href={"/login"}
-              className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-2xl text-white px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
-            >
-              Нэвтрэх
-            </a>
+            <></>
           )}
 
           <button

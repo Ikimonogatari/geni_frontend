@@ -36,7 +36,6 @@ function Page() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [dropdownOpen, setdropdownOpen] = useState(false);
-  const { setShouldRefetchUserInfo } = useUserInfo();
 
   const [editCreatorProfile, { data, error, isLoading }] =
     useEditCreatorProfileMutation();
@@ -113,7 +112,6 @@ function Page() {
     onSubmit: async (values) => {
       console.log(values);
       editCreatorProfile(values).unwrap();
-      setShouldRefetchUserInfo(true);
     },
   });
 
@@ -141,7 +139,6 @@ function Page() {
   useEffect(() => {
     if (data) {
       console.log(data);
-      setShouldRefetchUserInfo(true);
       toast.success("Амжилттай хадгаллаа");
     }
     if (error) {
@@ -157,7 +154,6 @@ function Page() {
 
   useEffect(() => {
     if (changeProfilePictureData) {
-      setShouldRefetchUserInfo(true);
       toast.success("Амжилттай");
     }
     if (changeProfilePictureError) {
@@ -233,7 +229,6 @@ function Page() {
           }).unwrap();
         }
       }
-      setShouldRefetchUserInfo(true);
 
       toast.success("Амжилттай хадгаллаа");
     } catch (err) {
@@ -245,7 +240,8 @@ function Page() {
     Cookies.remove("auth");
     Cookies.remove("userType");
     Cookies.remove("user-info");
-    router.push("/");
+    router.refresh();
+    router.replace("/");
   };
 
   return (

@@ -279,19 +279,22 @@ function page() {
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">
-              <Image
-                src={
-                  creatorData?.ProfileLink
-                    ? creatorData?.ProfileLink
-                    : "/dummy-profile.jpg"
-                }
-                // loader={GraphCMSImageLoader}
-                width={194}
-                height={194}
-                loading="lazy"
-                className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
-                alt=""
-              />
+              {creatorData ? (
+                <Image
+                  src={
+                    creatorData?.ProfileLink
+                      ? creatorData?.ProfileLink
+                      : "/dummy-profile.jpg"
+                  }
+                  width={194}
+                  height={194}
+                  loading="lazy"
+                  className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
+                  alt=""
+                />
+              ) : (
+                <div className="w-[90px] h-[90px] sm:w-[194px] sm:h-[194px]"></div>
+              )}
               <div className="flex flex-col gap-1 sm:gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
