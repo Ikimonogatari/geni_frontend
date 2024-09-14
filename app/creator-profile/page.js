@@ -163,7 +163,7 @@ function page() {
                   </a>
                   <a
                     target="_blank"
-                    href={`https://www.instagram.com/${getUserInfoData?.SocialChannels[1].SocialAddress}`}
+                    href={`https://www.instagram.com/${getUserInfoData?.SocialChannels?.[1]?.SocialAddress}`}
                   >
                     <Image
                       src={"/Instagram.png"}
@@ -175,7 +175,7 @@ function page() {
                   </a>
                   <a
                     target="_blank"
-                    href={`https://www.facebook.com/${getUserInfoData?.SocialChannels[0].SocialAddress}`}
+                    href={`https://www.facebook.com/${getUserInfoData?.SocialChannels?.[0]?.SocialAddress}`}
                   >
                     <Image
                       src={"/Facebook.png"}

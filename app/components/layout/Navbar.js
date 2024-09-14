@@ -4,14 +4,9 @@ import Image from "next/image";
 import NavButtons from "../NavButtons";
 import { useGetUserInfoQuery } from "@/app/services/service";
 import Cookies from "js-cookie";
-import { useUserInfo } from "@/app/context/UserInfoContext";
 
 function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    const userInfo = Cookies.get("user-info");
-  }, []);
 
   const {
     data: getUserInfoData,
@@ -27,8 +22,6 @@ function Navbar() {
     }
   }, [getUserInfoData]);
 
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   const userType = Cookies.get("userType");
   return (
     <div className="w-full bg-[#F5F4F0] top-0 absolute">
@@ -58,7 +51,7 @@ function Navbar() {
           >
             Brands
           </a>
-          {userType && userInfo ? (
+          {userType && getUserInfoData ? (
             <a
               href={
                 userType === "Creator" ? "/creator-profile" : "/brand-profile"
@@ -131,8 +124,12 @@ function Navbar() {
               />
               <span className="text-white text-base font-semibold">
                 {userType === "Creator"
-                  ? parsedUserInfo?.FirstName
-                  : parsedUserInfo?.Name}
+                  ? getUserInfoData?.Nickname
+                  : userType === "Brand"
+                  ? getUserInfoData?.Name
+                  : userType === "Student"
+                  ? getUserInfoData?.Nickname
+                  : ""}
               </span>
             </a>
           ) : getUserInfoLoading ? (
