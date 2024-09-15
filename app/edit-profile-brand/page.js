@@ -38,7 +38,7 @@ function Page() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  const [productTypes, setProductTypes] = useState([]);
+  const [brandTypes, setBrandTypes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
 
   const [editBrandProfile, { data, error, isLoading, isSuccess }] =
@@ -109,7 +109,10 @@ function Page() {
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       Address: parsedUserInfo ? parsedUserInfo?.Address : "",
       BrandAoADescription: "temp-desc",
-      ProductTypes: [],
+      BrandTypes:
+        parsedUserInfo && parsedUserInfo?.BrandTypes !== null
+          ? parsedUserInfo?.BrandTypes
+          : [],
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Required"),
@@ -180,14 +183,15 @@ function Page() {
   }, [changePasswordData, changePasswordError]);
 
   const handleProductType = (value) => {
-    setProductTypes((prev) => {
+    setBrandTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {
         return [...prev, value];
       }
       return prev;
     });
-    formik.setFieldValue("ProductTypes", [
-      ...formik.values.ProductTypes,
+    console.log(value);
+    formik.setFieldValue("BrandTypes", [
+      ...formik.values.BrandTypes,
       value.ProductTypeId,
     ]);
   };
@@ -358,10 +362,18 @@ function Page() {
                     Брэндийн төрөл
                   </label>
                   <div className="relative flex flex-row flex-wrap items-center gap-2">
-                    {productTypes?.map((p, i) => (
+                    {brandTypes?.map((p, i) => (
                       <div
                         key={i}
-                        className="bg-[#4D55F5] text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
+                        className="bg-[#4D55F5] text-white text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
+                      >
+                        {p.TypeName}
+                      </div>
+                    ))}
+                    {parsedUserInfo?.BrandTypes?.map((p, i) => (
+                      <div
+                        key={i}
+                        className="bg-[#4D55F5] text-white text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
                       >
                         {p.TypeName}
                       </div>
@@ -386,15 +398,24 @@ function Page() {
                       } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
                     >
                       {!listProductTypesError ? (
-                        listProductTypesData?.map((p, i) => (
-                          <div
-                            onClick={() => handleProductType(p)}
-                            key={i}
-                            className="cursor-pointer mt-1 bg-[#4D55F5] text-center text-xs rounded-full px-4 py-2"
-                          >
-                            {p.TypeName}
-                          </div>
-                        ))
+                        // Filter out product types already selected in `parsedUserInfo.BrandTypes`
+                        listProductTypesData
+                          ?.filter(
+                            (productType) =>
+                              !parsedUserInfo?.BrandTypes?.some(
+                                (brandType) =>
+                                  brandType.TypeName === productType.TypeName
+                              )
+                          )
+                          .map((p, i) => (
+                            <div
+                              onClick={() => handleProductType(p)}
+                              key={i}
+                              className="cursor-pointer mt-1 bg-[#4D55F5] text-white text-center text-xs rounded-full px-4 py-2"
+                            >
+                              {p.TypeName}
+                            </div>
+                          ))
                       ) : (
                         <></>
                       )}

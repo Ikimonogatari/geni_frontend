@@ -324,6 +324,97 @@ function ContentProgress({ currentContents }) {
                   Хүлээж авсан
                 </button>
               ) : null}
+              {p.Status === "ContentRejected" ? (
+                <Dialog>
+                  <DialogTrigger
+                    type="submit"
+                    className="bg-[#CA7FFE] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                  >
+                    Контент илгээх
+                  </DialogTrigger>
+                  <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
+                    <span className="text-3xl font-bold">Контент илгээх</span>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      <div className="flex flex-col gap-4">
+                        <span className="text-lg">Контент</span>
+                        <div
+                          {...getRootPropsForVideo()}
+                          className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
+                        >
+                          <input {...getInputPropsForVideo()} />
+
+                          {contentVideo ? (
+                            <video controls className="w-full h-full lg:h-auto">
+                              <source src={contentVideo} type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          ) : (
+                            <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
+                              <Image
+                                src={"/add-product-button.png"}
+                                width={54}
+                                height={54}
+                                alt=""
+                                className="w-[54px] h-[54px]"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-4">
+                        <span className="text-lg">Thumbnail зураг</span>
+                        <div
+                          {...getRootPropsForImage()}
+                          className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
+                        >
+                          <input {...getInputPropsForImage()} />
+                          {contentThumbnail ? (
+                            <img
+                              src={contentThumbnail}
+                              alt="Thumbnail Preview"
+                              className="w-full h-auto"
+                            />
+                          ) : (
+                            <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
+                              <Image
+                                src={"/add-product-button.png"}
+                                width={54}
+                                height={54}
+                                alt=""
+                                className="w-[54px] h-[54px]"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col h-full justify-between">
+                        <div className="flex flex-col gap-4">
+                          <span className="text-lg">Тайлбар</span>
+                          <textarea
+                            type="text"
+                            value={caption}
+                            onChange={(e) => setCaption(e.target.value)}
+                            placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
+                            className="p-2 h-[112px] w-full lg:w-[272px] border border-gray-300 rounded-md"
+                          />
+                        </div>
+                        {contentThumbnail && contentVideo && caption ? (
+                          <button
+                            onClick={() => handleContentSubmit(p.ContentId)}
+                            className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                          >
+                            Илгээх
+                          </button>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              ) : null}
               {p.Status === "ContentInProgress" ? (
                 <Dialog>
                   <DialogTrigger
