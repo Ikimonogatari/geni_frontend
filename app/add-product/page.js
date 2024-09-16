@@ -27,19 +27,31 @@ import toast from "react-hot-toast";
 
 import { ClipLoader } from "react-spinners";
 import Cookies from "js-cookie";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
 
 function Page() {
   const router = useRouter();
+
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
   const [selectedContentOutcomes, setSelectedContentOutcomes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
+  const [createProductSuccess, setCreateProductSuccess] = useState(false);
 
   const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  console.log(parsedUserInfo);
 
   const formik = useFormik({
     initialValues: {
-      brandId: userInfo ? JSON.parse(userInfo)?.UserId : null,
+      brandId: parsedUserInfo ? parsedUserInfo?.UserId : null,
       productName: "",
       information: "",
       requestForCreators: "",
@@ -55,6 +67,13 @@ function Page() {
         .of(Yup.string())
         .min(1, "At least one content type must be selected")
         .required("Content info is required"),
+      // productName: Yup.string().required("Required"),
+      // information: Yup.string().required("Required"),
+      // requestForCreators: Yup.string().required("Required"),
+      // quantity: Yup.string().required("Required"),
+      // price: Yup.string().required("Required"),
+      // productTypes: Yup.string().required("Required"),
+      // productPics: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       const modifiedValues = {
@@ -145,7 +164,8 @@ function Page() {
       toast.error("Алдаа гарлаа");
     }
     if (createProductData) {
-      toast.success("Амжилттай");
+      console.log(createProductData);
+      setCreateProductSuccess(true);
     }
   }, [createProductData, createProductError]);
 
@@ -188,6 +208,11 @@ function Page() {
         value,
       ]);
     }
+  };
+
+  const handleThanks = () => {
+    setCreateProductSuccess(false);
+    router.push("/brand-profile");
   };
 
   return (
@@ -326,7 +351,7 @@ function Page() {
                   {productTypes?.map((p, i) => (
                     <div
                       key={i}
-                      className="bg-[#CA7FFE] text-center text-xs rounded-full px-4 py-2"
+                      className="bg-[#CA7FFE] text-white text-center text-xs rounded-full px-4 py-2"
                     >
                       {p.TypeName}
                     </div>
@@ -349,7 +374,7 @@ function Page() {
                         <div
                           onClick={() => handleProductType(p)}
                           key={i}
-                          className="cursor-pointer mt-1 bg-[#CA7FFE] text-center text-xs rounded-full px-4 py-2"
+                          className="cursor-pointer mt-1 bg-[#CA7FFE] text-white text-center text-xs rounded-full px-4 py-2"
                         >
                           {p.TypeName}
                         </div>
@@ -527,7 +552,6 @@ function Page() {
                   </div>
                 ) : null}
               </div>
-
               <button
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#1920B4]`}
@@ -538,6 +562,65 @@ function Page() {
                   <span>Бүтээгдхүүн нэмэх</span>
                 </div>
               </button>
+              <Dialog open={createProductSuccess}>
+                <DialogContent className="max-w-lg flex flex-col items-center gap-2">
+                  <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
+                    БҮТЭЭГДЭХҮҮН НЭМЭГДЛЭЭ
+                  </span>
+                  <Image
+                    src={"/product-added.png"}
+                    width={209}
+                    height={220}
+                    alt="recieved"
+                  />
+
+                  <div className="w-full flex flex-col gap-5">
+                    <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
+                      <div className="w-full flex flex-row items-center gap-5">
+                        {parsedUserInfo ? (
+                          <Image
+                            src={
+                              parsedUserInfo.ProfileLink
+                                ? parsedUserInfo?.ProfileLink
+                                : "/dummy-profile.jpg"
+                            }
+                            width={77}
+                            height={77}
+                            alt=""
+                            className="aspect-square rounded-full border border-[#2D262D]"
+                          />
+                        ) : (
+                          <></>
+                        )}
+                        <div className="flex flex-row w-full items-start justify-between">
+                          <div className="w-full flex flex-col gap-1">
+                            <span className="font-bold text-xl">
+                              {parsedUserInfo?.Name}
+                            </span>
+                            <span className="text-xl">
+                              {createProductData?.ProductName}
+                            </span>
+                          </div>
+                          <div className="bg-[#CA7FFE] text-white text-center text-xs rounded-3xl px-4 py-2">
+                            {createProductData?.ProductTypes?.[0]?.TypeName}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-[#F49D19] p-4 text-white rounded-2xl">
+                      Geni танай бүтээгдэхүүнийг дээрх тоо ширхэгийн дагуу
+                      баталгаажуулж, агуулахдаа хүлээн авсны дараа платформ дээр
+                      бүтээгчдэд санал болгох болно. Баярлалаа.
+                    </div>
+                    <button
+                      onClick={handleThanks}
+                      className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
+                    >
+                      Баярлалаа
+                    </button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </form>
         </div>

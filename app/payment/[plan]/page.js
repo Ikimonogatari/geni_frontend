@@ -312,7 +312,7 @@ function page() {
                       height={271}
                       className=""
                     />
-                    <span className="uppercase font-bold text-[#4FB755] text-5xl text-center">
+                    <span className="uppercase font-bold text-[#4FB755] text-4xl sm:text-5xl text-center">
                       АМЖИЛТТАЙ ТӨЛӨГДЛӨӨ
                     </span>
                     <DialogClose className="mt-24 bg-[#4D55F5] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4">

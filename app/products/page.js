@@ -127,7 +127,7 @@ function Page() {
                           {product.ProductTypes?.slice(0, 1).map((t, i) => (
                             <div
                               key={i}
-                              className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2"
+                              className="bg-[#CA7FFE] text-[8px] sm:text-xs font-bold rounded-full px-2 py-1 sm:px-4 sm:py-2 text-white"
                             >
                               {t.TypeName}
                             </div>

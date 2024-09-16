@@ -54,18 +54,23 @@ function ContentGallery({ contentsGallery }) {
               </button>
               <div className="z-50 absolute bottom-6 left-6 flex flex-row items-center gap-2">
                 <Image
-                  src={"/content-creator-dummy.png"}
-                  width={22}
-                  height={22}
-                  alt="dummy"
+                  src={
+                    content.ProfileLink
+                      ? content.ProfileLink
+                      : "/dummy-profile.jpg"
+                  }
+                  className="rounded-full"
+                  width={26}
+                  height={26}
+                  alt=""
                 />
-                <span className="text-xs md:text-base text-white">
+                <span className="text-xs md:text-base text-black">
                   {content.Nickname}
                 </span>
                 <Image
                   src={"/verified-icon.png"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="verified"
                   className="w-4 h-4 sm:w-6 sm:h-6"
                 />

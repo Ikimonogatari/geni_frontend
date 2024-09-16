@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDropzone } from "react-dropzone";
-import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -30,8 +28,9 @@ function Page() {
   const router = useRouter();
   const params = useParams();
   const userInfo = Cookies.get("user-info");
+  console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-
+  console.log(parsedUserInfo);
   const userType = Cookies.get("userType");
   const { id } = params;
   const [productContentRequestMsg, setProductContentRequestMsg] = useState("");
@@ -109,17 +108,23 @@ function Page() {
             onSubmit={formik.handleSubmit}
             className="mt-11 flex flex-col lg:flex-row items-start gap-10"
           >
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-row items-center gap-4 w-1/2">
-                <button onClick={goPrev}>
-                  <Image
-                    src={"/creators-swipe-button.png"}
-                    width={42}
-                    height={42}
-                    alt="swipe-button"
-                    className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-                  />
-                </button>
+            <div className="flex flex-col gap-6 w-full sm:w-1/2">
+              <div className="flex flex-row items-center gap-4">
+                {getPublicProductByIdData &&
+                getPublicProductByIdData?.ProductPics.length > 1 ? (
+                  <button onClick={goPrev}>
+                    <Image
+                      src={"/creators-swipe-button.png"}
+                      width={42}
+                      height={42}
+                      alt="swipe-button"
+                      className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+                    />
+                  </button>
+                ) : (
+                  <></>
+                )}
+
                 <Swiper
                   style={{
                     "--swiper-pagination-color": "#CA7FFE",
@@ -135,6 +140,7 @@ function Page() {
                     setSwiper(s);
                   }}
                   modules={[Pagination]}
+                  className=""
                 >
                   {getPublicProductByIdData ? (
                     getPublicProductByIdData?.ProductPics.map((p, i) => (
@@ -142,10 +148,9 @@ function Page() {
                         <Image
                           src={p.Url}
                           alt={""}
-                          layout="responsive"
                           width={554}
                           height={554}
-                          className="object-cover rounded-2xl max-w-[554px] max-h-[554px]"
+                          className="aspect-square rounded-2xl w-full sm:max-w-[554px] sm:max-h-[554px]"
                         />
                       </SwiperSlide>
                     ))
@@ -153,36 +158,45 @@ function Page() {
                     <></>
                   )}
                 </Swiper>
-                <button onClick={goNext}>
-                  <Image
-                    src={"/creators-swipe-button.png"}
-                    width={42}
-                    height={42}
-                    alt="swipe-button"
-                    className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-                  />
-                </button>
+                {getPublicProductByIdData &&
+                getPublicProductByIdData?.ProductPics.length > 1 ? (
+                  <button onClick={goNext}>
+                    <Image
+                      src={"/creators-swipe-button.png"}
+                      width={42}
+                      height={42}
+                      alt="swipe-button"
+                      className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+                    />
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
-              <div className="flex flex-row items-center gap-4">
-                <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
-                  <b>Үлдэгдэл: </b>
-                  {getPublicProductByIdData?.LeftStock}/
-                  {getPublicProductByIdData?.Quantity}
-                </span>
-                <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
-                  <b>Үнэ:</b> ₮{getPublicProductByIdData?.Price}
-                </span>
-              </div>
+              {getPublicProductByIdData ? (
+                <div className="flex flex-row items-center gap-4">
+                  <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
+                    <b>Үлдэгдэл: </b>
+                    {getPublicProductByIdData?.LeftStock}/
+                    {getPublicProductByIdData?.Quantity}
+                  </span>
+                  <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
+                    <b>Үнэ:</b> ₮{getPublicProductByIdData?.Price}
+                  </span>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
 
             <div className="flex flex-col gap-4 w-full lg:w-1/2">
               <div className="flex flex-row items-center gap-3">
                 <Image
-                  src={"/lhamour.png"}
+                  src={getPublicProductByIdData?.ProductPics?.[0]?.Url}
                   width={77}
                   height={77}
-                  alt="dummy"
-                  className="border border-[#2D262D] rounded-full"
+                  alt=""
+                  className="border border-[#2D262D] rounded-full w-[77px] h-[77px]"
                 />
                 <div className="flex flex-col gap-2">
                   <span className="text-xl font-bold">
@@ -325,7 +339,7 @@ function Page() {
 
                     {requestState === "sent" ? (
                       <DialogContent className="max-w-lg flex flex-col items-center gap-2">
-                        <span className="text-[#4FB755] text-5xl text-center font-bold">
+                        <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
                           ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
                         </span>
                         <Image
@@ -335,20 +349,20 @@ function Page() {
                           alt="recieved"
                         />
 
-                        <div className="flex flex-col gap-5">
-                          <div className="flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-5">
+                        <div className="w-full flex flex-col gap-5">
+                          <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
                             <div className="w-full flex flex-row items-center gap-5">
                               {parsedUserInfo ? (
                                 <Image
                                   src={
-                                    parsedUserInfo.ProfilePic
-                                      ? "/dummy-creator.png"
+                                    parsedUserInfo.ProfileLink
+                                      ? parsedUserInfo?.ProfileLink
                                       : "/dummy-profile.jpg"
                                   }
                                   width={128}
                                   height={128}
                                   alt=""
-                                  className="w-[128px] h-[128px] rounded-2xl"
+                                  className="w-[100px] h-[100px] aspect-square sm:w-[128px] sm:h-[128px] rounded-2xl"
                                 />
                               ) : (
                                 <></>
@@ -399,7 +413,34 @@ function Page() {
                             setProductContentRequestMsg(e.target.value)
                           }
                           placeholder="Энд бичнэ үү"
-                          className="bg-[#F5F4F0] rounded-lg mt-4 w-full p-4 min-h-[203px]"
+                          className="bg-[#F5F4F0] rounded-lg mt-4 w-full p-4 min-h-[100px]"
+                        />
+                        <span className="text-xl">Хүргүүлэх хаяг:</span>
+
+                        <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
+                          <input type="checkbox" className="hidden peer" />
+                          <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                            <span className="text-[#F5F4F0] font-bold text-xl select-none">
+                              ✓
+                            </span>
+                          </div>
+                          <span className="text-base">
+                            Бүртгэлтэй гэрийн хаяг
+                          </span>
+                        </label>
+                        <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
+                          <input type="checkbox" className="hidden peer" />
+                          <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                            <span className="text-[#F5F4F0] font-bold text-xl select-none">
+                              ✓
+                            </span>
+                          </div>
+                          <span className="text-base">Бусад</span>
+                        </label>
+
+                        <textarea
+                          placeholder="Нэмэлт хаягаа энд бичнэ үү"
+                          className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
                         />
                         <button
                           onClick={handleProductContentRequest}

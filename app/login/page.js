@@ -51,7 +51,7 @@ function Page() {
         router.push("/student-profile");
       }
     } else if (error) {
-      toast.error(error.data.error);
+      toast.error(error?.data?.error);
     }
   }, [data, error]);
 
@@ -98,7 +98,7 @@ function Page() {
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
                 >
-                  Geni brand
+                  Geni Brand
                 </div>
                 <div
                   onClick={() => handleUserType("Student")}
@@ -108,7 +108,7 @@ function Page() {
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
                 >
-                  Geni student
+                  Geni Student
                 </div>
               </div>
               <span className="text-lg">И-мэйл</span>
