@@ -13,7 +13,12 @@ import {
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from "../components/ui/dialog";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -118,6 +123,10 @@ function page() {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
+  const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
+  const userInfo = Cookies.get("user-info");
+  console.log(userInfo ? userInfo : "");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
   const [
     uploadFile,
@@ -179,7 +188,7 @@ function page() {
       toast.error("Алдаа гарлаа");
     }
     if (isSuccess) {
-      toast.success("Амжилттай");
+      setIsHomeworkUploadSuccess(true);
     }
   }, [uploadHomeworkData, uploadHomeworkError]);
 
@@ -195,7 +204,11 @@ function page() {
     getRootProps: getRootPropsForImage,
     getInputProps: getInputPropsForImage,
   } = useDropzone({
-    accept: "image/*",
+    accept: {
+      "image/png": [],
+      "image/jpeg": [],
+      "image/jpg": [],
+    },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
@@ -222,7 +235,7 @@ function page() {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
   } = useDropzone({
-    accept: "video/mp4",
+    accept: { "video/mp4": [] },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
@@ -508,6 +521,64 @@ function page() {
                       <></>
                     )}
                   </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <Dialog open={isHomeworkUploadSuccess}>
+              <DialogContent className="max-w-lg flex flex-col items-center gap-2">
+                <span className="text-[#4FB755] uppercase text-4xl sm:text-5xl text-center font-bold">
+                  контент илгээгдлээ
+                </span>
+                <Image
+                  src={"/content-sent.png"}
+                  width={209}
+                  height={220}
+                  alt="recieved"
+                />
+
+                <div className="w-full flex flex-col gap-5">
+                  <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
+                    <div className="w-full flex flex-row items-center gap-5">
+                      {parsedUserInfo ? (
+                        <Image
+                          src={
+                            parsedUserInfo.ProfileLink
+                              ? parsedUserInfo?.ProfileLink
+                              : "/dummy-profile.jpg"
+                          }
+                          width={128}
+                          height={128}
+                          alt=""
+                          className="w-[100px] h-[100px] aspect-square sm:w-[128px] sm:h-[128px] rounded-2xl"
+                        />
+                      ) : (
+                        <></>
+                      )}
+
+                      <div className="w-full flex flex-col gap-2">
+                        <div className="w-full flex flex-row items-center gap-3">
+                          <span className="font-bold text-xl">
+                            {parsedUserInfo?.FirstName}
+                            {parsedUserInfo?.Name}
+                          </span>
+                        </div>
+
+                        <span className="text-lg">
+                          {parsedUserInfo ? parsedUserInfo?.Point : 0}
+                          xp
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <DialogClose>
+                    <button
+                      onClick={() => setIsHomeworkUploadSuccess(false)}
+                      className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
+                    >
+                      Баярлалаа
+                    </button>
+                  </DialogClose>
                 </div>
               </DialogContent>
             </Dialog>

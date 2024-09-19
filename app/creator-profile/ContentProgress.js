@@ -135,7 +135,11 @@ function ContentProgress({ currentContents }) {
     getRootProps: getRootPropsForImage,
     getInputProps: getInputPropsForImage,
   } = useDropzone({
-    accept: "image/*",
+    accept: {
+      "image/png": [],
+      "image/jpeg": [],
+      "image/jpg": [],
+    },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
@@ -162,7 +166,7 @@ function ContentProgress({ currentContents }) {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
   } = useDropzone({
-    accept: "video/mp4",
+    accept: { "video/mp4": [] },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
