@@ -330,7 +330,7 @@ function ContentProgress({ currentContents }) {
             <div
               className={`${getColorClass(
                 p.Status
-              )} col-span-1 flex flex-row items-center gap-3`}
+              )} col-span-1 flex flex-row items-center gap-[6px]`}
             >
               <Image
                 src={getStatusImage(p.Status)}
@@ -608,8 +608,8 @@ function ContentProgress({ currentContents }) {
               {creatorContentSubmitSuccess ? (
                 <Dialog open={isContentSuccess}>
                   <DialogContent className="max-w-lg flex flex-col items-center gap-2">
-                    <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
-                      ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
+                    <span className="text-[#4FB755] uppercase text-4xl sm:text-5xl text-center font-bold">
+                      контент илгээгдлээ
                     </span>
                     <Image
                       src={"/content-sent.png"}

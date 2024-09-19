@@ -146,7 +146,7 @@ function Navbar() {
           ) : getUserInfoLoading ? (
             <div className="w-[110.73px] h-[42px]"></div>
           ) : (
-            <></>
+            <div className="w-[110.73px] h-[42px]"></div>
           )}
 
           <button
