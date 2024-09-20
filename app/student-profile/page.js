@@ -125,6 +125,9 @@ function page() {
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
   const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
+  const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
+  const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
+
   const userInfo = Cookies.get("user-info");
   console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -169,8 +172,11 @@ function page() {
   useEffect(() => {
     if (getImagePresignedUrlError) {
       toast.error("Алдаа гарлаа");
+      setIsImageUploadLoading(false);
     }
     if (getImagePresignedUrlData) {
+      setIsImageUploadLoading(false);
+
       setContentThumbnail(getImagePresignedUrlData.url);
       console.log(getImagePresignedUrlData.url);
     }
@@ -179,9 +185,11 @@ function page() {
   useEffect(() => {
     if (getVideoPresignedUrlError) {
       toast.error("Алдаа гарлаа");
+      setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
       console.log(getVideoPresignedUrlData.url);
+      setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
@@ -215,6 +223,7 @@ function page() {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
+        setIsImageUploadLoading(true);
         uploadFile({ FolderName: "content-thumbnail" })
           .then((response) => {
             if (response.data) {
@@ -242,6 +251,7 @@ function page() {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
+        setIsVideoUploadLoading(true);
         uploadFile({ FolderName: "content-video" })
           .then((response) => {
             if (response.data) {
@@ -286,6 +296,8 @@ function page() {
   useEffect(() => {
     if (uploadFileError) {
       toast.error("Файл оруулахад алдаа гарлаа");
+      setIsVideoUploadLoading(false);
+      setIsImageUploadLoading(false);
     }
   }, [uploadFileData, uploadFileError]);
   return (
@@ -459,10 +471,10 @@ function page() {
                         <source src={contentVideo} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
-                    ) : getVideoPresignedUrlLoading ? (
+                    ) : isVideoUploadLoading ? (
                       <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
                         <ClipLoader
-                          loading={getVideoPresignedUrlLoading}
+                          loading={isVideoUploadLoading}
                           aria-label="Loading Spinner"
                           data-testid="loader"
                           className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
@@ -497,10 +509,10 @@ function page() {
                         alt=""
                         className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                       />
-                    ) : getImagePresignedUrlLoading ? (
+                    ) : isImageUploadLoading ? (
                       <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
                         <ClipLoader
-                          loading={getImagePresignedUrlLoading}
+                          loading={isImageUploadLoading}
                           aria-label="Loading Spinner"
                           data-testid="loader"
                           className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
