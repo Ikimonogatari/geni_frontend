@@ -238,7 +238,7 @@ function page() {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
   } = useDropzone({
-    accept: { "video/mp4": [] },
+    accept: { "video/mp4": [], "video/mov": [] },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
