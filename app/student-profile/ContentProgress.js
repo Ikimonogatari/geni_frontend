@@ -70,6 +70,7 @@ function ContentProgress({ currentContents }) {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
+      toast.error("Алдаа гарлаа");
     }
     if (getImagePresignedUrlData) {
       setContentThumbnail(getImagePresignedUrlData.url);
@@ -79,6 +80,7 @@ function ContentProgress({ currentContents }) {
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
+      toast.error("Алдаа гарлаа");
     }
     if (getVideoPresignedUrlData) {
       console.log(getVideoPresignedUrlData.url);

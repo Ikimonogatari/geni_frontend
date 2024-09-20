@@ -22,6 +22,7 @@ import {
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 function page() {
   const {
@@ -167,6 +168,7 @@ function page() {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
+      toast.error("Алдаа гарлаа");
     }
     if (getImagePresignedUrlData) {
       setContentThumbnail(getImagePresignedUrlData.url);
@@ -176,6 +178,7 @@ function page() {
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
+      toast.error("Алдаа гарлаа");
     }
     if (getVideoPresignedUrlData) {
       console.log(getVideoPresignedUrlData.url);
@@ -442,51 +445,38 @@ function page() {
                 Гэрийн даалгавар илгээх
                 {/* <Image src={"/plus.png"} width={14} height={14} alt="arrow" /> */}
               </DialogTrigger>
-
-              <DialogContent className="overflow-y-auto flex flex-col p-6 max-w-[1000px]">
+              <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
                 <span className="text-3xl font-bold">Контент илгээх</span>
-                <div className="flex flex-col lg:flex-row gap-6">
-                  <div className="flex flex-col gap-4">
+                <div className="w-full flex flex-col lg:flex-row gap-6">
+                  <div className="w-full flex flex-col gap-4">
                     <span className="text-lg">Контент</span>
-                    <div
-                      {...getRootPropsForVideo()}
-                      className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
-                    >
-                      {contentVideo ? (
-                        <video controls className="w-full h-full lg:h-auto">
-                          <source src={contentVideo} type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
-                      ) : (
-                        <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                          <input {...getInputPropsForVideo()} />
-                          <Image
-                            src={"/add-product-button.png"}
-                            width={54}
-                            height={54}
-                            alt=""
-                            className="w-[54px] h-[54px]"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
 
-                  <div className="flex flex-col gap-4">
-                    <span className="text-lg">Thumbnail зураг</span>
-                    <div
-                      {...getRootPropsForImage()}
-                      className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
-                    >
-                      {contentThumbnail ? (
-                        <img
-                          src={contentThumbnail}
-                          alt="Thumbnail Preview"
-                          className="w-full h-auto"
+                    {contentVideo ? (
+                      <video
+                        controls
+                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                      >
+                        <source src={contentVideo} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : getVideoPresignedUrlLoading ? (
+                      <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
+                        <ClipLoader
+                          loading={getVideoPresignedUrlLoading}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                          size={50}
                         />
-                      ) : (
+                      </div>
+                    ) : (
+                      <div
+                        {...getRootPropsForVideo()}
+                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl bg-[#F5F4F0]"
+                      >
+                        <input {...getInputPropsForVideo()} />
+
                         <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                          <input {...getInputPropsForImage()} />
                           <Image
                             src={"/add-product-button.png"}
                             width={54}
@@ -495,11 +485,49 @@ function page() {
                             className="w-[54px] h-[54px]"
                           />
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex flex-col h-full justify-between">
+                  <div className="w-full flex flex-col gap-4">
+                    <span className="text-lg">Thumbnail зураг</span>
+                    {contentThumbnail ? (
+                      <img
+                        src={contentThumbnail}
+                        alt=""
+                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                      />
+                    ) : getImagePresignedUrlLoading ? (
+                      <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
+                        <ClipLoader
+                          loading={getImagePresignedUrlLoading}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                          className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                          size={50}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        {...getRootPropsForImage()}
+                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                      >
+                        <input {...getInputPropsForImage()} />
+
+                        <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
+                          <Image
+                            src={"/add-product-button.png"}
+                            width={54}
+                            height={54}
+                            alt=""
+                            className="w-[54px] h-[54px]"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="w-full flex flex-col h-full justify-between">
                     <div className="flex flex-col gap-4">
                       <span className="text-lg">Тайлбар</span>
                       <textarea
@@ -507,12 +535,12 @@ function page() {
                         value={caption}
                         onChange={(e) => setCaption(e.target.value)}
                         placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-                        className="p-2 h-[112px] w-full lg:w-[272px] border border-gray-300 rounded-md"
+                        className="p-2 min-h-[200px] w-full border border-gray-300 rounded-md"
                       />
                     </div>
                     {contentThumbnail && contentVideo && caption ? (
                       <button
-                        onClick={handleContentSubmit}
+                        onClick={() => handleContentSubmit(c.ContentId)}
                         className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
                       >
                         Илгээх
