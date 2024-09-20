@@ -238,7 +238,7 @@ function page() {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
   } = useDropzone({
-    accept: { "video/mp4": [], "video/mov": [] },
+    // accept: { "video/mp4": [], "video/mov": [] },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
@@ -540,7 +540,7 @@ function page() {
                     </div>
                     {contentThumbnail && contentVideo && caption ? (
                       <button
-                        onClick={() => handleContentSubmit(c.ContentId)}
+                        onClick={handleContentSubmit}
                         className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
                       >
                         Илгээх
