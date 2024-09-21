@@ -148,6 +148,9 @@ function page() {
                     className="w-4 h-4 sm:w-6 sm:h-6"
                   />
                 </div>
+                <span className="text-[#6F6F6F] text-xs sm:text-base">
+                  @{getUserInfoData?.Nickname}
+                </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   <span className="text-sm sm:text-lg">
                     {getUserInfoData ? getUserInfoData.Point : 0} xp

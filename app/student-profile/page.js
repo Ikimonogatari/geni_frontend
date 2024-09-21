@@ -2,27 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
-import ContentGallery from "../components/ContentGallery";
 import {
-  useGetImagePresignedUrlMutation,
   useGetUserInfoQuery,
-  useGetVideoPresignedUrlMutation,
   useListCreatorContentsQuery,
-  useUploadByPresignUrlMutation,
-  useUploadHomeworkMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogClose,
-} from "../components/ui/dialog";
-import { useDropzone } from "react-dropzone";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { ClipLoader } from "react-spinners";
+import HomeworkUploadModal from "../components/HomeworkUploadModal";
 
 function page() {
   const {
@@ -119,187 +105,10 @@ function page() {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   };
 
-  const [contentThumbnail, setContentThumbnail] = useState(null);
-  const [contentVideo, setContentVideo] = useState(null);
-  const [contentVideoId, setContentVideoId] = useState(null);
-  const [contentThumbnailId, setContentThumbnailId] = useState(null);
-  const [caption, setCaption] = useState("");
-  const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
-  const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
-  const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
-
   const userInfo = Cookies.get("user-info");
   console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadByPresignUrlMutation();
-
-  const [
-    uploadHomework,
-    {
-      data: uploadHomeworkData,
-      error: uploadHomeworkError,
-      isLoading: uploadHomeworkLoading,
-      isSuccess,
-    },
-  ] = useUploadHomeworkMutation();
-
-  const [
-    getImagePresignedUrl,
-    {
-      data: getImagePresignedUrlData,
-      error: getImagePresignedUrlError,
-      isLoading: getImagePresignedUrlLoading,
-    },
-  ] = useGetImagePresignedUrlMutation();
-
-  const [
-    getVideoPresignedUrl,
-    {
-      data: getVideoPresignedUrlData,
-      error: getVideoPresignedUrlError,
-      isLoading: getVideoPresignedUrlLoading,
-    },
-  ] = useGetVideoPresignedUrlMutation();
-
-  useEffect(() => {
-    if (getImagePresignedUrlError) {
-      toast.error("Алдаа гарлаа");
-      setIsImageUploadLoading(false);
-    }
-    if (getImagePresignedUrlData) {
-      setIsImageUploadLoading(false);
-
-      setContentThumbnail(getImagePresignedUrlData.url);
-      console.log(getImagePresignedUrlData.url);
-    }
-  }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
-
-  useEffect(() => {
-    if (getVideoPresignedUrlError) {
-      toast.error("Алдаа гарлаа");
-      setIsVideoUploadLoading(false);
-    }
-    if (getVideoPresignedUrlData) {
-      console.log(getVideoPresignedUrlData.url);
-      setIsVideoUploadLoading(false);
-      setContentVideo(getVideoPresignedUrlData.url);
-    }
-  }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
-
-  useEffect(() => {
-    if (uploadHomeworkError) {
-      toast.error(uploadHomeworkError.data.error);
-    }
-    if (isSuccess) {
-      setIsHomeworkUploadSuccess(true);
-    }
-  }, [uploadHomeworkData, uploadHomeworkError]);
-
-  const handleContentSubmit = () => {
-    uploadHomework({
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
-    });
-  };
-
-  const {
-    getRootProps: getRootPropsForImage,
-    getInputProps: getInputPropsForImage,
-  } = useDropzone({
-    accept: {
-      "image/png": [],
-      "image/jpeg": [],
-      "image/jpg": [],
-    },
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        setIsImageUploadLoading(true);
-        uploadFile({ FolderName: "content-thumbnail" })
-          .then((response) => {
-            if (response.data) {
-              const { fileId, uploadURL } = response.data;
-              setContentThumbnailId(fileId);
-              uploadToS3(uploadURL, file).then(() => {
-                getImagePresignedUrl({
-                  FileId: fileId,
-                });
-              });
-            }
-          })
-          .catch(() => {
-            toast.error("Thumbnail upload failed");
-          });
-      }
-    },
-  });
-
-  const {
-    getRootProps: getRootPropsForVideo,
-    getInputProps: getInputPropsForVideo,
-  } = useDropzone({
-    // accept: { "video/mp4": [], "video/mov": [] },
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        setIsVideoUploadLoading(true);
-        uploadFile({ FolderName: "content-video" })
-          .then((response) => {
-            if (response.data) {
-              const { fileId, uploadURL } = response.data;
-              setContentVideoId(fileId);
-              uploadToS3(uploadURL, file).then(() => {
-                getVideoPresignedUrl({
-                  FileId: fileId,
-                });
-              });
-            }
-          })
-          .catch(() => {
-            toast.error("Video upload failed");
-          });
-      }
-    },
-  });
-
-  const uploadToS3 = async (url, file) => {
-    console.log(url);
-    console.log(file);
-
-    try {
-      const response = await axios.put(url, file, {
-        headers: {
-          "Content-Type": "application/octet-stream",
-        },
-      });
-
-      if (response.status == 200) {
-        console.log(response);
-      } else {
-        throw new Error(`HTTP error! status: ${response}`);
-      }
-    } catch (error) {
-      console.error("Error uploading to S3:", error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    if (uploadFileError) {
-      toast.error("Файл оруулахад алдаа гарлаа");
-      setIsVideoUploadLoading(false);
-      setIsImageUploadLoading(false);
-    }
-  }, [uploadFileData, uploadFileError]);
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
@@ -323,19 +132,12 @@ function page() {
                 <div className="w-[90px] h-[90px] sm:w-[194px] sm:h-[194px]"></div>
               )}
               <div className="flex flex-col gap-1 sm:gap-2">
-                <div className="flex flex-row items-center gap-3">
-                  <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                    {getUserInfoData?.FirstName} {getUserInfoData?.LastName}
-                  </span>
-
-                  <Image
-                    src={"/verified-icon.png"}
-                    width={24}
-                    height={24}
-                    alt="verified-icon"
-                    className="w-4 h-4 sm:w-6 sm:h-6"
-                  />
-                </div>
+                <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
+                  {getUserInfoData?.FirstName} {getUserInfoData?.LastName}
+                </span>
+                <span className="text-[#6F6F6F] text-xs sm:text-base">
+                  @{getUserInfoData?.Nickname}
+                </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   <span className="text-sm sm:text-lg">
                     {getUserInfoData ? getUserInfoData.Point : 0} xp
@@ -449,179 +251,7 @@ function page() {
               ))}
             </div>
 
-            <Dialog>
-              <DialogTrigger
-                type="submit"
-                className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4FB755] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
-              >
-                Гэрийн даалгавар илгээх
-                {/* <Image src={"/plus.png"} width={14} height={14} alt="arrow" /> */}
-              </DialogTrigger>
-              <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
-                <span className="text-3xl font-bold">Контент илгээх</span>
-                <div className="w-full flex flex-col lg:flex-row gap-6">
-                  <div className="w-full flex flex-col gap-4">
-                    <span className="text-lg">Контент</span>
-
-                    {contentVideo ? (
-                      <video
-                        controls
-                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                      >
-                        <source src={contentVideo} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    ) : isVideoUploadLoading ? (
-                      <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
-                        <ClipLoader
-                          loading={isVideoUploadLoading}
-                          aria-label="Loading Spinner"
-                          data-testid="loader"
-                          className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                          size={50}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        {...getRootPropsForVideo()}
-                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl bg-[#F5F4F0]"
-                      >
-                        <input {...getInputPropsForVideo()} />
-
-                        <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                          <Image
-                            src={"/add-product-button.png"}
-                            width={54}
-                            height={54}
-                            alt=""
-                            className="w-[54px] h-[54px]"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="w-full flex flex-col gap-4">
-                    <span className="text-lg">Thumbnail зураг</span>
-                    {contentThumbnail ? (
-                      <img
-                        src={contentThumbnail}
-                        alt=""
-                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                      />
-                    ) : isImageUploadLoading ? (
-                      <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
-                        <ClipLoader
-                          loading={isImageUploadLoading}
-                          aria-label="Loading Spinner"
-                          data-testid="loader"
-                          className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                          size={50}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        {...getRootPropsForImage()}
-                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                      >
-                        <input {...getInputPropsForImage()} />
-
-                        <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                          <Image
-                            src={"/add-product-button.png"}
-                            width={54}
-                            height={54}
-                            alt=""
-                            className="w-[54px] h-[54px]"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="w-full flex flex-col h-full justify-between">
-                    <div className="flex flex-col gap-4">
-                      <span className="text-lg">Тайлбар</span>
-                      <textarea
-                        type="text"
-                        value={caption}
-                        onChange={(e) => setCaption(e.target.value)}
-                        placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-                        className="p-2 min-h-[200px] w-full border border-gray-300 rounded-md"
-                      />
-                    </div>
-                    {contentThumbnail && contentVideo && caption ? (
-                      <button
-                        onClick={handleContentSubmit}
-                        className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
-                      >
-                        Илгээх
-                      </button>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-            <Dialog open={isHomeworkUploadSuccess}>
-              <DialogContent className="max-w-lg flex flex-col items-center gap-2">
-                <span className="text-[#4FB755] uppercase text-4xl sm:text-5xl text-center font-bold">
-                  контент илгээгдлээ
-                </span>
-                <Image
-                  src={"/content-sent.png"}
-                  width={209}
-                  height={220}
-                  alt="recieved"
-                />
-
-                <div className="w-full flex flex-col gap-5">
-                  <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
-                    <div className="w-full flex flex-row items-center gap-5">
-                      {parsedUserInfo ? (
-                        <Image
-                          src={
-                            parsedUserInfo.ProfileLink
-                              ? parsedUserInfo?.ProfileLink
-                              : "/dummy-profile.jpg"
-                          }
-                          width={128}
-                          height={128}
-                          alt=""
-                          className="w-[100px] h-[100px] aspect-square sm:w-[128px] sm:h-[128px] rounded-2xl"
-                        />
-                      ) : (
-                        <></>
-                      )}
-
-                      <div className="w-full flex flex-col gap-2">
-                        <div className="w-full flex flex-row items-center gap-3">
-                          <span className="font-bold text-xl">
-                            {parsedUserInfo?.FirstName}
-                            {parsedUserInfo?.Name}
-                          </span>
-                        </div>
-
-                        <span className="text-lg">
-                          {parsedUserInfo ? parsedUserInfo?.Point : 0}
-                          xp
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <DialogClose>
-                    <button
-                      onClick={() => setIsHomeworkUploadSuccess(false)}
-                      className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
-                    >
-                      Баярлалаа
-                    </button>
-                  </DialogClose>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <HomeworkUploadModal parsedUserInfo={parsedUserInfo} />
           </div>
           {renderBrandProfile()}
         </div>
@@ -691,5 +321,3 @@ const brandProfileButtons = [
     value: "content-progress",
   },
 ];
-
-const scores = ["20", "40", "60", "80", "100"];
