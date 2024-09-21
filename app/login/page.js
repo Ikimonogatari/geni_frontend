@@ -221,7 +221,7 @@ function Page() {
                 </div>
               ) : null}
 
-              <Dialog>
+              {/* <Dialog>
                 <DialogTrigger className="text-black font-semibold underline">
                   Нууц үг сэргээх
                 </DialogTrigger>
@@ -430,7 +430,7 @@ function Page() {
                     </div>
                   )}
                 </DialogContent>
-              </Dialog>
+              </Dialog> */}
               <button
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-md h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
