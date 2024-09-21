@@ -200,7 +200,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
           Гэрийн даалгавар илгээх
         </DialogTrigger>
 
-        <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
+        <DialogContent className="overflow-y-auto flex flex-col p-6 w-full sm:w-auto lg:w-full max-h-[739px] max-w-[1000px] rounded-3xl">
           <span className="text-3xl font-bold">Контент илгээх</span>
           <div className="w-full flex flex-col lg:flex-row gap-6">
             <div className="w-full flex flex-col gap-4">
@@ -290,7 +290,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-                  className="p-2 min-h-[200px] w-full border border-gray-300 rounded-md"
+                  className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
                 />
               </div>
               {contentThumbnail && contentVideo && caption ? (

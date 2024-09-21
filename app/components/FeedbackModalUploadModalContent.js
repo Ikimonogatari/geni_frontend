@@ -191,7 +191,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
   };
 
   return (
-    <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
+    <DialogContent className="overflow-y-auto flex flex-col p-6 w-full sm:w-auto lg:w-full max-h-[739px] max-w-[1000px] rounded-3xl">
       <span className="text-3xl font-bold">Контент илгээх</span>
       <div className="w-full flex flex-col lg:flex-row gap-6">
         <div className="w-full flex flex-col gap-4">

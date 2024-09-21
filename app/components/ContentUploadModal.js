@@ -14,7 +14,7 @@ import {
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 
-function ContentUploadModal({ parsedUserInfo }) {
+function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isContentSuccess, setIsContentSuccess] = useState(false);
@@ -23,7 +23,7 @@ function ContentUploadModal({ parsedUserInfo }) {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
-
+  console.log(parsedUserInfo);
   const [
     getImagePresignedUrl,
     {
@@ -201,7 +201,7 @@ function ContentUploadModal({ parsedUserInfo }) {
           Контент илгээх
         </DialogTrigger>
 
-        <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
+        <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
           <span className="text-3xl font-bold">Контент илгээх</span>
           <div className="w-full flex flex-col lg:flex-row gap-6">
             <div className="w-full flex flex-col gap-4">
@@ -291,12 +291,12 @@ function ContentUploadModal({ parsedUserInfo }) {
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-                  className="p-2 min-h-[200px] w-full border border-gray-300 rounded-md"
+                  className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
                 />
               </div>
               {contentThumbnail && contentVideo && caption ? (
                 <button
-                  onClick={() => handleContentSubmit(p.ContentId)}
+                  onClick={handleContentSubmit}
                   className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
                 >
                   Илгээх

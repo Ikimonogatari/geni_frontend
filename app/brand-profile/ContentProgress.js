@@ -57,6 +57,7 @@ function ContentProgress({ currentContents }) {
       data: brandReceiveContentData,
       error: brandReceiveContentError,
       isLoading: brandReceiveContentLoading,
+      isSuccess: brandReceiveContentSuccess,
     },
   ] = useBrandReceiveContentMutation();
 
@@ -64,10 +65,10 @@ function ContentProgress({ currentContents }) {
     if (brandReceiveContentError) {
       toast.error("Алдаа гарлаа");
     }
-    if (brandReceiveContentData) {
+    if (brandReceiveContentSuccess) {
       toast.success("Амжилттай");
     }
-  }, [brandReceiveContentData, brandReceiveContentError]);
+  }, [brandReceiveContentSuccess, brandReceiveContentError]);
 
   const handleDialogTrigger = (thumbnailId, contentId) => {
     getImagePresignedUrl({ FileId: thumbnailId });
@@ -220,16 +221,14 @@ function ContentProgress({ currentContents }) {
                   >
                     Контент авах
                   </DialogTrigger>
-                  <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] max-w-[1000px]">
-                    <span className="text-3xl font-bold">Контент авах</span>
-                    <div className="flex flex-col lg:flex-row gap-6">
-                      <div className="flex flex-col gap-4">
-                        <span className="text-lg">Контент</span>
-
+                  <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl">
+                    <div className="flex flex-col lg:flex-row gap-6 h-full">
+                      <div className="flex flex-col gap-4 h-full">
+                        <span className="text-lg font-semibold">Контент</span>
                         {contentVideo ? (
                           <video
                             controls
-                            className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
+                            className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                           >
                             <source src={contentVideo} type="video/mp4" />
                             Your browser does not support the video tag.
@@ -239,64 +238,66 @@ function ContentProgress({ currentContents }) {
                         )}
                       </div>
 
-                      <div className="flex flex-col gap-4">
-                        <span className="text-lg">Thumbnail зураг</span>
+                      <div className="flex flex-col gap-4 h-full">
+                        <span className="text-lg font-semibold">
+                          Thumbnail зураг
+                        </span>
 
                         {contentThumbnail ? (
                           <img
                             src={contentThumbnail}
                             alt=""
-                            className="w-full min-w-[300px] h-[200px] lg:h-[484px] lg:w-[272px]"
+                            className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                           />
                         ) : (
                           <></>
                         )}
                       </div>
 
-                      <div className="flex flex-col gap-4 h-full justify-between">
-                        <div className="flex flex-col gap-4">
-                          <span className="text-lg">Тайлбар</span>
-                        </div>
-                        <div className="flex flex-col gap-6">
-                          <span className="text-sm text-[#6F6F6F]">
-                            {p.Caption}
-                          </span>
-                          <div className="flex flex-col gap-2">
-                            <span className="text-sm">
-                              Та контент бүтээгчид оноо өгнө үү
+                      <div className="flex flex-col justify-between gap-4">
+                        <span className="text-lg font-semibold">Тайлбар</span>
+                        <div className="w-full h-full flex flex-col justify-between">
+                          <div className="flex flex-col gap-6">
+                            <span className="text-sm text-[#6F6F6F] p-3 bg-[#F5F4F0] rounded-xl">
+                              {p.Caption}
                             </span>
-                            <div className="flex flex-row items-center gap-[6px]">
-                              {scores.map((s, i) => (
-                                <span
-                                  onClick={() => setScore(s)}
-                                  key={i}
-                                  className={`transition-all duration-150 cursor-pointer py-2 px-4 ${
-                                    score == s
-                                      ? "bg-[#4FB755] text-white border-[1px] border-white"
-                                      : "bg-none text-[#CDCDCD] border-[#CDCDCD] border-[1px]"
-                                  } text-sm rounded-xl`}
-                                >
-                                  {s}
-                                </span>
-                              ))}
+                            <div className="flex flex-col gap-2">
+                              <span className="text-sm">
+                                Та контент бүтээгчид оноо өгнө үү
+                              </span>
+                              <div className="flex flex-row items-center gap-[6px]">
+                                {scores.map((s, i) => (
+                                  <span
+                                    onClick={() => setScore(s)}
+                                    key={i}
+                                    className={`transition-all duration-150 cursor-pointer py-2 px-4 ${
+                                      score == s
+                                        ? "bg-[#4FB755] text-white border-[1px] border-white"
+                                        : "bg-none text-[#CDCDCD] border-[#CDCDCD] border-[1px]"
+                                    } text-sm rounded-xl`}
+                                  >
+                                    {s}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <span className="text-sm">
-                              Та контент бүтээгчид сэтгэгдэлээ үлдээнэ үү
-                            </span>
-                            <textarea
-                              type="text"
-                              value={comment}
-                              onChange={(e) => setComment(e.target.value)}
-                              className="text-sm p-2 h-[127px] w-full lg:max-w-[445px] bg-[#F5F4F0] outline-none border rounded-md"
-                            />
+                            <div className="flex flex-col gap-2">
+                              <span className="text-sm">
+                                Та контент бүтээгчид сэтгэгдэлээ үлдээнэ үү
+                              </span>
+                              <textarea
+                                type="text"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                className="text-sm p-3 h-[127px] w-full lg:max-w-[445px] bg-[#F5F4F0] outline-none border rounded-xl"
+                              />
+                            </div>
                           </div>
                         </div>
                         {comment && score ? (
                           <button
                             onClick={() => handleContentReceive(p.ContentId)}
-                            className="mt-6 bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                            className="bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
                           >
                             Хүлээж авлаа
                           </button>

@@ -338,7 +338,7 @@ function Page() {
                     </DialogTrigger>
 
                     {requestState === "sent" ? (
-                      <DialogContent className="max-w-lg flex flex-col items-center gap-2">
+                      <DialogContent className="max-w-lg flex flex-col items-center gap-2 rounded-3xl">
                         <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
                           ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
                         </span>
@@ -392,14 +392,17 @@ function Page() {
                           </div>
 
                           <DialogClose>
-                            <button className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl">
+                            <button
+                              onClick={() => router.back()}
+                              className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
+                            >
                               Баярлалаа
                             </button>
                           </DialogClose>
                         </div>
                       </DialogContent>
                     ) : (
-                      <DialogContent className="flex flex-col max-w-2xl">
+                      <DialogContent className="flex flex-col max-w-2xl rounded-3xl">
                         <span className="text-2xl font-bold">
                           Хүсэлт илгээх
                         </span>

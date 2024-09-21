@@ -24,19 +24,23 @@ function ContentReviewModal({ p }) {
       >
         Сэтгэгдэл харах
       </DialogTrigger>
-      <DialogContent className="overflow-y-auto max-w-lg flex flex-col">
+      <DialogContent className="overflow-y-auto max-w-lg flex flex-col rounded-3xl">
         <span className="text-3xl font-bold">Брэндийн сэтгэгдэл</span>
         <div className="mt-10 flex flex-row items-center gap-4">
           <Image
-            src={p?.BrandPic ? p?.BrandPic : "/dummy-brand.png"}
+            src={
+              p?.BrandProfileLink
+                ? p?.BrandProfileLink
+                : "/white-placeholder.png"
+            }
             width={84}
             height={84}
             className="w-[84px] h-[84px] aspect-square rounded-full border border-[#2D262D]"
           />
           <div className="flex flex-col gap-1">
             <span className="text-lg font-bold">{p?.BrandName}</span>
-            <div className="bg-[#CA7FFE] text-white text-center text-xs rounded-3xl px-4 py-2">
-              {p?.BrandType}
+            <div className="bg-[#4D55F5] text-white text-center text-xs rounded-3xl px-4 py-2">
+              {p?.BrandTypes?.[0]?.TypeName}
             </div>
           </div>
         </div>
@@ -61,7 +65,7 @@ function ContentReviewModal({ p }) {
         </span>
 
         <span>Танд өгсөн сэтгэгдэл</span>
-        <span className="bg-[#F5F4F0] p-4 rounded-2xl min-h-[127px] overflow-y-auto">
+        <span className="bg-[#F5F4F0] p-3 rounded-2xl min-h-[127px] overflow-y-auto">
           {p?.BrandComment}
         </span>
       </DialogContent>

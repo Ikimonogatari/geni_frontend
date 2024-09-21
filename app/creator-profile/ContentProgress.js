@@ -173,7 +173,10 @@ function ContentProgress({ currentContents }) {
                 <></>
               )}
               {p.Status === "ContentInProgress" ? (
-                <ContentUploadModal parsedUserInfo={parsedUserInfo} />
+                <ContentUploadModal
+                  parsedUserInfo={parsedUserInfo}
+                  contentId={p.ContentId}
+                />
               ) : null}
 
               {p.Status === "ContentReceived" ? (

@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
-import ContentGallery from "../components/ContentGallery";
 import BrandProducts from "./BrandProducts";
 import {
   useGetUserInfoQuery,
@@ -10,6 +9,7 @@ import {
   useListBrandProductsQuery,
 } from "@/app/services/service";
 import Link from "next/link";
+import BrandContentGallery from "./BrandContentGallery";
 
 function page() {
   const {
@@ -117,7 +117,7 @@ function page() {
       case "content-progress":
         return <ContentProgress currentContents={currentContents} />;
       case "content-gallery":
-        return <ContentGallery contentsGallery={currentContents} />;
+        return <BrandContentGallery contentsGallery={currentContents} />;
       case "brand-products":
         return (
           <BrandProducts
