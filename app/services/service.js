@@ -248,6 +248,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    sendOtpToEmail: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/public/otp",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -283,4 +290,5 @@ export const {
   useListNotificationQuery,
   useListBrandProductsQuery,
   useAddProductSupplyMutation,
+  useSendOtpToEmailMutation,
 } = geniApi;
