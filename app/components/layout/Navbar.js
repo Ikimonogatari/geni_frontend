@@ -99,7 +99,7 @@ function Navbar() {
           {!getUserInfoLoading && getUserInfoError && !userType ? (
             <a
               href={"/login"}
-              className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-2xl text-white px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
+              className={`hidden md:flex flex-row items-center gap-1 bg-[#CA7FFE] rounded-xl text-white px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
             >
               Нэвтрэх
             </a>
@@ -124,7 +124,7 @@ function Navbar() {
                   : userType === "Student"
                   ? "bg-[#4FB755]"
                   : "opacity-0"
-              } rounded-2xl px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
+              } rounded-xl px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
             >
               <Image
                 src={"/user-icon.png"}

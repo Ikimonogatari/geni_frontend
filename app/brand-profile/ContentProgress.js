@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   useBrandReceiveContentMutation,
-  useUpdateContentStatusMutation,
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
 } from "../services/service";
@@ -53,15 +52,6 @@ function ContentProgress({ currentContents }) {
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
   const [
-    updateContentStatus,
-    {
-      data: updateContentStatusData,
-      error: updateContentStatusError,
-      isLoading: updateContentStatusLoading,
-    },
-  ] = useUpdateContentStatusMutation();
-
-  const [
     brandReceiveContent,
     {
       data: brandReceiveContentData,
@@ -69,15 +59,6 @@ function ContentProgress({ currentContents }) {
       isLoading: brandReceiveContentLoading,
     },
   ] = useBrandReceiveContentMutation();
-
-  useEffect(() => {
-    if (updateContentStatusError) {
-      toast.error("Алдаа гарлаа");
-    }
-    if (updateContentStatusData) {
-      toast.success("Амжилттай");
-    }
-  }, [updateContentStatusData, updateContentStatusError]);
 
   useEffect(() => {
     if (brandReceiveContentError) {

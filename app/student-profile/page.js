@@ -109,6 +109,13 @@ function page() {
   console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
+  const instagramLink = getUserInfoData?.SocialChannels?.find(
+    (channel) => channel.PlatformName === "Instagram"
+  );
+
+  const facebookLink = getUserInfoData?.SocialChannels?.find(
+    (channel) => channel.PlatformName === "Facebook"
+  );
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
@@ -151,38 +158,34 @@ function page() {
                       className="w-4 h-4 sm:w-6 sm:h-6"
                     />
                   </a>
-                  <a
-                    target="_blank"
-                    href={`https://www.instagram.com/${
-                      getUserInfoData?.SocialChannels?.find(
-                        (channel) => channel.PlatformName === "Instagram"
-                      )?.SocialAddress || ""
-                    }`}
-                  >
-                    <Image
-                      src={"/Instagram.png"}
-                      width={24}
-                      height={24}
-                      alt="ig"
-                      className="w-5 h-5 sm:w-6 sm:h-6"
-                    />
-                  </a>
-                  <a
-                    target="_blank"
-                    href={`https://www.facebook.com/${
-                      getUserInfoData?.SocialChannels?.find(
-                        (channel) => channel.PlatformName === "Facebook"
-                      )?.SocialAddress || ""
-                    }`}
-                  >
-                    <Image
-                      src={"/Facebook.png"}
-                      width={24}
-                      height={24}
-                      alt="fb"
-                      className="w-5 h-5 sm:w-6 sm:h-6"
-                    />
-                  </a>
+                  {instagramLink && (
+                    <a
+                      target="_blank"
+                      href={`https://www.instagram.com/${instagramLink || ""}`}
+                    >
+                      <Image
+                        src={"/Instagram.png"}
+                        width={24}
+                        height={24}
+                        alt="ig"
+                        className="w-5 h-5 sm:w-6 sm:h-6"
+                      />
+                    </a>
+                  )}
+                  {facebookLink && (
+                    <a
+                      target="_blank"
+                      href={`https://www.facebook.com/${facebookLink || ""}`}
+                    >
+                      <Image
+                        src={"/Facebook.png"}
+                        width={24}
+                        height={24}
+                        alt="fb"
+                        className="w-5 h-5 sm:w-6 sm:h-6"
+                      />
+                    </a>
+                  )}
                 </div>
                 <span className="text-[#6F6F6F] text-xs sm:text-base">
                   {getUserInfoData ? getUserInfoData.Bio : ""}

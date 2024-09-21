@@ -2,8 +2,11 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 function ContentGallery({ contentsGallery }) {
+  const userType = Cookies.get("userType");
+
   const [showModal, setShowModal] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
   console.log(contentsGallery);
@@ -27,21 +30,21 @@ function ContentGallery({ contentsGallery }) {
           contentsGallery?.map((content, id) => (
             <div
               onClick={() => (
-                setShowModal(true), setSelectedReel(content.ContentVideo)
+                setShowModal(true), setSelectedReel(content?.ContentVideo)
               )}
               key={id}
-              className="cursor-pointer z-0 col-span-1 relative w-full h-full"
+              className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl"
             >
               <video
                 preload="metadata"
-                className="rounded-2xl border-[1px] border-black/15 min-w-[161px] min-h-[285px] sm:min-w-[216px] sm:min-h-[385px] xl:min-w-[272px] xl:min-h-[484px]"
+                className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
                 muted
                 loop
                 // onMouseEnter={handleMouseEnter}
                 // onMouseLeave={handleMouseLeave}
-                poster={content.ContentThumbnail}
+                poster={content?.ContentThumbnail}
               >
-                <source type="video/mp4" src={content.ContentVideo} />
+                <source type="video/mp4" src={content?.ContentVideo} />
               </video>
               <button className="z-50 absolute top-3 right-3 p-2 rounded-lg bg-[#F5F4F0]">
                 <Image
@@ -52,11 +55,13 @@ function ContentGallery({ contentsGallery }) {
                   className="w-3 h-3 sm:w-6 sm:h-6"
                 />
               </button>
-              <div className="z-50 absolute bottom-6 left-6 flex flex-row items-center gap-2">
+              <div className="bg-black/20 px-2 py-1 rounded-3xl z-50 absolute bottom-3 left-3 sm:bottom-6 sm:left-6 flex flex-row items-center gap-2">
                 <Image
                   src={
-                    content.ProfileLink
-                      ? content.ProfileLink
+                    content?.BrandProfileLink && userType === "Brand"
+                      ? content?.CreatorProfileLink
+                      : content?.CreatorProfileLink && userType === "Creator"
+                      ? content?.BrandProfileLink
                       : "/dummy-profile.jpg"
                   }
                   className="rounded-full"
@@ -64,13 +69,14 @@ function ContentGallery({ contentsGallery }) {
                   height={26}
                   alt=""
                 />
-                <span className="text-xs md:text-base text-black">
-                  {content.Nickname}
+                <span className="text-xs md:text-base text-white">
+                  {userType === "Brand" && content?.Nickname}
+                  {userType === "Creator" && content?.BrandName}
                 </span>
                 <Image
                   src={"/verified-icon.png"}
-                  width={22}
-                  height={22}
+                  width={24}
+                  height={24}
                   alt="verified"
                   className="w-4 h-4 sm:w-6 sm:h-6"
                 />

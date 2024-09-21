@@ -114,6 +114,13 @@ export const geniApi = createApi({
       }),
       invalidatesTags: ["UserInfo"], // Invalidate the tag
     }),
+    changeBrandType: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/brand/types",
+        method: "PUT",
+        body,
+      }),
+    }),
     updateSocialChannel: builder.mutation({
       query: (body) => ({
         url: `/api/web/private/social-channel`,
@@ -255,6 +262,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    listContentGallery: builder.query({
+      query: (body) => ({
+        url: "/api/web/private/content/my",
+        method: "GET",
+        body,
+      }),
+    }),
+    listBrandTypes: builder.query({
+      query: (body) => ({
+        url: "/api/web/private/user/brand/type",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -291,4 +312,7 @@ export const {
   useListBrandProductsQuery,
   useAddProductSupplyMutation,
   useSendOtpToEmailMutation,
+  useListContentGalleryQuery,
+  useListBrandTypesQuery,
+  useChangeBrandTypeMutation,
 } = geniApi;

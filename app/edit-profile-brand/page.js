@@ -8,12 +8,13 @@ import { useRouter } from "next/navigation";
 import {
   useChangeProfilePictureMutation,
   useEditBrandProfileMutation,
-  useListProductTypesQuery,
   useUpdateSocialChannelMutation,
   useCreateSocialChannelMutation,
   useUploadFileMutation,
   useChangePasswordMutation,
   geniApi,
+  useListBrandTypesQuery,
+  useChangeBrandTypeMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
@@ -74,11 +75,21 @@ function Page() {
     },
   ] = useChangePasswordMutation();
 
+  const [
+    changeBrandType,
+    {
+      data: changeBrandTypeData,
+      error: changeBrandTypeError,
+      isLoading: changeBrandTypeLoading,
+      isSuccess: changeBrandTypeSuccess,
+    },
+  ] = useChangeBrandTypeMutation();
+
   const {
-    data: listProductTypesData,
-    error: listProductTypesError,
-    isLoading: listProductTypesLoading,
-  } = useListProductTypesQuery();
+    data: listBrandTypesData,
+    error: listBrandTypesError,
+    isLoading: listBrandTypesLoading,
+  } = useListBrandTypesQuery();
 
   const [
     updateSocialChannel,
@@ -109,10 +120,6 @@ function Page() {
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       Address: parsedUserInfo ? parsedUserInfo?.Address : "",
       BrandAoADescription: "temp-desc",
-      BrandTypes:
-        parsedUserInfo && parsedUserInfo?.BrandTypes !== null
-          ? parsedUserInfo?.BrandTypes
-          : [],
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Required"),
@@ -174,7 +181,6 @@ function Page() {
 
   useEffect(() => {
     if (changePasswordSuccess) {
-      console.log("Success:", data);
       toast.success("Амжилттай");
     }
     if (changePasswordError) {
@@ -182,7 +188,16 @@ function Page() {
     }
   }, [changePasswordData, changePasswordError]);
 
-  const handleProductType = (value) => {
+  useEffect(() => {
+    if (changeBrandTypeSuccess) {
+      toast.success("Амжилттай");
+    }
+    if (changeBrandTypeError) {
+      toast.error("Алдаа гарлаа");
+    }
+  }, [changeBrandTypeSuccess, changeBrandTypeError]);
+
+  const handleBrandTypes = (value) => {
     setBrandTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {
         return [...prev, value];
@@ -190,10 +205,6 @@ function Page() {
       return prev;
     });
     console.log(value);
-    formik.setFieldValue("BrandTypes", [
-      ...formik.values.BrandTypes,
-      value.ProductTypeId,
-    ]);
   };
 
   const handleChangeEmail = async () => {
@@ -259,6 +270,13 @@ function Page() {
     } catch (err) {
       toast.error("Алдаа гарлаа");
     }
+  };
+
+  const handleBrandTypesChange = () => {
+    const brandTypeIds = brandTypes.map((brandType) => brandType.TypeId);
+    changeBrandType({
+      BrandTypeIds: brandTypeIds,
+    });
   };
 
   const handleLogout = () => {
@@ -336,90 +354,99 @@ function Page() {
             onSubmit={formik.handleSubmit}
             className="mt-11 flex flex-col gap-4"
           >
-            <div className="flex flex-col sm:flex-row gap-5 w-full">
-              <div className="flex flex-col gap-3 w-full sm:w-1/2">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="Name">
-                  Брэндийн нэр
+            <div className="flex flex-col gap-3 w-full">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="Name">
+                Брэндийн нэр
+              </label>
+              <input
+                id="Name"
+                name="Name"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.Name}
+                className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl w-full"
+              />
+              {formik.touched.Name && formik.errors.Name && (
+                <div className="text-red-500 text-sm">{formik.errors.Name}</div>
+              )}
+            </div>
+            <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-[#6F6F6F] text-lg" htmlFor="type">
+                  Брэндийн төрөл
                 </label>
-                <input
-                  id="Name"
-                  name="Name"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.Name}
-                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl w-full"
-                />
-                {formik.touched.Name && formik.errors.Name && (
-                  <div className="text-red-500 text-sm">
-                    {formik.errors.Name}
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-3">
-                  <label className="text-[#6F6F6F] text-lg" htmlFor="type">
-                    Брэндийн төрөл
-                  </label>
-                  <div className="relative flex flex-row flex-wrap items-center gap-2">
-                    {brandTypes?.map((p, i) => (
-                      <div
-                        key={i}
-                        className="bg-[#4D55F5] text-white text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
-                      >
-                        {p.TypeName}
-                      </div>
-                    ))}
-                    {parsedUserInfo?.BrandTypes?.map((p, i) => (
-                      <div
-                        key={i}
-                        className="bg-[#4D55F5] text-white text-center text-base sm:text-xl rounded-full px-5 sm:px-8 py-3 sm:py-4"
-                      >
-                        {p.TypeName}
-                      </div>
-                    ))}
+                <div className="relative flex flex-row flex-wrap items-center gap-2">
+                  {brandTypes?.map((p, i) => (
                     <div
-                      onClick={() => setdropdownOpen(!dropdownOpen)}
-                      className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center"
+                      key={i}
+                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2"
+                    >
+                      {p.TypeName}
+                    </div>
+                  ))}
+                  {parsedUserInfo?.BrandTypes?.map((p, i) => (
+                    <div
+                      key={i}
+                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2"
+                    >
+                      {p.TypeName}
+                    </div>
+                  ))}
+                  <div
+                    onClick={() => setdropdownOpen(!dropdownOpen)}
+                    className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
+                  >
+                    <Image
+                      src={"/plus-icon-black.png"}
+                      width={24}
+                      height={24}
+                      className="aspect-square w-2 h-2 sm:w-3 sm:h-3"
+                    />
+                  </div>
+                  {brandTypes.length > 0 ? (
+                    <div
+                      onClick={handleBrandTypesChange}
+                      className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
                     >
                       <Image
-                        src={"/plus-icon-black.png"}
-                        width={24}
-                        height={24}
-                        alt="+"
-                        className=""
+                        src={"/check-icon.png"}
+                        width={16}
+                        height={16}
+                        className="aspect-square w-3 h-3 sm:w-4 sm:h-4"
                       />
                     </div>
-                    <div
-                      className={`${
-                        dropdownOpen
-                          ? `top-full opacity-100 visible`
-                          : "top-[110%] invisible opacity-0"
-                      } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
-                    >
-                      {!listProductTypesError ? (
-                        // Filter out product types already selected in `parsedUserInfo.BrandTypes`
-                        listProductTypesData
-                          ?.filter(
-                            (productType) =>
-                              !parsedUserInfo?.BrandTypes?.some(
-                                (brandType) =>
-                                  brandType.TypeName === productType.TypeName
-                              )
-                          )
-                          .map((p, i) => (
-                            <div
-                              onClick={() => handleProductType(p)}
-                              key={i}
-                              className="cursor-pointer mt-1 bg-[#4D55F5] text-white text-center text-xs rounded-full px-4 py-2"
-                            >
-                              {p.TypeName}
-                            </div>
-                          ))
-                      ) : (
-                        <></>
-                      )}
-                    </div>
+                  ) : (
+                    <></>
+                  )}
+
+                  <div
+                    className={`${
+                      dropdownOpen
+                        ? `top-full opacity-100 visible`
+                        : "top-[110%] invisible opacity-0"
+                    } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
+                  >
+                    {
+                      // Filter out product types already selected in `parsedUserInfo.BrandTypes`
+                      listBrandTypesData
+                        ?.filter(
+                          (productType) =>
+                            !parsedUserInfo?.BrandTypes?.some(
+                              (brandType) =>
+                                brandType.TypeName === productType.TypeName
+                            )
+                        )
+                        .map((p, i) => (
+                          <div
+                            onClick={() => handleBrandTypes(p)}
+                            key={i}
+                            className="cursor-pointer bg-[#4D55F5] text-white text-center text-sm rounded-full px-3 py-1"
+                          >
+                            {p.TypeName}
+                          </div>
+                        ))
+                    }
                   </div>
                 </div>
               </div>

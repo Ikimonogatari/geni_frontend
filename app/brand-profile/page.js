@@ -173,6 +173,13 @@ function page() {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   };
 
+  const instagramLink = getUserInfoData?.SocialChannels?.find(
+    (channel) => channel.PlatformName === "Instagram"
+  );
+
+  const facebookLink = getUserInfoData?.SocialChannels?.find(
+    (channel) => channel.PlatformName === "Facebook"
+  );
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
@@ -199,42 +206,45 @@ function page() {
                   {getUserInfoData ? getUserInfoData.Name : ""}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
-                  <a
-                    target="_blank"
-                    href={`https://www.instagram.com/${
-                      getUserInfoData?.SocialChannels?.find(
-                        (channel) => channel.PlatformName === "Instagram"
-                      )?.SocialAddress || ""
-                    }`}
-                  >
-                    <Image
-                      src={"/Instagram.png"}
-                      width={24}
-                      height={24}
-                      alt="ig"
-                      className="w-5 h-5 sm:w-6 sm:h-6"
-                    />
-                  </a>
-                  <a
-                    target="_blank"
-                    href={`https://www.facebook.com/${
-                      getUserInfoData?.SocialChannels?.find(
-                        (channel) => channel.PlatformName === "Facebook"
-                      )?.SocialAddress || ""
-                    }`}
-                  >
-                    <Image
-                      src={"/Facebook.png"}
-                      width={24}
-                      height={24}
-                      alt="fb"
-                      className="w-5 h-5 sm:w-6 sm:h-6"
-                    />
-                  </a>
+                  {instagramLink && (
+                    <a
+                      target="_blank"
+                      href={`https://www.instagram.com/${instagramLink || ""}`}
+                    >
+                      <Image
+                        src={"/Instagram.png"}
+                        width={24}
+                        height={24}
+                        alt="ig"
+                        className="w-5 h-5 sm:w-6 sm:h-6"
+                      />
+                    </a>
+                  )}
+                  {facebookLink && (
+                    <a
+                      target="_blank"
+                      href={`https://www.facebook.com/${facebookLink || ""}`}
+                    >
+                      <Image
+                        src={"/Facebook.png"}
+                        width={24}
+                        height={24}
+                        alt="fb"
+                        className="w-5 h-5 sm:w-6 sm:h-6"
+                      />
+                    </a>
+                  )}
                 </div>
-                <button className="bg-[#4D55F5] text-white rounded-full px-2 text-sm sm:text-base sm:px-4 py-1 sm:py-2">
-                  Beauty
-                </button>
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                  {getUserInfoData?.BrandTypes?.map((b, i) => (
+                    <button
+                      key={i}
+                      className="bg-[#4D55F5] text-white rounded-full px-3 text-xs sm:text-base sm:px-4 py-1 sm:py-2"
+                    >
+                      {b.TypeName}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex flex-row items-center gap-2 sm:gap-5 mt-5 md:mt-0">

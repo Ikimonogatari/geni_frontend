@@ -241,12 +241,15 @@ function Page() {
                   className="bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:max-w-[554px] lg:max-h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
                 >
                   <input {...getInputProps()} />
-                  <Image
-                    src={"/add-product-button.png"}
-                    width={54}
-                    height={54}
-                    alt="add-product-button"
-                  />
+                  <div className="rounded-xl bg-[#4D55F5] w-14 h-14 flex justify-center items-center">
+                    <Image
+                      src={"/add-icon.png"}
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="w-6 h-6"
+                    />
+                  </div>
                   <p>Зураг оруулах</p>
                 </div>
               ) : (
@@ -291,12 +294,15 @@ function Page() {
                       className="bg-[#F5F4F0] rounded-2xl p-5 max-w-[554px] max-h-[554px] min-h-[227px] w-full flex flex-col justify-center items-center gap-4"
                     >
                       <input {...getInputProps()} />
-                      <Image
-                        src={"/add-product-button.png"}
-                        width={54}
-                        height={54}
-                        alt="add-product-button"
-                      />
+                      <div className="rounded-xl bg-[#4D55F5] w-14 h-14 flex justify-center items-center">
+                        <Image
+                          src={"/add-icon.png"}
+                          width={24}
+                          height={24}
+                          alt=""
+                          className="w-6 h-6"
+                        />
+                      </div>
                       <p>Нэмэлт зураг оруулах</p>
                     </div>
                   </div>
@@ -316,13 +322,19 @@ function Page() {
             <div className="flex flex-col gap-4 w-full lg::max-w-lg">
               <div className="flex flex-row items-center gap-3">
                 <Image
-                  src={"/lhamour.png"}
+                  src={
+                    parsedUserInfo?.ProfileLink
+                      ? parsedUserInfo?.ProfileLink
+                      : "/white-placeholder.png"
+                  }
                   width={44}
                   height={44}
-                  alt="dummy"
-                  className="border border-[#2D262D] rounded-full"
+                  alt=""
+                  className="border border-[#2D262D] rounded-full w-11 h-11"
                 />
-                <span className="text-xl font-bold">lhamour</span>
+                <span className="text-xl font-bold">
+                  {parsedUserInfo?.Name}
+                </span>
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
@@ -351,14 +363,14 @@ function Page() {
                   {productTypes?.map((p, i) => (
                     <div
                       key={i}
-                      className="bg-[#CA7FFE] text-white text-center text-xs rounded-full px-4 py-2"
+                      className="bg-[#4D55F5] text-white text-center text-xs rounded-full px-4 py-2"
                     >
                       {p.TypeName}
                     </div>
                   ))}
                   <div
                     onClick={() => setdropdownOpen(!dropdownOpen)}
-                    className="cursor-pointer outline-none bg-[#CA7FFE] text-xs rounded-full w-8 h-8 flex items-center justify-center"
+                    className="cursor-pointer outline-none bg-[#4D55F5] text-xs rounded-full w-8 h-8 flex items-center justify-center"
                   >
                     <Image src={"/plus.png"} width={7} height={16} alt="+" />
                   </div>
@@ -374,7 +386,7 @@ function Page() {
                         <div
                           onClick={() => handleProductType(p)}
                           key={i}
-                          className="cursor-pointer mt-1 bg-[#CA7FFE] text-white text-center text-xs rounded-full px-4 py-2"
+                          className="cursor-pointer mt-1 bg-[#4D55F5] text-white text-center text-xs rounded-full px-4 py-2"
                         >
                           {p.TypeName}
                         </div>
@@ -559,7 +571,7 @@ function Page() {
                 <div
                   className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center`}
                 >
-                  <span>Бүтээгдхүүн нэмэх</span>
+                  <span>Бүтээгдэхүүн нэмэх</span>
                 </div>
               </button>
               <Dialog open={createProductSuccess}>
@@ -597,12 +609,12 @@ function Page() {
                             <span className="font-bold text-xl">
                               {parsedUserInfo?.Name}
                             </span>
-                            <span className="text-xl">
+                            <span className="text-lg">
                               {createProductData?.ProductName}
                             </span>
                           </div>
-                          <div className="bg-[#CA7FFE] text-white text-center text-xs rounded-3xl px-4 py-2">
-                            {createProductData?.ProductTypes?.[0]?.TypeName}
+                          <div className="bg-[#4D55F5] text-white text-center font-medium text-xs rounded-3xl px-4 py-2">
+                            {parsedUserInfo?.BrandTypes[0]?.TypeName}
                           </div>
                         </div>
                       </div>
@@ -614,7 +626,7 @@ function Page() {
                     </div>
                     <button
                       onClick={handleThanks}
-                      className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
+                      className="w-full py-4 text-white font-semibold bg-[#4D55F5] text-2xl border border-[#2D262D] rounded-2xl"
                     >
                       Баярлалаа
                     </button>
