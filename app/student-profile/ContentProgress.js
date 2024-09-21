@@ -116,7 +116,7 @@ function ContentProgress({ currentContents }) {
               <span className="">{getStatusName(c.Status)}</span>
             </div>
             <div className="col-span-1">
-              {c.Status === "ContentSent" ? (
+              {c.Status === "ContentRejected" ? (
                 <FeedbackModal parsedUserInfo={parsedUserInfo} />
               ) : (
                 <></>
