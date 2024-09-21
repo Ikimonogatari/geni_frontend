@@ -4,7 +4,7 @@ import Image from "next/image";
 import {
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
-  useCreatorContentSubmitMutation,
+  useUploadHomeworkMutation,
   useUploadByPresignUrlMutation,
 } from "../services/service";
 
@@ -61,14 +61,14 @@ function ContentProgress({ currentContents }) {
   ] = useGetVideoPresignedUrlMutation();
 
   const [
-    creatorContentSubmit,
+    uploadHomework,
     {
-      data: creatorContentSubmitData,
-      error: creatorContentSubmitError,
-      isLoading: creatorContentSubmitLoading,
-      isSuccess: creatorContentSubmitSuccess,
+      data: uploadHomeworkData,
+      error: uploadHomeworkError,
+      isLoading: uploadHomeworkLoading,
+      isSuccess: uploadHomeworkSuccess,
     },
-  ] = useCreatorContentSubmitMutation();
+  ] = useUploadHomeworkMutation();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -96,17 +96,16 @@ function ContentProgress({ currentContents }) {
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
   useEffect(() => {
-    if (creatorContentSubmitError) {
+    if (uploadHomeworkError) {
       toast.error("Алдаа гарлаа");
     }
-    if (creatorContentSubmitSuccess) {
+    if (uploadHomeworkSuccess) {
       setIsContentSuccess(true);
     }
-  }, [creatorContentSubmitData, creatorContentSubmitError]);
+  }, [uploadHomeworkSuccess, uploadHomeworkError]);
 
   const handleContentSubmit = (contentId) => {
-    creatorContentSubmit({
-      ContentId: contentId,
+    uploadHomework({
       Caption: caption,
       ContentThumbnailFileId: contentThumbnailId,
       ContentVideoFileId: contentVideoId,

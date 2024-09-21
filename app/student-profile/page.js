@@ -196,7 +196,7 @@ function page() {
 
   useEffect(() => {
     if (uploadHomeworkError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(uploadHomeworkError.data.error);
     }
     if (isSuccess) {
       setIsHomeworkUploadSuccess(true);
