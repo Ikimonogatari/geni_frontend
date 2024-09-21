@@ -10,7 +10,7 @@ function UploadSuccessModal({
   console.log(parsedUserInfo);
   return (
     <Dialog open={isContentSubmitSuccess}>
-      <DialogContent className="max-w-lg flex flex-col items-center gap-2 rounded-3xl">
+      <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
         <span className="text-[#4FB755] uppercase text-4xl sm:text-5xl text-center font-bold">
           контент илгээгдлээ
         </span>

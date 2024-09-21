@@ -58,9 +58,7 @@ function ContentGallery({ contentsGallery }) {
               <div className="bg-black/20 px-2 py-1 rounded-3xl z-50 absolute bottom-3 left-3 sm:bottom-6 sm:left-6 flex flex-row items-center gap-2">
                 <Image
                   src={
-                    content?.BrandProfileLink && userType === "Brand"
-                      ? content?.CreatorProfileLink
-                      : content?.CreatorProfileLink && userType === "Creator"
+                    content?.BrandProfileLink
                       ? content?.BrandProfileLink
                       : "/dummy-profile.jpg"
                   }
@@ -70,7 +68,6 @@ function ContentGallery({ contentsGallery }) {
                   alt=""
                 />
                 <span className="text-xs md:text-base text-white">
-                  {userType === "Brand" && content?.Nickname}
                   {userType === "Creator" && content?.BrandName}
                 </span>
                 <Image

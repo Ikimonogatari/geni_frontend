@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 
-function FeedbackModal({ parsedUserInfo }) {
+function FeedbackModal({ parsedUserInfo, contentId }) {
   const [resubmitting, setIsResubmitting] = useState(false);
 
   return (
@@ -14,7 +14,7 @@ function FeedbackModal({ parsedUserInfo }) {
         Дэлгэрэнгүй
       </DialogTrigger>
       {!resubmitting ? (
-        <DialogContent className="overflow-y-auto flex flex-col p-6 h-full w-full sm:w-auto lg:w-full max-h-[739px] max-w-[577px] rounded-3xl">
+        <DialogContent className="overflow-y-auto flex flex-col p-6 h-full w-full max-h-[739px] max-w-[577px] rounded-3xl">
           <span className="text-3xl font-bold">Зөвлөгөө</span>
           <div className="mt-4 flex flex-col gap-3">
             <div className="flex flex-row items-center gap-6 p-5 bg-[#F5F4F0] rounded-3xl">
@@ -30,7 +30,10 @@ function FeedbackModal({ parsedUserInfo }) {
           </button>
         </DialogContent>
       ) : (
-        <FeedbackModalUploadModalContent parsedUserInfo={parsedUserInfo} />
+        <FeedbackModalUploadModalContent
+          parsedUserInfo={parsedUserInfo}
+          contentId={contentId}
+        />
       )}
     </Dialog>
   );

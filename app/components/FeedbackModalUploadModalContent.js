@@ -10,14 +10,17 @@ import {
   useGetVideoPresignedUrlMutation,
   useUploadByPresignUrlMutation,
   useUploadHomeworkMutation,
+  useCreatorContentSubmitMutation,
 } from "../services/service";
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 
-function FeedbackModalUploadModalContent({ parsedUserInfo }) {
+function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
+  console.log(parsedUserInfo);
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
+  const [isContentSuccess, setIsContentSuccess] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
   const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideoId, setContentVideoId] = useState(null);
@@ -60,6 +63,16 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
     },
   ] = useUploadHomeworkMutation();
 
+  const [
+    creatorContentSubmit,
+    {
+      data: creatorContentSubmitData,
+      error: creatorContentSubmitError,
+      isLoading: creatorContentSubmitLoading,
+      isSuccess: creatorContentSubmitSuccess,
+    },
+  ] = useCreatorContentSubmitMutation();
+
   useEffect(() => {
     if (getImagePresignedUrlError) {
       toast.error("Алдаа гарлаа");
@@ -93,6 +106,15 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
       setIsHomeworkUploadSuccess(true);
     }
   }, [uploadHomeworkData, uploadHomeworkError]);
+
+  useEffect(() => {
+    if (creatorContentSubmitError) {
+      toast.error(creatorContentSubmitError.data.error);
+    }
+    if (creatorContentSubmitSuccess) {
+      setIsContentSuccess(true);
+    }
+  }, [creatorContentSubmitSuccess, creatorContentSubmitError]);
 
   useEffect(() => {
     if (uploadFileError) {
@@ -183,11 +205,21 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
     }
   };
   const handleContentSubmit = () => {
-    uploadHomework({
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
-    });
+    if (parsedUserInfo?.UserType === "Student") {
+      uploadHomework({
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+      });
+    }
+    if (parsedUserInfo?.UserType === "Creator") {
+      creatorContentSubmit({
+        ContentId: contentId,
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+      });
+    }
   };
 
   return (
@@ -273,7 +305,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
           )}
         </div>
 
-        <div className="w-full flex flex-col h-full justify-between">
+        <div className="w-full flex flex-col h-auto justify-between">
           <div className="flex flex-col gap-4">
             <span className="text-lg">Тайлбар</span>
             <textarea
@@ -281,13 +313,17 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-              className="p-2 min-h-[200px] w-full border border-gray-300 rounded-md"
+              className="p-3 min-h-[210px] w-full border bg-[#F5F4F0] border-gray-300 rounded-xl"
             />
           </div>
           {contentThumbnail && contentVideo && caption ? (
             <button
               onClick={handleContentSubmit}
-              className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+              className={`mt-6 ${
+                parsedUserInfo?.UserType === "Student"
+                  ? "bg-[#4FB755]"
+                  : "bg-[#CA7FFE]"
+              } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
             >
               Илгээх
             </button>
@@ -297,9 +333,17 @@ function FeedbackModalUploadModalContent({ parsedUserInfo }) {
         </div>
       </div>
       <UploadSuccessModal
-        isContentSubmitSuccess={isHomeworkUploadSuccess}
+        isContentSubmitSuccess={
+          parsedUserInfo?.UserType === "Student"
+            ? isHomeworkUploadSuccess
+            : isContentSuccess
+        }
         parsedUserInfo={parsedUserInfo}
-        setIsContentSubmitSuccess={setIsHomeworkUploadSuccess}
+        setIsContentSubmitSuccess={
+          parsedUserInfo?.UserType === "Student"
+            ? setIsHomeworkUploadSuccess
+            : setIsContentSuccess
+        }
       />
     </DialogContent>
   );

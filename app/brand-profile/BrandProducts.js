@@ -114,7 +114,7 @@ function BrandProducts({ brandProducts, brandData }) {
                     <DialogTrigger className="bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
                       Нэмэх
                     </DialogTrigger>
-                    <DialogContent className="max-w-lg flex flex-col gap-6 rounded-3xl">
+                    <DialogContent className="w-full max-w-lg flex flex-col gap-6 rounded-3xl">
                       <DialogHeader>
                         <DialogTitle className="text-3xl">
                           Бүтээгдэхүүн нэмэх

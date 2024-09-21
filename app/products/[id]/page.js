@@ -23,6 +23,7 @@ import {
   useRequestProductContentMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 function Page() {
   const router = useRouter();
@@ -87,6 +88,9 @@ function Page() {
     if (requestProductContentData) {
       setRequestState("sent");
     }
+    if (requestProductContentError) {
+      toast.error("Алдаа гарлаа");
+    }
   }, [requestProductContentData, requestProductContentError]);
 
   return (
@@ -106,10 +110,10 @@ function Page() {
           </button>
           <form
             onSubmit={formik.handleSubmit}
-            className="mt-11 flex flex-col lg:flex-row items-start gap-10"
+            className="mt-11 flex flex-col md:flex-row items-start gap-10"
           >
-            <div className="flex flex-col gap-6 w-full sm:w-1/2">
-              <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-col gap-6 w-full md:w-1/2">
+              <div className="flex flex-row items-center gap-4 w-full">
                 {getPublicProductByIdData &&
                 getPublicProductByIdData?.ProductPics.length > 1 ? (
                   <button onClick={goPrev}>
@@ -150,7 +154,7 @@ function Page() {
                           alt={""}
                           width={554}
                           height={554}
-                          className="aspect-square rounded-2xl w-full sm:max-w-[554px] sm:max-h-[554px]"
+                          className="aspect-square rounded-2xl w-full"
                         />
                       </SwiperSlide>
                     ))
@@ -189,7 +193,7 @@ function Page() {
               )}
             </div>
 
-            <div className="flex flex-col gap-4 w-full lg:w-1/2">
+            <div className="flex flex-col gap-4 w-full md:w-1/2">
               <div className="flex flex-row items-center gap-3">
                 <Image
                   src={getPublicProductByIdData?.ProductPics?.[0]?.Url}
@@ -220,7 +224,7 @@ function Page() {
                     getPublicProductByIdData?.ProductTypes?.map((t, i) => (
                       <div
                         key={i}
-                        className="bg-[#CA7FFE] text-xs rounded-full px-4 py-2"
+                        className="bg-[#CA7FFE] text-xs text-white rounded-full px-4 py-2"
                       >
                         {t.TypeName}
                       </div>
@@ -243,7 +247,7 @@ function Page() {
                   )}
                 </span>
               </div>
-              <div className="flex flex-col gap-3 text-lg max-w-sm">
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
                 <span className="font-bold">
                   Брэндийн хүсэж буй контентийн төрөл
                 </span>
@@ -268,7 +272,7 @@ function Page() {
                   )}
                 </div>
               </div>
-              <div className="flex flex-col gap-3 text-lg max-w-sm">
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
                 <label className="font-bold" htmlFor="name">
                   Контент бүтээгчээс хүсэх хүсэлт
                 </label>
@@ -280,7 +284,7 @@ function Page() {
                   )}
                 </p>
               </div>
-              <div className="flex flex-col gap-3 text-lg max-w-sm">
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
                 <span className="font-bold">
                   Контентоос хүлээж буй гол үр дүн
                 </span>
@@ -289,12 +293,7 @@ function Page() {
                   getPublicProductByIdData?.ContentResult.map((c, i) => (
                     <div
                       key={i}
-                      onClick={() => setContentOutcomeOption(c.Val)}
-                      className={`${
-                        contentOutcomeOption === c.Val
-                          ? "border-[#4D55F5] border-[2px]"
-                          : "border-[#CDCDCD] border-[2px]"
-                      } rounded-lg p-4 cursor-pointer transition-all duration-150`}
+                      className={`border-[#CDCDCD] border-[2px] rounded-lg p-4 cursor-pointer transition-all duration-150`}
                     >
                       {c.Name}
                     </div>
@@ -303,7 +302,7 @@ function Page() {
                   <></>
                 )}
               </div>
-              <div className="flex flex-col gap-3 text-lg max-w-sm">
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
                 <span className="font-bold">Тоо ширхэг</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
                   {getPublicProductByIdData ? (
@@ -313,7 +312,7 @@ function Page() {
                   )}
                 </span>
               </div>
-              <div className="flex flex-col gap-3 text-lg max-w-sm">
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
                 <span className="font-bold">Үнэ</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
                   ₮
@@ -327,18 +326,18 @@ function Page() {
               </div>
 
               {userType === "Creator" ? (
-                <div className="mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9C44DA]">
+                <div className="md:max-w-sm mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9C44DA]">
                   <Dialog>
                     <DialogTrigger
                       onClick={() => setRequestState("not-sent")}
                       type="submit"
-                      className="absolute -top-[8px] -left-[6px] z-50 text-white text-xl font-bold w-full h-[70px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex items-center justify-center"
+                      className="md:max-w-sm absolute -top-[8px] -left-[6px] z-50 text-white text-xl font-bold w-full h-[70px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex items-center justify-center"
                     >
                       Бүтээгдэхүүн авах
                     </DialogTrigger>
 
                     {requestState === "sent" ? (
-                      <DialogContent className="max-w-lg flex flex-col items-center gap-2 rounded-3xl">
+                      <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
                         <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
                           ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
                         </span>
@@ -402,7 +401,7 @@ function Page() {
                         </div>
                       </DialogContent>
                     ) : (
-                      <DialogContent className="flex flex-col max-w-2xl rounded-3xl">
+                      <DialogContent className="w-full flex flex-col max-w-2xl rounded-3xl">
                         <span className="text-2xl font-bold">
                           Хүсэлт илгээх
                         </span>

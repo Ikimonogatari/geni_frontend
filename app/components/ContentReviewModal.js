@@ -24,7 +24,7 @@ function ContentReviewModal({ p }) {
       >
         Сэтгэгдэл харах
       </DialogTrigger>
-      <DialogContent className="overflow-y-auto max-w-lg flex flex-col rounded-3xl">
+      <DialogContent className="overflow-y-auto max-w-lg w-full flex flex-col rounded-3xl">
         <span className="text-3xl font-bold">Брэндийн сэтгэгдэл</span>
         <div className="mt-10 flex flex-row items-center gap-4">
           <Image

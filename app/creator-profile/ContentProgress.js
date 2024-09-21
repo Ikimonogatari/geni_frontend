@@ -168,7 +168,10 @@ function ContentProgress({ currentContents }) {
                 </button>
               ) : null}
               {p.Status === "ContentRejected" ? (
-                <FeedbackModal parsedUserInfo={parsedUserInfo} />
+                <FeedbackModal
+                  parsedUserInfo={parsedUserInfo}
+                  contentId={p.ContentId}
+                />
               ) : (
                 <></>
               )}
