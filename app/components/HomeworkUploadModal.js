@@ -97,6 +97,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   useEffect(() => {
     if (uploadFileError) {
       toast.error("Файл оруулахад алдаа гарлаа");
+      toast.error(uploadFileError?.data?.error);
       setIsVideoUploadLoading(false);
       setIsImageUploadLoading(false);
     }
