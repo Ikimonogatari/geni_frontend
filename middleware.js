@@ -15,7 +15,7 @@ export function middleware(req) {
 
   if (url.pathname === "/login") {
     if (authToken) {
-      console.log("User is already authenticated, redirecting from login");
+      console.log("User already authenticated, redirecting from login");
       return NextResponse.redirect(new URL("/", req.nextUrl)); // Redirect to homepage or dashboard
     } else {
       return NextResponse.next(); // Allow unauthenticated users to access the login page
