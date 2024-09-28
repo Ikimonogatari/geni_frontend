@@ -228,7 +228,9 @@ function Page() {
                   onMouseLeave={handleMouseUpLoginPassword} // For when the user moves the mouse away from the button
                   onTouchStart={handleMouseDownLoginPassword} // For mobile
                   onTouchEnd={handleMouseUpLoginPassword} // For mobile
-                  className="text-sm opacity-90"
+                  className={`${
+                    login.values.password === "" ? "hidden" : "block"
+                  } text-sm opacity-90`}
                 >
                   <Image
                     src={"/show-pwd.png"}

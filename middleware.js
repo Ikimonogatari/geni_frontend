@@ -13,6 +13,15 @@ export function middleware(req) {
     return NextResponse.next();
   }
 
+  if (url.pathname === "/login") {
+    if (authToken) {
+      console.log("User is already authenticated, redirecting from login");
+      return NextResponse.redirect(new URL("/", req.nextUrl)); // Redirect to homepage or dashboard
+    } else {
+      return NextResponse.next(); // Allow unauthenticated users to access the login page
+    }
+  }
+
   // Redirect unauthenticated users to the login page
   if (!authToken) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
@@ -26,7 +35,7 @@ export function middleware(req) {
       url.pathname === "/add-product"
     ) {
       console.log("Redirecting Creator to login"); // Log redirection for debugging
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
+      return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   } else if (userType?.value === "Brand") {
     if (
@@ -34,7 +43,7 @@ export function middleware(req) {
       url.pathname === "/edit-profile-creator"
     ) {
       console.log("Redirecting Brand to login"); // Log redirection for debugging
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
+      return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   } else if (userType?.value === "Student") {
     // Add specific conditions for Student role if needed
@@ -46,7 +55,7 @@ export function middleware(req) {
       url.pathname === "/edit-profile-creator"
     ) {
       console.log("Redirecting Student to login"); // Log redirection for debugging
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
+      return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   }
 
@@ -67,5 +76,6 @@ export const config = {
     "/notifications",
     "/payment/:path*",
     "/products/:path*",
+    "/login",
   ],
 };

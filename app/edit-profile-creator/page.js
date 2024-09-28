@@ -564,7 +564,9 @@ function Page() {
                   onMouseLeave={handleMouseUpOldPassword} // For when the user moves the mouse away from the button
                   onTouchStart={handleMouseDownOldPasswrod} // For mobile
                   onTouchEnd={handleMouseUpOldPassword} // For mobile
-                  className="text-sm opacity-90"
+                  className={`${
+                    oldPassword === "" ? "hidden" : "block"
+                  } text-sm opacity-90`}
                 >
                   <Image
                     src={"/show-pwd.png"}
@@ -598,7 +600,9 @@ function Page() {
                     onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
                     onTouchStart={handleMouseDownNewPassword} // For mobile
                     onTouchEnd={handleMouseUpNewPassword} // For mobile
-                    className="text-sm opacity-90"
+                    className={`${
+                      newPassword === "" ? "hidden" : "block"
+                    } text-sm opacity-90`}
                   >
                     <Image
                       src={"/show-pwd.png"}

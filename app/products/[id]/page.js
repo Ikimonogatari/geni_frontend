@@ -326,9 +326,14 @@ function Page() {
               </div>
 
               {userType === "Creator" ? (
-                <div className="md:max-w-sm mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9C44DA]">
+                <div
+                  className={`${
+                    getPublicProductByIdData?.LeftStock === 0 && "opacity-55"
+                  } md:max-w-sm mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9C44DA]`}
+                >
                   <Dialog>
                     <DialogTrigger
+                      disabled={getPublicProductByIdData?.LeftStock === 0}
                       onClick={() => setRequestState("not-sent")}
                       type="submit"
                       className="md:max-w-sm absolute -top-[8px] -left-[6px] z-50 text-white text-xl font-bold w-full h-[70px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex items-center justify-center"
