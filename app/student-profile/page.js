@@ -245,12 +245,14 @@ function page() {
           <div className="mt-4 sm:mt-16 w-full flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-3">
               {brandProfileButtons.map((b, i) => (
-                <div
+                <a
+                  target="_blank"
+                  href={b.link}
                   key={i}
-                  className={`border-[1px] border-[#CDCDCD] text-[#6F6F6F] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
+                  className={`border-[1px] border-[#2D262D] bg-[#4FB755] text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
                 >
                   {b.title}
-                </div>
+                </a>
               ))}
             </div>
 
@@ -320,7 +322,8 @@ export default page;
 
 const brandProfileButtons = [
   {
-    title: "Онлайн хичээл",
+    title: "Онлайн хичээл үзэх",
     value: "content-progress",
+    link: "https://meirapage.gumroad.com/l/hxwkma/hic5m2k",
   },
 ];
