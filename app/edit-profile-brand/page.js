@@ -38,6 +38,14 @@ function Page() {
   );
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+  const handleMouseDownOldPasswrod = () => setShowOldPassword(true);
+  const handleMouseUpOldPassword = () => setShowOldPassword(false);
+
+  const handleMouseDownNewPassword = () => setShowNewPassword(true);
+  const handleMouseUpNewPassword = () => setShowNewPassword(false);
 
   const [brandTypes, setBrandTypes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
@@ -597,16 +605,33 @@ function Page() {
               <label className="text-[#6F6F6F] text-lg" htmlFor="oldPassword">
                 Хуучин нууц үг
               </label>
-              <div className="flex flex-row gap-5 items-center w-full">
+              <div className="flex flex-row justify-between items-center w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl">
                 <input
                   id="oldPassword"
                   name="oldPassword"
-                  type="password"
+                  type={showOldPassword ? "text" : "password"}
                   onChange={(e) => setOldPassword(e.target.value)}
                   onBlur={(e) => setOldPassword(e.target.value)}
                   value={oldPassword}
-                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+                  className="outline-none w-full bg-inherit"
                 />
+                <button
+                  type="button"
+                  onMouseDown={handleMouseDownOldPasswrod}
+                  onMouseUp={handleMouseUpOldPassword}
+                  onMouseLeave={handleMouseUpOldPassword} // For when the user moves the mouse away from the button
+                  onTouchStart={handleMouseDownOldPasswrod} // For mobile
+                  onTouchEnd={handleMouseUpOldPassword} // For mobile
+                  className="text-sm opacity-90"
+                >
+                  <Image
+                    src={"/show-pwd.png"}
+                    width={24}
+                    height={24}
+                    alt=""
+                    className="w-6 h-6"
+                  />
+                </button>
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full">
@@ -614,15 +639,34 @@ function Page() {
                 Шинэ нууц үг
               </label>
               <div className="flex flex-row gap-5 items-center w-full">
-                <input
-                  id="newPassword"
-                  name="newPassword"
-                  type="password"
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  onBlur={(e) => setNewPassword(e.target.value)}
-                  value={newPassword}
-                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
+                <div className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl flex flex-row items-center justify-between">
+                  <input
+                    id="newPassword"
+                    name="newPassword"
+                    type={showNewPassword ? "text" : "password"}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    onBlur={(e) => setNewPassword(e.target.value)}
+                    value={newPassword}
+                    className="outline-none bg-inherit"
+                  />
+                  <button
+                    type="button"
+                    onMouseDown={handleMouseDownNewPassword}
+                    onMouseUp={handleMouseUpNewPassword}
+                    onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
+                    onTouchStart={handleMouseDownNewPassword} // For mobile
+                    onTouchEnd={handleMouseUpNewPassword} // For mobile
+                    className="text-sm opacity-90"
+                  >
+                    <Image
+                      src={"/show-pwd.png"}
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="w-6 h-6"
+                    />
+                  </button>
+                </div>
                 <div
                   onClick={handleChangePassword}
                   className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"

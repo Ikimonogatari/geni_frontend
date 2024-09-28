@@ -24,6 +24,11 @@ function Page() {
   const [forgotPasswordState, setForgotPasswordState] = useState("1");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+
+  const handleMouseDownLoginPassword = () => setShowLoginPassword(true);
+  const handleMouseUpLoginPassword = () => setShowLoginPassword(false);
+
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
 
@@ -206,15 +211,34 @@ function Page() {
                 <div className="text-red-500 text-sm">{login.errors.email}</div>
               ) : null}
               <span className="text-lg">Нууц үг</span>
-              <input
-                name="password"
-                id="password"
-                type="password"
-                placeholder=""
-                className="border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4"
-                onChange={login.handleChange}
-                value={login.values.password}
-              />
+              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
+                <input
+                  name="password"
+                  id="password"
+                  type={showLoginPassword ? "text" : "password"}
+                  placeholder=""
+                  className="w-full outline-none"
+                  onChange={login.handleChange}
+                  value={login.values.password}
+                />
+                <button
+                  type="button"
+                  onMouseDown={handleMouseDownLoginPassword}
+                  onMouseUp={handleMouseUpLoginPassword}
+                  onMouseLeave={handleMouseUpLoginPassword} // For when the user moves the mouse away from the button
+                  onTouchStart={handleMouseDownLoginPassword} // For mobile
+                  onTouchEnd={handleMouseUpLoginPassword} // For mobile
+                  className="text-sm opacity-90"
+                >
+                  <Image
+                    src={"/show-pwd.png"}
+                    width={24}
+                    height={24}
+                    alt=""
+                    className="w-6 h-6"
+                  />
+                </button>
+              </div>
               {login.touched.password && login.errors.password ? (
                 <div className="text-red-500 text-sm">
                   {login.errors.password}

@@ -26,14 +26,12 @@ function Page() {
     if (new Date(createdAt).getTime() > twentyFourHoursAgo.getTime())
       return { status: "Шинэ", className: "bg-[#4FB755]" };
     else if (leftStock === 0) {
-      return { status: "Дууссан", className: "bg-[#4FB755]" };
+      return { status: "Дууссан", className: "bg-[#F41919]" };
     } else if (ratio <= 0.2) {
       return { status: "Цөөхөн үлдсэн", className: "bg-[#F49D19]" };
     } else {
       return { status: "Хангалттай", className: "bg-[#4FB755]" };
     }
-
-    return { statusText, className };
   };
 
   useEffect(() => {
@@ -140,14 +138,14 @@ function Page() {
                         </div>
                       </div>
                     </div>
-                    <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col gap-2 rounded-b-2xl h-full">
+                    <div className="bg-[#F5F4F0] p-3 sm:p-5 flex flex-col rounded-b-2xl h-full">
                       <span className="font-bold text-sm sm:text-xl">
                         {product.BrandName}
                       </span>
                       <span className="text-xs sm:text-lg">
                         {product.ProductName}
                       </span>
-                      <div className="text-[#6F6F6F] flex flex-col text-sm">
+                      <div className="text-[#6F6F6F] flex flex-col text-base mt-2">
                         <span className="">
                           Үлдэгдэл: {product.LeftStock}/{product.Quantity}
                         </span>
