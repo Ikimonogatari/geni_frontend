@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import {
   geniApi,
   useCreatorLoginMutation,
+  useForgotPasswordMutation,
   useSendOtpToEmailMutation,
 } from "../services/service";
 import Cookies from "js-cookie";
@@ -46,23 +47,32 @@ function Page() {
     },
   ] = useSendOtpToEmailMutation();
 
+  const [
+    forgotPassword,
+    {
+      data: forgotPasswordData,
+      error: forgotPasswordError,
+      isLoading: forgotPasswordLoading,
+      isSuccess: forgotPasswordSuccess,
+    },
+  ] = useForgotPasswordMutation();
+
   const emailForm = useFormik({
     initialValues: {
       forgotEmail: "",
     },
     validationSchema: Yup.object({
       forgotEmail: Yup.string()
-        .email("Invalid email address")
+        .email("Зөв имэйл хаяг оруулна уу")
         .required("Required"),
     }),
     onSubmit: (value) => {
       sendOtpToEmail({
-        To: value,
+        To: value.forgotEmail,
         UserType: userType, //Student, Brand, Creator
         Channel: "smtp", //smtp, sms
         Type: "forgotpassword",
       });
-      setForgotPasswordState("2");
     },
   });
   const otpForm = useFormik({
@@ -70,9 +80,11 @@ function Page() {
       otp: "",
     },
     validationSchema: Yup.object({
-      otp: Yup.string().required("Required"),
+      otp: Yup.string()
+        .matches(/^\d{4}$/, "Зөв код оруулна уу")
+        .required("Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: () => {
       setForgotPasswordState("3");
     },
   });
@@ -83,10 +95,18 @@ function Page() {
     },
     validationSchema: Yup.object({
       newPassword: Yup.string().required("Required"),
-      confirmPassword: Yup.string().required("Required"),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("newPassword"), null], "Нууц үг таарч байх ёстой")
+        .required("Required"),
     }),
     onSubmit: (values) => {
-      setForgotPasswordState("1");
+      forgotPassword({
+        UserType: userType, //Brand, Creator, Student
+        Channel: "smtp", //smtp, sms
+        OTP: otpForm.values.otp,
+        To: emailForm.values.forgotEmail,
+        NewPassword: values.newPassword,
+      });
     },
   });
 
@@ -140,6 +160,15 @@ function Page() {
       toast.error(sendOtpToEmailError?.data?.error);
     }
   }, [sendOtpToEmailSuccess, sendOtpToEmailError]);
+
+  useEffect(() => {
+    if (forgotPasswordSuccess) {
+      toast.success("Нууц үг шинэчлэгдлээ");
+      setForgotPasswordState("1");
+    } else if (forgotPasswordError) {
+      toast.error(forgotPassword?.data?.error);
+    }
+  }, [forgotPasswordSuccess, forgotPasswordError]);
 
   const handleUserType = (value) => {
     setUserType(value);
@@ -247,11 +276,11 @@ function Page() {
                 </div>
               ) : null}
 
-              {/* <Dialog>
+              <Dialog>
                 <DialogTrigger className="text-black font-semibold underline">
                   Нууц үг сэргээх
                 </DialogTrigger>
-                <DialogContent className="max-w-lg flex flex-col items-center gap-2">
+                <DialogContent className="rounded-3xl max-w-lg w-full flex flex-col items-center gap-2">
                   {forgotPasswordState === "1" ? (
                     <div className="flex flex-col gap-5">
                       <span className="text-3xl font-bold">
@@ -338,9 +367,12 @@ function Page() {
                             </div>
                           ) : null}
                         </div>
-                        <div className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold">
+                        <button
+                          onClick={emailForm.handleSubmit}
+                          className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
+                        >
                           Нууц код дахин авах
-                        </div>
+                        </button>
                         <button
                           type="submit"
                           className={`w-full py-4 text-lg text-white font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
@@ -350,113 +382,117 @@ function Page() {
                       </form>
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-5 w-full">
-                      <button
-                        onClick={() => setForgotPasswordState("2")}
-                        className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
-                      >
-                        <Image
-                          src={"/arrow-left.png"}
-                          width={24}
-                          height={24}
-                          alt="arrow-left"
-                        />
-                      </button>
-                      <span className="text-3xl font-bold">Шинэ нууц үг</span>
-
-                      <form
-                        onSubmit={forgotPasswordForm.handleSubmit}
-                        className="flex flex-col gap-4 w-full mt-6"
-                      >
-                        <div className="w-full flex flex-col gap-2">
-                          <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD] focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl relative">
-                            <span className="text-[#6F6F6F] text-xs sm:text-sm">
-                              Шинэ нууц үгээ оруулна уу
-                            </span>
-                            <input
-                              id="newPassword"
-                              name="newPassword"
-                              type={showNewPassword ? "text" : "password"}
-                              onChange={forgotPasswordForm.handleChange}
-                              onBlur={forgotPasswordForm.handleBlur}
-                              value={forgotPasswordForm.values.newPassword}
-                              className="outline-none bg-transparent"
-                            />
-                            <button
-                              type="button"
-                              onMouseDown={handleMouseDownNewPassword}
-                              onMouseUp={handleMouseUpNewPassword}
-                              onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
-                              onTouchStart={handleMouseDownNewPassword} // For mobile
-                              onTouchEnd={handleMouseUpNewPassword} // For mobile
-                              className="absolute right-3 top-9 text-sm text-gray-600"
-                            >
-                              <Image
-                                src={"/show-pwd.png"}
-                                width={24}
-                                height={24}
-                                alt=""
-                                className="w-6 h-6"
-                              />
-                            </button>
-                          </div>
-                          {forgotPasswordForm.touched.newPassword &&
-                          forgotPasswordForm.errors.newPassword ? (
-                            <div className="text-red-500 text-sm">
-                              {forgotPasswordForm.errors.newPassword}
-                            </div>
-                          ) : null}
-                        </div>
-                        <div className="w-full flex flex-col gap-2">
-                          <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD] focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl relative">
-                            <span className="text-[#6F6F6F] text-xs sm:text-sm">
-                              Шинэ нууц үгээ давтан оруулна уу
-                            </span>
-                            <input
-                              id="confirmPassword"
-                              name="confirmPassword"
-                              type={showConfirmPassword ? "text" : "password"}
-                              onChange={forgotPasswordForm.handleChange}
-                              onBlur={forgotPasswordForm.handleBlur}
-                              value={forgotPasswordForm.values.confirmPassword}
-                              className="outline-none bg-transparent"
-                            />
-                            <button
-                              type="button"
-                              onMouseDown={handleMouseDownConfirmPassword}
-                              onMouseUp={handleMouseUpConfirmPassword}
-                              onMouseLeave={handleMouseUpConfirmPassword} // For when the user moves the mouse away from the button
-                              onTouchStart={handleMouseDownConfirmPassword} // For mobile
-                              onTouchEnd={handleMouseUpConfirmPassword} // For mobile
-                              className="absolute right-3 top-9 text-sm text-gray-600"
-                            >
-                              <Image
-                                src={"/show-pwd.png"}
-                                width={24}
-                                height={24}
-                                alt=""
-                                className="w-6 h-6"
-                              />
-                            </button>
-                          </div>
-                          {forgotPasswordForm.touched.confirmPassword &&
-                          forgotPasswordForm.errors.confirmPassword ? (
-                            <div className="text-red-500 text-sm">
-                              {forgotPasswordForm.errors.confirmPassword}
-                            </div>
-                          ) : null}
-                        </div>
+                    forgotPasswordState === "3" && (
+                      <div className="flex flex-col gap-5 w-full">
                         <button
-                          type="submit"
-                          className={`w-full py-4 text-white text-lg font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
+                          onClick={() => setForgotPasswordState("2")}
+                          className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
                         >
-                          Хадгалах
+                          <Image
+                            src={"/arrow-left.png"}
+                            width={24}
+                            height={24}
+                            alt="arrow-left"
+                          />
                         </button>
-                      </form>
-                    </div>
+                        <span className="text-3xl font-bold">Шинэ нууц үг</span>
+
+                        <form
+                          onSubmit={forgotPasswordForm.handleSubmit}
+                          className="flex flex-col gap-4 w-full mt-6"
+                        >
+                          <div className="w-full flex flex-col gap-2">
+                            <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD] focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl relative">
+                              <span className="text-[#6F6F6F] text-xs sm:text-sm">
+                                Шинэ нууц үгээ оруулна уу
+                              </span>
+                              <input
+                                id="newPassword"
+                                name="newPassword"
+                                type={showNewPassword ? "text" : "password"}
+                                onChange={forgotPasswordForm.handleChange}
+                                onBlur={forgotPasswordForm.handleBlur}
+                                value={forgotPasswordForm.values.newPassword}
+                                className="outline-none bg-transparent"
+                              />
+                              <button
+                                type="button"
+                                onMouseDown={handleMouseDownNewPassword}
+                                onMouseUp={handleMouseUpNewPassword}
+                                onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
+                                onTouchStart={handleMouseDownNewPassword} // For mobile
+                                onTouchEnd={handleMouseUpNewPassword} // For mobile
+                                className="absolute right-3 top-9 text-sm text-gray-600"
+                              >
+                                <Image
+                                  src={"/show-pwd.png"}
+                                  width={24}
+                                  height={24}
+                                  alt=""
+                                  className="w-6 h-6"
+                                />
+                              </button>
+                            </div>
+                            {forgotPasswordForm.touched.newPassword &&
+                            forgotPasswordForm.errors.newPassword ? (
+                              <div className="text-red-500 text-sm">
+                                {forgotPasswordForm.errors.newPassword}
+                              </div>
+                            ) : null}
+                          </div>
+                          <div className="w-full flex flex-col gap-2">
+                            <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD] focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl relative">
+                              <span className="text-[#6F6F6F] text-xs sm:text-sm">
+                                Шинэ нууц үгээ давтан оруулна уу
+                              </span>
+                              <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type={showConfirmPassword ? "text" : "password"}
+                                onChange={forgotPasswordForm.handleChange}
+                                onBlur={forgotPasswordForm.handleBlur}
+                                value={
+                                  forgotPasswordForm.values.confirmPassword
+                                }
+                                className="outline-none bg-transparent"
+                              />
+                              <button
+                                type="button"
+                                onMouseDown={handleMouseDownConfirmPassword}
+                                onMouseUp={handleMouseUpConfirmPassword}
+                                onMouseLeave={handleMouseUpConfirmPassword} // For when the user moves the mouse away from the button
+                                onTouchStart={handleMouseDownConfirmPassword} // For mobile
+                                onTouchEnd={handleMouseUpConfirmPassword} // For mobile
+                                className="absolute right-3 top-9 text-sm text-gray-600"
+                              >
+                                <Image
+                                  src={"/show-pwd.png"}
+                                  width={24}
+                                  height={24}
+                                  alt=""
+                                  className="w-6 h-6"
+                                />
+                              </button>
+                            </div>
+                            {forgotPasswordForm.touched.confirmPassword &&
+                            forgotPasswordForm.errors.confirmPassword ? (
+                              <div className="text-red-500 text-sm">
+                                {forgotPasswordForm.errors.confirmPassword}
+                              </div>
+                            ) : null}
+                          </div>
+                          <button
+                            type="submit"
+                            className={`w-full py-4 text-white text-lg font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
+                          >
+                            Хадгалах
+                          </button>
+                        </form>
+                      </div>
+                    )
                   )}
                 </DialogContent>
-              </Dialog> */}
+              </Dialog>
               <button
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-md h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${

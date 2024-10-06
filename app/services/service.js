@@ -255,13 +255,6 @@ export const geniApi = createApi({
         body,
       }),
     }),
-    sendOtpToEmail: builder.mutation({
-      query: (body) => ({
-        url: "/api/admin/public/otp",
-        method: "POST",
-        body,
-      }),
-    }),
     listContentGallery: builder.query({
       query: (body) => ({
         url: "/api/web/private/content/my",
@@ -273,6 +266,20 @@ export const geniApi = createApi({
       query: (body) => ({
         url: "/api/web/private/user/brand/type",
         method: "GET",
+        body,
+      }),
+    }),
+    sendOtpToEmail: builder.mutation({
+      query: (body) => ({
+        url: "/api/admin/public/otp",
+        method: "POST",
+        body,
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/forgotpass",
+        method: "POST",
         body,
       }),
     }),
@@ -315,4 +322,5 @@ export const {
   useListContentGalleryQuery,
   useListBrandTypesQuery,
   useChangeBrandTypeMutation,
+  useForgotPasswordMutation,
 } = geniApi;
