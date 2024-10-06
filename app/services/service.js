@@ -283,6 +283,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getPublicBrandList: builder.query({
+      query: (body) => ({
+        url: "/api/admin/private/custbrand?limit=100&offset=0",
+        method: "GET",
+        body,
+      }),
+    }),
+    getPublicCreatorList: builder.query({
+      query: (body) => ({
+        url: "/api/admin/private/creator?offset=0&limit=100",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -323,4 +337,6 @@ export const {
   useListBrandTypesQuery,
   useChangeBrandTypeMutation,
   useForgotPasswordMutation,
+  useGetPublicBrandListQuery,
+  useGetPublicCreatorListQuery,
 } = geniApi;

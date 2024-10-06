@@ -132,8 +132,8 @@ function Page() {
   useEffect(() => {
     if (data) {
       // Set cookies first
-      Cookies.set("auth", data.JWT, { expires: 1 / 48 });
-      Cookies.set("userType", userType, { expires: 1 / 48 });
+      Cookies.set("auth", data.JWT, { expires: 24 });
+      Cookies.set("userType", userType, { expires: 24 });
 
       // Invalidate cache after cookies are set
       geniApi.util.invalidateTags(["UserInfo"]);

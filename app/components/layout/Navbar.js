@@ -26,7 +26,7 @@ function Navbar() {
   useEffect(() => {
     if (getUserInfoData) {
       Cookies.set("user-info", JSON.stringify(getUserInfoData), {
-        expires: 1 / 48,
+        expires: 24,
       });
     }
   }, [getUserInfoData]);

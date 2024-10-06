@@ -8,25 +8,15 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
 import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
+import { useGetPublicCreatorListQuery } from "../services/service";
 
-function Creators({ apiData }) {
+function Creators() {
   const [creators, setCreators] = useState([]);
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/Items/creator?sort=sort,-date_created&fields=*,Category.*.*,brand.*.*,content.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
-        );
-        console.log(r);
-        const d = await r.json();
-        setCreators(d.data);
-        console.log(d.data);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
-  console.log(apiData);
+  const {
+    data: getPublicCreatorListData,
+    error: getPublicCreatorListError,
+    isLoading: getPublicCreatorListLoading,
+  } = useGetPublicCreatorListQuery();
 
   const [slidesPerView, setSlidesPerView] = useState(5);
   const [swiper, setSwiper] = useState(null);
@@ -59,7 +49,7 @@ function Creators({ apiData }) {
   const goPrev = () => {
     swiper.slidePrev();
   };
-
+  console.log(getPublicCreatorListData ? getPublicCreatorListData : "");
   return (
     <div className="hidden sm:block container px-7 mx-auto max-w-7xl pt-20">
       <div className="flex flex-row justify-between items-center">
@@ -80,7 +70,7 @@ function Creators({ apiData }) {
             className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
           />
         </button>
-        {creators ? (
+        {getPublicCreatorListData ? (
           <Swiper
             spaceBetween={18}
             slidesPerView={slidesPerView}
@@ -146,69 +136,3 @@ function Creators({ apiData }) {
 }
 
 export default Creators;
-
-export async function getServerSideProps() {
-  try {
-    const getCreatorsResponse = await fetch(
-      // `${process.env.LOCAL_ENDPOINT}/api/getCreators`
-      `http://0.0.0.0:8055/Items/creator?sort=sort,-date_created&fields=*,Categories.*.*,Collab_Brands.*.*,Contents.*.*&filter=%7B%22status%22:%7B%22_eq%22:%22published%22%7D%7D`
-    );
-    console.log(getCreatorsResponse);
-    const creatorsData = await getCreatorsResponse.json();
-    console.log(creatorsData);
-
-    return {
-      props: {
-        apiData: {
-          ...creatorsData,
-        },
-      },
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-      props: {
-        message: error,
-      },
-    };
-  }
-}
-
-const creatorsDummy = [
-  {
-    image: "/dummy-creator.png",
-    name: "Davaa",
-    created_content: "12",
-    collab_brand: "3",
-  },
-  {
-    image: "/dummy-creator.png",
-    name: "Davaa",
-    created_content: "12",
-    collab_brand: "3",
-  },
-  {
-    image: "/dummy-creator.png",
-    name: "Davaa",
-    created_content: "12",
-    collab_brand: "3",
-  },
-  {
-    image: "/dummy-creator.png",
-    name: "Davaa",
-    created_content: "12",
-    collab_brand: "3",
-  },
-  {
-    image: "/dummy-creator.png",
-    name: "Davaa",
-    created_content: "12",
-    collab_brand: "3",
-  },
-  {
-    image: "/dummy-creator.png",
-    name: "Davaa",
-    created_content: "12",
-    collab_brand: "3",
-  },
-];
