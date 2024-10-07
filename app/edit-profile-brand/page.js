@@ -15,6 +15,8 @@ import {
   geniApi,
   useListBrandTypesQuery,
   useChangeBrandTypeMutation,
+  useSendOtpToEmailMutation,
+  useChangeEmailMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
@@ -26,6 +28,7 @@ function Page() {
   const { setShouldRefetchUserInfo } = useUserInfo();
 
   const userInfo = Cookies.get("user-info");
+  const userType = Cookies.get("userType");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   console.log(parsedUserInfo);
 
@@ -36,6 +39,7 @@ function Page() {
   const [email, setEmail] = useState(
     parsedUserInfo ? parsedUserInfo?.BusinessEmail : ""
   );
+  const [otp, setOtp] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -82,6 +86,26 @@ function Page() {
       isSuccess: changePasswordSuccess,
     },
   ] = useChangePasswordMutation();
+
+  const [
+    sendOtpToEmail,
+    {
+      data: sendOtpToEmailData,
+      error: sendOtpToEmailError,
+      isLoading: sendOtpToEmailLoading,
+      isSuccess: sendOtpToEmailSuccess,
+    },
+  ] = useSendOtpToEmailMutation();
+
+  const [
+    changeEmail,
+    {
+      data: changeEmailData,
+      error: changeEmailError,
+      isLoading: changeEmailLoading,
+      isSuccess: changeEmailSuccess,
+    },
+  ] = useChangeEmailMutation();
 
   const [
     changeBrandType,
@@ -197,6 +221,22 @@ function Page() {
   }, [changePasswordData, changePasswordError]);
 
   useEffect(() => {
+    if (sendOtpToEmailSuccess) {
+      toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
+    } else if (sendOtpToEmailError) {
+      toast.error(sendOtpToEmailError?.data?.error);
+    }
+  }, [sendOtpToEmailSuccess, sendOtpToEmailError]);
+
+  useEffect(() => {
+    if (changeEmailSuccess) {
+      toast.success("Имэйл шинэчлэгдлээ");
+    } else if (changeEmailError) {
+      toast.error(changeEmailError?.data?.error);
+    }
+  }, [changeEmailSuccess, changeEmailError]);
+
+  useEffect(() => {
     if (changeBrandTypeSuccess) {
       toast.success("Амжилттай");
     }
@@ -215,15 +255,21 @@ function Page() {
     console.log(value);
   };
 
-  const handleChangeEmail = async () => {
-    try {
-      await changeEmail({ email: email }).unwrap();
-      toast.success("Имэйл амжилттай солигдлоо");
-    } catch (err) {
-      toast.error("Имэйл солиход алдаа гарлаа");
-    }
+  const handleSendOtp = async () => {
+    sendOtpToEmail({
+      To: email,
+      UserType: userType, //Sys, Brand, Creator
+      Channel: "smtp", //smtp, sms
+      Type: "forgotpassword",
+    });
   };
 
+  const handleChangeEmail = () => {
+    changeEmail({
+      OTP: otp,
+      NewEmail: email,
+    });
+  };
   const handleChangePassword = async () => {
     try {
       await changePassword({
@@ -472,6 +518,29 @@ function Page() {
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) => setEmail(e.target.value)}
                   value={email}
+                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+                />
+                <div
+                  onClick={handleSendOtp}
+                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
+                >
+                  Код илгээх
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 w-full">
+              <label className="text-[#6F6F6F] text-lg" htmlFor="email">
+                Нэг удаагийн код
+              </label>
+              <div className="flex flex-row gap-5 items-center w-full">
+                <input
+                  id="otp"
+                  name="otp"
+                  type="text"
+                  pattern="\d{4}"
+                  onChange={(e) => setOtp(e.target.value)}
+                  onBlur={(e) => setOtp(e.target.value)}
+                  value={otp}
                   className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
                 />
                 <div

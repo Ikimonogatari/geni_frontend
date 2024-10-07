@@ -313,6 +313,7 @@ export const {
   useListProductDictsQuery,
   useChangeProfilePictureMutation,
   useChangePasswordMutation,
+  useChangeEmailMutation,
   useCreateSocialChannelMutation,
   useUpdateSocialChannelMutation,
   useListCreatorContentsQuery,
