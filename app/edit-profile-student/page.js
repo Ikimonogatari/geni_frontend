@@ -149,6 +149,11 @@ function Page() {
   });
 
   const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/png": [],
+      "image/jpeg": [],
+      "image/jpg": [],
+    },
     onDrop: (acceptedFiles) => {
       // Handle only the first file
       if (acceptedFiles.length > 0) {

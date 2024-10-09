@@ -159,7 +159,11 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
   } = useDropzone({
-    // accept: { "video/mp4": [], "video/mov": [] },
+    accept: {
+      "video/mp4": [".mp4"],
+      "video/avi": [".avi"],
+      "video/mov": [".mov"],
+    },
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
@@ -228,7 +232,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
       <div className="w-full flex flex-col lg:flex-row gap-6">
         <div className="w-full flex flex-col gap-4">
           <span className="text-lg">Контент</span>
-
           {contentVideo ? (
             <video
               controls
@@ -250,18 +253,19 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
           ) : (
             <div
               {...getRootPropsForVideo()}
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl bg-[#F5F4F0]"
+              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
             >
               <input {...getInputPropsForVideo()} />
-
               <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                <Image
-                  src={"/add-product-button.png"}
-                  width={54}
-                  height={54}
-                  alt=""
-                  className="w-[54px] h-[54px]"
-                />
+                <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
+                  <Image
+                    src={"/add-icon.png"}
+                    width={20}
+                    height={20}
+                    alt=""
+                    className="w-5 h-5"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -291,15 +295,16 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
             >
               <input {...getInputPropsForImage()} />
-
               <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                <Image
-                  src={"/add-product-button.png"}
-                  width={54}
-                  height={54}
-                  alt=""
-                  className="w-[54px] h-[54px]"
-                />
+                <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
+                  <Image
+                    src={"/add-icon.png"}
+                    width={20}
+                    height={20}
+                    alt=""
+                    className="w-5 h-5"
+                  />
+                </div>
               </div>
             </div>
           )}

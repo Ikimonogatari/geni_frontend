@@ -67,13 +67,10 @@ function Page() {
         .of(Yup.string())
         .min(1, "At least one content type must be selected")
         .required("Content info is required"),
-      // productName: Yup.string().required("Required"),
-      // information: Yup.string().required("Required"),
-      // requestForCreators: Yup.string().required("Required"),
-      // quantity: Yup.string().required("Required"),
-      // price: Yup.string().required("Required"),
-      // productTypes: Yup.string().required("Required"),
-      // productPics: Yup.string().required("Required"),
+      information: Yup.string().required("Required"),
+      requestForCreators: Yup.string().required("Required"),
+      quantity: Yup.string().required("Required"),
+      price: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       const modifiedValues = {
@@ -122,6 +119,10 @@ function Page() {
 
   const [productTypes, setProductTypes] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/png": [".png"],
+      "image/jpeg": [".jpg", ".jpeg"],
+    },
     onDrop: (acceptedFiles) => {
       const fileUploadPromises = acceptedFiles.map(async (file) => {
         const formData = new FormData();

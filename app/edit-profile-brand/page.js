@@ -158,6 +158,7 @@ function Page() {
       Name: Yup.string().required("Required"),
       PhoneNumber: Yup.string().required("Required"),
       Bio: Yup.string().required("Required"),
+      RegNo: Yup.string().required("Required"),
       Address: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
@@ -166,6 +167,11 @@ function Page() {
   });
 
   const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/png": [],
+      "image/jpeg": [],
+      "image/jpg": [],
+    },
     onDrop: async (acceptedFiles) => {
       // Handle only the first file
       if (acceptedFiles.length > 0) {
