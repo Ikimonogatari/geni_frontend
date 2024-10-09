@@ -26,7 +26,7 @@ function Navbar() {
   useEffect(() => {
     if (getUserInfoData) {
       Cookies.set("user-info", JSON.stringify(getUserInfoData), {
-        expires: 24,
+        expires: 1 / 24,
       });
     }
   }, [getUserInfoData]);
@@ -46,19 +46,19 @@ function Navbar() {
             href="/"
             className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
           >
-            Home
+            Нүүр
           </a>
           <a
             href="/creators"
             className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
           >
-            Creators
+            Бүтээгчид
           </a>
           <a
             href="/brands"
             className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
           >
-            Brands
+            Брэндүүд
           </a>
           {userType && getUserInfoData ? (
             <a
@@ -67,14 +67,14 @@ function Navbar() {
               }
               className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
             >
-              Profile
+              Профайл
             </a>
           ) : (
             <a
               href={"/login"}
               className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
             >
-              Login
+              Нэвтрэх
             </a>
           )}
         </div>

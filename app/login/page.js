@@ -26,7 +26,6 @@ function Page() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
-
   const handleMouseDownLoginPassword = () => setShowLoginPassword(true);
   const handleMouseUpLoginPassword = () => setShowLoginPassword(false);
 
@@ -132,8 +131,8 @@ function Page() {
   useEffect(() => {
     if (data) {
       // Set cookies first
-      Cookies.set("auth", data.JWT, { expires: 24 });
-      Cookies.set("userType", userType, { expires: 24 });
+      Cookies.set("auth", data.JWT, { expires: 1 / 24 });
+      Cookies.set("userType", userType, { expires: 1 / 24 });
 
       // Invalidate cache after cookies are set
       geniApi.util.invalidateTags(["UserInfo"]);

@@ -34,15 +34,13 @@ function Page() {
     instagram: "",
     facebook: "",
   });
-  const [otp, setOtp] = useState("");
-  const [email, setEmail] = useState(
+  const [newEmail, setNewEmail] = useState(
     parsedUserInfo ? parsedUserInfo?.Email : ""
   );
-
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [dropdownOpen, setdropdownOpen] = useState(false);
-
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
@@ -207,7 +205,8 @@ function Page() {
 
   useEffect(() => {
     if (sendOtpToEmailSuccess) {
-      toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
+      setIsOtpSent(true);
+      toast.success("Таны хуучин мэйл рүү нэг удаагийн код илгээгдлээ");
     } else if (sendOtpToEmailError) {
       toast.error(sendOtpToEmailError?.data?.error);
     }
@@ -215,6 +214,7 @@ function Page() {
 
   useEffect(() => {
     if (changeEmailSuccess) {
+      setIsOtpSent(false);
       toast.success("Имэйл шинэчлэгдлээ");
     } else if (changeEmailError) {
       toast.error(changeEmailError?.data?.error);
@@ -279,7 +279,7 @@ function Page() {
 
   const handleSendOtp = async () => {
     sendOtpToEmail({
-      To: email,
+      To: parsedUserInfo ? parsedUserInfo?.Email : null,
       UserType: userType, //Sys, Brand, Creator
       Channel: "smtp", //smtp, sms
       Type: "forgotpassword",
@@ -289,7 +289,7 @@ function Page() {
   const handleChangeEmail = () => {
     changeEmail({
       OTP: otp,
-      NewEmail: email,
+      NewEmail: newEmail,
     });
   };
 
@@ -429,51 +429,53 @@ function Page() {
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="email">
-                Имэйл
-              </label>
-              <div className="flex flex-row gap-5 items-center w-full">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  onBlur={(e) => setEmail(e.target.value)}
-                  value={email}
-                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
-                <div
-                  onClick={handleSendOtp}
-                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
-                >
-                  Код илгээх
+
+            {!isOtpSent ? (
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-[#6F6F6F] text-lg" htmlFor="newEmail">
+                  Имэйл
+                </label>
+                <div className="flex flex-row gap-5 items-center w-full">
+                  <input
+                    id="newEmail"
+                    name="newEmail"
+                    type="email"
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    value={newEmail}
+                    className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+                  />
+                  <div
+                    onClick={handleSendOtp}
+                    className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
+                  >
+                    Код илгээх
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <label className="text-[#6F6F6F] text-lg" htmlFor="email">
-                Нэг удаагийн код
-              </label>
-              <div className="flex flex-row gap-5 items-center w-full">
-                <input
-                  id="otp"
-                  name="otp"
-                  type="text"
-                  pattern="\d{4}"
-                  onChange={(e) => setOtp(e.target.value)}
-                  onBlur={(e) => setOtp(e.target.value)}
-                  value={otp}
-                  className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
-                <div
-                  onClick={handleChangeEmail}
-                  className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
-                >
-                  Өөрчлөх
+            ) : (
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-[#6F6F6F] text-lg" htmlFor="otp">
+                  Нэг удаагийн код
+                </label>
+                <div className="flex flex-row gap-5 items-center w-full">
+                  <input
+                    id="otp"
+                    name="otp"
+                    type="text"
+                    pattern="\d{4}"
+                    onChange={(e) => setOtp(e.target.value)}
+                    value={otp}
+                    className="w-1/2 p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
+                  />
+                  <div
+                    onClick={handleChangeEmail}
+                    className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
+                  >
+                    Мэйл солих
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="flex flex-col gap-3">
               <label className="text-[#6F6F6F] text-lg" htmlFor="RegNo">
@@ -606,7 +608,6 @@ function Page() {
                   name="oldPassword"
                   type={showOldPassword ? "text" : "password"}
                   onChange={(e) => setOldPassword(e.target.value)}
-                  onBlur={(e) => setOldPassword(e.target.value)}
                   value={oldPassword}
                   className="outline-none w-full bg-inherit"
                 />
@@ -642,7 +643,6 @@ function Page() {
                     name="newPassword"
                     type={showNewPassword ? "text" : "password"}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    onBlur={(e) => setNewPassword(e.target.value)}
                     value={newPassword}
                     className="outline-none bg-inherit"
                   />
