@@ -17,7 +17,7 @@ function page() {
   useEffect(() => {
     if (listPaymentPlansData) {
       console.log(listPaymentPlansData);
-      const sortedPlans = [...listPaymentPlansData].sort((a, b) => {
+      const sortedPlans = [...listPaymentPlansData]?.sort((a, b) => {
         return planOrder.indexOf(a.type) - planOrder.indexOf(b.type);
       });
       setPlans(sortedPlans);
@@ -53,67 +53,67 @@ function page() {
                 >
                   <div className="flex flex-col justify-between items-center gap-4 w-full">
                     <Image
-                      src={subPlans[i].image}
+                      src={subPlans[i]?.image}
                       width={125}
                       height={131}
                       alt="sub"
                     />
                     <span className="text-3xl font-bold">
-                      {subPlans[i].title}
+                      {subPlans[i]?.title}
                     </span>
                     <span className="text-lg">
-                      {subPlans[i].desc ? subPlans[i].desc : <br />}
+                      {subPlans[i]?.desc ? subPlans[i]?.desc : <br />}
                     </span>
                     {s.plans && i != 3 ? (
                       <div className="border border-[#6F6F6F] rounded-3xl w-full px-7 py-4 flex flex-col">
                         <span className="text-lg mx-auto mt-2">
-                          {s.plans[0].planDurationInMonth ? (
-                            s.plans[0].planDurationInMonth
+                          {s.plans[0]?.planDurationInMonth ? (
+                            s.plans[0]?.planDurationInMonth
                           ) : (
                             <></>
                           )}{" "}
                           month
                         </span>
                         <span className="text-2xl text-nowrap font-bold">
-                          {s.plans[0].price} MNT
+                          {s.plans[0]?.price} MNT
                         </span>
                         <span className="text-sm mt-2">
-                          Content limit: &nbsp;{s.plans[0].contentLimit}
+                          Content limit: &nbsp;{s.plans[0]?.contentLimit}
                         </span>
                         <span className="text-sm mt-1">
                           Content price:{" "}
-                          {(s.plans[0].price / s.plans[0].contentLimit).toFixed(
-                            1
-                          )}{" "}
+                          {(
+                            s.plans[0]?.price / s.plans[0]?.contentLimit
+                          ).toFixed(1)}{" "}
                           MNT
                         </span>
                       </div>
                     ) : (
                       <div className="text-center border border-[#6F6F6F] rounded-3xl px-7 py-4 flex flex-col">
-                        {subPlans[i].text}
+                        {subPlans[i]?.text}
                       </div>
                     )}
                     {s.plans.length > 1 ? (
                       <div className="text-[#6F6F6F] border border-[#CDCDCD] rounded-3xl w-full p-4 flex flex-col items-center">
                         <span className="text-lg">
-                          {s.plans[1].planDurationInMonth} month
+                          {s.plans[1]?.planDurationInMonth} month
                         </span>
                         <span className="text-xl font-bold">
-                          {s.plans[1].price} MNT
+                          {s.plans[1]?.price} MNT
                         </span>
                         <div className="mt-5 bg-[#4FB755] text-white text-sm rounded-3xl flex flex-col items-center w-full px-5 py-3">
                           <span>
                             {" "}
                             Хэмнэлт:{" "}
-                            {s.plans[1].savedPrice
-                              ? s.plans[1].savedPrice
+                            {s.plans[1]?.savedPrice
+                              ? s.plans[1]?.savedPrice
                               : 0}{" "}
                             MNT
                           </span>
                           <span>
                             +
-                            {s.plans[1].freeContent
-                              ? s.plans[1].freeContent
+                            {s.plans[1]?.freeContent
+                              ? s.plans[1]?.freeContent
                               : 6}{" "}
                             контент үнэгүй
                           </span>
@@ -127,7 +127,7 @@ function page() {
                     onClick={() => router.push(`/payment/${s.type}`)}
                     className="hover:bg-[#4D55F5] transition-all duration-250 mt-3 bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-xl w-full text-center py-4"
                   >
-                    {subPlans[i].buttonText}
+                    {subPlans[i]?.buttonText}
                   </button>
                 </div>
               ))

@@ -615,7 +615,7 @@ function Page() {
                             </span>
                           </div>
                           <div className="bg-[#4D55F5] text-white text-center font-medium text-xs rounded-3xl px-4 py-2">
-                            {parsedUserInfo?.BrandTypes[0]?.TypeName}
+                            {parsedUserInfo?.BrandTypes?.[0]?.TypeName}
                           </div>
                         </div>
                       </div>

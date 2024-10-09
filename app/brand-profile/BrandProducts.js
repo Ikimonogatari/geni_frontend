@@ -122,7 +122,7 @@ function BrandProducts({ brandProducts, brandData }) {
                       </DialogHeader>
                       {p.ProductPics ? (
                         <Image
-                          src={p.ProductPics[0].Url}
+                          src={p.ProductPics[0]?.Url}
                           width={445}
                           height={239}
                           alt=""

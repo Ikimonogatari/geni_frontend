@@ -114,7 +114,7 @@ function Page() {
                   >
                     <div className="relative w-full rounded-t-2xl">
                       <Image
-                        src={product.ProductPics[0].Url}
+                        src={product.ProductPics?.[0]?.Url}
                         width={280}
                         height={280}
                         alt=""

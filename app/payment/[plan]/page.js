@@ -61,7 +61,7 @@ function page() {
   useEffect(() => {
     if (listPaymentPlansData) {
       console.log(listPaymentPlansData);
-      const sortedPlans = [...listPaymentPlansData].sort((a, b) => {
+      const sortedPlans = [...listPaymentPlansData]?.sort((a, b) => {
         return planOrder.indexOf(a.type) - planOrder.indexOf(b.type);
       });
 
@@ -130,7 +130,7 @@ function page() {
           <div className="w-full gap-5 flex flex-col">
             <div className="transition-all duration-150 w-full bg-[#F5F4F0] rounded-3xl flex flex-row items-center gap-9 justify-between p-8">
               <Image
-                src={subPlans[id].image}
+                src={subPlans[id]?.image}
                 width={237}
                 height={249}
                 alt="sub"
@@ -139,7 +139,7 @@ function page() {
               <div className="flex flex-col gap-4 w-full">
                 <div className="flex flex-col items-center lg:items-start gap-2">
                   <Image
-                    src={subPlans[id].image}
+                    src={subPlans[id]?.image}
                     width={237}
                     height={249}
                     alt="sub"
@@ -148,35 +148,36 @@ function page() {
                   <span className="text-3xl font-bold">
                     {selectedType ? selectedType.type : <></>}
                   </span>
-                  <span className="text-lg">{subPlans[id].desc}</span>
+                  <span className="text-lg">{subPlans[id]?.desc}</span>
                 </div>
                 <div className="flex flex-col md:flex-row gap-7 h-full">
                   {selectedType && selectedType.plans && id != 3 ? (
                     <div
                       onClick={() =>
-                        handleSelectPlan(selectedType.plans[0].planId)
+                        handleSelectPlan(selectedType.plans[0]?.planId)
                       }
                       className={`transition-all duration-150 cursor-pointer min-h-[184px] md:w-1/2 border-[2px] ${
-                        selectedPlan == selectedType.plans[0].planId
+                        selectedPlan == selectedType.plans[0]?.planId
                           ? "border-[#4D55F5]"
                           : "border-[#CDCDCD]"
                       } transition-all duration-150 h-full rounded-3xl w-full px-7 py-4 flex flex-col`}
                     >
                       <span className="text-lg mx-auto">
                         {selectedType ? (
-                          selectedType.plans[0].planDurationInMonth
+                          selectedType.plans[0]?.planDurationInMonth
                         ) : (
                           <></>
                         )}{" "}
                         month
                       </span>
                       <span className="text-3xl mx-auto text-nowrap font-bold">
-                        {selectedType ? selectedType.plans[0].price : <></>} MNT
+                        {selectedType ? selectedType.plans[0]?.price : <></>}{" "}
+                        MNT
                       </span>
                       <span className="text-sm mt-5">
                         Content limit: &nbsp;
                         {selectedType ? (
-                          selectedType.plans[0].contentLimit
+                          selectedType.plans[0]?.contentLimit
                         ) : (
                           <></>
                         )}
@@ -185,8 +186,8 @@ function page() {
                         Content price:{" "}
                         {selectedType ? (
                           (
-                            selectedType.plans[0].price /
-                            selectedType.plans[0].contentLimit
+                            selectedType.plans[0]?.price /
+                            selectedType.plans[0]?.contentLimit
                           ).toFixed(1)
                         ) : (
                           <></>
@@ -195,36 +196,37 @@ function page() {
                     </div>
                   ) : (
                     <div className="w-full md:w-1/2 mx-auto lg:mx-0 text-center border border-[#6F6F6F] rounded-3xl px-7 py-4 flex flex-col">
-                      {subPlans[id].text}
+                      {subPlans[id]?.text}
                     </div>
                   )}
                   {selectedType && selectedType.plans.length > 1 ? (
                     <div
                       onClick={() =>
-                        handleSelectPlan(selectedType.plans[1].planId)
+                        handleSelectPlan(selectedType.plans[1]?.planId)
                       }
                       className={`transition-all duration-150 cursor-pointer min-h-[184px] h-full md:w-1/2 border-[2px] ${
-                        selectedPlan == selectedType.plans[1].planId
+                        selectedPlan == selectedType.plans[1]?.planId
                           ? "border-[#4D55F5]"
                           : "border-[#CDCDCD]"
                       } transition-all duration-150 rounded-3xl w-full px-7 py-4 flex flex-col items-center justify-between`}
                     >
                       <span className="text-lg">
                         {selectedType ? (
-                          selectedType.plans[1].planDurationInMonth
+                          selectedType.plans[1]?.planDurationInMonth
                         ) : (
                           <></>
                         )}{" "}
                         month
                       </span>
                       <span className="text-3xl font-bold">
-                        {selectedType ? selectedType.plans[1].price : <></>} MNT
+                        {selectedType ? selectedType.plans[1]?.price : <></>}{" "}
+                        MNT
                       </span>
                       <div className="mt-5 bg-[#4FB755] text-white text-sm rounded-3xl flex flex-col items-center w-full px-5 py-3">
                         <span>
                           Saved:{" "}
                           {selectedType ? (
-                            selectedType.plans[1].savedPrice
+                            selectedType.plans[1]?.savedPrice
                           ) : (
                             <></>
                           )}
@@ -232,8 +234,8 @@ function page() {
                         <span>
                           +
                           {selectedType ? (
-                            selectedType.plans[1].freeContent ? (
-                              s.plans[1].freeContent
+                            selectedType.plans[1]?.freeContent ? (
+                              s.plans[1]?.freeContent
                             ) : (
                               6
                             )
