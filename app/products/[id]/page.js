@@ -35,6 +35,9 @@ function Page() {
   const userType = Cookies.get("userType");
   const { id } = params;
   const [productContentRequestMsg, setProductContentRequestMsg] = useState("");
+  const [otherAddress, setOtherAddress] = useState("");
+  const [useOtherAddress, setUseOtherAddress] = useState(false);
+
   const {
     data: getPublicProductByIdData,
     error: getPublicProductByIdError,
@@ -67,7 +70,6 @@ function Page() {
   });
 
   const [contentTypeOption, setContentTypeOption] = useState("");
-  const [contentOutcomeOption, setContentOutcomeOption] = useState("");
   const [requestState, setRequestState] = useState("not-sent");
   const [swiper, setSwiper] = useState(null);
   const goNext = () => {
@@ -78,9 +80,12 @@ function Page() {
   };
 
   const handleProductContentRequest = () => {
+    const address = useOtherAddress ? otherAddress : parsedUserInfo?.Location;
+
     requestProductContent({
       ProductId: id,
       RequestReason: productContentRequestMsg,
+      AdditionalAddress: address,
     });
   };
 
@@ -425,7 +430,12 @@ function Page() {
                         <span className="text-xl">Хүргүүлэх хаяг:</span>
 
                         <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
-                          <input type="checkbox" className="hidden peer" />
+                          <input
+                            type="checkbox"
+                            className="hidden peer"
+                            checked={!useOtherAddress}
+                            onChange={() => setUseOtherAddress(false)}
+                          />
                           <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
                             <span className="text-[#F5F4F0] font-bold text-xl select-none">
                               ✓
@@ -435,8 +445,15 @@ function Page() {
                             Бүртгэлтэй гэрийн хаяг
                           </span>
                         </label>
+
+                        {/* Checkbox to use another address */}
                         <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
-                          <input type="checkbox" className="hidden peer" />
+                          <input
+                            type="checkbox"
+                            className="hidden peer"
+                            checked={useOtherAddress}
+                            onChange={() => setUseOtherAddress(true)}
+                          />
                           <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
                             <span className="text-[#F5F4F0] font-bold text-xl select-none">
                               ✓
@@ -445,10 +462,15 @@ function Page() {
                           <span className="text-base">Бусад</span>
                         </label>
 
-                        <textarea
-                          placeholder="Нэмэлт хаягаа энд бичнэ үү"
-                          className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
-                        />
+                        {/* Text area for the other address */}
+                        {useOtherAddress && (
+                          <textarea
+                            value={otherAddress}
+                            onChange={(e) => setOtherAddress(e.target.value)}
+                            placeholder="Нэмэлт хаягаа энд бичнэ үү"
+                            className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
+                          />
+                        )}
                         <button
                           onClick={handleProductContentRequest}
                           className="mt-3 bg-[#CA7FFE] border-[#2D262D] border font-semibold rounded-lg text-center py-4 text-xl text-white w-full"
