@@ -196,7 +196,7 @@ function Page() {
             <div className="flex flex-col gap-4 w-full md:w-1/2">
               <div className="flex flex-row items-center gap-3">
                 <Image
-                  src={getPublicProductByIdData?.BrandProfileLink}
+                  src={getPublicProductByIdData?.BrandProfileUrl}
                   width={77}
                   height={77}
                   alt=""
