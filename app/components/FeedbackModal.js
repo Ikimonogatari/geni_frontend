@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 
-function FeedbackModal({ parsedUserInfo, contentId }) {
+function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
   const [resubmitting, setIsResubmitting] = useState(false);
 
   return (
@@ -17,10 +17,15 @@ function FeedbackModal({ parsedUserInfo, contentId }) {
         <DialogContent className="overflow-y-auto flex flex-col p-6 h-full w-full max-h-[739px] max-w-[577px] rounded-3xl">
           <span className="text-3xl font-bold">Зөвлөгөө</span>
           <div className="mt-4 flex flex-col gap-3">
-            <div className="flex flex-row items-center gap-6 p-5 bg-[#F5F4F0] rounded-3xl">
-              <div className="rounded-full w-3 h-3 bg-[#D9D9D9]"></div>
-              <span>Ёс бус хэллэг агуулагдсан байна.</span>
-            </div>
+            {feedbacks?.map((f, i) => (
+              <div
+                key={i}
+                className="flex flex-row items-center gap-6 p-5 bg-[#F5F4F0] rounded-3xl"
+              >
+                <div className="rounded-full w-3 h-3 bg-[#D9D9D9]"></div>
+                <span>{f.Name}</span>
+              </div>
+            ))}
           </div>
           <button
             onClick={() => setIsResubmitting(true)}

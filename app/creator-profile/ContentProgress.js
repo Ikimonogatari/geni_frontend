@@ -170,7 +170,8 @@ function ContentProgress({ currentContents }) {
               {p.Status === "ContentRejected" ? (
                 <FeedbackModal
                   parsedUserInfo={parsedUserInfo}
-                  contentId={p.ContentId}
+                  contentId={p?.ContentId}
+                  feedbacks={p?.Feedbacks}
                 />
               ) : (
                 <></>
