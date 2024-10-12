@@ -30,7 +30,7 @@ function FreeContentWave() {
           <div className="mt-8 relative w-full max-w-[364px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
             <a
               target="_blank"
-              href="https://forms.gle/snf9FWo5WKXaqb2C8"
+              href="https://forms.gle/EbjaLfTfRCzH4Acr8"
               className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[364px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
             >
               <span>Давалгаанд нэгдэх</span>
