@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Brands from "./Brands";
 import BrandsMobile from "./BrandsMobile";
+import FreeContentWave from "./FreeContentWave";
 
 export const metadata = {
   title: "Geni | Brands",
@@ -56,11 +57,11 @@ function page() {
               className="max-w-[170px] max-h-[140px] sm:max-w-[301px] sm:max-h-[252px]"
             />
           </div>
-          <div className="mt-8 block lg:hidden relative w-full h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
+          <div className="block lg:hidden mt-5 relative w-full max-w-[364px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
             <a
               target="_blank"
               href="https://forms.gle/snf9FWo5WKXaqb2C8"
-              className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
+              className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[364px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
             >
               <span>Geni Brand болох</span>
               <Image
@@ -72,6 +73,7 @@ function page() {
             </a>
           </div>
         </div>
+        <FreeContentWave />
         <div className="container px-7 mx-auto mt-7">
           <Image
             src={"/brand-cycle.png"}
