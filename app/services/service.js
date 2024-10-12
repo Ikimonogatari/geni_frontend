@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 export const geniApi = createApi({
   reducerPath: "geniApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_AWS_URL,
+    baseUrl: process.env.NEXT_PUBLIC_AWS_PROD_URL,
     prepareHeaders: (headers) => {
       const auth = Cookies.get("auth");
       if (auth) {
