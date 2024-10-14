@@ -54,10 +54,10 @@ function creators() {
                 alt="geni-creator-logo"
               />
               <span className="text-2xl font-bold text-[#6F6F6F]">
-                3-р ээлжийн өргөдөл хүлээн авч байна.
+                Дараагийн хөтөлбөр зарлагдаагүй байна.
               </span>
             </div>
-            <div className="relative w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
+            <div className="hidden w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
               <a
                 target="_blank"
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
