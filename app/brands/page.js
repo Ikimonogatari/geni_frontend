@@ -13,6 +13,8 @@ function page() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
+        <FreeContentWave />
+
         <div className="container text-[#2D262D] max-w-7xl mx-auto pb-4 pt-14 sm:py-28 px-7 flex flex-col lg:flex-row lg:items-center">
           <div className="flex flex-col gap-12 w-full lg:w-1/2">
             <Image
@@ -73,7 +75,6 @@ function page() {
             </a>
           </div>
         </div>
-        <FreeContentWave />
         <div className="container px-7 mx-auto mt-7">
           <Image
             src={"/brand-cycle.png"}
