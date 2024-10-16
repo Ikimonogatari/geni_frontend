@@ -144,7 +144,7 @@ export default function Home() {
                 alt="creators"
                 className="block sm:hidden"
               />
-              <div className="relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
+              <div className="relative hidden w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
                 <a
                   target="_blank"
                   href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"

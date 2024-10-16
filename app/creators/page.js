@@ -130,7 +130,7 @@ function creators() {
                 Онлайн хөтөлбөрт хамрагдан суралцангаа бодит туршлага
                 хуримтлуулан хэрэглэгчээс бүтээгч болоорой.
               </span>
-              <div className="relative hidden lg:block w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
+              <div className="relative hidden w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
                 <a
                   target="_blank"
                   href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
@@ -152,7 +152,7 @@ function creators() {
               height={385}
               alt="become-creator"
             />
-            <div className="relative block lg:hidden mt-9 w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
+            <div className="relative hidden mt-9 w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
               <a
                 target="_blank"
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
@@ -254,7 +254,7 @@ function creators() {
                 className="absolute bottom-0 right-0 max-w-[89px] max-h-[55px] sm:max-w-[160px] sm:max-h-[99px]"
               />
             </div>
-            <div className="mt-10 sm:mt-[110px] relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
+            <div className="mt-10 sm:mt-[110px] hidden relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
               <a
                 target="_blank"
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
