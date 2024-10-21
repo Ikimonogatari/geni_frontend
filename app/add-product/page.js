@@ -252,6 +252,10 @@ function Page() {
                     />
                   </div>
                   <p>Зураг оруулах</p>
+                  <p className="text-center w-full sm:w-2/3 text-xs sm:text-sm">
+                    Зураг оруулахдаа зөвхөн 1х1 хэмжээтэй дөрвөлжин зураг
+                    оруулна уу.
+                  </p>
                 </div>
               ) : (
                 <></>
@@ -483,7 +487,7 @@ function Page() {
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
-                  Контентийн гаралт
+                  Контентын гаралт
                 </label>
                 <p className="underline text-sm">
                   Та нэг болон түүнээс дээш гаралт сонгох боломжтой бөгөөд
