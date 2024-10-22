@@ -120,7 +120,7 @@ function Page() {
             <div className="flex flex-col gap-6 w-full md:w-1/2">
               <div className="flex flex-row items-center gap-4 w-full">
                 {getPublicProductByIdData &&
-                getPublicProductByIdData?.ProductPics.length > 1 ? (
+                getPublicProductByIdData?.ProductPics?.length > 1 ? (
                   <button onClick={goPrev}>
                     <Image
                       src={"/creators-swipe-button.png"}
@@ -152,7 +152,7 @@ function Page() {
                   className=""
                 >
                   {getPublicProductByIdData ? (
-                    getPublicProductByIdData?.ProductPics.map((p, i) => (
+                    getPublicProductByIdData?.ProductPics?.map((p, i) => (
                       <SwiperSlide key={i}>
                         <Image
                           src={p.Url}
@@ -168,7 +168,7 @@ function Page() {
                   )}
                 </Swiper>
                 {getPublicProductByIdData &&
-                getPublicProductByIdData?.ProductPics.length > 1 ? (
+                getPublicProductByIdData?.ProductPics?.length > 1 ? (
                   <button onClick={goNext}>
                     <Image
                       src={"/creators-swipe-button.png"}
