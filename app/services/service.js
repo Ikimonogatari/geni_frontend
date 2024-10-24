@@ -139,7 +139,7 @@ export const geniApi = createApi({
     }),
     listCreatorContents: builder.query({
       query: (body) => ({
-        url: `/api/web/private/content?offset=0`,
+        url: `/api/web/private/content?&limit=100&offset=0`,
         method: "GET",
         body,
       }),
@@ -236,7 +236,7 @@ export const geniApi = createApi({
     }),
     listBrandContents: builder.query({
       query: (body) => ({
-        url: `/api/web/private/content?offset=0`,
+        url: `/api/web/private/content?&limit=100&offset=0`,
         method: "GET",
         body,
       }),
