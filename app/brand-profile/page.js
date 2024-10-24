@@ -380,15 +380,15 @@ export default page;
 
 const brandProfileButtons = [
   {
-    title: "Content progress",
+    title: "Контент статус",
     value: "content-progress",
   },
   {
-    title: "Content gallery",
+    title: "Контент",
     value: "content-gallery",
   },
   {
-    title: "My Products",
+    title: "Бүтээгдэхүүн",
     value: "brand-products",
   },
 ];
