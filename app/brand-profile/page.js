@@ -289,7 +289,7 @@ function page() {
           </div>
 
           <div className="pl-7 md:px-7 mt-4 sm:mt-16 w-full flex flex-row items-center justify-between">
-            <div className="overflow-x-auto w-full">
+            <div className="overflow-x-auto">
               <div className="flex flex-row items-center min-w-[448px] gap-3">
                 {brandProfileButtons.map((b, i) => (
                   <button
@@ -309,7 +309,7 @@ function page() {
 
             <a
               href="/add-product"
-              className="w-full max-w-[270px] hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+              className="w-auto whitespace-nowrap hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
             >
               Бүтээгдэхүүн нэмэх
               <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
