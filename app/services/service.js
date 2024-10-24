@@ -229,7 +229,7 @@ export const geniApi = createApi({
     }),
     listBrandProducts: builder.query({
       query: (body) => ({
-        url: "/api/web/public/product",
+        url: "/api/web/private/product?&limit=100&offset=0",
         method: "GET",
         body,
       }),
