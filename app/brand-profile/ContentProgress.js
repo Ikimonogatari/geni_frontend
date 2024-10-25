@@ -248,8 +248,7 @@ function ContentProgress({ currentContents }) {
               <span className="">{getStatusName(p.Status)}</span>
             </div>
             <div className="col-span-1">
-              {
-                // p.Status === "ContentApproved" ? (
+              {p.Status === "ContentApproved" ? (
                 <Dialog>
                   <DialogTrigger
                     onClick={() =>
@@ -415,10 +414,9 @@ function ContentProgress({ currentContents }) {
                     </div>
                   </DialogContent>
                 </Dialog>
-                // ) : (
-                // <></>
-                // )
-              }
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         ))}
