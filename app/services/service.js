@@ -285,14 +285,14 @@ export const geniApi = createApi({
     }),
     getPublicBrandList: builder.query({
       query: (body) => ({
-        url: "/api/admin/private/custbrand?limit=100&offset=0",
+        url: "/api/web/public/brand?limit=100&offset=0",
         method: "GET",
         body,
       }),
     }),
     getPublicCreatorList: builder.query({
       query: (body) => ({
-        url: "/api/admin/private/creator?offset=0&limit=100",
+        url: "/api/web/public/creator?offset=0&limit=100",
         method: "GET",
         body,
       }),

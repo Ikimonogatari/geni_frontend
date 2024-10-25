@@ -7,11 +7,17 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
-import GraphCMSImageLoader from "../components/GraphCMSImageLoader";
 import { useGetPublicCreatorListQuery } from "../services/service";
 
 function Creators() {
-  const [creators, setCreators] = useState([]);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+
+  const handleSlideChange = (s) => {
+    setIsBeginning(s.isBeginning);
+    setIsEnd(s.isEnd);
+  };
+
   const {
     data: getPublicCreatorListData,
     error: getPublicCreatorListError,
@@ -23,17 +29,21 @@ function Creators() {
 
   const checkViewportSize = () => {
     const width = window.innerWidth;
-    if (width <= 640) {
-      // Mobile
+    if (width <= 480) {
+      // Mobile: display 1 slide
       setSlidesPerView(1);
-    } else if (width >= 640 && width <= 1068) {
-      // Tablet or medium devices
+    } else if (width > 480 && width <= 768) {
+      // Small to Medium devices: display 2 slides
+      setSlidesPerView(2);
+    } else if (width > 768 && width <= 1024) {
+      // Medium to Large devices: display 3 slides
       setSlidesPerView(3);
     } else {
-      // Larger devices
-      setSlidesPerView(5);
+      // Large devices and wider: display 4 slides
+      setSlidesPerView(4);
     }
   };
+
   useEffect(() => {
     checkViewportSize();
 
@@ -49,31 +59,39 @@ function Creators() {
   const goPrev = () => {
     swiper.slidePrev();
   };
+
   console.log(getPublicCreatorListData ? getPublicCreatorListData : "");
   return (
-    <div className="hidden sm:block container px-7 mx-auto max-w-7xl pt-20">
+    <div className="w-full pt-20">
       <div className="flex flex-row justify-between items-center">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
-          Бүтээгчид / {creators.length}
+          Geni Бүтээгчид / {getPublicCreatorListData?.Data?.length}
         </span>
-        <button className="rounded-full bg-[#CA7FFE] text-white py-2 px-6">
+        <a
+          href="/all-creators"
+          className="rounded-full bg-[#CA7FFE] text-white py-2 px-6"
+        >
           Бүгд
-        </button>
+        </a>
       </div>
-      <div className="relative flex flex-row gap-3 items-center mt-9">
-        <button onClick={goPrev}>
-          <Image
-            src={"/creators-swipe-button.png"}
-            width={42}
-            height={42}
-            alt="swipe-button"
-            className="hidden sm:block min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-          />
-        </button>
-        {getPublicCreatorListData ? (
+      {getPublicCreatorListData && (
+        <div className="relative flex flex-row gap-3 justify-between items-center mt-10 w-full">
+          {!isBeginning && (
+            <button onClick={goPrev}>
+              <Image
+                src={"/creators-swipe-button.png"}
+                width={42}
+                height={42}
+                alt="swipe-button"
+                className="min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+              />
+            </button>
+          )}
+
           <Swiper
             spaceBetween={18}
             slidesPerView={slidesPerView}
+            onSlideChange={handleSlideChange}
             autoplay={{
               delay: 7000,
               disableOnInteraction: false,
@@ -84,53 +102,114 @@ function Creators() {
             modules={[Autoplay, Pagination, Navigation]}
             className=""
           >
-            {creators.map((creator, id) => (
-              <SwiperSlide key={id} className="">
-                <a
-                  href={`/profile/${creator.id}`}
-                  className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] flex flex-col gap-2"
-                >
-                  <Image
-                    src={"/verified-icon.png"}
-                    width={24}
-                    height={24}
-                    alt="verified-icon"
-                    className="absolute right-6 top-6 w-6 h-6"
-                  />
-                  <Image
-                    loader={GraphCMSImageLoader}
-                    src={creator.image ? creator.image : ""}
-                    width={179}
-                    height={101}
-                    alt="creator-image"
-                    className="w-full rounded-2xl"
-                  />
+            {getPublicCreatorListData.Data.map((creator, id) => {
+              // Find Instagram and Facebook links for each creator
+              const instagramLink = creator?.SocialChannels?.find(
+                (channel) => channel.PlatformName === "Instagram"
+              )?.Link;
 
-                  <p className="text-base mt-3">{creator.name}</p>
-                  <p className="text-[#6F6F6F] text-sm mt-1">
-                    Created content: {creator.content.length}
-                  </p>
-                  <p className="text-[#6F6F6F] text-sm mt-1">
-                    Collab brands: {creator.brand.length}
-                  </p>
-                </a>
-              </SwiperSlide>
-            ))}
+              const facebookLink = creator?.SocialChannels?.find(
+                (channel) => channel.PlatformName === "Facebook"
+              )?.Link;
+
+              return (
+                <SwiperSlide key={id} className="">
+                  <div className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full">
+                    <a href={`/public-profile/${creator.CreatorId}`}>
+                      <Image
+                        src={
+                          creator?.ProfileLink
+                            ? creator?.ProfileLink
+                            : "/dummy-profile.png"
+                        }
+                        width={194}
+                        height={194}
+                        alt=""
+                        className="aspect-square w-[194px] h-[194px] rounded-full border border-[#000000] object-cover"
+                      />
+                    </a>
+                    <div className="flex flex-row items-center gap-2">
+                      <a
+                        href={`/public-profile/${creator.CreatorId}`}
+                        className="hover:underline hover:underline-offset-3 text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden"
+                      >
+                        {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
+                      </a>
+                      <Image
+                        src={"/verified-icon.png"}
+                        width={20}
+                        height={20}
+                        alt="verified-icon"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    {creator?.Point && creator?.ContentNumber ? (
+                      <div className="flex flex-row items-center gap-2">
+                        <Image
+                          src={"/star.png"}
+                          width={20}
+                          height={20}
+                          className="w-5 h-5"
+                        />
+                        <span className="text-lg">
+                          {creator?.Point}/5 {creator?.ContentNumber} контент
+                        </span>
+                      </div>
+                    ) : null}
+                    <div className="flex flex-row gap-2 mt-3">
+                      {instagramLink && (
+                        <a
+                          href={instagramLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-75"
+                        >
+                          <Image
+                            src="/Instagram.png"
+                            width={24}
+                            height={24}
+                            alt=""
+                            className="w-6 h-6"
+                          />
+                        </a>
+                      )}
+                      {facebookLink && (
+                        <a
+                          href={facebookLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-75"
+                        >
+                          <Image
+                            src="/Facebook.png"
+                            width={24}
+                            height={24}
+                            alt=""
+                            className="w-6 h-6"
+                          />
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-[#6F6F6F]">{creator?.Bio}</p>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
-        ) : (
-          <></>
-        )}
 
-        <button onClick={goNext}>
-          <Image
-            src={"/creators-swipe-button.png"}
-            width={42}
-            height={42}
-            alt="swipe-button"
-            className="hidden sm:block rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
-          />
-        </button>
-      </div>
+          {!isEnd && (
+            <button onClick={goNext}>
+              <Image
+                src={"/creators-swipe-button.png"}
+                width={42}
+                height={42}
+                alt="swipe-button"
+                className="rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+              />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -14,14 +14,17 @@ function creators() {
       <div className="mt-32">
         <div className="pt-20 container max-w-7xl mx-auto px-7">
           <Image
+            loading="lazy"
             src={"/genicreator-logo.svg"}
             width={160}
             height={29}
             alt="geni-creator-logo"
           />
+          <Creators />
           <div className="flex flex-col lg:flex-row gap-5 mt-6">
             <div className="w-full lg:w-1/2 flex flex-col gap-6 p-8 rounded-2xl bg-[#F5F4F0]">
               <Image
+                loading="lazy"
                 src={"/creators-image1.png"}
                 width={254}
                 height={225}
@@ -34,6 +37,7 @@ function creators() {
             </div>
             <div className="w-full lg:w-1/2 flex flex-col gap-6 p-8 rounded-2xl bg-[#F5F4F0]">
               <Image
+                loading="lazy"
                 src={"/creators-image2.png"}
                 width={258}
                 height={236}
@@ -48,6 +52,7 @@ function creators() {
           <div className="rounded-2xl px-6 py-8 sm:p-14 border-[1px] border-[#2D262D] bg-[#F5F4F0] mt-6 flex flex-col lg:flex-row gap-6 lg:gap-0 justify-between">
             <div className="flex flex-col gap-4">
               <Image
+                loading="lazy"
                 src={"/genicreatorprogram-logo.svg"}
                 width={160}
                 height={29}
@@ -65,6 +70,7 @@ function creators() {
               >
                 <span>Geni Creator болох</span>
                 <Image
+                  loading="lazy"
                   src={"/arrow-right-icon.png"}
                   alt="arrow"
                   width={16}
@@ -76,6 +82,7 @@ function creators() {
         </div>
         <div className="container px-7 mx-auto mt-7">
           <Image
+            loading="lazy"
             src={"/creator-cycle.png"}
             width={1348}
             height={442}
@@ -83,6 +90,7 @@ function creators() {
             className="hidden lg:block mx-auto"
           />
           <Image
+            loading="lazy"
             src={"/creator-cycle-mobile.png"}
             width={335}
             height={1505}
@@ -90,9 +98,6 @@ function creators() {
             className="block lg:hidden mx-auto"
           />
         </div>
-
-        <Creators />
-        <CreatorsMobile />
         <div className="container max-w-7xl px-7 mx-auto pt-16 pb-20">
           <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#CA7FFE] text-white">
             <div className="flex flex-col gap-4 lg:gap-10">
@@ -106,6 +111,7 @@ function creators() {
               </span>
             </div>
             <Image
+              loading="lazy"
               src={"/creator-alumni-image.png"}
               width={302}
               height={302}
@@ -121,6 +127,7 @@ function creators() {
           <div className="container max-w-7xl px-7 mx-auto flex flex-col lg:flex-row items-center justify-between">
             <div className="flex flex-col gap-9">
               <Image
+                loading="lazy"
                 src={"/genicreatorprogram-logo.svg"}
                 width={160}
                 height={29}
@@ -138,6 +145,7 @@ function creators() {
                 >
                   <span>Geni Creator болох</span>
                   <Image
+                    loading="lazy"
                     src={"/arrow-right-icon.png"}
                     alt="arrow"
                     width={16}
@@ -147,6 +155,7 @@ function creators() {
               </div>
             </div>
             <Image
+              loading="lazy"
               src={"/become-creator-image.png"}
               width={455}
               height={385}
@@ -160,6 +169,7 @@ function creators() {
               >
                 <span>Geni Creator болох</span>
                 <Image
+                  loading="lazy"
                   src={"/arrow-right-icon.png"}
                   alt="arrow"
                   width={16}
@@ -176,10 +186,11 @@ function creators() {
           <div className="flex flex-col lg:flex-row gap-5 mt-6">
             <div className="w-full lg:w-1/2 flex flex-col gap-8 p-8 rounded-2xl bg-[#F5F4F0]">
               <Image
+                loading="lazy"
                 src={"/creators-image3.png"}
                 width={172}
                 height={220}
-                alt="creators-image"
+                alt=""
                 className="mx-auto"
               />
               <span className="text-2xl sm:text-4xl font-bold">
@@ -188,6 +199,7 @@ function creators() {
             </div>
             <div className="w-full lg:w-1/2 flex flex-col gap-6 p-8 rounded-2xl bg-[#F5F4F0]">
               <Image
+                loading="lazy"
                 src={"/creators-image4.png"}
                 width={247}
                 height={232}
@@ -219,6 +231,7 @@ function creators() {
           <div className="bg-[#F5F4F0] px-7 py-10 sm:py-20 w-full flex flex-col justify-center items-center">
             <div className="relative w-[307px] h-[270px] sm:w-[587px] sm:h-[485px] flex justify-center items-center">
               <Image
+                loading="lazy"
                 src={"/creator-pros-icon1.png"}
                 width={145}
                 height={144}
@@ -226,6 +239,7 @@ function creators() {
                 className="absolute top-0 left-0 max-w-[81px] max-h-[81px] sm:max-w-[145px] sm:max-h-[144px]"
               />
               <Image
+                loading="lazy"
                 src={"/creator-pros-icon2.png"}
                 width={136}
                 height={197}
@@ -233,6 +247,7 @@ function creators() {
                 className="absolute top-0 right-0 max-w-[76px] max-h-[110px] sm:max-w-[136px] sm:max-h-[197px]"
               />
               <Image
+                loading="lazy"
                 src={"/creators-pros-image.png"}
                 width={311}
                 height={371}
@@ -240,6 +255,7 @@ function creators() {
                 className="max-w-[174px] max-h-[207px] sm:max-w-[311px] sm:max-h-[371px]"
               />
               <Image
+                loading="lazy"
                 src={"/creator-pros-icon3.png"}
                 width={180}
                 height={140}
@@ -247,6 +263,7 @@ function creators() {
                 className="absolute bottom-0 left-0 max-w-[101px] max-h-[78px] sm:max-w-[180px] sm:max-h-[140px]"
               />
               <Image
+                loading="lazy"
                 src={"/creator-pros-icon4.png"}
                 width={160}
                 height={99}
@@ -262,6 +279,7 @@ function creators() {
               >
                 <span>Geni Creator болох</span>
                 <Image
+                  loading="lazy"
                   src={"/arrow-right-icon.png"}
                   alt="arrow"
                   width={16}

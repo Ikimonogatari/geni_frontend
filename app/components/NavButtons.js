@@ -15,7 +15,7 @@ function NavButtons() {
             : "text-[#000000B8]"
         } hidden md:block`}
       >
-        Geni Creators
+        Geni Бүтээгчид
       </a>
       <span className={`font-bold hidden md:block`}>·</span>
       <a
@@ -26,7 +26,7 @@ function NavButtons() {
             : "text-[#000000B8]"
         } hidden md:block`}
       >
-        Geni Brands
+        Geni Брэндүүд
       </a>
     </div>
   );
