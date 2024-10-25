@@ -75,7 +75,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(getImagePresignedUrlError?.data?.error);
       setIsImageUploadLoading(false);
     }
     if (getImagePresignedUrlData) {
@@ -88,7 +88,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(getVideoPresignedUrlError?.data?.error);
       setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
@@ -100,7 +100,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (uploadHomeworkError) {
-      toast.error(uploadHomeworkError.data.error);
+      toast.error(uploadHomeworkError?.data.error);
     }
     if (isSuccess) {
       setIsHomeworkUploadSuccess(true);
@@ -109,7 +109,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (creatorContentSubmitError) {
-      toast.error(creatorContentSubmitError.data.error);
+      toast.error(creatorContentSubmitError?.data.error);
     }
     if (creatorContentSubmitSuccess) {
       setIsContentSuccess(true);
@@ -118,7 +118,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (uploadFileError) {
-      toast.error("Файл оруулахад алдаа гарлаа");
+      toast.error(uploadFileError?.data?.error);
       setIsVideoUploadLoading(false);
       setIsImageUploadLoading(false);
     }

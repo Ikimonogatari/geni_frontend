@@ -62,7 +62,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(getImagePresignedUrlError?.data?.error);
       setIsImageUploadLoading(false);
     }
     if (getImagePresignedUrlData) {
@@ -75,7 +75,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(getVideoPresignedUrlError?.data?.error);
       setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
@@ -87,7 +87,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (uploadHomeworkError) {
-      toast.error(uploadHomeworkError.data.error);
+      toast.error(uploadHomeworkError?.data.error);
     }
     if (isSuccess) {
       setIsHomeworkUploadSuccess(true);
@@ -96,7 +96,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (uploadFileError) {
-      toast.error("Файл оруулахад алдаа гарлаа");
       toast.error(uploadFileError?.data?.error);
       setIsVideoUploadLoading(false);
       setIsImageUploadLoading(false);

@@ -179,13 +179,13 @@ function Page() {
       toast.success("Амжилттай хадгаллаа");
     }
     if (error) {
-      toast.error("Алдаа гарлаа");
+      toast.error(error?.data?.error);
     }
   }, [data, error]);
 
   useEffect(() => {
     if (uploadFileError) {
-      toast.error("Зураг оруулахад алдаа гарлаа");
+      toast.error(uploadFileError?.data?.error);
     }
   }, [uploadFileData, uploadFileError]);
 
@@ -194,7 +194,7 @@ function Page() {
       toast.success("Амжилттай");
     }
     if (changeProfilePictureError) {
-      toast.error("Зураг оруулахад алдаа гарлаа");
+      toast.error(changeProfilePictureError?.data?.error);
     }
   }, [changeProfilePictureData, changeProfilePictureError]);
 
@@ -204,7 +204,7 @@ function Page() {
       toast.success("Амжилттай");
     }
     if (changePasswordError) {
-      toast.error("Нууц үг солиход алдаа гарлаа");
+      toast.error(changePasswordError?.data?.error);
     }
   }, [changePasswordData, changePasswordError]);
 

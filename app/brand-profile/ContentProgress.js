@@ -63,7 +63,7 @@ function ContentProgress({ currentContents }) {
 
   useEffect(() => {
     if (brandReceiveContentError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(brandReceiveContentError?.data?.error);
     }
     if (brandReceiveContentSuccess) {
       toast.success("Амжилттай");

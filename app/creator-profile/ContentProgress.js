@@ -27,7 +27,7 @@ function ContentProgress({ currentContents }) {
 
   useEffect(() => {
     if (updateContentStatusError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(updateContentStatusError?.data?.error);
     }
     if (updateContentStatusData) {
       toast.success("Амжилттай");

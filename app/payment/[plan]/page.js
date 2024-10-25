@@ -76,7 +76,7 @@ function page() {
       setIsPaymentSuccess(true);
     }
     if (checkPaymentError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(checkPaymentError?.data?.error);
     }
   }, [checkPaymentData, checkPaymentError, subscribePlanData]);
 
@@ -85,7 +85,7 @@ function page() {
       setTxId(subscribePlanData.UserTxnId);
     }
     if (subscribePlanError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(subscribePlanError?.data?.error);
     }
   }, [subscribePlanData, subscribePlanError]);
 

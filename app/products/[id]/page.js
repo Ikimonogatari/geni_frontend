@@ -94,7 +94,7 @@ function Page() {
       setRequestState("sent");
     }
     if (requestProductContentError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(requestProductContentError?.data?.error);
     }
   }, [requestProductContentData, requestProductContentError]);
 

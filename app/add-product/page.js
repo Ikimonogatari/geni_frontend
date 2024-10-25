@@ -156,13 +156,13 @@ function Page() {
 
   useEffect(() => {
     if (uploadFileError) {
-      toast.error("Зураг оруулахад алдаа гарлаа");
+      toast.error(uploadFileError?.data?.error);
     }
   }, [uploadFileData, uploadFileError]);
 
   useEffect(() => {
     if (createProductError) {
-      toast.error("Алдаа гарлаа");
+      toast.error(createProductError?.data?.error);
     }
     if (createProductData) {
       console.log(createProductData);
