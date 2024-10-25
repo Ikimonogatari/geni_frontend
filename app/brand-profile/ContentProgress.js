@@ -111,6 +111,18 @@ function ContentProgress({ currentContents }) {
     audio.play();
   };
 
+  const copyCaptionToClipboard = (caption) => {
+    navigator.clipboard
+      .writeText(caption)
+      .then(() => {
+        toast.success("Тайлбарыг хууллаа!");
+      })
+      .catch((err) => {
+        console.error("Error copying text: ", err);
+        toast.error("Тайлбарыг хуулж чадсангүй!");
+      });
+  };
+
   const getColorClass = (status) => {
     switch (status) {
       case "Request":
@@ -236,7 +248,8 @@ function ContentProgress({ currentContents }) {
               <span className="">{getStatusName(p.Status)}</span>
             </div>
             <div className="col-span-1">
-              {p.Status === "ContentApproved" ? (
+              {
+                // p.Status === "ContentApproved" ? (
                 <Dialog>
                   <DialogTrigger
                     onClick={() =>
@@ -284,12 +297,44 @@ function ContentProgress({ currentContents }) {
                       </div>
 
                       <div className="flex flex-col justify-between gap-4">
-                        <span className="text-base font-semibold">Тайлбар</span>
+                        <div className="w-full flex flex-row items-center justify-between">
+                          <span className="text-base font-semibold">
+                            Тайлбар
+                          </span>
+                          <button
+                            className="p-2 bg-[#CA7FFE] rounded-xl hidden lg:block"
+                            onClick={() => copyCaptionToClipboard(p.Caption)}
+                          >
+                            <Image
+                              src={"/copy-button.png"}
+                              alt=""
+                              width={24}
+                              height={24}
+                              className="w-6 h-6"
+                            />
+                          </button>
+                        </div>
                         <div className="w-full h-full flex flex-col justify-between">
                           <div className="flex flex-col gap-6">
-                            <span className="text-sm text-[#6F6F6F] p-3 bg-[#F5F4F0] rounded-xl">
-                              {p.Caption}
-                            </span>
+                            <div className="flex flex-row items-start gap-2">
+                              <span className="text-sm text-[#6F6F6F] p-3 bg-[#F5F4F0] rounded-xl">
+                                {p.Caption}
+                              </span>
+                              <button
+                                className="p-2 bg-[#CA7FFE] rounded-xl block lg:hidden"
+                                onClick={() =>
+                                  copyCaptionToClipboard(p.Caption)
+                                }
+                              >
+                                <Image
+                                  src={"/copy-button.png"}
+                                  alt=""
+                                  width={24}
+                                  height={24}
+                                  className="min-w-4 min-h-4 sm:min-w-6 sm:min-h-6"
+                                />
+                              </button>
+                            </div>
                             <div className="flex flex-col gap-2">
                               <span className="text-base font-semibold">
                                 Та контент бүтээгчид оноо өгнө үү
@@ -370,9 +415,10 @@ function ContentProgress({ currentContents }) {
                     </div>
                   </DialogContent>
                 </Dialog>
-              ) : (
-                <></>
-              )}
+                // ) : (
+                // <></>
+                // )
+              }
             </div>
           </div>
         ))}
