@@ -102,7 +102,7 @@ function Creators() {
             modules={[Autoplay, Pagination, Navigation]}
             className=""
           >
-            {getPublicCreatorListData.Data.map((creator, id) => {
+            {getPublicCreatorListData?.Data.map((creator, id) => {
               // Find Instagram and Facebook links for each creator
               const instagramLink = creator?.SocialChannels?.find(
                 (channel) => channel.PlatformName === "Instagram"

@@ -1,11 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import Creators from "./Creators";
-import CreatorsMobile from "./CreatorsMobile";
 
 export const metadata = {
-  title: "Geni | Creators",
-  description: "Geni Creators",
+  title: "Geni | Бүтээгчид",
+  description: "Geni Бүтээгчид",
 };
 
 function creators() {
