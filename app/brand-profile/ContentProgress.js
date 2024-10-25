@@ -8,11 +8,34 @@ import {
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 
+function renderStars(score, setScore, playSound) {
+  return [1, 2, 3, 4, 5].map((star, index) => (
+    <span
+      key={index}
+      onClick={() => {
+        setScore(star);
+        playSound();
+      }}
+      className="cursor-pointer"
+    >
+      <Image
+        src={star <= score ? "/star.png" : "/empty-star.png"}
+        alt="Star"
+        width={28}
+        height={28}
+      />
+    </span>
+  ));
+}
+
 function ContentProgress({ currentContents }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
-  const [score, setScore] = useState("");
+  const [qualityScore, setQualityScore] = useState(null);
+  const [guidelineScore, setGuidelineScore] = useState(null);
+  const [conceptScore, setConceptScore] = useState(null);
   const [comment, setComment] = useState("");
+  const [isCommenting, setIsCommenting] = useState(false);
 
   console.log(currentContents);
 
@@ -82,6 +105,12 @@ function ContentProgress({ currentContents }) {
       Point: score,
     });
   };
+
+  const playSound = () => {
+    const audio = new Audio("/star-sound.mp3");
+    audio.play();
+  };
+
   const getColorClass = (status) => {
     switch (status) {
       case "Request":
@@ -224,7 +253,7 @@ function ContentProgress({ currentContents }) {
                   <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl">
                     <div className="flex flex-col lg:flex-row gap-6 h-full">
                       <div className="flex flex-col gap-4 h-full">
-                        <span className="text-lg font-semibold">Контент</span>
+                        <span className="text-base font-semibold">Контент</span>
                         {contentVideo ? (
                           <video
                             controls
@@ -239,7 +268,7 @@ function ContentProgress({ currentContents }) {
                       </div>
 
                       <div className="flex flex-col gap-4 h-full">
-                        <span className="text-lg font-semibold">
+                        <span className="text-base font-semibold">
                           Thumbnail зураг
                         </span>
 
@@ -255,46 +284,79 @@ function ContentProgress({ currentContents }) {
                       </div>
 
                       <div className="flex flex-col justify-between gap-4">
-                        <span className="text-lg font-semibold">Тайлбар</span>
+                        <span className="text-base font-semibold">Тайлбар</span>
                         <div className="w-full h-full flex flex-col justify-between">
                           <div className="flex flex-col gap-6">
                             <span className="text-sm text-[#6F6F6F] p-3 bg-[#F5F4F0] rounded-xl">
                               {p.Caption}
                             </span>
                             <div className="flex flex-col gap-2">
-                              <span className="text-sm">
+                              <span className="text-base font-semibold">
                                 Та контент бүтээгчид оноо өгнө үү
                               </span>
-                              <div className="flex flex-row items-center gap-[6px]">
-                                {scores.map((s, i) => (
-                                  <span
-                                    onClick={() => setScore(s)}
-                                    key={i}
-                                    className={`transition-all duration-150 cursor-pointer py-2 px-4 ${
-                                      score == s
-                                        ? "bg-[#4FB755] text-white border-[1px] border-white"
-                                        : "bg-none text-[#CDCDCD] border-[#CDCDCD] border-[1px]"
-                                    } text-sm rounded-xl`}
-                                  >
-                                    {s}
+                              <div className="border-[1px] border-[#000000] rounded-2xl bg-[#F5F4F0] p-5">
+                                <div className="flex flex-col gap-2">
+                                  <span className="text-sm">
+                                    Брэндийн өгсөн чиглүүлэгийн дагуу хийсэн
+                                    эсэх
                                   </span>
-                                ))}
+                                  <div className="flex flex-row gap-[6px] items-center">
+                                    {renderStars(
+                                      guidelineScore,
+                                      setGuidelineScore,
+                                      playSound
+                                    )}
+                                  </div>
+                                  <span className="text-sm">
+                                    Контентын агуулга
+                                  </span>
+                                  <div className="flex flex-row gap-[6px] items-center">
+                                    {renderStars(
+                                      conceptScore,
+                                      setConceptScore,
+                                      playSound
+                                    )}
+                                  </div>
+                                  <span className="text-sm">
+                                    Контентын хийцлэл
+                                  </span>
+                                  <div className="flex flex-row gap-[6px] items-center">
+                                    {renderStars(
+                                      qualityScore,
+                                      setQualityScore,
+                                      playSound
+                                    )}
+                                  </div>
+                                  <div className="flex flex-col gap-2">
+                                    <button
+                                      onClick={() => setIsCommenting(true)}
+                                      className="text-sm text-[#4D55F5] underline text-start"
+                                    >
+                                      Та контент бүтээгчид сэтгэгдэлээ үлдээнэ
+                                      үү
+                                    </button>
+                                    {isCommenting ? (
+                                      <textarea
+                                        type="text"
+                                        value={comment}
+                                        onChange={(e) =>
+                                          setComment(e.target.value)
+                                        }
+                                        className="text-sm p-3 h-[127px] w-full lg:max-w-[445px] bg-white outline-none border rounded-xl"
+                                      />
+                                    ) : (
+                                      <></>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <span className="text-sm">
-                                Та контент бүтээгчид сэтгэгдэлээ үлдээнэ үү
-                              </span>
-                              <textarea
-                                type="text"
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                className="text-sm p-3 h-[127px] w-full lg:max-w-[445px] bg-[#F5F4F0] outline-none border rounded-xl"
-                              />
                             </div>
                           </div>
                         </div>
-                        {comment && score ? (
+                        {comment &&
+                        guidelineScore &&
+                        qualityScore &&
+                        conceptScore ? (
                           <button
                             onClick={() => handleContentReceive(p.ContentId)}
                             className="bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
@@ -320,5 +382,3 @@ function ContentProgress({ currentContents }) {
 }
 
 export default ContentProgress;
-
-const scores = ["20", "40", "60", "80", "100"];
