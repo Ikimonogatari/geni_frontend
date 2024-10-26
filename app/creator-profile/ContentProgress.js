@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useUpdateContentStatusMutation } from "../services/service";
 import toast from "react-hot-toast";

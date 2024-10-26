@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Creators from "./Creators";
+import MonthlyCompetition from "./MonthlyCompetition";
+import Leaderboard from "./Leaderboard";
 
 export const metadata = {
   title: "Geni | Бүтээгчид",
@@ -10,17 +12,45 @@ export const metadata = {
 function creators() {
   return (
     <div className="min-h-screen w-full bg-white text-[#2D262D]">
-      <div className="mt-32">
-        <div className="pt-20 container max-w-7xl mx-auto px-7">
+      <div className="mt-12">
+        <div className="pt-12 sm:pt-20 container max-w-7xl mx-auto px-7">
+          <Creators />
+          <div className="mt-12 sm:mt-20">
+            <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#CA7FFE] text-white">
+              <div className="flex flex-col gap-4 lg:gap-10">
+                <span className="text-2xl sm:text-3xl font-bold">
+                  Жаахан хүүхдээ харангаа гэрээсээ онлайнаар, дуртай
+                  бүтээгдэхүүнээ үнэгүй авч, контентоор хуваалцаад тухайн
+                  брэндээ дэмжиж, түгээж байгаагаа мэдэх урамтай байдаг.
+                </span>
+                <span className="text-2xl hidden sm:block">
+                  Creator program student: Urtnasan Batsukh
+                </span>
+              </div>
+              <Image
+                loading="lazy"
+                src={"/creator-alumni-image.png"}
+                width={302}
+                height={302}
+                alt="creator-alumni"
+                className="max-w-[302px] max-h-[302px] w-full h-full aspect-square"
+              />
+              <span className="text-base block sm:hidden">
+                Creator program student: Urtnasan Batsukh
+              </span>
+            </div>
+          </div>
+          <MonthlyCompetition />
+          <Leaderboard />
           <Image
             loading="lazy"
             src={"/genicreator-logo.svg"}
             width={160}
             height={29}
             alt="geni-creator-logo"
+            className="mt-12 sm:mt-20"
           />
-          <Creators />
-          <div className="flex flex-col lg:flex-row gap-5 mt-6">
+          <div className="flex flex-col lg:flex-row gap-5 mt-8">
             <div className="w-full lg:w-1/2 flex flex-col gap-6 p-8 rounded-2xl bg-[#F5F4F0]">
               <Image
                 loading="lazy"
@@ -48,7 +78,7 @@ function creators() {
               </span>
             </div>
           </div>
-          <div className="rounded-2xl px-6 py-8 sm:p-14 border-[1px] border-[#2D262D] bg-[#F5F4F0] mt-6 flex flex-col lg:flex-row gap-6 lg:gap-0 justify-between">
+          <div className="rounded-2xl px-6 py-8 sm:p-14 border-[1px] border-[#2D262D] bg-[#F5F4F0] mt-12 sm:mt-20 flex flex-col lg:flex-row gap-6 lg:gap-0 justify-between">
             <div className="flex flex-col gap-4">
               <Image
                 loading="lazy"
@@ -79,7 +109,7 @@ function creators() {
             </div>
           </div>
         </div>
-        <div className="container px-7 mx-auto mt-7">
+        <div className="container px-7 mx-auto mt-12 sm:mt-20">
           <Image
             loading="lazy"
             src={"/creator-cycle.png"}
@@ -97,32 +127,8 @@ function creators() {
             className="block lg:hidden mx-auto"
           />
         </div>
-        <div className="container max-w-7xl px-7 mx-auto pt-16 pb-20">
-          <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#CA7FFE] text-white">
-            <div className="flex flex-col gap-4 lg:gap-10">
-              <span className="text-2xl sm:text-3xl font-bold">
-                Жаахан хүүхдээ харангаа гэрээсээ онлайнаар, дуртай
-                бүтээгдэхүүнээ үнэгүй авч, контентоор хуваалцаад тухайн брэндээ
-                дэмжиж, түгээж байгаагаа мэдэх урамтай байдаг.
-              </span>
-              <span className="text-2xl hidden sm:block">
-                Creator program student: Urtnasan Batsukh
-              </span>
-            </div>
-            <Image
-              loading="lazy"
-              src={"/creator-alumni-image.png"}
-              width={302}
-              height={302}
-              alt="creator-alumni"
-              className=""
-            />
-            <span className="text-base block sm:hidden">
-              Creator program student: Urtnasan Batsukh
-            </span>
-          </div>
-        </div>
-        <div className="bg-[#F5F4F0] border-y-[1px] border-[#2D262D] py-12">
+
+        <div className="bg-[#F5F4F0] border-y-[1px] border-[#2D262D] mt-12 sm:mt-20 py-12">
           <div className="container max-w-7xl px-7 mx-auto flex flex-col lg:flex-row items-center justify-between">
             <div className="flex flex-col gap-9">
               <Image
