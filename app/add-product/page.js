@@ -294,6 +294,32 @@ function Page() {
     }
   };
 
+  const removeContentItem = (name) => {
+    // Find the item in either listProductDictsTypeData or listProductDictsResultData
+    const item =
+      listProductDictsTypeData.find((c) => c.Name === name) ||
+      listProductDictsResultData.find((c) => c.Name === name);
+
+    if (item) {
+      // Remove from formik values based on Name and Type
+      formik.setFieldValue(
+        "contentInfo",
+        formik.values.contentInfo.filter(
+          (info) => !(info.Name === item.Name && info.Type === item.Type)
+        )
+      );
+
+      // Remove from state based on Val
+      if (item.Type === "Type") {
+        setSelectedContentTypes((prev) => prev.filter((n) => n !== item.Name));
+      } else if (item.Type === "Result") {
+        setSelectedContentOutcomes((prev) =>
+          prev.filter((n) => n !== item.Name)
+        );
+      }
+    }
+  };
+
   const handleThanks = () => {
     setCreateProductSuccess(false);
     router.push("/brand-profile");
@@ -578,9 +604,17 @@ function Page() {
                 {selectedContentTypes.map((c, i) => (
                   <div
                     key={i}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[1px] border-[#4D55F5] rounded-md"
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[1px] border-[#4D55F5] rounded-md flex flex-row items-center justify-between"
                   >
                     {c}
+                    <button onClick={() => removeContentItem(c)}>
+                      <Image
+                        src={"/remove-brandinfo-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 bg-[#4D55F5] rounded-full aspect-square"
+                      />
+                    </button>
                   </div>
                 ))}
                 {formik.touched.contentInfo && (
@@ -649,9 +683,17 @@ function Page() {
                 {selectedContentOutcomes.map((c, i) => (
                   <div
                     key={i}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[2px] border-[#CA7FFE] rounded-md"
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[2px] border-[#CA7FFE] rounded-md flex flex-row items-center justify-between"
                   >
                     {c}
+                    <button onClick={() => removeContentItem(c)}>
+                      <Image
+                        src={"/remove-brandinfo-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 bg-[#CA7FFE] rounded-full aspect-square"
+                      />
+                    </button>
                   </div>
                 ))}
                 {formik.touched.contentInfo && formik.errors.contentInfo ? (

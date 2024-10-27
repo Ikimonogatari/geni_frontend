@@ -235,11 +235,11 @@ function page() {
                     </a>
                   )}
                 </div>
-                <div className="flex flex-wrap items-center gap-1 sm:gap-2 lg:w-1/2">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2 lg:w-4/5">
                   {getUserInfoData?.BrandTypes?.map((b, i) => (
                     <button
                       key={i}
-                      className="bg-[#4D55F5] whitespace-nowrap text-white rounded-full px-3 text-xs sm:text-base sm:px-4 py-1 sm:py-2"
+                      className="bg-[#4D55F5] whitespace-nowrap text-white rounded-full px-3 text-sm py-1 sm:py-[6px]"
                     >
                       {b.TypeName}
                     </button>
