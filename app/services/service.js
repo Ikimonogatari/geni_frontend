@@ -120,6 +120,7 @@ export const geniApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     updateSocialChannel: builder.mutation({
       query: (body) => ({

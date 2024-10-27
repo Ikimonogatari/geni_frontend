@@ -30,7 +30,6 @@ function Page() {
   const userInfo = Cookies.get("user-info");
   const userType = Cookies.get("userType");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -260,9 +259,23 @@ function Page() {
     }
   }, []);
 
+  useEffect(() => {
+    if (listBrandTypesData) {
+      setAvailableBrandTypes(listBrandTypesData);
+    }
+  }, [listBrandTypesData]);
+
+  const [availableBrandTypes, setAvailableBrandTypes] = useState([]);
+
+  console.log(parsedUserInfo);
+
   const handleAddBrandTypes = (value) => {
     setBrandTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {
+        // Filter out the added brand type from available options
+        setAvailableBrandTypes((prevOptions) =>
+          prevOptions.filter((option) => option.TypeName !== value.TypeName)
+        );
         return [...prev, value];
       }
       return prev;
@@ -270,9 +283,21 @@ function Page() {
   };
 
   const handleRemoveBrandTypes = (value) => {
-    setBrandTypes((prev) =>
-      prev.filter((item) => item.TypeName !== value.TypeName)
-    );
+    setBrandTypes((prev) => {
+      const updatedBrandTypes = prev.filter(
+        (item) => item.TypeName !== value.TypeName
+      );
+
+      // Add the removed brand type back to the available options if it exists
+      const removedType = listBrandTypesData.find(
+        (option) => option.TypeName === value.TypeName
+      );
+      if (removedType) {
+        setAvailableBrandTypes((prevOptions) => [...prevOptions, removedType]);
+      }
+
+      return updatedBrandTypes;
+    });
   };
 
   const handleSendOtp = async () => {
@@ -523,10 +548,10 @@ function Page() {
                         : "top-[110%] invisible opacity-0"
                     } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
                   >
-                    {listBrandTypesData
+                    {availableBrandTypes
                       ?.filter(
                         (productType) =>
-                          !parsedUserInfo?.BrandTypes?.some(
+                          !brandTypes.some(
                             (brandType) =>
                               brandType.TypeName === productType.TypeName
                           )
