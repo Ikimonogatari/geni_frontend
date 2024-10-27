@@ -287,15 +287,6 @@ function Page() {
       const updatedBrandTypes = prev.filter(
         (item) => item.TypeName !== value.TypeName
       );
-
-      // Add the removed brand type back to the available options if it exists
-      const removedType = listBrandTypesData.find(
-        (option) => option.TypeName === value.TypeName
-      );
-      if (removedType) {
-        setAvailableBrandTypes((prevOptions) => [...prevOptions, removedType]);
-      }
-
       return updatedBrandTypes;
     });
   };
@@ -543,7 +534,14 @@ function Page() {
 
                   <div
                     className={`${
-                      dropdownOpen
+                      dropdownOpen &&
+                      availableBrandTypes?.filter(
+                        (productType) =>
+                          !brandTypes.some(
+                            (brandType) =>
+                              brandType.TypeName === productType.TypeName
+                          )
+                      ).length > 0
                         ? `top-full opacity-100 visible`
                         : "top-[110%] invisible opacity-0"
                     } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}

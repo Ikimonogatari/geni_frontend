@@ -239,7 +239,7 @@ function page() {
                   {getUserInfoData?.BrandTypes?.map((b, i) => (
                     <button
                       key={i}
-                      className="bg-[#4D55F5] text-white rounded-full px-3 text-xs sm:text-base sm:px-4 py-1 sm:py-2"
+                      className="bg-[#4D55F5] whitespace-nowrap text-white rounded-full px-3 text-xs sm:text-base sm:px-4 py-1 sm:py-2"
                     >
                       {b.TypeName}
                     </button>

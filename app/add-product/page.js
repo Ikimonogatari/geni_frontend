@@ -51,10 +51,11 @@ function Page() {
 
   const formik = useFormik({
     initialValues: {
-      brandId: parsedUserInfo ? parsedUserInfo?.UserId : null,
       productName: "",
       information: "",
       requestForCreators: "",
+      amount: "",
+      addInfoSource: "",
       quantity: "",
       price: "",
       contentInfo: [],
@@ -62,15 +63,34 @@ function Page() {
       productPics: [],
     },
     validationSchema: Yup.object({
-      productName: Yup.string().required("Required"),
+      productName: Yup.string().required("Заавал бөглөнө үү"),
       contentInfo: Yup.array()
-        .of(Yup.string())
-        .min(1, "At least one content type must be selected")
-        .required("Content info is required"),
-      information: Yup.string().required("Required"),
-      requestForCreators: Yup.string().required("Required"),
-      quantity: Yup.string().required("Required"),
-      price: Yup.string().required("Required"),
+        .of(
+          Yup.object().shape({
+            Type: Yup.string(),
+            Name: Yup.string(),
+          })
+        )
+        .required("Content info is required")
+        .test("custom-validation", function (contentInfo) {
+          const hasOutcome = contentInfo?.some((item) => item.Type === "Type");
+          const hasResult = contentInfo?.some((item) => item.Type === "Result");
+
+          if (!hasOutcome || !hasResult) {
+            return this.createError({
+              path: this.path,
+              message: `Контентын төрөл болон үр дүнгээс дор хаяж нэгийг сонгоно уу`,
+            });
+          }
+
+          return true;
+        }),
+
+      information: Yup.string().required("Заавал бөглөнө үү"),
+      amount: Yup.string().required("Заавал бөглөнө үү"),
+      requestForCreators: Yup.string().required("Заавал бөглөнө үү"),
+      quantity: Yup.string().required("Заавал бөглөнө үү"),
+      price: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
       const modifiedValues = {
@@ -118,6 +138,7 @@ function Page() {
   } = useListProductDictsQuery("Result");
 
   const [productTypes, setProductTypes] = useState([]);
+  const [availableProductTypes, setAvailableProductTypes] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/png": [".png"],
@@ -170,39 +191,72 @@ function Page() {
     }
   }, [createProductData, createProductError]);
 
-  const handleProductType = (value) => {
-    setProductTypes((prev) => {
-      if (!prev.some((type) => type.TypeName === value.TypeName)) {
-        return [...prev, value];
-      }
-      return prev;
-    });
+  useEffect(() => {
+    if (listProductTypesData) {
+      setAvailableProductTypes(listProductTypesData);
+    }
+  }, [listProductTypesData]);
+
+  const handleProductType = (newType) => {
+    if (!productTypes.some((p) => p.TypeName === newType.TypeName)) {
+      setProductTypes((prev) => [...prev, newType]);
+
+      // Remove from available product types
+      setAvailableProductTypes((prev) =>
+        prev.filter((p) => p.TypeName !== newType.TypeName)
+      );
+    }
     formik.setFieldValue("productTypes", [
       ...formik.values.productTypes,
-      value.ProductTypeId,
+      newType.ProductTypeId,
     ]);
   };
 
-  const handleRemoveProductType = (typeName) => {
-    setProductTypes((prevTypes) =>
-      prevTypes.filter((type) => type.TypeName !== typeName)
+  const handleRemoveProductType = (typeNameToRemove) => {
+    setProductTypes((prev) =>
+      prev.filter((p) => p.TypeName !== typeNameToRemove)
     );
+
+    // Re-add the type back to available product types
+    const removedType = { TypeName: typeNameToRemove };
+    setAvailableProductTypes((prev) => [...prev, removedType]);
     formik.setFieldValue(
       "productTypes",
-      formik.values.productTypes.filter((id) => id !== type.ProductTypeId)
+      formik.values.productTypes.filter(
+        (id) => id !== typeNameToRemove.ProductTypeId
+      )
     );
   };
 
   const handleContentTypeOption = (value) => {
     const selectedItem = listProductDictsTypeData.find((c) => c.Val === value);
-    if (selectedItem && !selectedContentTypes.includes(selectedItem.Name)) {
-      setSelectedContentTypes((prev) => [...prev, selectedItem.Name]);
-    }
-    if (!formik.values.contentInfo.includes(value)) {
-      formik.setFieldValue("contentInfo", [
-        ...formik.values?.contentInfo,
-        value,
-      ]);
+
+    // Add or remove selected content types
+    if (selectedItem) {
+      setSelectedContentTypes((prev) => {
+        // If already selected, remove it; otherwise, add it
+        if (prev.includes(selectedItem.Name)) {
+          return prev.filter((name) => name !== selectedItem.Name);
+        } else {
+          return [...prev, selectedItem.Name];
+        }
+      });
+
+      // Update formik values for contentInfo
+      const newContentInfoItem = {
+        Type: "Type", // Assuming Type is "Type" for this section
+        Name: selectedItem.Name,
+      };
+      const contentInfoExists = formik.values.contentInfo.some(
+        (item) => item.Name === selectedItem.Name && item.Type === "Type"
+      );
+
+      if (!contentInfoExists) {
+        formik.setFieldValue("contentInfo", [
+          ...formik.values.contentInfo,
+          newContentInfoItem,
+        ]);
+      }
     }
   };
 
@@ -210,14 +264,33 @@ function Page() {
     const selectedItem = listProductDictsResultData.find(
       (c) => c.Val === value
     );
-    if (selectedItem && !selectedContentOutcomes.includes(selectedItem.Name)) {
-      setSelectedContentOutcomes((prev) => [...prev, selectedItem.Name]);
-    }
-    if (!formik.values.contentInfo.includes(value)) {
-      formik.setFieldValue("contentInfo", [
-        ...formik.values?.contentInfo,
-        value,
-      ]);
+
+    // Add or remove selected content outcomes
+    if (selectedItem) {
+      setSelectedContentOutcomes((prev) => {
+        // If already selected, remove it; otherwise, add it
+        if (prev.includes(selectedItem.Name)) {
+          return prev.filter((name) => name !== selectedItem.Name);
+        } else {
+          return [...prev, selectedItem.Name];
+        }
+      });
+
+      // Update formik values for contentInfo
+      const newContentInfoItem = {
+        Type: "Result", // Assuming Type is "Result" for this section
+        Name: selectedItem.Name,
+      };
+      const contentInfoExists = formik.values.contentInfo.some(
+        (item) => item.Name === selectedItem.Name && item.Type === "Result"
+      );
+
+      if (!contentInfoExists) {
+        formik.setFieldValue("contentInfo", [
+          ...formik.values.contentInfo,
+          newContentInfoItem,
+        ]);
+      }
     }
   };
 
@@ -297,7 +370,7 @@ function Page() {
                               layout="responsive"
                               width={554}
                               height={554}
-                              className="object-cover rounded-lg max-w-[554px] max-h-[554px]"
+                              className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px]"
                             />
                           </SwiperSlide>
                         ))}
@@ -378,7 +451,7 @@ function Page() {
                   {productTypes?.map((p, i) => (
                     <div
                       key={i}
-                      className="flex flex-row justify-between items-center gap- bg-[#4D55F5] text-white text-center text-xs rounded-full pl-4 pr-[2px] py-[2px] gap-2"
+                      className="flex flex-row whitespace-nowrap justify-between items-center gap- bg-[#4D55F5] text-white text-center text-xs rounded-full pl-4 pr-[2px] py-[2px] gap-2"
                     >
                       {p.TypeName}
                       <button
@@ -389,6 +462,7 @@ function Page() {
                           src={"/product-remove-icon.png"}
                           width={24}
                           height={24}
+                          alt=""
                           className="rounded-full bg-white h-full aspect-square min-h-6 mih-w-6"
                         />
                       </button>
@@ -402,18 +476,19 @@ function Page() {
                       src={"/product-add-icon.png"}
                       width={24}
                       height={24}
-                      alt="w-full h-full aspect-square"
+                      className="w-6 h-6 aspect-square"
+                      alt=""
                     />
                   </div>
                   <div
                     className={`${
-                      dropdownOpen
+                      dropdownOpen && availableProductTypes.length > 0
                         ? `top-full opacity-100 visible`
                         : "top-[110%] invisible opacity-0"
                     } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
                   >
                     {!listProductTypesError ? (
-                      listProductTypesData?.map((p, i) => (
+                      availableProductTypes?.map((p, i) => (
                         <div
                           onClick={() => handleProductType(p)}
                           key={i}
@@ -445,6 +520,25 @@ function Page() {
                 {formik.touched.information && formik.errors.information ? (
                   <div className="text-red-500 text-sm">
                     {formik.errors.information}
+                  </div>
+                ) : null}
+              </div>
+              <div className="flex flex-col gap-3">
+                <label className="font-bold" htmlFor="addInfoSource">
+                  Нэмэлт мэдээлэл авах сурвалж
+                </label>
+                <input
+                  id="addInfoSource"
+                  name="addInfoSource"
+                  type="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.addInfoSource}
+                  className="p-2 border border-[#CDCDCD] rounded-lg h-12"
+                />
+                {formik.touched.addInfoSource && formik.errors.addInfoSource ? (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.addInfoSource}
                   </div>
                 ) : null}
               </div>
@@ -489,6 +583,14 @@ function Page() {
                     {c}
                   </div>
                 ))}
+                {formik.touched.contentInfo && (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.contentInfo &&
+                    typeof formik.errors.contentInfo === "string"
+                      ? formik.errors.contentInfo
+                      : null}
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
@@ -513,10 +615,10 @@ function Page() {
               </div>
               <div className="flex flex-col gap-3">
                 <label className="font-bold" htmlFor="name">
-                  Контентын гаралт
+                  Контентын үр дүн
                 </label>
                 <p className="underline text-sm">
-                  Та нэг болон түүнээс дээш гаралт сонгох боломжтой бөгөөд
+                  Та нэг болон түүнээс дээш үр дүн сонгох боломжтой бөгөөд
                   бүтээгч таны илүүд үзсэн контент хийцлэлийн төрлийг харгалзан
                   контентоо бүтээнэ.
                 </p>
@@ -552,10 +654,34 @@ function Page() {
                     {c}
                   </div>
                 ))}
+                {formik.touched.contentInfo && formik.errors.contentInfo ? (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.contentInfo}
+                  </div>
+                ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
-                  Тоо ширхэг
+                <label className="font-bold" htmlFor="amount">
+                  Бүтээгдэхүүний хэмжээ
+                </label>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.amount}
+                  className="p-2 border border-[#CDCDCD] rounded-lg h-12"
+                />
+                {formik.touched.amount && formik.errors.amount ? (
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.amount}
+                  </div>
+                ) : null}
+              </div>
+              <div className="flex flex-col gap-3">
+                <label className="font-bold" htmlFor="quantity">
+                  Бүтээгчдэд илгээх бүтээгдэхүүний тоо
                 </label>
                 <input
                   id="quantity"
@@ -573,8 +699,8 @@ function Page() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
-                  Үнийн санал
+                <label className="font-bold" htmlFor="price">
+                  Бүтээгчдэд илгээж буй бүтээгдэхүүний үнэ
                 </label>
 
                 <div className="flex flex-row gap-1 items-center border border-[#CDCDCD] rounded-lg h-12 p-2">
