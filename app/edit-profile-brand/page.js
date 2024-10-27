@@ -254,14 +254,25 @@ function Page() {
     }
   }, [changeBrandTypeSuccess, changeBrandTypeError]);
 
-  const handleBrandTypes = (value) => {
+  useEffect(() => {
+    if (parsedUserInfo && parsedUserInfo.BrandTypes) {
+      setBrandTypes(parsedUserInfo?.BrandTypes.map((p) => p));
+    }
+  }, []);
+
+  const handleAddBrandTypes = (value) => {
     setBrandTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {
         return [...prev, value];
       }
       return prev;
     });
-    console.log(value);
+  };
+
+  const handleRemoveBrandTypes = (value) => {
+    setBrandTypes((prev) =>
+      prev.filter((item) => item.TypeName !== value.TypeName)
+    );
   };
 
   const handleSendOtp = async () => {
@@ -336,7 +347,10 @@ function Page() {
   };
 
   const handleBrandTypesChange = () => {
-    const brandTypeIds = brandTypes.map((brandType) => brandType.TypeId);
+    const brandTypeIds = brandTypes.map(
+      (brandType) => brandType.TypeId || brandType.BrandTypeId
+    );
+
     changeBrandType({
       BrandTypeIds: brandTypeIds,
     });
@@ -443,19 +457,38 @@ function Page() {
                   {brandTypes?.map((p, i) => (
                     <div
                       key={i}
-                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2"
+                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2 flex flex-row items-center justify-between gap-2"
                     >
                       {p.TypeName}
+                      <button
+                        className="rounded-full w-6 h-6 text-center"
+                        onClick={() => handleRemoveBrandTypes(p)}
+                      >
+                        <Image
+                          src={"/product-remove-icon.png"}
+                          width={24}
+                          height={24}
+                          className="rounded-full bg-white h-full aspect-square min-h-6 mih-w-6"
+                        />
+                      </button>
                     </div>
                   ))}
-                  {parsedUserInfo?.BrandTypes?.map((p, i) => (
+                  {/* {parsedUserInfo?.BrandTypes?.map((p, i) => (
                     <div
                       key={i}
-                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2"
+                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2 flex flex-row items-center justify-between gap-2"
                     >
                       {p.TypeName}
+                      <button onClick={() => handleRemoveBrandTypes(p)}>
+                        <Image
+                          src={"/product-remove-icon.png"}
+                          width={24}
+                          height={24}
+                          className="w-6 h-6 aspect-square rounded-full bg-white"
+                        />
+                      </button>
                     </div>
-                  ))}
+                  ))} */}
                   <div
                     onClick={() => setdropdownOpen(!dropdownOpen)}
                     className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
@@ -490,26 +523,23 @@ function Page() {
                         : "top-[110%] invisible opacity-0"
                     } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
                   >
-                    {
-                      // Filter out product types already selected in `parsedUserInfo.BrandTypes`
-                      listBrandTypesData
-                        ?.filter(
-                          (productType) =>
-                            !parsedUserInfo?.BrandTypes?.some(
-                              (brandType) =>
-                                brandType.TypeName === productType.TypeName
-                            )
-                        )
-                        .map((p, i) => (
-                          <div
-                            onClick={() => handleBrandTypes(p)}
-                            key={i}
-                            className="cursor-pointer bg-[#4D55F5] text-white text-center text-sm rounded-full px-3 py-1"
-                          >
-                            {p.TypeName}
-                          </div>
-                        ))
-                    }
+                    {listBrandTypesData
+                      ?.filter(
+                        (productType) =>
+                          !parsedUserInfo?.BrandTypes?.some(
+                            (brandType) =>
+                              brandType.TypeName === productType.TypeName
+                          )
+                      )
+                      .map((p, i) => (
+                        <div
+                          onClick={() => handleAddBrandTypes(p)}
+                          key={i}
+                          className="cursor-pointer bg-[#4D55F5] text-white text-center text-sm rounded-full px-3 py-1"
+                        >
+                          {p.TypeName}
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>

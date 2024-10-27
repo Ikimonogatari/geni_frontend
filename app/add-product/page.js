@@ -183,6 +183,16 @@ function Page() {
     ]);
   };
 
+  const handleRemoveProductType = (typeName) => {
+    setProductTypes((prevTypes) =>
+      prevTypes.filter((type) => type.TypeName !== typeName)
+    );
+    formik.setFieldValue(
+      "productTypes",
+      formik.values.productTypes.filter((id) => id !== type.ProductTypeId)
+    );
+  };
+
   const handleContentTypeOption = (value) => {
     const selectedItem = listProductDictsTypeData.find((c) => c.Val === value);
     if (selectedItem && !selectedContentTypes.includes(selectedItem.Name)) {
@@ -368,16 +378,32 @@ function Page() {
                   {productTypes?.map((p, i) => (
                     <div
                       key={i}
-                      className="bg-[#4D55F5] text-white text-center text-xs rounded-full px-4 py-2"
+                      className="flex flex-row justify-between items-center gap- bg-[#4D55F5] text-white text-center text-xs rounded-full pl-4 pr-[2px] py-[2px] gap-2"
                     >
                       {p.TypeName}
+                      <button
+                        className="rounded-full w-6 h-6 text-center"
+                        onClick={() => handleRemoveProductType(p.TypeName)}
+                      >
+                        <Image
+                          src={"/product-remove-icon.png"}
+                          width={24}
+                          height={24}
+                          className="rounded-full bg-white h-full aspect-square min-h-6 mih-w-6"
+                        />
+                      </button>
                     </div>
                   ))}
                   <div
                     onClick={() => setdropdownOpen(!dropdownOpen)}
                     className="cursor-pointer outline-none bg-[#4D55F5] text-xs rounded-full w-8 h-8 flex items-center justify-center"
                   >
-                    <Image src={"/plus.png"} width={7} height={16} alt="+" />
+                    <Image
+                      src={"/product-add-icon.png"}
+                      width={24}
+                      height={24}
+                      alt="w-full h-full aspect-square"
+                    />
                   </div>
                   <div
                     className={`${
