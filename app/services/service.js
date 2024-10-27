@@ -298,6 +298,12 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    deleteProduct: builder.mutation({
+      query: (productId) => ({
+        url: `/api/web/public/product/${productId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -341,4 +347,5 @@ export const {
   useForgotPasswordMutation,
   useGetPublicBrandListQuery,
   useGetPublicCreatorListQuery,
+  useDeleteProductMutation,
 } = geniApi;
