@@ -232,7 +232,7 @@ function ContentProgress({ currentContents }) {
                 className="w-4 h-4 sm:w-6 sm:h-6"
               />
             </div>
-            <span className="col-span-1">{p.Status}/5</span>
+            <span className="col-span-1">{p.ContentPhase}</span>
             <div
               className={`${getColorClass(
                 p.Status
