@@ -201,7 +201,7 @@ function page() {
               ) : (
                 <div className="w-[90px] sm:w-[194px] h-[90px] sm:h-[194px]"></div>
               )}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1 sm:gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
                   {getUserInfoData ? getUserInfoData.Name : ""}
                 </span>
@@ -235,7 +235,7 @@ function page() {
                     </a>
                   )}
                 </div>
-                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2 lg:w-1/2">
                   {getUserInfoData?.BrandTypes?.map((b, i) => (
                     <button
                       key={i}
