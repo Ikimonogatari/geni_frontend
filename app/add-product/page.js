@@ -18,6 +18,12 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../components/ui/hover-card";
+
+import {
   useUploadFileMutation,
   useCreateProductMutation,
   useListProductTypesQuery,
@@ -533,16 +539,24 @@ function Page() {
                 <label className="font-bold" htmlFor="name">
                   Бүтээгдэхүүний дэлгэрэнгүй мэдээлэл
                 </label>
-                <textarea
-                  id="information"
-                  name="information"
-                  placeholder="Хэрэглэх зориулалт болон заавар, орц найрлага, ач холбогдол, анхаарах зүйлс"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.information}
-                  rows={4} // Adjust the number of rows as needed
-                  className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
-                />
+                <div className="p-2 border border-[#CDCDCD] rounded-lg flex flex-col">
+                  <textarea
+                    id="information"
+                    name="information"
+                    placeholder="Хэрэглэх зориулалт болон заавар, орц найрлага, ач холбогдол, анхаарах зүйлс"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.information}
+                    rows={4} // Adjust the number of rows as needed
+                    maxLength={600} // Set maximum characters
+                    className="overflow-y-auto outline-none"
+                  />
+
+                  <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
+                    Тэмдэгтийн тоо: {formik.values.information.length}/600
+                  </div>
+                </div>
+
                 {formik.touched.information && formik.errors.information ? (
                   <div className="text-red-500 text-sm">
                     {formik.errors.information}
@@ -569,14 +583,27 @@ function Page() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
+                <label
+                  className="font-bold flex flex-row items-center justify-between"
+                  htmlFor="name"
+                >
                   Контентийн төрөл
+                  <HoverCard>
+                    <HoverCardTrigger className="cursor-pointer">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
+                      Та нэг болон түүнээс дээш төрөл сонгох боломжтой бөгөөд
+                      бүтээгч таны сонгосон контент хийцлэлийн төрлийг харгалзан
+                      контентоо бүтээнэ.
+                    </HoverCardContent>
+                  </HoverCard>
                 </label>
-                <p className="underline text-sm">
-                  Та нэг болон түүнээс дээш төрөл сонгох боломжтой бөгөөд
-                  бүтээгч таны илүүд үзсэн контент хийцлэлийн төрлийг харгалзан
-                  контентоо бүтээнэ.
-                </p>
                 <Select
                   onValueChange={(value) => handleContentTypeOption(value)}
                 >
@@ -627,19 +654,45 @@ function Page() {
                 )}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
+                <label
+                  className="font-bold flex flex-row items-center justify-between"
+                  htmlFor="name"
+                >
                   Контент бүтээгчээс хүсэх хүсэлт
+                  <HoverCard>
+                    <HoverCardTrigger className="cursor-pointer">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
+                      Контентийн агуулга болон хийцлэлтэй хамааралтай брэндийн
+                      чиглүүлэг болон бүтээгчээс хүсэх хүсэлтээ бичсэнээр таны
+                      хүсэж буй контент гарах магадлал ихсэнэ.
+                    </HoverCardContent>
+                  </HoverCard>
                 </label>
-                <textarea
-                  id="requestForCreators"
-                  name="requestForCreators"
-                  placeholder="Хэрэглэх зориулалт болон заавар, орц найрлага, ач холбогдол, анхаарах зүйлс"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.requestForCreators}
-                  rows={4} // Adjust the number of rows as needed
-                  className="p-2 border border-[#CDCDCD] rounded-lg" // You can adjust other styles as needed
-                />
+                <div className="p-2 border border-[#CDCDCD] rounded-lg flex flex-col">
+                  <textarea
+                    id="requestForCreators"
+                    name="requestForCreators"
+                    placeholder="Контент агуулга болон хийцлэлтэй холбоотой бүтээгчээс хүсэх нэмэлт зүйлс"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.requestForCreators}
+                    rows={4}
+                    maxLength={600}
+                    className="overflow-y-auto outline-none" // You can adjust other styles as needed
+                  />
+
+                  <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
+                    Тэмдэгтийн тоо: {formik.values.requestForCreators.length}
+                    /600
+                  </div>
+                </div>
                 {formik.touched.requestForCreators &&
                 formik.errors.requestForCreators ? (
                   <div className="text-red-500 text-sm">
@@ -648,14 +701,27 @@ function Page() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="name">
-                  Контентын үр дүн
+                <label
+                  className="font-bold flex flex-row items-center justify-between"
+                  htmlFor="name"
+                >
+                  Контентоос хүлээж буй гол үр дүн
+                  <HoverCard>
+                    <HoverCardTrigger className="cursor-pointer">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
+                      Хийлгэж буй контентоо ашиглаж хүрэх үр дүнгээ оруулсанаар
+                      контент бүтээгч таны зорилгыг илүү сайн мэдэж контентдоо
+                      шингээх болно.
+                    </HoverCardContent>
+                  </HoverCard>
                 </label>
-                <p className="underline text-sm">
-                  Та нэг болон түүнээс дээш үр дүн сонгох боломжтой бөгөөд
-                  бүтээгч таны илүүд үзсэн контент хийцлэлийн төрлийг харгалзан
-                  контентоо бүтээнэ.
-                </p>
                 <Select
                   onValueChange={(value) => handleContentOutcomeOption(value)}
                 >
@@ -703,8 +769,27 @@ function Page() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="amount">
+                <label
+                  className="font-bold flex flex-row items-center justify-between"
+                  htmlFor="amount"
+                >
                   Бүтээгдэхүүний хэмжээ
+                  <HoverCard>
+                    <HoverCardTrigger className="cursor-pointer">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
+                      Таны бүтээгдэхүүн ямар хэмжих нэгжтэйгээс хамаарч энд
+                      ойлгомжтой оруулна уу. <br />
+                      <br />
+                      Жишээ: XL, L, 1 хайрцаг: 24 ширхэг, 2 литр гэх мэт
+                    </HoverCardContent>
+                  </HoverCard>
                 </label>
                 <input
                   id="amount"
@@ -722,8 +807,26 @@ function Page() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="quantity">
+                <label
+                  className="font-bold flex flex-row items-center justify-between"
+                  htmlFor="quantity"
+                >
                   Бүтээгчдэд илгээх бүтээгдэхүүний тоо
+                  <HoverCard>
+                    <HoverCardTrigger className="cursor-pointer">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
+                      Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа
+                      тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та
+                      контент хүлээн авна.
+                    </HoverCardContent>
+                  </HoverCard>
                 </label>
                 <input
                   id="quantity"
@@ -741,8 +844,26 @@ function Page() {
                 ) : null}
               </div>
               <div className="flex flex-col gap-3">
-                <label className="font-bold" htmlFor="price">
+                <label
+                  className="font-bold flex flex-row items-center justify-between"
+                  htmlFor="price"
+                >
                   Бүтээгчдэд илгээж буй бүтээгдэхүүний үнэ
+                  <HoverCard>
+                    <HoverCardTrigger className="cursor-pointer">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
+                      Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүнийхээ үнийг
+                      оруулна. Нэг бүтээгчид багц болгон илгээж байгаа бол
+                      багцын үнийг оруулна.
+                    </HoverCardContent>
+                  </HoverCard>
                 </label>
 
                 <div className="flex flex-row gap-1 items-center border border-[#CDCDCD] rounded-lg h-12 p-2">
