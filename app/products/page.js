@@ -20,12 +20,13 @@ function Page() {
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-    let statusText = "";
-    let className = "";
-
-    if (new Date(createdAt).getTime() > twentyFourHoursAgo.getTime())
+    if (
+      new Date(createdAt).getTime() > twentyFourHoursAgo.getTime() &&
+      leftStock > 0 &&
+      ratio > 0.2
+    ) {
       return { status: "Шинэ", className: "bg-[#4FB755]" };
-    else if (leftStock === 0) {
+    } else if (leftStock === 0) {
       return { status: "Дууссан", className: "bg-[#F41919]" };
     } else if (ratio <= 0.2) {
       return { status: "Цөөхөн үлдсэн", className: "bg-[#F49D19]" };
