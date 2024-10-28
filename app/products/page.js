@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useListPublicProductsQuery } from "../services/service";
+import {
+  useListProductTypesQuery,
+  useListPublicProductsQuery,
+} from "../services/service";
 
 function Page() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,6 +17,12 @@ function Page() {
     error: listProductsError,
     isLoading: listProductsLoading,
   } = useListPublicProductsQuery();
+
+  const {
+    data: listProductTypesData,
+    error: listProductTypesError,
+    isLoading: listProductTypesLoading,
+  } = useListProductTypesQuery();
 
   const getStockStatus = (leftStock, quantity, createdAt) => {
     const ratio = leftStock / quantity;
@@ -69,17 +78,17 @@ function Page() {
       <div className="mt-32">
         <div className="container max-w-8xl mx-auto px-7 py-12">
           <div className="w-full flex flex-wrap items-center gap-3 font-bold text-[10px] sm:text-xs">
-            {["Beauty", "Food", "Cloth"].map((category) => (
+            {listProductTypesData?.map((t, i) => (
               <div
-                key={category}
-                onClick={() => setSelectedCategory(category)}
+                key={i}
+                onClick={() => setSelectedCategory(t?.TypeName)}
                 className={`cursor-pointer rounded-full px-4 py-2 ${
-                  selectedCategory === category
+                  selectedCategory === t?.TypeName
                     ? "bg-[#CA7FFE] text-white"
                     : "bg-[#F5F4F0]"
                 }`}
               >
-                {category}
+                {t?.TypeName}
               </div>
             ))}
           </div>
