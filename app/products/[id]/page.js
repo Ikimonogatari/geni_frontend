@@ -190,7 +190,8 @@ function Page() {
                     {getPublicProductByIdData?.Quantity}
                   </span>
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
-                    <b>Үнэ:</b> ₮{getPublicProductByIdData?.Price}
+                    <b>Үнэ:</b> ₮
+                    {Number(getPublicProductByIdData?.Price).toLocaleString()}
                   </span>
                 </div>
               ) : (

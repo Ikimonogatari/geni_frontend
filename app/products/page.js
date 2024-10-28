@@ -179,7 +179,9 @@ function Page() {
                         <span className="">
                           Үлдэгдэл: {product.LeftStock}/{product.Quantity}
                         </span>
-                        <span className="">Үнэ: ₮{product.Price}</span>
+                        <span className="">
+                          Үнэ: ₮{Number(product.Price).toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   </Link>
