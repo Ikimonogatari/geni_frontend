@@ -114,7 +114,7 @@ function Creators() {
 
               return (
                 <SwiperSlide key={id} className="">
-                  <div className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full">
+                  <div className="bg-[#F5F4F0] min-h-[340px] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full">
                     <a href={`/public-profile/${creator.CreatorId}`}>
                       <Image
                         src={
@@ -190,7 +190,9 @@ function Creators() {
                         </a>
                       )}
                     </div>
-                    <p className="text-[#6F6F6F]">{creator?.Bio}</p>
+                    <p className="text-[#6F6F6F] text-xs line-clamp-3">
+                      {creator?.Bio}
+                    </p>
                   </div>
                 </SwiperSlide>
               );
