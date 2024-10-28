@@ -161,7 +161,7 @@ function Creators() {
                     <div className="flex flex-row gap-2 mt-3">
                       {instagramLink && (
                         <a
-                          href={instagramLink}
+                          href={instagramLink?.SocialAddress}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:opacity-75"
@@ -177,7 +177,7 @@ function Creators() {
                       )}
                       {facebookLink && (
                         <a
-                          href={facebookLink}
+                          href={facebookLink?.SocialAddress}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:opacity-75"

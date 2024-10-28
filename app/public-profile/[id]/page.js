@@ -88,7 +88,9 @@ function page() {
                   {instagramLink && (
                     <a
                       target="_blank"
-                      href={`https://www.instagram.com/${instagramLink || ""}`}
+                      href={`https://www.instagram.com/${
+                        instagramLink?.SocialAddress || ""
+                      }`}
                     >
                       <Image
                         src={"/Instagram.png"}
@@ -102,7 +104,9 @@ function page() {
                   {facebookLink && (
                     <a
                       target="_blank"
-                      href={`https://www.facebook.com/${facebookLink || ""}`}
+                      href={`https://www.facebook.com/${
+                        facebookLink?.SocialAddress || ""
+                      }`}
                     >
                       <Image
                         src={"/Facebook.png"}
