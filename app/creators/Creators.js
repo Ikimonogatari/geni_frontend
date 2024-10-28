@@ -115,7 +115,9 @@ function Creators() {
               return (
                 <SwiperSlide key={id} className="">
                   <div className="bg-[#F5F4F0] min-h-[340px] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full">
-                    <a href={`/public-profile/${creator.CreatorId}`}>
+                    <a
+                    // href={`/public-profile/${creator.CreatorId}`}
+                    >
                       <Image
                         src={
                           creator?.ProfileLink
@@ -130,7 +132,7 @@ function Creators() {
                     </a>
                     <div className="flex flex-row items-center gap-2">
                       <a
-                        href={`/public-profile/${creator.CreatorId}`}
+                        // href={`/public-profile/${creator.CreatorId}`}
                         className="hover:underline hover:underline-offset-3 text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden"
                       >
                         {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
