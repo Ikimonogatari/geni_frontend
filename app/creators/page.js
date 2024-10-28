@@ -40,8 +40,8 @@ function creators() {
               </span>
             </div>
           </div>
-          <MonthlyCompetition />
-          <Leaderboard />
+          {/* <MonthlyCompetition />
+          <Leaderboard /> */}
           <Image
             loading="lazy"
             src={"/genicreator-logo.svg"}
