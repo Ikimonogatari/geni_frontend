@@ -196,7 +196,7 @@ function page() {
                   alt=""
                   width={194}
                   height={194}
-                  className="rounded-full sm:rounded-xl w-[90px] sm:w-[194px] h-[90px] sm:h-[194px] border border-[#2D262D]"
+                  className="rounded-full sm:rounded-xl w-[90px] sm:w-[194px] h-[90px] sm:h-[194px] border border-[#2D262D] object-cover"
                 />
               ) : (
                 <div className="w-[90px] sm:w-[194px] h-[90px] sm:h-[194px]"></div>
@@ -253,7 +253,7 @@ function page() {
                 className="rounded-xl bg-[#F5F4F0] p-2"
               >
                 <Image
-                  src={"/brand-profile-icon2.png"}
+                  src={"/notification-icon.png"}
                   width={24}
                   height={24}
                   alt="icon"
@@ -265,7 +265,7 @@ function page() {
                 className="rounded-xl bg-[#F5F4F0] p-2"
               >
                 <Image
-                  src={"/brand-profile-icon3.png"}
+                  src={"/edit-profile-icon.png"}
                   width={24}
                   height={24}
                   alt="icon"

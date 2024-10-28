@@ -132,7 +132,7 @@ function page() {
                   width={194}
                   height={194}
                   loading="lazy"
-                  className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
+                  className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D] object-cover"
                   alt=""
                 />
               ) : (
