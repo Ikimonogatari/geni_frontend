@@ -78,6 +78,16 @@ function Page() {
       <div className="mt-32">
         <div className="container max-w-8xl mx-auto px-7 py-12">
           <div className="w-full flex flex-wrap items-center gap-3 font-bold text-[10px] sm:text-xs">
+            <div
+              onClick={() => setSelectedCategory("")}
+              className={`cursor-pointer rounded-full px-4 py-2 ${
+                selectedCategory === ""
+                  ? "bg-[#CA7FFE] text-white"
+                  : "bg-[#F5F4F0]"
+              }`}
+            >
+              Бүгд
+            </div>
             {listProductTypesData?.map((t, i) => (
               <div
                 key={i}
