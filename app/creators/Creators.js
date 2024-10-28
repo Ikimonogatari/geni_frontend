@@ -103,21 +103,18 @@ function Creators() {
             className=""
           >
             {getPublicCreatorListData?.Data.map((creator, id) => {
-              // Find Instagram and Facebook links for each creator
-              const instagramLink = creator?.SocialChannels?.find(
-                (channel) => channel.PlatformName === "Instagram"
-              )?.Link;
+              const instagramLink = creator?.Socials?.find(
+                (channel) => channel.Name === "Instagram"
+              )?.SocialAddress;
 
-              const facebookLink = creator?.SocialChannels?.find(
-                (channel) => channel.PlatformName === "Facebook"
-              )?.Link;
+              const facebookLink = creator?.Socials?.find(
+                (channel) => channel.Name === "Facebook"
+              )?.SocialAddress;
 
               return (
                 <SwiperSlide key={id} className="">
-                  <div className="bg-[#F5F4F0] min-h-[340px] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full">
-                    <a
-                    // href={`/public-profile/${creator.CreatorId}`}
-                    >
+                  <div className="bg-[#F5F4F0] min-h-[400px] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full">
+                    <a href={`/public-profile/${creator.CreatorId}`}>
                       <Image
                         src={
                           creator?.ProfileLink
@@ -138,30 +135,41 @@ function Creators() {
                         {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
                       </a>
                       <Image
-                        src={"/verified-icon.png"}
-                        width={20}
-                        height={20}
-                        alt="verified-icon"
-                        className="w-5 h-5"
+                        src={
+                          creator?.LevelIconUrl
+                            ? creator.LevelIconUrl
+                            : "/verified-icon.png"
+                        }
+                        width={creator?.LevelIconUrl ? 58 : 20}
+                        height={creator?.LevelIconUrl ? 22 : 20}
+                        alt=""
+                        className={`mt-[2px] ${
+                          creator?.LevelIconUrl
+                            ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
+                            : "min-w-5 min-h-5 max-w-12 max-h-5"
+                        }`}
                       />
                     </div>
-                    {creator?.Point && creator?.ContentNumber ? (
+                    {creator && (
+                      // creator?.AverageRating && creator?.ContentCount &&
                       <div className="flex flex-row items-center gap-2">
                         <Image
                           src={"/star.png"}
                           width={20}
                           height={20}
                           className="w-5 h-5"
+                          alt=""
                         />
-                        <span className="text-lg">
-                          {creator?.Point}/5 {creator?.ContentNumber} контент
+                        <span className="text-base">
+                          {creator?.AverageRating} ({creator?.ContentCount}{" "}
+                          контент)
                         </span>
                       </div>
-                    ) : null}
-                    <div className="flex flex-row gap-2 mt-3">
+                    )}
+                    <div className="flex flex-row gap-2">
                       {instagramLink && (
                         <a
-                          href={instagramLink?.SocialAddress}
+                          href={instagramLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:opacity-75"
@@ -177,7 +185,7 @@ function Creators() {
                       )}
                       {facebookLink && (
                         <a
-                          href={facebookLink?.SocialAddress}
+                          href={facebookLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:opacity-75"

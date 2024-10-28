@@ -16,14 +16,13 @@ function AllCreators() {
       </span>
       <div className=" grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[10px] sm:gap-4">
         {getPublicCreatorListData?.Data.map((creator, id) => {
-          // Find Instagram and Facebook links for each creator
-          const instagramLink = creator?.SocialChannels?.find(
-            (channel) => channel.PlatformName === "Instagram"
-          )?.Link;
+          const instagramLink = creator?.Socials?.find(
+            (channel) => channel.Name === "Instagram"
+          )?.SocialAddress;
 
-          const facebookLink = creator?.SocialChannels?.find(
-            (channel) => channel.PlatformName === "Facebook"
-          )?.Link;
+          const facebookLink = creator?.Socials?.find(
+            (channel) => channel.Name === "Facebook"
+          )?.SocialAddress;
 
           return (
             <div
@@ -51,27 +50,38 @@ function AllCreators() {
                   {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
                 </a>
                 <Image
-                  src={"/verified-icon.png"}
-                  width={20}
-                  height={20}
-                  alt="verified-icon"
-                  className="w-5 h-5"
+                  src={
+                    creator?.LevelIconUrl
+                      ? creator.LevelIconUrl
+                      : "/verified-icon.png"
+                  }
+                  width={creator?.LevelIconUrl ? 58 : 20}
+                  height={creator?.LevelIconUrl ? 22 : 20}
+                  alt=""
+                  className={`mt-[2px] ${
+                    creator?.LevelIconUrl
+                      ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
+                      : "min-w-5 min-h-5 max-w-12 max-h-5"
+                  }`}
                 />
               </div>
-              {creator?.Point && creator?.ContentNumber ? (
+              {creator && (
+                // creator?.AverageRating !== "0/5" &&
+                //   creator?.ContentCount !== 0 &&
                 <div className="flex flex-row items-center gap-2">
                   <Image
                     src={"/star.png"}
                     width={20}
                     height={20}
                     className="w-5 h-5"
+                    alt=""
                   />
-                  <span className="text-lg">
-                    {creator?.Point}/5 {creator?.ContentNumber} контент
+                  <span className="text-base">
+                    {creator?.AverageRating} ({creator?.ContentCount} контент)
                   </span>
                 </div>
-              ) : null}
-              <div className="flex flex-row gap-2 mt-3">
+              )}
+              <div className="flex flex-row gap-2">
                 {instagramLink && (
                   <a
                     href={instagramLink}
@@ -105,7 +115,9 @@ function AllCreators() {
                   </a>
                 )}
               </div>
-              <p className="text-[#6F6F6F]">{creator?.Bio}</p>
+              <p className="text-[#6F6F6F] text-sm line-clamp-4">
+                {creator?.Bio}
+              </p>
             </div>
           );
         })}
