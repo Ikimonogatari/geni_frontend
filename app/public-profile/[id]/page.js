@@ -88,9 +88,7 @@ function page() {
                   {instagramLink && (
                     <a
                       target="_blank"
-                      href={`https://www.instagram.com/${
-                        instagramLink?.SocialAddress || ""
-                      }`}
+                      href={`${instagramLink?.SocialAddress || ""}`}
                     >
                       <Image
                         src={"/Instagram.png"}
@@ -104,9 +102,7 @@ function page() {
                   {facebookLink && (
                     <a
                       target="_blank"
-                      href={`https://www.facebook.com/${
-                        facebookLink?.SocialAddress || ""
-                      }`}
+                      href={`${facebookLink?.SocialAddress || ""}`}
                     >
                       <Image
                         src={"/Facebook.png"}
@@ -139,7 +135,7 @@ function page() {
                 className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
                 <Image
-                  src={"/brand-profile-icon2.png"}
+                  src={"/notification-icon.png"}
                   width={24}
                   height={24}
                   alt="icon"
@@ -151,7 +147,7 @@ function page() {
                 className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
                 <Image
-                  src={"/brand-profile-icon3.png"}
+                  src={"/edit-profile-icon.png"}
                   width={24}
                   height={24}
                   alt="icon"

@@ -209,7 +209,7 @@ function page() {
                   {instagramLink && (
                     <a
                       target="_blank"
-                      href={`https://www.instagram.com/${instagramLink || ""}`}
+                      href={`${instagramLink?.SocialAddress || ""}`}
                     >
                       <Image
                         src={"/Instagram.png"}
@@ -223,7 +223,7 @@ function page() {
                   {facebookLink && (
                     <a
                       target="_blank"
-                      href={`https://www.facebook.com/${facebookLink || ""}`}
+                      href={`${facebookLink?.SocialAddress || ""}`}
                     >
                       <Image
                         src={"/Facebook.png"}
