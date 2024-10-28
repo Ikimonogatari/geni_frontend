@@ -78,7 +78,7 @@ function ContentProgress({ currentContents }) {
             <span className="col-span-1">{p.ContentPhase}</span>
             <StatusIndicator status={p.Status} />
             <div className="col-span-1">
-              {p.Status === "ProdApproved" ? (
+              {p.Status === "ProdDelivering" ? (
                 <button
                   onClick={() =>
                     handleUpdateContentStatus(p.ContentId, "ContentInProgress")
