@@ -7,6 +7,7 @@ import {
   useGetUserInfoQuery,
   useListBrandContentsQuery,
   useListBrandProductsQuery,
+  useListContentGalleryQuery,
 } from "@/app/services/service";
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
@@ -23,6 +24,12 @@ function page() {
     error: listBrandContentsError,
     isLoading: listBrandContentsLoading,
   } = useListBrandContentsQuery();
+
+  const {
+    data: listContentGalleryData,
+    error: listContentGalleryError,
+    isLoading: listContentGalleryLoading,
+  } = useListContentGalleryQuery();
 
   const {
     data: listBrandProductsData,
@@ -56,8 +63,8 @@ function page() {
         break;
       case "content-gallery":
         contents =
-          listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data
+          listContentGalleryData && listContentGalleryData.Data != null
+            ? listContentGalleryData.Data
             : [];
         console.log(contents);
         break;
@@ -92,8 +99,8 @@ function page() {
         break;
       case "content-gallery":
         contents =
-          listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data
+          listContentGalleryData && listContentGalleryData.Data != null
+            ? listContentGalleryData.Data
             : [];
         break;
       case "brand-products":
