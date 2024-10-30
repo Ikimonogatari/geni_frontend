@@ -489,22 +489,6 @@ function Page() {
                       </button>
                     </div>
                   ))}
-                  {/* {parsedUserInfo?.BrandTypes?.map((p, i) => (
-                    <div
-                      key={i}
-                      className="bg-[#4D55F5] text-white text-center text-sm sm:text-lg rounded-full px-3 sm:px-5 py-1 sm:py-2 flex flex-row items-center justify-between gap-2"
-                    >
-                      {p.TypeName}
-                      <button onClick={() => handleRemoveBrandTypes(p)}>
-                        <Image
-                          src={"/product-remove-icon.png"}
-                          width={24}
-                          height={24}
-                          className="w-6 h-6 aspect-square rounded-full bg-white"
-                        />
-                      </button>
-                    </div>
-                  ))} */}
                   <div
                     onClick={() => setdropdownOpen(!dropdownOpen)}
                     className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
