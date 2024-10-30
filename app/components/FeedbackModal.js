@@ -23,7 +23,7 @@ function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
                 className="flex flex-row items-center gap-6 p-5 bg-[#F5F4F0] rounded-3xl"
               >
                 <div className="rounded-full w-3 h-3 bg-[#D9D9D9]"></div>
-                <span>{f.Name}</span>
+                <span>{f.Feedback}</span>
               </div>
             ))}
           </div>

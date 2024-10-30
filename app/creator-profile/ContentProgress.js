@@ -92,7 +92,7 @@ function ContentProgress({ currentContents }) {
                 <FeedbackModal
                   parsedUserInfo={parsedUserInfo}
                   contentId={p?.ContentId}
-                  feedbacks={p?.Feedbacks}
+                  feedbacks={p?.FeedBacks}
                 />
               ) : (
                 <></>
