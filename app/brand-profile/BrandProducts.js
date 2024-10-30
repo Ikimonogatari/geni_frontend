@@ -18,6 +18,7 @@ function BrandProducts({ brandProducts, brandData }) {
   console.log(brandData);
   console.log(brandProducts);
   const [count, setCount] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const increment = () => setCount(count + 1);
@@ -54,6 +55,7 @@ function BrandProducts({ brandProducts, brandData }) {
   useEffect(() => {
     if (deleteProductSuccess) {
       toast.success("Амжилттай");
+      setIsDialogOpen(false);
     } else if (deleteProductError) {
       toast.error(deleteProductError?.data?.error);
     }
@@ -200,7 +202,7 @@ function BrandProducts({ brandProducts, brandData }) {
                     </DialogContent>
                   </Dialog>
                 ) : p.Status !== "Approved" && !isDeleting ? (
-                  <Dialog>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
                       Дэлгэрэнгүй
                     </DialogTrigger>
@@ -256,7 +258,7 @@ function BrandProducts({ brandProducts, brandData }) {
                         </div>
                         <div className="flex flex-col sm:flex-row items-center gap-4 text-lg sm:text-xl text-[#2D262D] font-semibold">
                           <a
-                            href="/edit-product"
+                            href={`/edit-product/${p.ProductId}`}
                             className="whitespace-nowrap w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6"
                           >
                             <Image

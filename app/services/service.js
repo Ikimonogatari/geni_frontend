@@ -300,8 +300,15 @@ export const geniApi = createApi({
     }),
     deleteProduct: builder.mutation({
       query: (productId) => ({
-        url: `/api/web/public/product/${productId}`,
+        url: `/api/web/private/product/${productId}`,
         method: "DELETE",
+      }),
+    }),
+    editProduct: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/product`,
+        method: "PUT",
+        body,
       }),
     }),
   }),
@@ -348,4 +355,5 @@ export const {
   useGetPublicBrandListQuery,
   useGetPublicCreatorListQuery,
   useDeleteProductMutation,
+  useEditProductMutation,
 } = geniApi;
