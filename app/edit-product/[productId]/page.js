@@ -33,7 +33,6 @@ import {
 import toast from "react-hot-toast";
 
 import { ClipLoader } from "react-spinners";
-import Cookies from "js-cookie";
 
 function Page() {
   const router = useRouter();
@@ -46,10 +45,6 @@ function Page() {
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
 
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
-
   const {
     data: getPublicProductByIdData,
     error: getPublicProductByIdError,
@@ -58,32 +53,16 @@ function Page() {
 
   const formik = useFormik({
     initialValues: {
-      productName: getPublicProductByIdData
-        ? getPublicProductByIdData?.ProductName
-        : "",
-      information: getPublicProductByIdData
-        ? getPublicProductByIdData?.Information
-        : "",
-      requestForCreators: getPublicProductByIdData
-        ? getPublicProductByIdData?.RequestForCreators
-        : "",
-      amount: getPublicProductByIdData ? getPublicProductByIdData?.Amount : "",
-      addInfoSource: getPublicProductByIdData
-        ? getPublicProductByIdData?.addInfoSource
-        : "",
-      quantity: getPublicProductByIdData
-        ? getPublicProductByIdData?.Quantity
-        : "",
-      price: getPublicProductByIdData ? getPublicProductByIdData?.Price : "",
-      contentInfo: getPublicProductByIdData
-        ? getPublicProductByIdData?.ProductName
-        : [],
-      productTypes: getPublicProductByIdData
-        ? getPublicProductByIdData?.ProductTypes
-        : [],
-      productPics: getPublicProductByIdData?.ProductPics
-        ? getPublicProductByIdData?.ProductPics
-        : [],
+      productName: "",
+      information: "",
+      requestForCreators: "",
+      amount: "",
+      addInfoSource: "",
+      quantity: "",
+      price: "",
+      contentInfo: [],
+      productTypes: [],
+      productPics: [],
     },
     validationSchema: Yup.object({
       productName: Yup.string().required("Заавал бөглөнө үү"),
@@ -201,6 +180,23 @@ function Page() {
       });
     },
   });
+
+  useEffect(() => {
+    if (getPublicProductByIdData) {
+      formik.setValues({
+        productName: getPublicProductByIdData?.ProductName || "",
+        information: getPublicProductByIdData?.Information || "",
+        requestForCreators: getPublicProductByIdData?.RequestForCreators || "",
+        amount: getPublicProductByIdData?.Amount || "",
+        addInfoSource: getPublicProductByIdData?.addInfoSource || "",
+        quantity: getPublicProductByIdData?.Quantity || "",
+        price: getPublicProductByIdData?.Price || "",
+        contentInfo: getPublicProductByIdData?.ContentInfo || [],
+        productTypes: getPublicProductByIdData?.ProductTypes || [],
+        productPics: getPublicProductByIdData?.ProductPics || [],
+      });
+    }
+  }, [getPublicProductByIdData]);
 
   useEffect(() => {
     if (uploadFileError) {
@@ -349,7 +345,7 @@ function Page() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
-        <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
+        <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container flex flex-col">
           <button
             onClick={() => router.back()}
             className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
@@ -361,6 +357,9 @@ function Page() {
               alt="arrow-left"
             />
           </button>
+          <span className="text-4xl sm:text-5xl xl:text-6xl font-bold mt-7">
+            Мэдээлэл засах
+          </span>
           <form
             onSubmit={formik.handleSubmit}
             className="mt-11 flex flex-col lg:flex-row gap-10"
@@ -458,8 +457,8 @@ function Page() {
               <div className="flex flex-row items-center gap-3">
                 <Image
                   src={
-                    parsedUserInfo?.ProfileLink
-                      ? parsedUserInfo?.ProfileLink
+                    getPublicProductByIdData?.BrandProfileUrl
+                      ? getPublicProductByIdData?.BrandProfileUrl
                       : "/white-placeholder.png"
                   }
                   width={44}
@@ -468,7 +467,7 @@ function Page() {
                   className="border border-[#2D262D] rounded-full w-11 h-11"
                 />
                 <span className="text-xl font-bold">
-                  {parsedUserInfo?.Name}
+                  {getPublicProductByIdData?.BrandName}
                 </span>
               </div>
               <div className="flex flex-col gap-3">
@@ -906,7 +905,7 @@ function Page() {
                 <div
                   className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center`}
                 >
-                  <span>Бүтээгдэхүүн нэмэх</span>
+                  <span>Хадгалах</span>
                 </div>
               </button>
             </div>

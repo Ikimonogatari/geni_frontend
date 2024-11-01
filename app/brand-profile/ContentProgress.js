@@ -103,7 +103,7 @@ function ContentProgress({ currentContents }) {
     brandReceiveContent({
       ContentId: contentId,
       Comment: comment,
-      Point: score,
+      Star: guidelineScore,
     });
   };
 
@@ -319,10 +319,9 @@ function ContentProgress({ currentContents }) {
                             </div>
                           </div>
                         </div>
-                        {comment &&
-                        guidelineScore &&
-                        qualityScore &&
-                        conceptScore ? (
+                        {guidelineScore != 0 &&
+                        qualityScore != 0 &&
+                        conceptScore != 0 ? (
                           <button
                             onClick={() => handleContentReceive(p.ContentId)}
                             className="bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
