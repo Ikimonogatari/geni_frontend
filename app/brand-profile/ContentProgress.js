@@ -191,7 +191,7 @@ function ContentProgress({ currentContents }) {
                         {contentVideo ? (
                           <video
                             controls
-                            className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                            className="aspect-[9/16] w-full h-full sm:max-w-[272px] rounded-2xl"
                           >
                             <source src={contentVideo} type="video/mp4" />
                             Your browser does not support the video tag.
@@ -210,7 +210,7 @@ function ContentProgress({ currentContents }) {
                           <img
                             src={contentThumbnail}
                             alt=""
-                            className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                            className="aspect-[9/16] w-full h-full sm:max-w-[272px] rounded-2xl"
                           />
                         ) : (
                           <></>
