@@ -55,8 +55,7 @@ function BrandContentGallery({ contentsGallery }) {
                         <div className="flex flex-row items-center gap-2">
                           <Image
                             src={
-                              content?.CreatorProfileLink &&
-                              userType === "Creator"
+                              content?.CreatorProfileLink
                                 ? content?.CreatorProfileLink
                                 : "/dummy-profile.jpg"
                             }
