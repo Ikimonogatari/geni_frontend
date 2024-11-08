@@ -209,6 +209,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
     }
   };
   const handleContentSubmit = () => {
+    console.log("handling feedback content submit");
     if (parsedUserInfo?.UserType === "Student") {
       uploadHomework({
         Caption: caption,
