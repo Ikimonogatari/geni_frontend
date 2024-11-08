@@ -47,7 +47,8 @@ function Page() {
   useEffect(() => {
     if (listProductsData) {
       let filtered = [...listProductsData.Data];
-      console.log(filtered);
+
+      // Filter by selected category
       if (selectedCategory) {
         filtered = filtered.filter((product) =>
           product.ProductTypes?.some(
@@ -56,6 +57,7 @@ function Page() {
         );
       }
 
+      // Search query filter
       if (searchQuery) {
         filtered = filtered.filter(
           (product) =>
@@ -67,9 +69,17 @@ function Page() {
             )
         );
       }
+
+      // Sort by the ratio of LeftStock to Quantity
+      filtered.sort((a, b) => {
+        const ratioA = a.LeftStock / a.Quantity;
+        const ratioB = b.LeftStock / b.Quantity;
+        return ratioB - ratioA; // Descending order
+      });
+
       setFilteredProducts(filtered);
     } else {
-      setFilteredProducts([]); // Set to an empty array if listProductsData is not an array or is undefined
+      setFilteredProducts([]);
     }
   }, [searchQuery, selectedCategory, listProductsData]);
 
