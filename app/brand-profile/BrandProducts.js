@@ -91,6 +91,17 @@ function BrandProducts({ brandProducts, brandData }) {
     deleteProduct(productId);
     setIsDeleting(false);
   };
+
+  const sortedBrandProducts = [...brandProducts].sort((a, b) => {
+    if (a.Status === "Approved" && b.Status !== "Approved") {
+      return -1;
+    } else if (a.Status !== "Approved" && b.Status === "Approved") {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
   return (
     <div className="w-full overflow-x-auto">
       <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
@@ -119,7 +130,7 @@ function BrandProducts({ brandProducts, brandData }) {
           </div>
           <span className="col-span-1">Үйлдэл</span>
         </div>
-        {brandProducts.map((p, i) => {
+        {sortedBrandProducts?.map((p, i) => {
           const stockStatus = getStockStatus(p.LeftStock, p.Quantity);
           const requestStatus = getRequestStatus(p.Status);
           return (
