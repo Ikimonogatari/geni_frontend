@@ -229,17 +229,15 @@ export const geniApi = createApi({
       }),
     }),
     listBrandProducts: builder.query({
-      query: (body) => ({
-        url: "/api/web/private/product?&limit=100&offset=0",
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/product?&limit=${limit}&offset=${offset}`,
         method: "GET",
-        body,
       }),
     }),
     listBrandContents: builder.query({
-      query: (body) => ({
-        url: `/api/web/private/content?&limit=100&offset=0`,
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/content?&limit=${limit}&offset=${offset}`,
         method: "GET",
-        body,
       }),
     }),
     uploadHomework: builder.mutation({
@@ -257,10 +255,9 @@ export const geniApi = createApi({
       }),
     }),
     listContentGallery: builder.query({
-      query: (body) => ({
-        url: "/api/web/private/content/my",
+      query: () => ({
+        url: `/api/web/private/content/my`,
         method: "GET",
-        body,
       }),
     }),
     listBrandTypes: builder.query({

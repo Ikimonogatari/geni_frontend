@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import BrandProducts from "./BrandProducts";
@@ -19,27 +19,38 @@ function page() {
     isLoading: getUserInfoLoading,
   } = useGetUserInfoQuery();
 
+  const [profileState, setProfileState] = useState("content-progress");
+  const [currentPage, setCurrentPage] = useState(1);
+  const contentsPerPage = 10;
+  const [currentContents, setCurrentContents] = useState([]);
+  const offset = (currentPage - 1) * contentsPerPage;
+
   const {
     data: listBrandContentsData,
     error: listBrandContentsError,
     isLoading: listBrandContentsLoading,
-  } = useListBrandContentsQuery();
+    refetch: refetchBrandContents,
+  } = useListBrandContentsQuery(
+    { limit: contentsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
+    refetch: refetchContentGallery,
   } = useListContentGalleryQuery();
 
   const {
     data: listBrandProductsData,
     error: listBrandProductsError,
     isLoading: listBrandProductsLoading,
-  } = useListBrandProductsQuery();
-
-  const [profileState, setProfileState] = useState("content-progress");
-  const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 12;
+    refetch: refetchBrandProducts,
+  } = useListBrandProductsQuery(
+    { limit: contentsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -51,75 +62,84 @@ function page() {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  useEffect(() => {
+    switch (profileState) {
+      case "content-progress":
+        refetchBrandContents();
+        break;
+      case "content-gallery":
+        refetchContentGallery();
+        break;
+      case "brand-products":
+        refetchBrandProducts();
+        break;
+      default:
+        refetchBrandContents();
+        break;
+    }
+  }, [profileState, currentPage]);
+
+  useEffect(() => {
+    const contents = getCurrentContents();
+    setCurrentContents(contents);
+  }, [
+    currentPage,
+    profileState,
+    listBrandContentsData,
+    listContentGalleryData,
+    listBrandProductsData,
+  ]);
+
   const getCurrentContents = () => {
     let contents;
     switch (profileState) {
       case "content-progress":
-        contents =
-          listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data
-            : [];
-        console.log(contents);
+        contents = listBrandContentsData?.Data ?? [];
         break;
       case "content-gallery":
-        contents =
-          listContentGalleryData && listContentGalleryData.Data != null
-            ? listContentGalleryData.Data
-            : [];
-        console.log(contents);
+        contents = listContentGalleryData?.Data ?? [];
         break;
       case "brand-products":
-        contents =
-          listBrandProductsData && listBrandProductsData.Data != null
-            ? listBrandProductsData.Data
-            : [];
-        console.log(contents);
+        contents = listBrandProductsData?.Data ?? [];
         break;
       default:
-        contents =
-          listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data
-            : [];
-        console.log(contents);
+        contents = listBrandContentsData?.Data ?? [];
     }
 
-    const indexOfLastContent = currentPage * contentsPerPage;
-    const indexOfFirstContent = indexOfLastContent - contentsPerPage;
-    return contents.slice(indexOfFirstContent, indexOfLastContent);
+    return contents;
   };
 
   const getTotalPages = () => {
-    let contents;
+    let totalCount;
     switch (profileState) {
       case "content-progress":
-        contents =
+        totalCount =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data
+            ? listBrandContentsData.RowCount
             : [];
         break;
       case "content-gallery":
-        contents =
+        totalCount =
           listContentGalleryData && listContentGalleryData.Data != null
-            ? listContentGalleryData.Data
+            ? listContentGalleryData.RowCount
             : [];
         break;
       case "brand-products":
-        contents =
+        totalCount =
           listBrandProductsData && listBrandProductsData.Data != null
-            ? listBrandProductsData.Data
+            ? listBrandProductsData.RowCount
             : [];
         break;
       default:
-        contents =
+        totalCount =
           listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.Data
+            ? listBrandContentsData.RowCount
             : [];
     }
-    return Math.ceil(contents.length / contentsPerPage);
+    return Math.ceil(totalCount / contentsPerPage);
   };
 
   const renderBrandProfile = () => {
-    const currentContents = getCurrentContents();
     switch (profileState) {
       case "content-progress":
         return <ContentProgress currentContents={currentContents} />;
@@ -313,7 +333,6 @@ function page() {
                 ))}
               </div>
             </div>
-
             <a
               href="/add-product"
               className="w-auto whitespace-nowrap hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
@@ -322,8 +341,7 @@ function page() {
               <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
             </a>
           </div>
-
-          {renderBrandProfile()}
+          {currentContents ? renderBrandProfile() : <>Loading</>}
         </div>
 
         {listBrandContentsData && totalPages > 1 ? (

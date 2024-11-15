@@ -159,8 +159,8 @@ function BrandProducts({ brandProducts, brandData }) {
                   <span className="">{stockStatus.status}</span>
                 </div>
               ) : (
-                <span className={`${requestStatus.className}`}>
-                  {requestStatus.text}
+                <span className={`${requestStatus?.className}`}>
+                  {requestStatus?.text}
                 </span>
               )}
               <div className="col-span-1">
@@ -266,9 +266,9 @@ function BrandProducts({ brandProducts, brandData }) {
                                 Статус
                               </span>
                               <span
-                                className={`${requestStatus.className} text-[#4FB755] text-xl`}
+                                className={`${requestStatus?.className} text-[#4FB755] text-xl`}
                               >
-                                {requestStatus.text}
+                                {requestStatus?.text}
                               </span>
                             </div>
                           </div>
