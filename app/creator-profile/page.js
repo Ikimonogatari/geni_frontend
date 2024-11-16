@@ -178,19 +178,22 @@ function page() {
                   </span>
 
                   <Image
-                    src={"/verified-icon.png"}
-                    width={24}
-                    height={24}
-                    alt="verified-icon"
-                    className="w-4 h-4 sm:w-6 sm:h-6"
+                    src={
+                      getUserInfoData?.LevelIconUrl
+                        ? getUserInfoData?.LevelIconUrl
+                        : "/verified-icon.png"
+                    }
+                    width={getUserInfoData?.LevelIconUrl ? 58 : 24}
+                    height={getUserInfoData?.LevelIconUrl ? 22 : 24}
+                    alt=""
+                    className={`mt-[2px] ${
+                      getUserInfoData?.LevelIconUrl
+                        ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
+                        : "min-w-6 min-h-6 max-w-12 max-h-5"
+                    }`}
                   />
-                </div>
-                <span className="text-[#6F6F6F] text-xs sm:text-base">
-                  @{getUserInfoData?.Nickname}
-                </span>
-                <div className="flex flex-row items-center gap-2 sm:gap-3">
                   <span className="text-sm sm:text-lg">
-                    {getUserInfoData ? getUserInfoData.Point : 0} xp
+                    {getUserInfoData && <>{getUserInfoData.Point} xp</>}
                   </span>
                   <a>
                     <Image
@@ -201,6 +204,30 @@ function page() {
                       className="w-4 h-4 sm:w-6 sm:h-6"
                     />
                   </a>
+                </div>
+                {getUserInfoData?.AverageRating &&
+                  getUserInfoData?.ContentCount && (
+                    <div className="flex flex-row items-center gap-3">
+                      <Image
+                        src={"/star.png"}
+                        width={24}
+                        height={24}
+                        alt="verified-icon"
+                        className="w-4 h-4 sm:w-6 sm:h-6"
+                      />
+                      <span className="text-[#2D262D] text-xs sm:text-base">
+                        {getUserInfoData?.AverageRating} Average rating (
+                        {getUserInfoData?.ContentCount} contents)
+                      </span>
+                    </div>
+                  )}
+                <span className="text-[#6F6F6F] text-xs sm:text-base">
+                  {getUserInfoData?.Nickname !== "" &&
+                    getUserInfoData?.Nickname && (
+                      <>@{getUserInfoData?.Nickname}</>
+                    )}
+                </span>
+                <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink && (
                     <a
                       target="_blank"

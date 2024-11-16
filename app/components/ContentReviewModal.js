@@ -82,7 +82,7 @@ function ContentReviewModal({ p }) {
               Брэндийн өгсөн чиглүүлэгийн дагуу хийсэн эсэх
             </span>
             <div className="flex flex-row gap-[6px] items-center">
-              {renderStars(p?.BrandInstructionsPnt)}
+              {renderStars(p?.BrandInstructionPnt)}
             </div>
             <span className="text-sm">Контентын агуулга</span>
             <div className="flex flex-row gap-[6px] items-center">
