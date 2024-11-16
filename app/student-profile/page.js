@@ -11,6 +11,11 @@ import Link from "next/link";
 import HomeworkUploadModal from "../components/HomeworkUploadModal";
 
 function page() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const contentsPerPage = 12;
+  const [currentContents, setCurrentContents] = useState([]);
+  const offset = (currentPage - 1) * contentsPerPage;
+
   const {
     data: getUserInfoData,
     error: getUserInfoError,
@@ -21,10 +26,10 @@ function page() {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
-  } = useListCreatorContentsQuery();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 8;
+  } = useListCreatorContentsQuery(
+    { limit: contentsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -36,36 +41,30 @@ function page() {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  const getCurrentContents = () => {
-    const contents = listCreatorContentsData
-      ? listCreatorContentsData.Data != null
-        ? listCreatorContentsData.Data
-        : []
-      : [];
+  useEffect(() => {
+    const contents = getCurrentContents();
+    setCurrentContents(contents);
+  }, [currentPage, listCreatorContentsData]);
 
-    const indexOfLastContent = currentPage * contentsPerPage;
-    const indexOfFirstContent = indexOfLastContent - contentsPerPage;
-    return contents.slice(indexOfFirstContent, indexOfLastContent);
+  const getCurrentContents = () => {
+    const contents = listCreatorContentsData?.Data ?? [];
+    return contents;
   };
 
   const getTotalPages = () => {
-    const contents = listCreatorContentsData
-      ? listCreatorContentsData.Data != null
-        ? listCreatorContentsData.Data
-        : []
-      : [];
-    return Math.ceil(contents.length / contentsPerPage);
+    let totalCount;
+    totalCount = listCreatorContentsData?.RowCount ?? [];
+    return Math.ceil(totalCount / contentsPerPage);
   };
 
   const renderBrandProfile = () => {
-    const currentContents = getCurrentContents();
     return <ContentProgress currentContents={currentContents} />;
   };
 
   const totalPages = getTotalPages();
 
   const getPageNumbers = () => {
-    const totalNumbers = 5; // Number of page numbers to show
+    const totalNumbers = 3; // Number of page numbers to show
     const totalBlocks = totalNumbers + 2; // Including first and last page
 
     if (totalPages > totalBlocks) {

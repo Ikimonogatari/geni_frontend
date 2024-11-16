@@ -29,7 +29,6 @@ function page() {
     data: listBrandContentsData,
     error: listBrandContentsError,
     isLoading: listBrandContentsLoading,
-    refetch: refetchBrandContents,
   } = useListBrandContentsQuery(
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
@@ -39,14 +38,12 @@ function page() {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-    refetch: refetchContentGallery,
   } = useListContentGalleryQuery();
 
   const {
     data: listBrandProductsData,
     error: listBrandProductsError,
     isLoading: listBrandProductsLoading,
-    refetch: refetchBrandProducts,
   } = useListBrandProductsQuery(
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
@@ -61,23 +58,6 @@ function page() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
-  useEffect(() => {
-    switch (profileState) {
-      case "content-progress":
-        refetchBrandContents();
-        break;
-      case "content-gallery":
-        refetchContentGallery();
-        break;
-      case "brand-products":
-        refetchBrandProducts();
-        break;
-      default:
-        refetchBrandContents();
-        break;
-    }
-  }, [profileState, currentPage]);
 
   useEffect(() => {
     const contents = getCurrentContents();

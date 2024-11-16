@@ -13,7 +13,7 @@ import Link from "next/link";
 function page() {
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 2;
+  const contentsPerPage = 12;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
 
@@ -21,7 +21,6 @@ function page() {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-    refetch: refetchContentGallery,
   } = useListContentGalleryQuery();
 
   const {
@@ -34,7 +33,6 @@ function page() {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
-    refetch: refetchCreatorContents,
   } = useListCreatorContentsQuery(
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
@@ -49,20 +47,6 @@ function page() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
-  useEffect(() => {
-    switch (profileState) {
-      case "content-progress":
-        refetchCreatorContents();
-        break;
-      case "content-gallery":
-        refetchContentGallery();
-        break;
-      default:
-        refetchCreatorContents();
-        break;
-    }
-  }, [profileState, currentPage]);
 
   useEffect(() => {
     const contents = getCurrentContents();
