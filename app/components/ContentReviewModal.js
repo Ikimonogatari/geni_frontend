@@ -3,19 +3,31 @@ import Image from "next/image";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 
 function ContentReviewModal({ p }) {
-  function getRatingWord(points) {
-    if (points == 100) {
-      return "Маш сайн"; // Very Good
-    } else if (points == 80) {
-      return "Сайн"; // Good
-    } else if ((points = 60)) {
-      return "Дунд"; // Average
-    } else if (points == 40) {
-      return "Муу"; // Bad
-    } else {
-      return "Маш муу"; // Very Bad
-    }
+  function renderStars(score) {
+    return [1, 2, 3, 4, 5].map((star, index) => (
+      <span key={index}>
+        <Image
+          src={star <= score ? "/star.png" : "/empty-star.png"}
+          alt="Star"
+          width={28}
+          height={28}
+        />
+      </span>
+    ));
   }
+
+  const renderAvgStar = (instruction, context, creation) => {
+    const validScores = [instruction, context, creation].filter(
+      (score) => typeof score === "number" && !isNaN(score)
+    );
+
+    if (validScores.length === 0) return 0; // Avoid division by zero
+
+    return (
+      validScores.reduce((sum, score) => sum + score, 0) / validScores.length
+    ).toFixed(1);
+  };
+
   return (
     <Dialog>
       <DialogTrigger
@@ -24,9 +36,9 @@ function ContentReviewModal({ p }) {
       >
         Сэтгэгдэл харах
       </DialogTrigger>
-      <DialogContent className="overflow-y-auto max-w-lg w-full flex flex-col rounded-3xl">
+      <DialogContent className="max-w-lg w-full flex flex-col rounded-3xl">
         <span className="text-3xl font-bold">Брэндийн сэтгэгдэл</span>
-        <div className="mt-10 flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-4 mt-4">
           <Image
             src={
               p?.BrandProfileLink
@@ -37,37 +49,58 @@ function ContentReviewModal({ p }) {
             height={84}
             className="w-[84px] h-[84px] aspect-square rounded-full border border-[#2D262D]"
           />
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             <span className="text-lg font-bold">{p?.BrandName}</span>
             <div className="bg-[#4D55F5] text-white text-center text-xs rounded-3xl px-4 py-2">
               {p?.BrandTypes?.[0]?.TypeName}
             </div>
           </div>
         </div>
-        <span className="mt-5">Танд өгсөн оноо</span>
-        <div className="flex gap-2">
-          {[20, 40, 60, 80, 100].map((point, i) => (
-            <div
-              key={i}
-              className={`py-2 px-5 text-sm rounded-xl ${
-                p?.BrandGivenPoint === point
-                  ? "bg-[#4FB755] border-[#4FB755] border text-white"
-                  : "bg-transparent border-[#CDCDCD] border text-[#CDCDCD]"
-              }`}
-            >
-              {point}
-            </div>
-          ))}
+        <div className="mt-4 flex flex-row items-center gap-2">
+          <span>Таньд өгсөн дундаж оноо:</span>
+          <Image
+            src={"/star.png"}
+            width={28}
+            height={28}
+            alt=""
+            className="w-7 h-7"
+          />
+          <span>
+            {p &&
+              renderAvgStar(
+                p?.BrandInstructionPnt || 0,
+                p?.ContextPnt || 0,
+                p?.CreationPnt || 0
+              )}
+          </span>
         </div>
 
-        <span className="py-1 px-3 text-sm bg-[#FFD28F] rounded-3xl w-fit">
-          {getRatingWord(p?.BrandGivePoints)}
-        </span>
-
-        <span>Танд өгсөн сэтгэгдэл</span>
-        <span className="bg-[#F5F4F0] p-3 rounded-2xl min-h-[127px] overflow-y-auto">
-          {p?.BrandComment}
-        </span>
+        <div className="border-[1px] border-[#000000] rounded-2xl bg-[#F5F4F0] p-5">
+          <div className="flex flex-col gap-2">
+            <span className="text-sm">
+              Брэндийн өгсөн чиглүүлэгийн дагуу хийсэн эсэх
+            </span>
+            <div className="flex flex-row gap-[6px] items-center">
+              {renderStars(p?.BrandInstructionsPnt)}
+            </div>
+            <span className="text-sm">Контентын агуулга</span>
+            <div className="flex flex-row gap-[6px] items-center">
+              {renderStars(p?.ContextPnt)}
+            </div>
+            <span className="text-sm">Контентын хийцлэл</span>
+            <div className="flex flex-row gap-[6px] items-center">
+              {renderStars(p?.CreationPnt)}
+            </div>
+          </div>
+        </div>
+        {p?.BrandComment !== "" && (
+          <div className="flex flex-col gap-4">
+            <span>Танд өгсөн сэтгэгдэл</span>
+            <span className="bg-[#F5F4F0] border-[1px] border-[#000000] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
+              {p?.BrandComment}
+            </span>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
