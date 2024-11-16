@@ -21,7 +21,7 @@ function page() {
 
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 10;
+  const contentsPerPage = 12;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
 
@@ -113,28 +113,16 @@ function page() {
     let totalCount;
     switch (profileState) {
       case "content-progress":
-        totalCount =
-          listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.RowCount
-            : [];
+        totalCount = listBrandContentsData?.RowCount ?? null;
         break;
       case "content-gallery":
-        totalCount =
-          listContentGalleryData && listContentGalleryData.Data != null
-            ? listContentGalleryData.RowCount
-            : [];
+        totalCount = listContentGalleryData?.RowCount ?? null;
         break;
       case "brand-products":
-        totalCount =
-          listBrandProductsData && listBrandProductsData.Data != null
-            ? listBrandProductsData.RowCount
-            : [];
+        totalCount = listBrandProductsData?.RowCount ?? null;
         break;
       default:
-        totalCount =
-          listBrandContentsData && listBrandContentsData.Data != null
-            ? listBrandContentsData.RowCount
-            : [];
+        totalCount = listBrandContentsData?.RowCount ?? null;
     }
     return Math.ceil(totalCount / contentsPerPage);
   };

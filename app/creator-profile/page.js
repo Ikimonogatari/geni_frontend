@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "../components/ContentGallery";
@@ -11,25 +11,34 @@ import {
 import Link from "next/link";
 
 function page() {
+  const [profileState, setProfileState] = useState("content-progress");
+  const [currentPage, setCurrentPage] = useState(1);
+  const contentsPerPage = 2;
+  const [currentContents, setCurrentContents] = useState([]);
+  const offset = (currentPage - 1) * contentsPerPage;
+
   const {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
+    refetch: refetchContentGallery,
   } = useListContentGalleryQuery();
+
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
   } = useGetUserInfoQuery();
+
   const {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
-  } = useListCreatorContentsQuery();
-
-  const [profileState, setProfileState] = useState("content-progress");
-  const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 12;
+    refetch: refetchCreatorContents,
+  } = useListCreatorContentsQuery(
+    { limit: contentsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -41,55 +50,60 @@ function page() {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  useEffect(() => {
+    switch (profileState) {
+      case "content-progress":
+        refetchCreatorContents();
+        break;
+      case "content-gallery":
+        refetchContentGallery();
+        break;
+      default:
+        refetchCreatorContents();
+        break;
+    }
+  }, [profileState, currentPage]);
+
+  useEffect(() => {
+    const contents = getCurrentContents();
+    setCurrentContents(contents);
+  }, [
+    currentPage,
+    profileState,
+    listCreatorContentsData,
+    listContentGalleryData,
+  ]);
+
   const getCurrentContents = () => {
     let contents;
     switch (profileState) {
       case "content-progress":
-        contents = listCreatorContentsData
-          ? listCreatorContentsData.Data != null
-            ? listCreatorContentsData.Data
-            : []
-          : [];
-        console.log(contents);
+        contents = listCreatorContentsData?.Data ?? [];
         break;
       case "content-gallery":
-        contents =
-          listContentGalleryData && listContentGalleryData.Data != null
-            ? listContentGalleryData.Data
-            : [];
-        console.log(contents);
+        contents = listContentGalleryData?.Data ?? [];
         break;
+      default:
+        contents = listCreatorContentsData?.Data ?? [];
     }
 
-    const indexOfLastContent = currentPage * contentsPerPage;
-    const indexOfFirstContent = indexOfLastContent - contentsPerPage;
-    return contents.slice(indexOfFirstContent, indexOfLastContent);
+    return contents;
   };
 
   const getTotalPages = () => {
-    let contents;
+    let totalCount;
     switch (profileState) {
       case "content-progress":
-        contents = listCreatorContentsData
-          ? listCreatorContentsData.Data != null
-            ? listCreatorContentsData.Data
-            : []
-          : [];
-        console.log(contents);
+        totalCount = listCreatorContentsData?.RowCount ?? null;
         break;
       case "content-gallery":
-        contents =
-          listContentGalleryData && listContentGalleryData.Data != null
-            ? listContentGalleryData.Data
-            : [];
-        console.log(contents);
+        totalCount = listContentGalleryData?.RowCount ?? null;
         break;
     }
-    return Math.ceil(contents.length / contentsPerPage);
+    return Math.ceil(totalCount / contentsPerPage);
   };
 
   const renderBrandProfile = () => {
-    const currentContents = getCurrentContents();
     switch (profileState) {
       case "content-progress":
         return <ContentProgress currentContents={currentContents} />;
@@ -104,7 +118,7 @@ function page() {
   const totalPages = getTotalPages();
 
   const getPageNumbers = () => {
-    const totalNumbers = 5; // Number of page numbers to show
+    const totalNumbers = 3; // Number of page numbers to show
     const totalBlocks = totalNumbers + 2; // Including first and last page
 
     if (totalPages > totalBlocks) {

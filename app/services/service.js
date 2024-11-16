@@ -139,10 +139,9 @@ export const geniApi = createApi({
       invalidatesTags: ["UserInfo"],
     }),
     listCreatorContents: builder.query({
-      query: (body) => ({
-        url: `/api/web/private/content?&limit=100&offset=0`,
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/content?&limit=${limit}&offset=${offset}`,
         method: "GET",
-        body,
       }),
     }),
     listPublicProducts: builder.query({
