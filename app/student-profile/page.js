@@ -211,7 +211,7 @@ function page() {
                   width={24}
                   height={24}
                   alt="icon"
-                  className="w-5 sm:w-6 h-5 sm:h-6"
+                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
                 />
               </Link>
               <Link
@@ -223,7 +223,7 @@ function page() {
                   width={24}
                   height={24}
                   alt="icon"
-                  className="w-5 sm:w-6 h-5 sm:h-6"
+                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
                 />
               </Link>
               <Link

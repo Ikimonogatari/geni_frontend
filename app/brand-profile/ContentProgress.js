@@ -103,7 +103,9 @@ function ContentProgress({ currentContents }) {
     brandReceiveContent({
       ContentId: contentId,
       Comment: comment,
-      Star: guidelineScore,
+      InstructionStar: guidelineScore,
+      ContextStar: conceptScore,
+      CreationStar: qualityScore,
     });
   };
 

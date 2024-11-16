@@ -226,15 +226,18 @@ function Page() {
                 </div>
               </div>
               <span className="text-lg">И-мэйл</span>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder=""
-                className="border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4"
-                onChange={login.handleChange}
-                value={login.values.email}
-              />
+              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder=""
+                  className="w-full outline-none"
+                  onChange={login.handleChange}
+                  value={login.values.email}
+                />
+              </div>
+
               {login.touched.email && login.errors.email ? (
                 <div className="text-red-500 text-sm">{login.errors.email}</div>
               ) : null}
