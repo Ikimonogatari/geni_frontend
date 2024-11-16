@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 
 function ContentReviewModal({ p }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   function renderStars(score) {
     return [1, 2, 3, 4, 5].map((star, index) => (
       <span key={index}>
@@ -29,7 +30,7 @@ function ContentReviewModal({ p }) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         type="submit"
         className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
@@ -101,6 +102,12 @@ function ContentReviewModal({ p }) {
             </span>
           </div>
         )}
+        <button
+          onClick={() => setIsDialogOpen(false)}
+          className="mt-2 w-full py-4 text-white font-semibold bg-[#CA7FFE] text-xl border border-[#2D262D] rounded-2xl"
+        >
+          Баярлалаа
+        </button>
       </DialogContent>
     </Dialog>
   );
