@@ -16,7 +16,7 @@ function FreeContentWave() {
           <span className="text-base sm:text-lg">
             Давалгаанд нэгдэх брэндүүдийн хүсэлт авах хугацаа:
           </span>
-          <span className="text-xl sm:text-3xl font-bold">10.15 - 10.31</span>
+          <span className="text-xl sm:text-3xl font-bold">10.15 - 11.31</span>
         </div>
         <div className="flex flex-col w-full lg:w-1/2">
           <span className="text-3xl sm:text-4xl font-bold">
