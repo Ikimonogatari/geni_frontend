@@ -9,6 +9,7 @@ import {
   useListCreatorContentsQuery,
 } from "@/app/services/service";
 import Link from "next/link";
+import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 
 function page() {
   const [profileState, setProfileState] = useState("content-progress");
@@ -195,15 +196,26 @@ function page() {
                   <span className="text-sm sm:text-lg">
                     {getUserInfoData && <>{getUserInfoData.Point} xp</>}
                   </span>
-                  <a>
-                    <Image
-                      src={"/Info.png"}
-                      width={24}
-                      height={24}
-                      alt="info"
-                      className="w-4 h-4 sm:w-6 sm:h-6"
-                    />
-                  </a>
+                  <Dialog>
+                    <DialogTrigger type="submit" className="">
+                      <Image
+                        src={"/info-icon.png"}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full"
+                      />
+                    </DialogTrigger>
+                    <DialogContent className="flex flex-col gap-8">
+                      <span>Creator түвшин</span>
+                      <div className="grid grid-cols-5">
+                        <div className="col-span1">Түвшин нэр</div>
+                        <div className="col-span1">Цол</div>
+                        <div className="col-span1">XP оноо</div>
+                        <div className="col-span1">Мөнгөн шагнал</div>
+                        <div className="col-span1">Үүсэх давуу тал</div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 {getUserInfoData?.AverageRating &&
                   getUserInfoData?.ContentCount && (
@@ -216,8 +228,8 @@ function page() {
                         className="w-4 h-4 sm:w-6 sm:h-6"
                       />
                       <span className="text-[#2D262D] text-xs sm:text-base">
-                        {getUserInfoData?.AverageRating} Average rating (
-                        {getUserInfoData?.ContentCount} contents)
+                        {getUserInfoData?.AverageRating} дундаж үнэлгээ (
+                        {getUserInfoData?.ContentCount} контент)
                       </span>
                     </div>
                   )}
@@ -413,5 +425,43 @@ const brandProfileButtons = [
   {
     title: "Контент",
     value: "content-gallery",
+  },
+];
+
+const creator_level = [
+  {
+    level_name: "",
+    badge: "/",
+    xp: "",
+    price: "",
+    advantage: "",
+  },
+  {
+    level_name: "",
+    badge: "/",
+    xp: "",
+    price: "",
+    advantage: "",
+  },
+  {
+    level_name: "",
+    badge: "/",
+    xp: "",
+    price: "",
+    advantage: "",
+  },
+  {
+    level_name: "",
+    badge: "/",
+    xp: "",
+    price: "",
+    advantage: "",
+  },
+  {
+    level_name: "",
+    badge: "/",
+    xp: "",
+    price: "",
+    advantage: "",
   },
 ];
