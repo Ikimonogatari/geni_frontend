@@ -214,6 +214,22 @@ function page() {
                         <div className="col-span1">Мөнгөн шагнал</div>
                         <div className="col-span1">Үүсэх давуу тал</div>
                       </div>
+                      {creator_level.map((c, i) => (
+                        <div key={i} className="grid grid-cols-5">
+                          <div className="col-span1">{c.level_name}</div>
+                          <div className="col-span1">
+                            <Image
+                              src={c.badge}
+                              alt=""
+                              width={24}
+                              height={24}
+                            />
+                          </div>
+                          <div className="col-span1">{c.xp}</div>
+                          <div className="col-span1">{c.price}</div>
+                          <div className="col-span1">{c.advantage}</div>
+                        </div>
+                      ))}
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -430,38 +446,38 @@ const brandProfileButtons = [
 
 const creator_level = [
   {
-    level_name: "",
+    level_name: "Geni creator",
     badge: "/",
-    xp: "",
-    price: "",
-    advantage: "",
+    xp: "-",
+    price: "%",
+    advantage: "-",
   },
   {
-    level_name: "",
+    level_name: "Pro creator gold",
     badge: "/",
-    xp: "",
-    price: "",
-    advantage: "",
+    xp: "10’000",
+    price: "₮16’000 - ₮80’000",
+    advantage: "-",
   },
   {
-    level_name: "",
+    level_name: "Pro creator silver",
     badge: "/",
-    xp: "",
-    price: "",
-    advantage: "",
+    xp: "5’000",
+    price: "₮10’000 - ₮50’000",
+    advantage: "3 бүтээгдэхүүн зэрэг хүсэх эрх",
   },
   {
-    level_name: "",
+    level_name: "Pro creator bronze",
     badge: "/",
-    xp: "",
-    price: "",
-    advantage: "",
+    xp: "1’000",
+    price: "₮6’000 - ₮30’000",
+    advantage: "2 бүтээгдэхүүн зэрэг хүсэх эрх",
   },
   {
-    level_name: "",
+    level_name: "Certified creator",
     badge: "/",
-    xp: "",
-    price: "",
-    advantage: "",
+    xp: "100",
+    price: "-",
+    advantage: "1 бүтээгдэхүүн хүсэх эрх",
   },
 ];
