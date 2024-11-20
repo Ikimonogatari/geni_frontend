@@ -37,7 +37,7 @@ function page() {
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full p-6 sm:p-11 bg-[#F5F4F0] rounded-2xl border border-black">
             <div className="flex flex-row items-center gap-7">
               {getUserInfoData ? (
                 <Image
@@ -49,7 +49,7 @@ function page() {
                   width={194}
                   height={194}
                   loading="lazy"
-                  className="rounded-full sm:rounded-xl w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
+                  className="rounded-full w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
                   alt=""
                 />
               ) : (
@@ -58,33 +58,42 @@ function page() {
               <div className="flex flex-col gap-1 sm:gap-2">
                 <div className="flex flex-row items-center gap-3">
                   <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                    {getUserInfoData?.FirstName} {getUserInfoData?.LastName}
+                    {getUserInfoData?.Nickname}
                   </span>
 
                   <Image
-                    src={"/verified-icon.png"}
-                    width={24}
-                    height={24}
-                    alt="verified-icon"
-                    className="w-4 h-4 sm:w-6 sm:h-6"
+                    src={
+                      getUserInfoData?.LevelIconUrl
+                        ? getUserInfoData?.LevelIconUrl
+                        : "/verified-icon.png"
+                    }
+                    width={getUserInfoData?.LevelIconUrl ? 58 : 24}
+                    height={getUserInfoData?.LevelIconUrl ? 22 : 24}
+                    alt=""
+                    className={`mt-[2px] ${
+                      getUserInfoData?.LevelIconUrl
+                        ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
+                        : "min-w-6 min-h-6 max-w-12 max-h-5"
+                    }`}
                   />
                 </div>
-                <span className="text-[#6F6F6F] text-xs sm:text-base">
-                  @{getUserInfoData?.Nickname}
-                </span>
+                {getUserInfoData?.AverageRating &&
+                  getUserInfoData?.ContentCount && (
+                    <div className="flex flex-row items-center gap-3">
+                      <Image
+                        src={"/star.png"}
+                        width={24}
+                        height={24}
+                        alt="verified-icon"
+                        className="w-4 h-4 sm:w-6 sm:h-6"
+                      />
+                      <span className="text-[#2D262D] text-xs sm:text-base">
+                        {getUserInfoData?.AverageRating} (
+                        {getUserInfoData?.ContentCount} контент)
+                      </span>
+                    </div>
+                  )}
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
-                  <span className="text-sm sm:text-lg">
-                    {getUserInfoData ? getUserInfoData.Point : 0} xp
-                  </span>
-                  <a>
-                    <Image
-                      src={"/Info.png"}
-                      width={24}
-                      height={24}
-                      alt="info"
-                      className="w-4 h-4 sm:w-6 sm:h-6"
-                    />
-                  </a>
                   {instagramLink && (
                     <a
                       target="_blank"
@@ -114,6 +123,7 @@ function page() {
                     </a>
                   )}
                 </div>
+
                 <span className="text-[#6F6F6F] text-xs sm:text-base">
                   {getUserInfoData ? getUserInfoData.Bio : ""}
                 </span>
@@ -128,45 +138,6 @@ function page() {
                   ))}
                 </div>
               </div>
-            </div>
-            <div className="flex flex-row items-center gap-2 sm:gap-5">
-              <Link
-                href={"/notifications"}
-                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
-              >
-                <Image
-                  src={"/notification-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="icon"
-                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                />
-              </Link>
-              <Link
-                href={"/edit-profile-creator"}
-                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
-              >
-                <Image
-                  src={"/edit-profile-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="icon"
-                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                />
-              </Link>
-              <Link
-                href="/products"
-                className="flex sm:hidden flex-row items-center gap-2 text-xs sm:text-base bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
-              >
-                Бүтээгдэхүүн үзэх
-                <Image
-                  src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
-                  alt="arrow"
-                  className="w-[9px] h-[9px] sm:w-[14px] sm:h-[14px]"
-                />
-              </Link>
             </div>
           </div>
           {listContentGalleryData && listContentGalleryData?.Data != null ? (
