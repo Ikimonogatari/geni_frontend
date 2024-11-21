@@ -137,24 +137,31 @@ function page() {
               </div>
             </div>
           </div>
-          <span className="text-lg sm:text-2xl text-[#6F6F6F] mt-5">
-            Хамтарсан брэндүүд / {getUserInfoData?.CollabBrands.length}
-          </span>
-          <div className="bg-[#F5F4F0] rounded-3xl flex flex-row items-center overflow-x-auto p-3 sm:p-5 gap-2 sm:gap-[14px] my-5">
-            {getUserInfoData?.CollabBrands?.map((b, i) => (
-              <Image
-                key={i}
-                src={b?.ProfilePicUrl}
-                alt=""
-                width={74}
-                height={74}
-                className="w-[49px] h-[49px] sm:w-[74px] sm:h-[74px] rounded-full object-cover border border-[#000000]"
-              />
-            ))}
-          </div>
-          <span className="text-lg sm:text-2xl text-[#6F6F6F]">
-            Хийсэн контентууд / {getUserInfoData?.ContentCount}
-          </span>
+          {getUserInfoData?.CollabBrands?.length > 0 && (
+            <div className="flex flex-col">
+              <span className="text-lg sm:text-2xl text-[#6F6F6F] mt-5">
+                Хамтарсан брэндүүд / {getUserInfoData?.CollabBrands?.length}
+              </span>
+              <div className="bg-[#F5F4F0] rounded-3xl flex flex-row items-center overflow-x-auto p-3 sm:p-5 gap-2 sm:gap-[14px] my-5">
+                {getUserInfoData?.CollabBrands?.map((b, i) => (
+                  <Image
+                    key={i}
+                    src={b?.ProfilePicUrl}
+                    alt=""
+                    width={74}
+                    height={74}
+                    className="w-[49px] h-[49px] sm:w-[74px] sm:h-[74px] rounded-full object-cover border border-[#000000]"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {listContentGalleryData?.Data &&
+            listContentGalleryData?.Data?.length > 0 && (
+              <span className="mt-5 text-lg sm:text-2xl text-[#6F6F6F]">
+                Хийсэн контентууд / {listContentGalleryData?.Data?.length}
+              </span>
+            )}
           {listContentGalleryData && listContentGalleryData?.Data != null ? (
             <ContentGallery contentsGallery={listContentGalleryData?.Data} />
           ) : (
