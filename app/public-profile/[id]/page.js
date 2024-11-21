@@ -2,41 +2,38 @@
 import React from "react";
 import Image from "next/image";
 import {
-  useGetUserInfoQuery,
-  useListContentGalleryQuery,
-  useListCreatorContentsQuery,
+  useListPublicCreatorContentGalleryQuery,
+  useGetPublicCreatorByIdQuery,
 } from "@/app/services/service";
 import Link from "next/link";
 import ContentGallery from "@/app/components/ContentGallery";
+import { useParams } from "next/navigation";
 
 function page() {
+  const params = useParams();
+  const { id } = params;
   const {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-  } = useListContentGalleryQuery();
+  } = useListPublicCreatorContentGalleryQuery(id);
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery();
-  const {
-    data: listCreatorContentsData,
-    error: listCreatorContentsError,
-    isLoading: listCreatorContentsLoading,
-  } = useListCreatorContentsQuery();
+  } = useGetPublicCreatorByIdQuery(id);
 
-  const instagramLink = getUserInfoData?.SocialChannels?.find(
-    (channel) => channel.PlatformName === "Instagram"
+  const instagramLink = getUserInfoData?.Socials?.find(
+    (channel) => channel.Name === "Instagram"
   );
 
-  const facebookLink = getUserInfoData?.SocialChannels?.find(
-    (channel) => channel.PlatformName === "Facebook"
+  const facebookLink = getUserInfoData?.Socials?.find(
+    (channel) => channel.Name === "Facebook"
   );
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
-        <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
+        <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20 flex flex-col">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full p-6 sm:p-11 bg-[#F5F4F0] rounded-2xl border border-black">
             <div className="flex flex-row items-center gap-7">
               {getUserInfoData ? (
@@ -49,7 +46,7 @@ function page() {
                   width={194}
                   height={194}
                   loading="lazy"
-                  className="rounded-full w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D]"
+                  className="rounded-full w-[90px] h-[90px] sm:w-[194px] sm:h-[194px] aspect-square border border-[#2D262D] object-cover"
                   alt=""
                 />
               ) : (
@@ -140,6 +137,24 @@ function page() {
               </div>
             </div>
           </div>
+          <span className="text-lg sm:text-2xl text-[#6F6F6F] mt-5">
+            Хамтарсан брэндүүд / {getUserInfoData?.CollabBrands.length}
+          </span>
+          <div className="bg-[#F5F4F0] rounded-3xl flex flex-row items-center overflow-x-auto p-3 sm:p-5 gap-2 sm:gap-[14px] my-5">
+            {getUserInfoData?.CollabBrands?.map((b, i) => (
+              <Image
+                key={i}
+                src={b?.ProfilePicUrl}
+                alt=""
+                width={74}
+                height={74}
+                className="w-[49px] h-[49px] sm:w-[74px] sm:h-[74px] rounded-full object-cover border border-[#000000]"
+              />
+            ))}
+          </div>
+          <span className="text-lg sm:text-2xl text-[#6F6F6F]">
+            Хийсэн контентууд / {getUserInfoData?.ContentCount}
+          </span>
           {listContentGalleryData && listContentGalleryData?.Data != null ? (
             <ContentGallery contentsGallery={listContentGalleryData?.Data} />
           ) : (
