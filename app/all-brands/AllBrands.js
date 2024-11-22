@@ -1,0 +1,90 @@
+"use client";
+import React from "react";
+import Image from "next/image";
+import { useGetPublicBrandListQuery } from "../services/service";
+
+function AllBrands() {
+  const {
+    data: getPublicBrandListData,
+    error: getPublicBrandListError,
+    isLoading: getPublicBrandListLoading,
+  } = useGetPublicBrandListQuery();
+  return (
+    <div className="flex flex-col gap-6">
+      <span className="text-[#6F6F6F] text-base sm:text-2xl">
+        Бүх Geni брэндүүд / {getPublicBrandListData?.Data?.length}
+      </span>
+      <div className=" grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[10px] sm:gap-4">
+        {getPublicBrandListData?.Data.map((brand, id) => {
+          const instagramLink = brand?.Socials?.find(
+            (channel) => channel.Name === "Instagram"
+          )?.SocialAddress;
+
+          const facebookLink = brand?.Socials?.find(
+            (channel) => channel.Name === "Facebook"
+          )?.SocialAddress;
+
+          return (
+            <div
+              key={id}
+              className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full"
+            >
+              <Image
+                src={
+                  brand?.ProfileLink ? brand?.ProfileLink : "/dummy-profile.png"
+                }
+                width={194}
+                height={194}
+                alt=""
+                className="aspect-square w-[115px] sm:w-[194px] h-[115px] sm:h-[194px] rounded-full border border-[#000000] object-cover"
+              />
+              <span className="hover:underline hover:underline-offset-3 text-base sm:text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden">
+                {brand?.Name ? brand?.Name : "Geni Брэнд"}
+              </span>
+
+              <div className="flex flex-row gap-2">
+                {instagramLink && (
+                  <a
+                    href={instagramLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:opacity-75"
+                  >
+                    <Image
+                      src="/Instagram.png"
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="h-5 w-5 sm:w-6 sm:h-6"
+                    />
+                  </a>
+                )}
+                {facebookLink && (
+                  <a
+                    href={facebookLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:opacity-75"
+                  >
+                    <Image
+                      src="/Facebook.png"
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="h-5 w-5 sm:w-6 sm:h-6"
+                    />
+                  </a>
+                )}
+              </div>
+              <p className="text-[#6F6F6F] text-[10px] sm:text-sm line-clamp-4">
+                {brand?.Bio}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default AllBrands;

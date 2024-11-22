@@ -12,6 +12,8 @@ import { useGetPublicCreatorListQuery } from "../services/service";
 function Creators() {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
+  const [slidesPerView, setSlidesPerView] = useState(5);
+  const [swiper, setSwiper] = useState(null);
 
   const handleSlideChange = (s) => {
     setIsBeginning(s.isBeginning);
@@ -23,9 +25,6 @@ function Creators() {
     error: getPublicCreatorListError,
     isLoading: getPublicCreatorListLoading,
   } = useGetPublicCreatorListQuery();
-
-  const [slidesPerView, setSlidesPerView] = useState(5);
-  const [swiper, setSwiper] = useState(null);
 
   const checkViewportSize = () => {
     const width = window.innerWidth;
@@ -53,6 +52,7 @@ function Creators() {
       window.removeEventListener("resize", checkViewportSize);
     };
   }, []);
+
   const goNext = () => {
     swiper.slideNext();
   };
@@ -60,7 +60,6 @@ function Creators() {
     swiper.slidePrev();
   };
 
-  console.log(getPublicCreatorListData ? getPublicCreatorListData : "");
   return (
     <div className="w-full pt-20">
       <div className="flex flex-row justify-between items-center">
@@ -129,7 +128,7 @@ function Creators() {
                     </a>
                     <div className="flex flex-row items-center gap-2">
                       <a
-                        // href={`/public-profile/${creator.CreatorId}`}
+                        href={`/public-profile/${creator.CreatorId}`}
                         className="hover:underline hover:underline-offset-3 text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden"
                       >
                         {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
