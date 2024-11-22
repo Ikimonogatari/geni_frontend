@@ -90,9 +90,6 @@ function Navbar() {
               alt="logo"
               className=""
             />
-            <span className="bg-[#2D262D] px-3 py-1 rounded-3xl text-xs text-white">
-              beta
-            </span>
           </a>
           <NavButtons />
 
