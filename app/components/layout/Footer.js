@@ -16,14 +16,21 @@ function Footer() {
             </div>
             <div className="flex flex-row gap-4 items-center">
               <a target="_blank" href="https://www.instagram.com/geni.ugc/">
-                <Image src={"/ig-icon.png"} width={40} height={40} alt="logo" />
+                <Image
+                  src={"/ig-icon.png"}
+                  width={24}
+                  height={24}
+                  alt="logo"
+                  className="w-6 h-6"
+                />
               </a>
               <a target="_blank" href="mailto:geni.ugc@gmail.com">
                 <Image
                   src={"/mail-icon.png"}
-                  width={40}
-                  height={40}
+                  width={24}
+                  height={24}
                   alt="logo"
+                  className="w-7 h-7"
                 />
               </a>
             </div>
