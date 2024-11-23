@@ -93,9 +93,9 @@ function page() {
         <Brands />
 
         <div className="container max-w-7xl px-7 mx-auto py-10">
-          <div className="flex flex-col lg:flex-row p-8 gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#4D55F5] text-white">
+          <div className="flex flex-col lg:flex-row p-8 gap-2 sm:gap-10 items-center rounded-3xl border-[#2D262D] border-[1px] bg-[#4D55F5] text-white">
             <div className="flex flex-col gap-4">
-              <span className="text-2xl sm:text-3xl font-bold">
+              <span className="text-base sm:text-lg lg:text-2xl font-bold">
                 Ad creative-ийн хувьд худалдан авалтад хамгийн их нөлөөлдөг
                 хэлбэр нь UGC гэж боддог. Монгол залуус маань энэ шинэ төрлийн
                 ad creative-ийн онцгой ач холбогдлыг олж харж Монголынхоо
