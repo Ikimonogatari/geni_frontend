@@ -134,7 +134,6 @@ function ContentProgress({ currentContents }) {
                   contentId={p.ContentId}
                 />
               ) : null}
-
               {p.Status === "ContentReceived" ? (
                 <ContentReviewModal p={p} />
               ) : null}

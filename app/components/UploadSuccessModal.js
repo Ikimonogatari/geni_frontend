@@ -39,20 +39,21 @@ function UploadSuccessModal({
               ) : (
                 <></>
               )}
+              {parsedUserInfo && (
+                <div className="w-full flex flex-col gap-2">
+                  <div className="w-full flex flex-row items-center gap-3">
+                    <span className="font-bold text-xl">
+                      {parsedUserInfo?.FirstName}
+                      {parsedUserInfo?.Name}
+                    </span>
+                  </div>
 
-              <div className="w-full flex flex-col gap-2">
-                <div className="w-full flex flex-row items-center gap-3">
-                  <span className="font-bold text-xl">
-                    {parsedUserInfo?.FirstName}
-                    {parsedUserInfo?.Name}
+                  <span className="text-lg">
+                    {parsedUserInfo ? parsedUserInfo?.Point : 0}
+                    xp
                   </span>
                 </div>
-
-                <span className="text-lg">
-                  {parsedUserInfo ? parsedUserInfo?.Point : 0}
-                  xp
-                </span>
-              </div>
+              )}
             </div>
           </div>
 

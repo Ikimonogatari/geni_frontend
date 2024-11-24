@@ -1,16 +1,13 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 
 import Cookies from "js-cookie";
-import UploadSuccessModal from "../components/UploadSuccessModal";
 import FeedbackModal from "../components/FeedbackModal";
 import StatusIndicator from "../components/StatusIndicator";
 
 function ContentProgress({ currentContents }) {
   console.log(currentContents);
 
-  const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
   const userInfo = Cookies.get("user-info");
   console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -42,7 +39,11 @@ function ContentProgress({ currentContents }) {
             <StatusIndicator status={c.Status} />
             <div className="col-span-1">
               {c.Status === "ContentRejected" ? (
-                <FeedbackModal parsedUserInfo={parsedUserInfo} />
+                <FeedbackModal
+                  parsedUserInfo={parsedUserInfo}
+                  contentId={c.ContentId}
+                  feedbacks={c.FeedBacks}
+                />
               ) : (
                 <></>
               )}
