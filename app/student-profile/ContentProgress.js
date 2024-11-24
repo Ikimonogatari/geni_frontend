@@ -14,7 +14,7 @@ function ContentProgress({ currentContents }) {
 
   return (
     <div className="w-full overflow-x-auto">
-      <div className="min-w-[450px] sm:min-w-[600px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+      <div className="min-w-[850px] sm:min-w-[1200px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
         <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[2fr,1fr,1fr,2fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
           <span className="col-span-1">Үзэх хичээл</span>
           <span className="col-span-1">Багш</span>
@@ -30,7 +30,7 @@ function ContentProgress({ currentContents }) {
             <span className="col-span-1">Geni creator online course</span>
             <span className="col-span-1">Geni</span>
             <a
-              className="underline"
+              className="underline col-span-1"
               target="_blank"
               href="https://meirapage.gumroad.com/l/hxwkma/hic5m2k"
             >

@@ -241,14 +241,14 @@ function page() {
             </div>
           </div>
 
-          <div className="mt-4 sm:mt-16 w-full flex flex-row items-center justify-between">
+          <div className="mt-4 sm:mt-16 w-full flex flex-row items-center justify-between gap-4">
             <div className="flex flex-row items-center gap-3">
               {brandProfileButtons.map((b, i) => (
                 <a
                   target="_blank"
                   href={b.link}
                   key={i}
-                  className={`border-[1px] border-[#2D262D] bg-[#4FB755] text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
+                  className={`border-[1px] border-[#2D262D] bg-[#4FB755] text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-xs sm:text-base`}
                 >
                   {b.title}
                 </a>
