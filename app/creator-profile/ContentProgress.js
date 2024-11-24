@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useUpdateContentStatusMutation } from "../services/service";
 import toast from "react-hot-toast";
@@ -8,13 +8,13 @@ import ContentUploadModal from "../components/ContentUploadModal";
 import FeedbackModal from "../components/FeedbackModal";
 import ContentReviewModal from "../components/ContentReviewModal";
 import StatusIndicator from "../components/StatusIndicator";
+import DeadlineModal from "../components/DeadlineModal";
 
 function ContentProgress({ currentContents }) {
   console.log(currentContents);
   const userInfo = Cookies.get("user-info");
   console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-
   console.log(parsedUserInfo);
 
   const [
@@ -35,33 +35,33 @@ function ContentProgress({ currentContents }) {
     }
   }, [updateContentStatusData, updateContentStatusError]);
 
-  const handleUpdateContentStatus = (contentId, status) => {
-    updateContentStatus({
+  const handleUpdateContentStatus = async (contentId, status) => {
+    await updateContentStatus({
       ContentId: contentId,
       Status: status,
     });
   };
 
-  const formatDeadline = (deadline) => {
-    const deadlineDate = new Date(deadline);
-    return deadlineDate.toLocaleString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const getDeadlineBgClass = (deadline) => {
+  const getDeadlineInfo = (deadline) => {
     const now = new Date();
     const timeRemaining = new Date(deadline) - now;
-    const halfway = 1000 * 60 * 60 * 12; // 12 hours in ms
-    const almostDue = 1000 * 60 * 60 * 3; // 3 hours in ms
+    const oneDay = 1000 * 60 * 60 * 24; // 1 day in milliseconds
+    const daysLeft = Math.ceil(timeRemaining / oneDay);
 
-    if (timeRemaining <= almostDue) return "bg-[#FFE0E0]"; // almost due
-    if (timeRemaining <= halfway) return "bg-[#FFF8E0]"; // halfway
-    return "bg-[#E0F4FF]"; // enough time
+    if (timeRemaining < 0) {
+      return { bgClass: "bg-[#FF0000] text-white", text: "Хоцорсон" }; // deep red for overdue
+    }
+    if (daysLeft <= 1) {
+      return { bgClass: "bg-[#FFE0E0]", text: `${daysLeft} хоног үлдсэн` };
+    }
+    if (daysLeft <= 3) {
+      return { bgClass: "bg-[#FFF8E0]", text: `${daysLeft} хоног үлдсэн` };
+    }
+    if (daysLeft <= 7) {
+      return { bgClass: "bg-[#E0F4FF]", text: `${daysLeft} хоног үлдсэн` };
+    }
+
+    return { bgClass: "bg-[#E0F4FF]", text: `${daysLeft} хоног үлдсэн` };
   };
 
   return (
@@ -99,26 +99,26 @@ function ContentProgress({ currentContents }) {
             <span className="col-span-1">{p.ProductName}</span>
             <span className="col-span-1">{p.BrandName}</span>
             <span className="col-span-1">{p.ContentPhase}</span>
+
             <StatusIndicator status={p.Status} />
             <span
-              className={`
-                col-span-1 px-1 py-1 rounded-md text-center
-                ${getDeadlineBgClass(p.Deadline)}
-              `}
+              className={`px-2 py-[6px] rounded-md text-center ${
+                getDeadlineInfo(p.Deadline).bgClass
+              }
+  `}
             >
-              {formatDeadline(p.Deadline)}
+              {getDeadlineInfo(p.Deadline).text}
             </span>
+
             <div className="col-span-1">
               {p.Status === "ProdDelivering" ? (
-                <button
-                  onClick={() =>
-                    handleUpdateContentStatus(p.ContentId, "ContentInProgress")
-                  }
-                  className="bg-[#4D55F5] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  Хүлээж авсан
-                </button>
-              ) : null}
+                <DeadlineModal
+                  p={p}
+                  handleUpdateContentStatus={handleUpdateContentStatus}
+                />
+              ) : (
+                <></>
+              )}
               {p.Status === "ContentRejected" ? (
                 <FeedbackModal
                   parsedUserInfo={parsedUserInfo}
