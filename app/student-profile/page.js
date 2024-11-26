@@ -137,26 +137,11 @@ function page() {
               ) : (
                 <div className="w-[90px] h-[90px] sm:w-[194px] sm:h-[194px]"></div>
               )}
-              <div className="flex flex-col gap-1 sm:gap-2">
+              <div className="flex flex-col gap-1">
                 <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                  {getUserInfoData?.FirstName} {getUserInfoData?.LastName}
-                </span>
-                <span className="text-[#6F6F6F] text-xs sm:text-base">
-                  @{getUserInfoData?.Nickname}
+                  {getUserInfoData?.Nickname}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
-                  <span className="text-sm sm:text-lg">
-                    {getUserInfoData ? getUserInfoData.Point : 0} xp
-                  </span>
-                  <a>
-                    <Image
-                      src={"/Info.png"}
-                      width={24}
-                      height={24}
-                      alt="info"
-                      className="w-4 h-4 sm:w-6 sm:h-6"
-                    />
-                  </a>
                   {instagramLink && (
                     <a
                       target="_blank"
@@ -186,19 +171,13 @@ function page() {
                     </a>
                   )}
                 </div>
-                <span className="text-[#6F6F6F] text-xs sm:text-base">
-                  {getUserInfoData ? getUserInfoData.Bio : ""}
-                </span>
-                <div className="mt-1 flex flex-wrap items-center gap-2 text-[#2D262D]">
-                  {getUserInfoData?.Category?.map((c, i) => (
-                    <button
-                      key={i}
-                      className="bg-[#4FB755] font-semibold rounded-full px-4 py-2"
-                    >
-                      {c.Category_id.name}
-                    </button>
-                  ))}
-                </div>
+                {getUserInfoData ? (
+                  <span className="text-[#6F6F6F] text-xs sm:text-base">
+                    {getUserInfoData?.Bio}
+                  </span>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="flex flex-row items-center gap-2 sm:gap-5">
