@@ -1,10 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import { DialogClose, DialogContent, Dialog } from "./ui/dialog";
-import { useRouter } from "next/navigation";
 
-function ConvertToCreatorModal({ isCreator }) {
-  const router = useRouter();
+function ConvertToCreatorModal({ isCreator, handleBecomeCreator }) {
   return (
     <Dialog open={isCreator}>
       <DialogContent className="w-full max-w-2xl flex flex-col gap-3 rounded-3xl">
@@ -38,7 +36,7 @@ function ConvertToCreatorModal({ isCreator }) {
           сонгон нэвтрэнэ үү!
         </div>
         <DialogClose
-          onClick={() => router.push("/login")}
+          onClick={handleBecomeCreator}
           className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-base sm:text-xl border border-[#2D262D] rounded-2xl"
         >
           Geni Creator-р нэвтрэх

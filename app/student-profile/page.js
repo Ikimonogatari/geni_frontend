@@ -5,17 +5,20 @@ import ContentProgress from "./ContentProgress";
 import {
   useGetUserInfoQuery,
   useListCreatorContentsQuery,
+  useBecomeCreatorMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import HomeworkUploadModal from "../components/HomeworkUploadModal";
 import ConvertToCreatorModal from "../components/ConvertToCreatorModal";
+import { useRouter } from "next/navigation";
 
 function page() {
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 12;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
+  const router = useRouter();
 
   const {
     data: getUserInfoData,
@@ -31,6 +34,16 @@ function page() {
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
   );
+
+  const [
+    becomeCreator,
+    {
+      data: becomeCreatorData,
+      error: becomeCreatorError,
+      isLoading: becomeCreatorLoading,
+      isSuccess: becomeCreatorSuccess,
+    },
+  ] = useBecomeCreatorMutation();
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -118,6 +131,22 @@ function page() {
   );
 
   const isCreator = getUserInfoData?.HasGivenHomework;
+
+  const handleBecomeCreator = async () => {
+    await becomeCreator();
+  };
+
+  useEffect(() => {
+    if (becomeCreatorSuccess) {
+      router.push("/login");
+    }
+  }, [becomeCreatorSuccess, router]);
+
+  useEffect(() => {
+    if (getUserInfoData?.UserType === "Creator") {
+      router.push("/login");
+    }
+  }, [getUserInfoData, router]);
 
   return (
     <div className="min-h-screen w-full h-full bg-white">
@@ -296,7 +325,10 @@ function page() {
           <></>
         )}
       </div>
-      <ConvertToCreatorModal isCreator={isCreator} />
+      <ConvertToCreatorModal
+        isCreator={isCreator}
+        handleBecomeCreator={handleBecomeCreator}
+      />
     </div>
   );
 }

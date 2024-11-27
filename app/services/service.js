@@ -246,6 +246,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    becomeCreator: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student/becomecreator",
+        method: "POST",
+        body,
+      }),
+    }),
     addProductSupply: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/product/supply",
@@ -366,4 +373,5 @@ export const {
   useListPublicCreatorContentGalleryQuery,
   useDeleteProductMutation,
   useEditProductMutation,
+  useBecomeCreatorMutation,
 } = geniApi;
