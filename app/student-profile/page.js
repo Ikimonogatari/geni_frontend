@@ -9,6 +9,7 @@ import {
 import Cookies from "js-cookie";
 import Link from "next/link";
 import HomeworkUploadModal from "../components/HomeworkUploadModal";
+import ConvertToCreatorModal from "../components/ConvertToCreatorModal";
 
 function page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -115,6 +116,9 @@ function page() {
   const facebookLink = getUserInfoData?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Facebook"
   );
+
+  const isCreator = getUserInfoData?.HasGivenHomework;
+
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
@@ -292,6 +296,7 @@ function page() {
           <></>
         )}
       </div>
+      <ConvertToCreatorModal isCreator={isCreator} />
     </div>
   );
 }

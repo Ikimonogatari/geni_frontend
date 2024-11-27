@@ -14,11 +14,11 @@ export function middleware(req) {
   }
 
   if (url.pathname === "/login") {
-    if (authToken) {
+    if (authToken && userType?.value !== "Student") {
       console.log("User already authenticated, redirecting from login");
       return NextResponse.redirect(new URL("/", req.nextUrl)); // Redirect to homepage or dashboard
     } else {
-      return NextResponse.next(); // Allow unauthenticated users to access the login page
+      return NextResponse.next(); // Allow unauthenticated users or Student users to access the login page
     }
   }
 
@@ -34,7 +34,7 @@ export function middleware(req) {
       url.pathname === "/edit-profile-brand" ||
       url.pathname === "/add-product"
     ) {
-      console.log("Redirecting Creator to login"); // Log redirection for debugging
+      console.log("Redirecting Creator to home"); // Log redirection for debugging
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   } else if (userType?.value === "Brand") {
@@ -42,11 +42,10 @@ export function middleware(req) {
       url.pathname === "/creator-profile" ||
       url.pathname === "/edit-profile-creator"
     ) {
-      console.log("Redirecting Brand to login"); // Log redirection for debugging
+      console.log("Redirecting Brand to home"); // Log redirection for debugging
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   } else if (userType?.value === "Student") {
-    // Add specific conditions for Student role if needed
     if (
       url.pathname === "/brand-profile" ||
       url.pathname === "/edit-profile-brand" ||
@@ -54,7 +53,7 @@ export function middleware(req) {
       url.pathname === "/creator-profile" ||
       url.pathname === "/edit-profile-creator"
     ) {
-      console.log("Redirecting Student to login"); // Log redirection for debugging
+      console.log("Redirecting Student to home"); // Log redirection for debugging
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   }

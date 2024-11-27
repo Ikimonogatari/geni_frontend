@@ -50,29 +50,13 @@ export default function Home() {
               className="absolute -bottom-32 left-24 hidden lg:block"
             />
           </div>
-          <div className="relative">
-            <Image
-              src={"/hero-image4.png"}
-              width={154}
-              height={45}
-              alt="hero-image"
-              className="absolute -left-3 sm:-left-7 top-7 max-w-[88px] sm:max-w-[154px]"
-            />
-            <Image
-              src={"/hero-image5.png"}
-              width={138}
-              height={48}
-              alt="hero-image"
-              className="absolute -right-3 sm:-right-7 top-7 max-w-[92px] sm:max-w-[138px]"
-            />
-            <Image
-              src={"/hero-image3.png"}
-              width={502}
-              height={378}
-              alt="hero-image"
-              className=""
-            />
-          </div>
+          <Image
+            src={"/hero-image.png"}
+            width={502}
+            height={378}
+            alt="hero-image"
+            className=""
+          />
         </div>
         <div className="container mx-auto px-7 w-full pt-12">
           <Image
@@ -309,33 +293,11 @@ export default function Home() {
             </div>
             <div className="relative">
               <Image
-                src={"/founder-icon3.png"}
-                width={71}
-                height={93}
-                alt="founder-icon"
-                className="absolute left-0 top-0  max-w-[41px] max-h-[54px] sm:max-w-[71px] sm:max-h-[93px]"
-              />
-              <Image
-                src={"/founder-icon2.png"}
-                width={195}
-                height={211}
-                alt="founder-icon"
-                className="absolute right-0 top-0  max-w-[114px] max-h-[123px] sm:max-w-[195px] sm:max-h-[211px]"
-              />
-
-              <Image
                 src={"/founder-image.png"}
                 width={546}
                 height={547}
                 alt="founder"
                 className="mx-auto"
-              />
-              <Image
-                src={"/founder-icon1.png"}
-                width={123}
-                height={40}
-                alt="founder-icon"
-                className="absolute bottom-14 sm:bottom-24 right-0 max-w-[72px] max-h-[23px] sm:max-w-[123px] sm:max-h-[40px]"
               />
             </div>
           </div>
