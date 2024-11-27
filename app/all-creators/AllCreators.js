@@ -49,21 +49,23 @@ function AllCreators() {
                 >
                   {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
                 </a>
-                <Image
-                  src={
-                    creator?.LevelIconUrl
-                      ? creator.LevelIconUrl
-                      : "/verified-icon.png"
-                  }
-                  width={creator?.LevelIconUrl ? 58 : 20}
-                  height={creator?.LevelIconUrl ? 22 : 20}
-                  alt=""
-                  className={`mt-[2px] ${
-                    creator?.LevelIconUrl
-                      ? "max-w-[29px] max-h-[11px] sm:min-w-[58px] sm:min-h-[22px] sm:max-w-[58px] sm:max-h-[22px]"
-                      : "max-w-4 max-h-4 sm:min-w-5 sm:min-h-5 sm:max-w-12 sm:max-h-5"
-                  }`}
-                />
+                {(creator?.Point >= 80 || creator?.LevelIconUrl) && (
+                  <Image
+                    src={
+                      creator?.LevelIconUrl
+                        ? creator?.LevelIconUrl
+                        : "/verified-icon.png"
+                    }
+                    width={creator?.LevelIconUrl ? 58 : 24}
+                    height={creator?.LevelIconUrl ? 22 : 24}
+                    alt=""
+                    className={`mt-[2px] ${
+                      creator?.LevelIconUrl
+                        ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
+                        : "min-w-6 min-h-6 max-w-12 max-h-5"
+                    }`}
+                  />
+                )}
               </div>
               {creator && (
                 // creator?.AverageRating !== "0/5" &&

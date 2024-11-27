@@ -68,7 +68,7 @@ function ContentGallery({ contentsGallery }) {
                   alt=""
                 />
                 <span className="text-xs md:text-base text-white">
-                  {userType === "Creator" && content?.BrandName}
+                  {content?.BrandName}
                 </span>
                 <Image
                   src={"/verified-icon.png"}

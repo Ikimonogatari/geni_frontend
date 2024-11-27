@@ -427,7 +427,7 @@ function Page() {
                     src={"/verified-icon.png"}
                     width={24}
                     height={24}
-                    alt="verified-icon"
+                    alt=""
                     className="w-6 h-6"
                   />
                 </div>

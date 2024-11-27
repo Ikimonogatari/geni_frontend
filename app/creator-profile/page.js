@@ -179,21 +179,24 @@ function page() {
                       {getUserInfoData?.Nickname}
                     </span>
 
-                    <Image
-                      src={
-                        getUserInfoData?.LevelIconUrl
-                          ? getUserInfoData?.LevelIconUrl
-                          : "/verified-icon.png"
-                      }
-                      width={getUserInfoData?.LevelIconUrl ? 58 : 24}
-                      height={getUserInfoData?.LevelIconUrl ? 22 : 24}
-                      alt=""
-                      className={`mt-[2px] ${
-                        getUserInfoData?.LevelIconUrl
-                          ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
-                          : "min-w-6 min-h-6 max-w-12 max-h-5"
-                      }`}
-                    />
+                    {(getUserInfoData?.Point >= 80 ||
+                      getUserInfoData?.LevelIconUrl) && (
+                      <Image
+                        src={
+                          getUserInfoData?.LevelIconUrl
+                            ? getUserInfoData?.LevelIconUrl
+                            : "/verified-icon.png"
+                        }
+                        width={getUserInfoData?.LevelIconUrl ? 58 : 24}
+                        height={getUserInfoData?.LevelIconUrl ? 22 : 24}
+                        alt=""
+                        className={`mt-[2px] ${
+                          getUserInfoData?.LevelIconUrl
+                            ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
+                            : "min-w-6 min-h-6 max-w-12 max-h-5"
+                        }`}
+                      />
+                    )}
                   </div>
                   <div className="flex flex-row items-center gap-3">
                     <span className="text-sm sm:text-lg">
@@ -306,21 +309,23 @@ function page() {
                   </div>
                 </div>
                 {getUserInfoData?.AverageRating &&
-                  getUserInfoData?.ContentCount && (
-                    <div className="flex flex-row items-center gap-3">
-                      <Image
-                        src={"/star.png"}
-                        width={24}
-                        height={24}
-                        alt="verified-icon"
-                        className="w-4 h-4 sm:w-6 sm:h-6"
-                      />
-                      <span className="text-[#2D262D] text-xs sm:text-base">
-                        {getUserInfoData?.AverageRating} дундаж үнэлгээ (
-                        {getUserInfoData?.ContentCount} контент)
-                      </span>
-                    </div>
-                  )}
+                getUserInfoData?.ContentCount ? (
+                  <div className="flex flex-row items-center gap-3">
+                    <Image
+                      src={"/star.png"}
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="w-4 h-4 sm:w-6 sm:h-6"
+                    />
+                    <span className="text-[#2D262D] text-xs sm:text-base">
+                      {getUserInfoData?.AverageRating} дундаж үнэлгээ (
+                      {getUserInfoData?.ContentCount} контент)
+                    </span>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink && (
                     <a

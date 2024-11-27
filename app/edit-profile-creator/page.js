@@ -363,18 +363,32 @@ function Page() {
                     />
                   </button>
                 </div>
-                <div className="flex flex-row items-center gap-3">
-                  <span className="text-sm sm:text-lg">
-                    Баталгаажсан бүтээгч
-                  </span>
-                  <Image
-                    src={"/verified-icon.png"}
-                    width={24}
-                    height={24}
-                    alt="verified-icon"
-                    className="w-6 h-6"
-                  />
-                </div>
+
+                {parsedUserInfo?.Point > 80 ? (
+                  <div className="flex flex-row items-center gap-3">
+                    <span className="text-sm sm:text-lg">
+                      Баталгаажсан бүтээгч
+                    </span>
+                    <Image
+                      src={"/verified-icon.png"}
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="w-6 h-6"
+                    />
+                  </div>
+                ) : parsedUserInfo?.LevelIconUrl ? (
+                  <div className="flex flex-row items-center gap-3">
+                    <Image
+                      src={parsedUserInfo.LevelIconUrl}
+                      width={58}
+                      height={24}
+                      alt=""
+                      className="w-[58px] h-6"
+                    />
+                  </div>
+                ) : null}
+
                 <div
                   {...getRootProps()}
                   className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"

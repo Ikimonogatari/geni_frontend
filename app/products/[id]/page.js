@@ -358,58 +358,14 @@ function Page() {
                           height={220}
                           alt="recieved"
                         />
-
-                        <div className="w-full flex flex-col gap-5">
-                          <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
-                            <div className="w-full flex flex-row items-center gap-5">
-                              {parsedUserInfo ? (
-                                <Image
-                                  src={
-                                    parsedUserInfo.ProfileLink
-                                      ? parsedUserInfo?.ProfileLink
-                                      : "/dummy-profile.jpg"
-                                  }
-                                  width={128}
-                                  height={128}
-                                  alt=""
-                                  className="w-[100px] h-[100px] aspect-square sm:w-[128px] sm:h-[128px] rounded-2xl"
-                                />
-                              ) : (
-                                <></>
-                              )}
-
-                              <div className="w-full flex flex-col gap-2">
-                                <div className="w-full flex flex-row items-center gap-3">
-                                  <span className="font-bold text-xl">
-                                    {parsedUserInfo?.FirstName}
-                                    {parsedUserInfo?.Name}
-                                  </span>
-                                  <Image
-                                    src={"/verified-icon.png"}
-                                    width={24}
-                                    height={24}
-                                    alt="verified"
-                                    className="w-6 h-6"
-                                  />
-                                </div>
-
-                                <span className="text-lg">
-                                  {parsedUserInfo ? parsedUserInfo?.Point : 0}
-                                  xp
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <DialogClose>
-                            <button
-                              onClick={() => router.back()}
-                              className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
-                            >
-                              Баярлалаа
-                            </button>
-                          </DialogClose>
-                        </div>
+                        <DialogClose className="w-full">
+                          <button
+                            onClick={() => router.back()}
+                            className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
+                          >
+                            Баярлалаа
+                          </button>
+                        </DialogClose>
                       </DialogContent>
                     ) : (
                       <DialogContent className="w-full flex flex-col max-w-2xl rounded-3xl">

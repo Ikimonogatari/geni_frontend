@@ -160,14 +160,12 @@ function ContentProgress({ currentContents }) {
           >
             <span className="col-span-1">{p.ProductName}</span>
             <div className="col-span-1 flex flex-row items-center gap-3">
-              <span>{p.FirstName}</span>
-              <Image
-                src={"/verified-icon.png"}
-                width={24}
-                height={24}
-                alt="verified"
-                className="w-4 h-4 sm:w-6 sm:h-6"
-              />
+              <a
+                className="hover:underline"
+                href={`/public-profile/${p?.CreatorId}`}
+              >
+                {p.Nickname ? p.Nickname : "Geni бүтээгч"}
+              </a>
             </div>
             <span className="col-span-1">{p.ContentPhase}</span>
             <StatusIndicator status={p.Status} />
