@@ -172,7 +172,9 @@ function page() {
               )}
               <div className="flex flex-col gap-1">
                 <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                  {getUserInfoData?.Nickname}
+                  {getUserInfoData?.Nickname
+                    ? getUserInfoData?.Nickname
+                    : "Geni сурагч"}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink && (

@@ -176,7 +176,9 @@ function page() {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
                   <div className="flex flex-row items-center gap-3">
                     <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                      {getUserInfoData?.Nickname}
+                      {getUserInfoData?.Nickname
+                        ? getUserInfoData?.Nickname
+                        : "Geni бүтээгч"}
                     </span>
 
                     {(getUserInfoData?.Point >= 80 ||
