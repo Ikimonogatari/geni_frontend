@@ -9,6 +9,7 @@ import FeedbackModal from "../components/FeedbackModal";
 import ContentReviewModal from "../components/ContentReviewModal";
 import StatusIndicator from "../components/StatusIndicator";
 import DeadlineModal from "../components/DeadlineModal";
+import DeadlineHover from "../components/DeadlineHover";
 
 function ContentProgress({ currentContents }) {
   console.log(currentContents);
@@ -40,28 +41,6 @@ function ContentProgress({ currentContents }) {
       ContentId: contentId,
       Status: status,
     });
-  };
-
-  const getDeadlineInfo = (deadline) => {
-    const now = new Date();
-    const timeRemaining = new Date(deadline) - now;
-    const oneDay = 1000 * 60 * 60 * 24; // 1 day in milliseconds
-    const daysLeft = Math.ceil(timeRemaining / oneDay);
-
-    if (timeRemaining < 0) {
-      return { bgClass: "bg-[#FF0000] text-white", text: "Хоцорсон" }; // deep red for overdue
-    }
-    if (daysLeft <= 1) {
-      return { bgClass: "bg-[#FFE0E0]", text: `${daysLeft} хоног үлдсэн` };
-    }
-    if (daysLeft <= 3) {
-      return { bgClass: "bg-[#FFF8E0]", text: `${daysLeft} хоног үлдсэн` };
-    }
-    if (daysLeft <= 7) {
-      return { bgClass: "bg-[#E0F4FF]", text: `${daysLeft} хоног үлдсэн` };
-    }
-
-    return { bgClass: "bg-[#E0F4FF]", text: `${daysLeft} хоног үлдсэн` };
   };
 
   return (
@@ -97,19 +76,12 @@ function ContentProgress({ currentContents }) {
             className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,1fr,3fr,2fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
           >
             <span className="col-span-1">{p.ProductName}</span>
+            {}
             <span className="col-span-1">{p.BrandName}</span>
             <span className="col-span-1">{p.ContentPhase}</span>
 
             <StatusIndicator status={p.Status} />
-            <span
-              className={`px-2 py-[6px] rounded-md text-center ${
-                getDeadlineInfo(p.Deadline).bgClass
-              }
-  `}
-            >
-              {getDeadlineInfo(p.Deadline).text}
-            </span>
-
+            <DeadlineHover deadline={p.Deadline} />
             <div className="col-span-1">
               {p.Status === "ProdDelivering" ? (
                 <DeadlineModal

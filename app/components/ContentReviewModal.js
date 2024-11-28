@@ -33,7 +33,7 @@ function ContentReviewModal({ p }) {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         type="submit"
-        className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+        className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
       >
         Сэтгэгдэл харах
       </DialogTrigger>
