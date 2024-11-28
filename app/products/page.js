@@ -148,7 +148,7 @@ function Page() {
                         width={280}
                         height={280}
                         alt=""
-                        className="aspect-square inset-0 w-full rounded-t-2xl"
+                        className="aspect-square inset-0 w-full rounded-t-2xl object-cover"
                       />
                       <div className="flex flex-row items-center justify-end sm:justify-between w-full absolute top-2 px-3 sm:top-3">
                         <div className="hidden sm:flex flex-row items-center w-full gap-2">
