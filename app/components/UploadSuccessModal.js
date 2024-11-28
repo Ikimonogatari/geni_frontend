@@ -20,11 +20,10 @@ function UploadSuccessModal({
           height={220}
           alt="recieved"
         />
-
         <div className="w-full flex flex-col gap-5">
-          <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
-            <div className="w-full flex flex-row items-center gap-5">
-              {parsedUserInfo ? (
+          {parsedUserInfo && (
+            <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
+              <div className="w-full flex flex-row items-center gap-5">
                 <Image
                   src={
                     parsedUserInfo.ProfileLink
@@ -36,10 +35,6 @@ function UploadSuccessModal({
                   alt=""
                   className="w-[100px] h-[100px] aspect-square sm:w-[128px] sm:h-[128px] rounded-2xl"
                 />
-              ) : (
-                <></>
-              )}
-              {parsedUserInfo && (
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full flex flex-row items-center gap-3">
                     <span className="font-bold text-xl">
@@ -53,9 +48,9 @@ function UploadSuccessModal({
                     xp
                   </span>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
 
           <DialogClose>
             <button
