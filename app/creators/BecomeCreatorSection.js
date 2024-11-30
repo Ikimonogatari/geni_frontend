@@ -25,7 +25,7 @@ function BecomeCreatorSection() {
               "https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
             }
             bg={"bg-[#CA7FFE]"}
-            shadowbg={"#9c44da"}
+            shadowbg={"shadow-[0.25rem_0.25rem_#9c44da]"}
             text={"Geni Creator болох"}
           />
         </div>

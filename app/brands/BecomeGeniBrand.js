@@ -23,7 +23,7 @@ function BecomeGeniBrand() {
           link={"https://forms.gle/snf9FWo5WKXaqb2C8"}
           text={"Geni Brand болох"}
           bg={"bg-[#4D55F5]"}
-          shadowbg={"#131aaf"}
+          shadowbg={"shadow-[0.25rem_0.25rem_#131aaf]"}
         />
       </div>
     </div>

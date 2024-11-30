@@ -8,7 +8,7 @@ function HomeBecomeGeniButton({ text, bg, shadowbg, link, width }) {
   return (
     <button
       onClick={() => router.push(link)}
-      className={`${bg} ${width} text-white font-bold cursor-pointer border border-[#2D262D] rounded-md transition-all transform translate-x-[-0.25rem] translate-y-[-0.25rem] shadow-[0.25rem_0.25rem_${shadowbg}] active:translate-x-0 active:translate-y-0 active:shadow-none flex flex-row items-center justify-center gap-2`}
+      className={`${bg} ${width} ${shadowbg} text-white font-bold cursor-pointer border border-[#2D262D] rounded-md transition-all transform translate-x-[-0.25rem] translate-y-[-0.25rem] active:translate-x-0 active:translate-y-0 active:shadow-none flex flex-row items-center justify-center gap-2`}
     >
       <span className="text-base sm:text-lg">{text}</span>
       <Image

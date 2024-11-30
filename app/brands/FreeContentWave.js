@@ -31,7 +31,7 @@ function FreeContentWave() {
             link={"https://forms.gle/EbjaLfTfRCzH4Acr8"}
             text={"Давалгаанд нэгдэх"}
             bg={"bg-[#4D55F5]"}
-            shadowbg={"#131aaf"}
+            shadowbg={"shadow-[0.25rem_0.25rem_#131aaf]"}
           />
         </div>
       </div>

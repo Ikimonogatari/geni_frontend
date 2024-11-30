@@ -10,14 +10,14 @@ import {
   useSendOtpToEmailMutation,
 } from "../services/service";
 import Cookies from "js-cookie";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
+import LoginButton from "./LoginButton";
 
 function Page() {
   const router = useRouter();
@@ -176,11 +176,11 @@ function Page() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-32">
+      <div className="mt-20 sm:mt-32">
         <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
           <form
             onSubmit={login.handleSubmit}
-            className="mt-11 flex flex-col xl:flex-row items-center gap-16"
+            className="sm:mt-11 flex flex-col xl:flex-row items-center gap-6 sm:gap-16"
           >
             <div className="bg-[#F5F4F0] rounded-2xl px-12 py-16 lg:px-10 lg:py-32 max-w-3xl w-full">
               <Image
@@ -192,8 +192,8 @@ function Page() {
               />
             </div>
             <div className="flex flex-col gap-4 w-full max-w-3xl xl:max-w-md">
-              <span className="text-xl font-bold">Нэвтрэх</span>
-              <div className="flex flex-row items-center gap-6">
+              <span className="text-lg sm:text-xl font-bold">Нэвтрэх</span>
+              <div className="flex flex-row items-center gap-4 sm:gap-6 text-sm sm:text-base">
                 <div
                   onClick={() => handleUserType("Creator")}
                   className={`transition-all duration-150 ${
@@ -202,7 +202,7 @@ function Page() {
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-4 rounded-lg border-[2px] w-full text-center`}
                 >
-                  Geni Creator
+                  Creator
                 </div>
                 <div
                   onClick={() => handleUserType("Brand")}
@@ -212,7 +212,7 @@ function Page() {
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
                 >
-                  Geni Brand
+                  Brand
                 </div>
                 <div
                   onClick={() => handleUserType("Student")}
@@ -222,17 +222,17 @@ function Page() {
                       : "border-[#CDCDCD]"
                   } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
                 >
-                  Geni Student
+                  Student
                 </div>
               </div>
-              <span className="text-lg">И-мэйл</span>
+              <span className="text-base sm:text-lg">И-мэйл</span>
               <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
                 <input
                   id="email"
                   name="email"
                   type="email"
                   placeholder=""
-                  className="w-full outline-none"
+                  className="w-full outline-none text-sm sm:text-base"
                   onChange={login.handleChange}
                   value={login.values.email}
                 />
@@ -241,14 +241,14 @@ function Page() {
               {login.touched.email && login.errors.email ? (
                 <div className="text-red-500 text-sm">{login.errors.email}</div>
               ) : null}
-              <span className="text-lg">Нууц үг</span>
+              <span className="text-base sm:text-lg">Нууц үг</span>
               <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
                 <input
                   name="password"
                   id="password"
                   type={showLoginPassword ? "text" : "password"}
                   placeholder=""
-                  className="w-full outline-none"
+                  className="w-full outline-none text-sm sm:text-base"
                   onChange={login.handleChange}
                   value={login.values.password}
                 />
@@ -495,34 +495,24 @@ function Page() {
                   )}
                 </DialogContent>
               </Dialog>
-              <button
-                type="submit"
-                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-md h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
+              <LoginButton
+                width={`w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
+                text={"Нэвтрэх"}
+                shadowbg={
                   userType === "Creator"
-                    ? "bg-[#9c44da]"
+                    ? "shadow-[0.25rem_0.25rem_#9c44da]"
                     : userType === "Brand"
-                    ? "bg-[#1920B4]"
-                    : "bg-[#3A8F44]"
-                }`}
-              >
-                <div
-                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-md h-[90px] rounded-xl border-[1px] border-[#2D262D] ${
-                    userType === "Creator"
-                      ? "bg-[#CA7FFE]"
-                      : userType === "Brand"
-                      ? "bg-[#4D55F5]"
-                      : "bg-[#4FB755]"
-                  } flex flex-row gap-2 items-center justify-center`}
-                >
-                  <span>Нэвтрэх</span>
-                  <Image
-                    src={"/arrow-right-icon.png"}
-                    alt="arrow"
-                    width={16}
-                    height={16}
-                  />
-                </div>
-              </button>
+                    ? "shadow-[0.25rem_0.25rem_#1920B4]"
+                    : "shadow-[0.25rem_0.25rem_#3A8F44]"
+                }
+                bg={
+                  userType === "Creator"
+                    ? "bg-[#CA7FFE]"
+                    : userType === "Brand"
+                    ? "bg-[#4D55F5]"
+                    : "bg-[#4FB755]"
+                }
+              />
             </div>
           </form>
         </div>
