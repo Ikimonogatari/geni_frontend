@@ -17,9 +17,7 @@ function page() {
       <div className="mt-[96px] sm:mt-[136px] md:mt-[152px]">
         <FreeContentWave />
         <BrandHero />
-        <div className="container px-7 mx-auto mt-7">
-          <BrandCycle />
-        </div>
+        <BrandCycle />
         <Brands />
         <BrandAlumni />
         <BecomeGeniBrand />

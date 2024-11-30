@@ -2,8 +2,7 @@ import React from "react";
 import Image from "next/image";
 function BrandCycle() {
   return (
-    <>
-      {" "}
+    <div className="container px-7 mx-auto mt-7">
       <Image
         src={"/brand-cycle.png"}
         width={1348}
@@ -18,7 +17,7 @@ function BrandCycle() {
         alt="cycle-image-mobile"
         className="block lg:hidden mx-auto"
       />
-    </>
+    </div>
   );
 }
 

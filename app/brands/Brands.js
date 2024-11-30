@@ -123,9 +123,9 @@ function Brands() {
                       {brand?.Name ? brand?.Name : "Geni Брэнд"}
                     </span>
                     {brand?.BrandTypes && (
-                      <button className="bg-[#CA7FFE] rounded-full px-4 py-2">
+                      <div className="bg-[#CA7FFE] text-white rounded-full px-4 py-2">
                         {brand?.BrandTypes?.[0]?.TypeName}
-                      </button>
+                      </div>
                     )}
 
                     <div className="flex flex-row gap-2">
@@ -162,9 +162,6 @@ function Brands() {
                         </a>
                       )}
                     </div>
-                    <p className="text-[#6F6F6F] text-xs line-clamp-3">
-                      {brand?.Bio}
-                    </p>
                   </div>
                 </SwiperSlide>
               );

@@ -62,7 +62,11 @@ function AllBrands() {
               <span className="hover:underline hover:underline-offset-3 text-base sm:text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden">
                 {brand?.Name ? brand?.Name : "Geni Брэнд"}
               </span>
-
+              {brand?.BrandTypes && (
+                <div className="bg-[#CA7FFE] text-white rounded-full px-4 py-2">
+                  {brand?.BrandTypes?.[0]?.TypeName}
+                </div>
+              )}
               <div className="flex flex-row gap-2">
                 {instagramLink && (
                   <a
@@ -97,9 +101,6 @@ function AllBrands() {
                   </a>
                 )}
               </div>
-              <p className="text-[#6F6F6F] text-[10px] sm:text-sm line-clamp-4">
-                {brand?.Bio}
-              </p>
             </div>
           );
         })}
