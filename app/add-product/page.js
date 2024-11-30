@@ -35,10 +35,7 @@ import { ClipLoader } from "react-spinners";
 import Cookies from "js-cookie";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 
@@ -69,8 +66,9 @@ function Page() {
       productPics: [],
     },
     validationSchema: Yup.object({
-      productPics: Yup.array().required(),
-      // productName: Yup.string().required("Заавал бөглөнө үү"),
+      productPics: Yup.array().required("Заавал бөглөнө үү"),
+      productTypes: Yup.array().required("Заавал бөглөнө үү"),
+      productName: Yup.string().required("Заавал бөглөнө үү"),
       contentInfo: Yup.array()
         .of(
           Yup.object().shape({
@@ -92,6 +90,7 @@ function Page() {
 
           return true;
         }),
+      addInfoSource: Yup.string().required("Заавал бөглөнө үү"),
       information: Yup.string().required("Заавал бөглөнө үү"),
       amount: Yup.string().required("Заавал бөглөнө үү"),
       requestForCreators: Yup.string().required("Заавал бөглөнө үү"),
@@ -105,6 +104,7 @@ function Page() {
       };
       createProduct(modifiedValues);
     },
+    validateOnMount: true,
   });
 
   const [
@@ -533,6 +533,11 @@ function Page() {
                       <></>
                     )}
                   </div>
+                  {formik.touched.productTypes && formik.errors.productTypes ? (
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.productTypes}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className="flex flex-col gap-3">
@@ -888,7 +893,7 @@ function Page() {
                 type="submit"
                 className={`ml-[6px] mt-3 relative transition-all duration-150 bg-[#131AAF] w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
                   !formik.dirty || !formik.isValid || formik.isSubmitting
-                    ? "opacity-90 cursor-not-allowed"
+                    ? "opacity-80 cursor-not-allowed"
                     : "opacity-100"
                 }`}
                 disabled={
@@ -898,7 +903,7 @@ function Page() {
                 <div
                   className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white bg-[#4D55F5] text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] flex items-center justify-center ${
                     !formik.dirty || !formik.isValid || formik.isSubmitting
-                      ? "opacity-90"
+                      ? "opacity-80"
                       : "opacity-100"
                   }`}
                 >

@@ -220,7 +220,7 @@ function BrandProducts({ brandProducts, brandData }) {
                   {p.Status === "Request" && (
                     <Dialog>
                       <DialogTrigger className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
-                        Дэлгэрэнгүй
+                        Харах
                       </DialogTrigger>
                       <DialogContent className="overflow-y-auto h-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 py-12 w-full lg:w-full max-w-[1000px] rounded-3xl">
                         <DialogHeader>
