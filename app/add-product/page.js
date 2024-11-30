@@ -886,7 +886,7 @@ function Page() {
               </div>
               <button
                 type="submit"
-                className={`ml-[6px] mt-3 relative transition-all duration-150 bg-[#4D55F5] w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
+                className={`ml-[6px] mt-3 relative transition-all duration-150 bg-[#131AAF] w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
                   !formik.dirty || !formik.isValid || formik.isSubmitting
                     ? "opacity-90 cursor-not-allowed"
                     : "opacity-100"
