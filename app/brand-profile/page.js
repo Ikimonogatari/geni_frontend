@@ -186,7 +186,7 @@ function page() {
                   src={
                     getUserInfoData?.ProfileLink
                       ? getUserInfoData?.ProfileLink
-                      : "/dummy-profile.jpg"
+                      : "/dummy-brand.png"
                   }
                   alt=""
                   width={194}

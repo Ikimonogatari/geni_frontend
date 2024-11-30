@@ -161,7 +161,7 @@ function page() {
                   src={
                     getUserInfoData?.ProfileLink
                       ? getUserInfoData?.ProfileLink
-                      : "/dummy-profile.jpg"
+                      : "/dummy-creator.png"
                   }
                   width={194}
                   height={194}
