@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import BecomeGeniButton from "../components/common/BecomeGeniButton";
 
 function FreeContentWave() {
   return (
@@ -14,30 +15,24 @@ function FreeContentWave() {
             className="max-w-[517px] max-h-[241px] w-full h-full"
           />
         </div>
-        <div className="flex flex-col w-full md:w-1/2">
+        <div className="flex flex-col w-full md:w-1/2 gap-4 sm:gap-5">
           <span className="text-2xl sm:text-3xl lg:text-4xl font-bold">
             ҮНЭГҮЙ КОНТЕНТ АВАХ УУ?
           </span>
-          <p className="mt-3 xl:mt-4 text-sm lg:text-base">
+          <p className="text-sm lg:text-base">
             Монгол дахь брэндүүдэд хэрэглэгчийн бүтээсэн контентын үр дүн, давуу
             талыг бодитоор мэдрүүлэх үүднээс бид зөвхөн бүтээгдэхүүнээ илгээгээд
             үнэгүй контент авах боломжийг нээж байна.
           </p>
-          <div className="mt-5 xl:mt-8 relative w-full max-w-[364px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-            <a
-              target="_blank"
-              href="https://forms.gle/EbjaLfTfRCzH4Acr8"
-              className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[364px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
-            >
-              <span>Давалгаанд нэгдэх</span>
-              <Image
-                src={"/arrow-right-icon.png"}
-                alt="arrow"
-                width={16}
-                height={16}
-              />
-            </a>
-          </div>
+          <BecomeGeniButton
+            width={
+              "aspect-[371/84] max-w-[320px] lg:max-w-[371px] lg:max-h-[84px]"
+            }
+            link={"https://forms.gle/EbjaLfTfRCzH4Acr8"}
+            text={"Давалгаанд нэгдэх"}
+            bg={"bg-[#4D55F5]"}
+            framebg={"bg-[#131aaf]"}
+          />
         </div>
       </div>
     </div>

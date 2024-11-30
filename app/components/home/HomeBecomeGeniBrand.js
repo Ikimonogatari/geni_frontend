@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import HomeBecomeGeniButton from "./HomeBecomeGeniButton";
+import HomeBecomeGeniButton from "./common/HomeBecomeGeniButton";
 
 function HomeBecomeGeniBrand() {
   return (

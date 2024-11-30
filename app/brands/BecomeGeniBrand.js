@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import BecomeGeniButton from "../components/common/BecomeGeniButton";
 
 function BecomeGeniBrand() {
   return (
@@ -17,21 +18,13 @@ function BecomeGeniBrand() {
             илгээгээрэй.
           </span>
         </div>
-        <div className="relative w-full aspect-[371/84] sm:max-w-[320px] lg:max-w-[371px] lg:max-h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#131aaf]">
-          <a
-            target="_blank"
-            href="https://forms.gle/snf9FWo5WKXaqb2C8"
-            className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full aspect-[371/84] sm:max-w-[320px] lg:max-w-[371px] lg:max-h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex flex-row gap-2 items-center justify-center"
-          >
-            <span>Geni Brand болох</span>
-            <Image
-              src={"/arrow-right-icon.png"}
-              alt="arrow"
-              width={16}
-              height={16}
-            />
-          </a>
-        </div>
+        <BecomeGeniButton
+          width={"aspect-[371/84] max-w-[320px] lg:max-w-[371px]"}
+          link={"https://forms.gle/snf9FWo5WKXaqb2C8"}
+          text={"Geni Brand болох"}
+          bg={"bg-[#4D55F5]"}
+          framebg={"bg-[#131aaf]"}
+        />
       </div>
     </div>
   );
