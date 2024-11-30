@@ -19,7 +19,7 @@ function BecomeGeniBrand() {
           </span>
         </div>
         <BecomeGeniButton
-          width={"aspect-[371/84] max-w-[320px] lg:max-w-[371px]"}
+          width={"w-full aspect-[371/84] max-w-[320px] lg:max-w-[371px]"}
           link={"https://forms.gle/snf9FWo5WKXaqb2C8"}
           text={"Geni Brand болох"}
           bg={"bg-[#4D55F5]"}
