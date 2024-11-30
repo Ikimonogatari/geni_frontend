@@ -69,7 +69,8 @@ function Page() {
       productPics: [],
     },
     validationSchema: Yup.object({
-      productName: Yup.string().required("Заавал бөглөнө үү"),
+      productPics: Yup.array().required(),
+      // productName: Yup.string().required("Заавал бөглөнө үү"),
       contentInfo: Yup.array()
         .of(
           Yup.object().shape({
@@ -91,7 +92,6 @@ function Page() {
 
           return true;
         }),
-
       information: Yup.string().required("Заавал бөглөнө үү"),
       amount: Yup.string().required("Заавал бөглөнө үү"),
       requestForCreators: Yup.string().required("Заавал бөглөнө үү"),
@@ -402,7 +402,7 @@ function Page() {
                               layout="responsive"
                               width={554}
                               height={554}
-                              className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px]"
+                              className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg"
                             />
                           </SwiperSlide>
                         ))}
@@ -886,10 +886,21 @@ function Page() {
               </div>
               <button
                 type="submit"
-                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#1920B4]`}
+                className={`ml-[6px] mt-3 relative transition-all duration-150 bg-[#4D55F5] w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
+                  !formik.dirty || !formik.isValid || formik.isSubmitting
+                    ? "opacity-90 cursor-not-allowed"
+                    : "opacity-100"
+                }`}
+                disabled={
+                  !formik.dirty || !formik.isValid || formik.isSubmitting
+                }
               >
                 <div
-                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center`}
+                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white bg-[#4D55F5] text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] flex items-center justify-center ${
+                    !formik.dirty || !formik.isValid || formik.isSubmitting
+                      ? "opacity-90"
+                      : "opacity-100"
+                  }`}
                 >
                   <span>Бүтээгдэхүүн нэмэх</span>
                 </div>
