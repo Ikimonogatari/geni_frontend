@@ -34,7 +34,7 @@ function Navbar() {
   const userType = Cookies.get("userType");
   return (
     <div className="w-full bg-[#F5F4F0] top-0 absolute">
-      <div className="w-full py-[52px] px-7 sm:px-20">
+      <div className="w-full py-8 sm:py-[52px] shadow-sm px-7 lg:px-20">
         <div
           className={`${
             dropdownOpen
@@ -78,7 +78,7 @@ function Navbar() {
             </a>
           )}
         </div>
-        <div className="w-full flex flex-row justify-between items-center gap-12 text-base text-[#000000B8]">
+        <div className="w-full flex flex-row justify-between items-center lg:gap-12 text-base text-[#000000B8]">
           <a
             href="/"
             className="flex flex-row items-start justify-center gap-2 w-auto"
@@ -90,6 +90,9 @@ function Navbar() {
               alt="logo"
               className=""
             />
+            <span className="bg-[#2D262D] px-3 py-1 rounded-3xl text-xs text-white">
+              beta
+            </span>
           </a>
           <NavButtons />
 
