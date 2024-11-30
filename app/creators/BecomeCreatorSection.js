@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import BecomeGeniButton from "../components/common/BecomeGeniButton";
 
 function BecomeCreatorSection() {
   return (
@@ -17,22 +18,16 @@ function BecomeCreatorSection() {
             Онлайн хөтөлбөрт хамрагдан суралцангаа бодит туршлага хуримтлуулан
             хэрэглэгчээс бүтээгч болоорой.
           </span>
-          <div className="hidden lg:block relative w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-            <a
-              target="_blank"
-              href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
-              className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
-            >
-              <span>Geni Creator болох</span>
-              <Image
-                loading="lazy"
-                src={"/arrow-right-icon.png"}
-                alt="arrow"
-                width={16}
-                height={16}
-              />
-            </a>
-          </div>
+
+          <BecomeGeniButton
+            width={"hidden lg:flex w-full lg:max-w-[371px] h-[84px]"}
+            link={
+              "https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+            }
+            bg={"bg-[#CA7FFE]"}
+            shadowbg={"#9c44da"}
+            text={"Geni Creator болох"}
+          />
         </div>
         <Image
           loading="lazy"
@@ -41,22 +36,15 @@ function BecomeCreatorSection() {
           height={385}
           alt="become-creator"
         />
-        <div className="block lg:hidden relative mt-9 w-full lg:max-w-[371px] h-[84px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-          <a
-            target="_blank"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
-            className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full lg:max-w-[371px] h-[84px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
-          >
-            <span>Geni Creator болох</span>
-            <Image
-              loading="lazy"
-              src={"/arrow-right-icon.png"}
-              alt="arrow"
-              width={16}
-              height={16}
-            />
-          </a>
-        </div>
+        <BecomeGeniButton
+          width={"mt-4 flex lg:hidden w-full lg:max-w-[371px] h-[84px]"}
+          link={
+            "https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+          }
+          bg={"bg-[#CA7FFE]"}
+          shadowbg={"#9c44da"}
+          text={"Geni Creator болох"}
+        />
       </div>
     </div>
   );

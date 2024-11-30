@@ -26,9 +26,9 @@ function creators() {
           <CreatorCycle />
           <Creators />
           <CreatorAlumni />
-          {/* <MonthlyCompetition />
-          <Leaderboard /> */}
-          <BecomeCreatorBanner />
+          {/* <MonthlyCompetition /> */}
+          {/* <Leaderboard /> */}
+          {/* <BecomeCreatorBanner /> */}
         </div>
         <BecomeCreatorSection />
         <CertifiedCreatorBenefits />

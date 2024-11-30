@@ -32,12 +32,13 @@ function HomeBecomeCreator() {
           className="w-full aspect-[746/335]"
         />
         <HomeBecomeGeniButton
-          text={"Creator"}
+          text={"Geni Creator болох"}
           link={
             "https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
           }
-          framebg={"bg-[#9c44da]"}
+          shadowbg={"#9c44da"}
           bg={"bg-[#CA7FFE]"}
+          width={"w-full max-w-[532px] max-h-[90px] aspect-[532/90]"}
         />
       </div>
     </div>

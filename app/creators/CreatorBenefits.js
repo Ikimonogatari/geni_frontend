@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import BecomeGeniButton from "../components/common/BecomeGeniButton";
 
 function CreatorBenefits() {
   return (
@@ -27,22 +28,17 @@ function CreatorBenefits() {
             className="aspect-[598/433]"
           />
         </div>
-        <div className="mt-6 sm:mt-10 relative w-full max-w-[532px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9c44da]">
-          <a
-            target="_blank"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
-            className="absolute -top-[8px] -left-[6px] z-50 text-white text-lg font-bold w-full max-w-[532px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex flex-row gap-2 items-center justify-center"
-          >
-            <span>Geni Creator болох</span>
-            <Image
-              loading="lazy"
-              src={"/arrow-right-icon.png"}
-              alt="arrow"
-              width={16}
-              height={16}
-            />
-          </a>
-        </div>
+        <BecomeGeniButton
+          width={
+            "mt-6 sm:mt-10 w-full max-w-[371px] h-[84px] lg:max-w-[532px] lg:h-[90px]"
+          }
+          link={
+            "https://docs.google.com/forms/d/e/1FAIpQLSdrBB6Hjs2cnrLWe4Z48HHCr56RcRFXvK8klYB5VifU-YckYw/viewform"
+          }
+          bg={"bg-[#CA7FFE]"}
+          shadowbg={"#9c44da"}
+          text={"Geni Creator болох"}
+        />
       </div>
     </div>
   );

@@ -35,10 +35,11 @@ function HomeBecomeGeniBrand() {
           className="w-full aspect-[635/347] max-w-[635px] max-h-[347px]"
         />
         <HomeBecomeGeniButton
-          text={"Brand"}
+          text={"Geni Brand болох"}
           link={"https://forms.gle/snf9FWo5WKXaqb2C8"}
-          framebg={"bg-[#131aaf]"}
+          shadowbg={"#131aaf"}
           bg={"bg-[#4D55F5]"}
+          width={"w-full max-w-[532px] max-h-[90px] aspect-[532/90]"}
         />
       </div>
     </div>
