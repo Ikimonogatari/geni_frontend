@@ -348,7 +348,7 @@ function Page() {
                       </span>
                       <form
                         onSubmit={otpForm.handleSubmit}
-                        className="flex flex-col gap-4"
+                        className="flex flex-col gap-2 sm:gap-4"
                       >
                         <div className="flex flex-col gap-2">
                           <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD]  focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl">
@@ -384,7 +384,7 @@ function Page() {
                         </button>
                         <button
                           type="submit"
-                          className={`w-full py-4 text-lg text-white font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
+                          className={`mt-2 w-full py-4 text-lg text-white font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
                         >
                           Баталгаажуулах
                         </button>
