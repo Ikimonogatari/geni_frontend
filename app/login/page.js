@@ -18,6 +18,7 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import LoginButton from "./LoginButton";
+import OtpTimeLeft from "./OtpTimeLeft";
 
 function Page() {
   const router = useRouter();
@@ -342,7 +343,7 @@ function Page() {
                       <span className="text-3xl font-bold">
                         Нууц үг сэргээх
                       </span>
-                      <span className="mt-6">
+                      <span className="mt-2 sm:mt-6">
                         Имэйл хаягт очсон нэг удаагын нууц кодыг оруулна уу.
                       </span>
                       <form
@@ -369,6 +370,12 @@ function Page() {
                             </div>
                           ) : null}
                         </div>
+                        {sendOtpToEmailSuccess && (
+                          <OtpTimeLeft
+                            otpDuration={sendOtpToEmailData?.otpDuration}
+                          />
+                        )}
+
                         <button
                           onClick={emailForm.handleSubmit}
                           className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
