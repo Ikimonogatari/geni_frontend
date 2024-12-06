@@ -80,7 +80,11 @@ function ContentProgress({ currentContents }) {
             <span className="col-span-1">{p.ContentPhase}</span>
 
             <StatusIndicator status={p.Status} />
-            {p.Deadline ? <DeadlineHover deadline={p.Deadline} /> : <></>}
+            {p.Deadline ? (
+              <DeadlineHover deadline={p.Deadline} />
+            ) : (
+              <div className="col-span-1"></div>
+            )}
             <div className="col-span-1">
               {p.Status === "ProdDelivering" ? (
                 <DeadlineModal
