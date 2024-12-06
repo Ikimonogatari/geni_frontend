@@ -137,7 +137,7 @@ function AllCreators() {
                   </a>
                 )}
               </div>
-              <p className="text-[#6F6F6F] text-[8px] sm:text-sm line-clamp-4">
+              <p className="text-[#6F6F6F] text-[8px] sm:text-sm line-clamp-3">
                 {creator?.Bio}
               </p>
             </div>
