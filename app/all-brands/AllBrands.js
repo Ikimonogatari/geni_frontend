@@ -52,7 +52,7 @@ function AllBrands() {
             >
               <Image
                 src={
-                  brand?.ProfileLink ? brand?.ProfileLink : "/dummy-profile.png"
+                  brand?.ProfileLink ? brand?.ProfileLink : "/dummy-brand.png"
                 }
                 width={194}
                 height={194}

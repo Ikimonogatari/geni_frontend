@@ -112,7 +112,7 @@ function Brands() {
                       src={
                         brand?.ProfileLink
                           ? brand?.ProfileLink
-                          : "/dummy-profile.png"
+                          : "/dummy-brand.png"
                       }
                       width={194}
                       height={194}

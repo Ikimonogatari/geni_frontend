@@ -56,7 +56,7 @@ function AllCreators() {
                   src={
                     creator?.ProfileLink
                       ? creator?.ProfileLink
-                      : "/dummy-profile.png"
+                      : "/dummy-creator.png"
                   }
                   width={194}
                   height={194}

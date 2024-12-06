@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
 function DeadlineModal({ p, handleUpdateContentStatus }) {
   const formatDeadline = (deadline) => {

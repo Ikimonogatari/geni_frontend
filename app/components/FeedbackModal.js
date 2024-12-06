@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DialogContent, Dialog, DialogTrigger } from "../components/ui/dialog";
+import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 
 function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {

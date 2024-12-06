@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DialogContent } from "../components/ui/dialog";
+import { DialogContent } from "./ui/dialog";
 import Image from "next/image";
 import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
@@ -13,7 +13,7 @@ import {
   useCreatorContentSubmitMutation,
 } from "../services/service";
 import toast from "react-hot-toast";
-import UploadSuccessModal from "../components/UploadSuccessModal";
+import UploadSuccessModal from "./UploadSuccessModal";
 
 function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
   console.log(parsedUserInfo);

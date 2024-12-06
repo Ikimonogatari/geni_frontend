@@ -409,7 +409,7 @@ function Page() {
                   src={
                     parsedUserInfo?.ProfileLink
                       ? parsedUserInfo?.ProfileLink
-                      : "/dummy-profile.jpg"
+                      : "/dummy-brand.png"
                   }
                   width={194}
                   height={194}

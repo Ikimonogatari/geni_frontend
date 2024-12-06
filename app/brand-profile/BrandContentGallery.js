@@ -87,7 +87,7 @@ function BrandContentGallery({ contentsGallery }) {
                               src={
                                 content?.CreatorProfileLink
                                   ? content?.CreatorProfileLink
-                                  : "/dummy-profile.jpg"
+                                  : "/dummy-brand.png"
                               }
                               width={20}
                               height={20}

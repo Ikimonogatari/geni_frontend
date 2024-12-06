@@ -15,7 +15,7 @@ function Leaderboard() {
             <div className="text-lg sm:text-base w-full grid grid-cols-4 gap-1 sm:gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-opacity-50 border-[1px] bg-[#F5F4F0] rounded-3xl">
               <div className="col-span-1 flex flex-row items-center gap-2">
                 <Image
-                  src={"/dummy-profile.jpg"}
+                  src={"/dummy-creator.png"}
                   width={44}
                   height={44}
                   alt=""

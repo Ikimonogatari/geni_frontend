@@ -28,7 +28,7 @@ function UploadSuccessModal({
                   src={
                     parsedUserInfo.ProfileLink
                       ? parsedUserInfo?.ProfileLink
-                      : "/dummy-profile.jpg"
+                      : "/dummy-creator.png"
                   }
                   width={128}
                   height={128}

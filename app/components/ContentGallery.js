@@ -60,7 +60,7 @@ function ContentGallery({ contentsGallery }) {
                   src={
                     content?.BrandProfileLink
                       ? content?.BrandProfileLink
-                      : "/dummy-profile.jpg"
+                      : "/dummy-brand.png"
                   }
                   className="rounded-full"
                   width={26}

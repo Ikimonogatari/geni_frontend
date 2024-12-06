@@ -5,11 +5,11 @@ import toast from "react-hot-toast";
 
 import Cookies from "js-cookie";
 import ContentUploadModal from "../components/ContentUploadModal";
-import FeedbackModal from "./FeedbackModal";
+import FeedbackModal from "../components/FeedbackModal";
 import ContentReviewModal from "../components/ContentReviewModal";
 import StatusIndicator from "../components/StatusIndicator";
-import DeadlineModal from "./DeadlineModal";
-import DeadlineHover from "./DeadlineHover";
+import DeadlineModal from "../components/DeadlineModal";
+import DeadlineHover from "../components/DeadlineHover";
 
 function ContentProgress({ currentContents }) {
   console.log(currentContents);
@@ -76,7 +76,6 @@ function ContentProgress({ currentContents }) {
             className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,1fr,3fr,2fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
           >
             <span className="col-span-1">{p.ProductName}</span>
-            {}
             <span className="col-span-1">{p.BrandName}</span>
             <span className="col-span-1">{p.ContentPhase}</span>
 

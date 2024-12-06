@@ -14,7 +14,7 @@ function MonthlyCompetition() {
             <span className="text-lg sm:text-2xl font-bold">ВИДЕО ГЭРЭЛ</span>
           </div>
           <Image
-            src={"/dummy-profile.jpg"}
+            src={"/dummy-creator.png"}
             width={164}
             height={164}
             alt=""
@@ -25,7 +25,7 @@ function MonthlyCompetition() {
           <span className="text-base sm:text-xl">9 сарын ялагч</span>
           <div className="flex flex-row items-center gap-6">
             <Image
-              src={"/dummy-profile.jpg"}
+              src={"/dummy-creator.png"}
               width={90}
               height={90}
               alt=""

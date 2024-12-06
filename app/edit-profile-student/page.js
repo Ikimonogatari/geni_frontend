@@ -332,7 +332,11 @@ function Page() {
             <div className="flex flex-row items-center gap-7">
               {parsedUserInfo ? (
                 <Image
-                  src={parsedUserInfo?.ProfileLink}
+                  src={
+                    parsedUserInfo?.ProfileLink
+                      ? parsedUserInfo?.ProfileLink
+                      : "/dummy-student.png"
+                  }
                   width={194}
                   height={194}
                   loading="lazy"
