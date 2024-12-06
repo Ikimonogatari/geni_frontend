@@ -2,7 +2,7 @@
 import React from "react";
 
 import Cookies from "js-cookie";
-import FeedbackModal from "../components/FeedbackModal";
+import FeedbackModal from "../creator-profile/FeedbackModal";
 import StatusIndicator from "../components/StatusIndicator";
 
 function ContentProgress({ currentContents }) {

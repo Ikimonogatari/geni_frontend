@@ -5,11 +5,11 @@ import toast from "react-hot-toast";
 
 import Cookies from "js-cookie";
 import ContentUploadModal from "../components/ContentUploadModal";
-import FeedbackModal from "../components/FeedbackModal";
+import FeedbackModal from "./FeedbackModal";
 import ContentReviewModal from "../components/ContentReviewModal";
 import StatusIndicator from "../components/StatusIndicator";
-import DeadlineModal from "../components/DeadlineModal";
-import DeadlineHover from "../components/DeadlineHover";
+import DeadlineModal from "./DeadlineModal";
+import DeadlineHover from "./DeadlineHover";
 
 function ContentProgress({ currentContents }) {
   console.log(currentContents);
@@ -81,7 +81,7 @@ function ContentProgress({ currentContents }) {
             <span className="col-span-1">{p.ContentPhase}</span>
 
             <StatusIndicator status={p.Status} />
-            <DeadlineHover deadline={p.Deadline} />
+            {p.Deadline ? <DeadlineHover deadline={p.Deadline} /> : <></>}
             <div className="col-span-1">
               {p.Status === "ProdDelivering" ? (
                 <DeadlineModal
