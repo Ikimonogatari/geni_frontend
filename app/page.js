@@ -26,18 +26,6 @@ export default function Home() {
         <HomeAlumniLayout>
           <HomeAlumniBrand />
         </HomeAlumniLayout>
-        <div className="w-full px-7 py-6 sm:py-10 lg:py-20 flex flex-row justify-center items-center gap-3 sm:gap-8 bg-[#2D262D]">
-          <Image
-            src={"/comingsoon-icon.png"}
-            width={151}
-            height={152}
-            alt="coming-soon"
-            className="max-w-[54px] max-h-[54px] sm:max-w-[151px] sm:max-h-[152px]"
-          />
-          <span className="text-sm sm:text-xl lg:text-3xl font-normal sm:font-bold text-white">
-            Платформ Тун Удахгүй...
-          </span>
-        </div>
       </div>
     </main>
   );
