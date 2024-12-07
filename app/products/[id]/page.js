@@ -24,6 +24,7 @@ import {
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import HandleButton from "@/app/components/common/HandleButton";
 
 function Page() {
   const router = useRouter();
@@ -332,112 +333,111 @@ function Page() {
               </div>
 
               {userType === "Creator" ? (
-                <div
-                  className={`${
-                    getPublicProductByIdData?.LeftStock === 0 && "opacity-55"
-                  } md:max-w-sm mt-8 block relative w-full h-[70px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#9C44DA]`}
-                >
-                  <Dialog>
-                    <DialogTrigger
+                <Dialog>
+                  <DialogTrigger
+                    onClick={() => setRequestState("not-sent")}
+                    type="submit"
+                    className={
+                      getPublicProductByIdData?.LeftStock === 0 && "opacity-55"
+                    }
+                  >
+                    <HandleButton
                       disabled={getPublicProductByIdData?.LeftStock === 0}
-                      onClick={() => setRequestState("not-sent")}
-                      type="submit"
-                      className="md:max-w-sm absolute -top-[8px] -left-[6px] z-50 text-white text-xl font-bold w-full h-[70px] rounded-xl border-[1px] border-[#2D262D] bg-[#CA7FFE] flex items-center justify-center"
-                    >
-                      Бүтээгдэхүүн авах
-                    </DialogTrigger>
+                      width={`mt-8 w-full aspect-[371/84] md:max-w-sm`}
+                      text={"Бүтээгдэхүүн авах"}
+                      bg={"bg-[#CA7FFE]"}
+                      shadowbg={"shadow-[0.25rem_0.25rem_#9c44da]"}
+                    />
+                  </DialogTrigger>
 
-                    {requestState === "sent" ? (
-                      <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
-                        <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
-                          ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
-                        </span>
-                        <Image
-                          src={"/request-received.png"}
-                          width={209}
-                          height={220}
-                          alt="recieved"
-                        />
-                        <DialogClose className="w-full">
-                          <button
-                            onClick={() => router.back()}
-                            className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
-                          >
-                            Баярлалаа
-                          </button>
-                        </DialogClose>
-                      </DialogContent>
-                    ) : (
-                      <DialogContent className="w-full flex flex-col max-w-2xl rounded-3xl">
-                        <span className="text-2xl font-bold">
-                          Хүсэлт илгээх
-                        </span>
-                        <span className="text-xl mt-6">
-                          Бүтээгдэхүүнийг сонирхож буй шалтгаан болон тухайн
-                          бүтээгдэхүүнд зориулан хийх контент санаагаа товч
-                          хуваалцаарай.
-                        </span>
-                        <textarea
-                          onChange={(e) =>
-                            setProductContentRequestMsg(e.target.value)
-                          }
-                          placeholder="Энд бичнэ үү"
-                          className="bg-[#F5F4F0] rounded-lg mt-4 w-full p-4 min-h-[100px]"
-                        />
-                        <span className="text-xl">Хүргүүлэх хаяг:</span>
-
-                        <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            className="hidden peer"
-                            checked={!useOtherAddress}
-                            onChange={() => setUseOtherAddress(false)}
-                          />
-                          <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
-                            <span className="text-[#F5F4F0] font-bold text-xl select-none">
-                              ✓
-                            </span>
-                          </div>
-                          <span className="text-base">
-                            Бүртгэлтэй гэрийн хаяг
-                          </span>
-                        </label>
-
-                        {/* Checkbox to use another address */}
-                        <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            className="hidden peer"
-                            checked={useOtherAddress}
-                            onChange={() => setUseOtherAddress(true)}
-                          />
-                          <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
-                            <span className="text-[#F5F4F0] font-bold text-xl select-none">
-                              ✓
-                            </span>
-                          </div>
-                          <span className="text-base">Бусад</span>
-                        </label>
-
-                        {/* Text area for the other address */}
-                        {useOtherAddress && (
-                          <textarea
-                            value={otherAddress}
-                            onChange={(e) => setOtherAddress(e.target.value)}
-                            placeholder="Нэмэлт хаягаа энд бичнэ үү"
-                            className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
-                          />
-                        )}
+                  {requestState === "sent" ? (
+                    <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
+                      <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
+                        ХҮСЭЛТ ИЛГЭЭГДЛЭЭ
+                      </span>
+                      <Image
+                        src={"/request-received.png"}
+                        width={209}
+                        height={220}
+                        alt="recieved"
+                      />
+                      <DialogClose className="w-full">
                         <button
-                          onClick={handleProductContentRequest}
-                          className="mt-3 bg-[#CA7FFE] border-[#2D262D] border font-semibold rounded-lg text-center py-4 text-xl text-white w-full"
+                          onClick={() => router.push("/creator-profile")}
+                          className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
                         >
-                          Хүсэлт илгээх
+                          Баярлалаа
                         </button>
-                      </DialogContent>
-                    )}
-                  </Dialog>
-                </div>
+                      </DialogClose>
+                    </DialogContent>
+                  ) : (
+                    <DialogContent className="w-full flex flex-col max-w-2xl rounded-3xl">
+                      <span className="text-2xl font-bold">Хүсэлт илгээх</span>
+                      <span className="text-xl mt-6">
+                        Бүтээгдэхүүнийг сонирхож буй шалтгаан болон тухайн
+                        бүтээгдэхүүнд зориулан хийх контент санаагаа товч
+                        хуваалцаарай.
+                      </span>
+                      <textarea
+                        onChange={(e) =>
+                          setProductContentRequestMsg(e.target.value)
+                        }
+                        placeholder="Энд бичнэ үү"
+                        className="bg-[#F5F4F0] rounded-lg mt-4 w-full p-4 min-h-[100px]"
+                      />
+                      <span className="text-xl">Хүргүүлэх хаяг:</span>
+
+                      <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="hidden peer"
+                          checked={!useOtherAddress}
+                          onChange={() => setUseOtherAddress(false)}
+                        />
+                        <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                          <span className="text-[#F5F4F0] font-bold text-xl select-none">
+                            ✓
+                          </span>
+                        </div>
+                        <span className="text-base">
+                          Бүртгэлтэй гэрийн хаяг
+                        </span>
+                      </label>
+
+                      {/* Checkbox to use another address */}
+                      <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="hidden peer"
+                          checked={useOtherAddress}
+                          onChange={() => setUseOtherAddress(true)}
+                        />
+                        <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                          <span className="text-[#F5F4F0] font-bold text-xl select-none">
+                            ✓
+                          </span>
+                        </div>
+                        <span className="text-base">Бусад</span>
+                      </label>
+
+                      {/* Text area for the other address */}
+                      {useOtherAddress && (
+                        <textarea
+                          value={otherAddress}
+                          onChange={(e) => setOtherAddress(e.target.value)}
+                          placeholder="Нэмэлт хаягаа энд бичнэ үү"
+                          className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
+                        />
+                      )}
+                      <button
+                        onClick={handleProductContentRequest}
+                        className="mt-3 bg-[#CA7FFE] border-[#2D262D] border font-semibold rounded-lg text-center py-4 text-xl text-white w-full"
+                      >
+                        Хүсэлт илгээх
+                      </button>
+                    </DialogContent>
+                  )}
+                </Dialog>
               ) : (
                 <></>
               )}

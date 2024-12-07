@@ -301,16 +301,17 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
                   className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
                 />
               </div>
-              {contentThumbnail && contentVideo && caption ? (
-                <button
-                  onClick={handleContentSubmit}
-                  className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  Илгээх
-                </button>
-              ) : (
-                <></>
-              )}
+              <button
+                onClick={handleContentSubmit}
+                disabled={!(contentThumbnail && contentVideo && caption)} // Disable when conditions are not met
+                className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${
+                  contentThumbnail && contentVideo && caption
+                    ? "opacity-100"
+                    : "opacity-55 cursor-not-allowed"
+                }`}
+              >
+                Илгээх
+              </button>
             </div>
           </div>
         </DialogContent>

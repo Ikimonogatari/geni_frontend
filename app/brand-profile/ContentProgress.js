@@ -201,12 +201,10 @@ function ContentProgress({ currentContents }) {
                           <></>
                         )}
                       </div>
-
                       <div className="flex flex-col gap-4 h-full">
                         <span className="text-base font-semibold">
                           Thumbnail зураг
                         </span>
-
                         {contentThumbnail ? (
                           <img
                             src={contentThumbnail}
