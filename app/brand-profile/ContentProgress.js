@@ -191,6 +191,7 @@ function ContentProgress({ currentContents }) {
                         {contentVideo ? (
                           <video
                             controls
+                            controlsList="nodownload"
                             className="aspect-[9/16] w-full h-full sm:max-w-[272px] rounded-2xl"
                           >
                             <source src={contentVideo} type="video/mp4" />
