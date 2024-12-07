@@ -20,7 +20,7 @@ function TierInfoModal() {
             <div className="col-span-1">Түвшин нэр</div>
             <div className="col-span-1">Цол</div>
             <div className="col-span-1">XP оноо</div>
-            <div className="col-span-1">Мөнгөн шагнал</div>
+            <div className="col-span-1">Geni credit point</div>
             <div className="col-span-1">Үүсэх давуу тал</div>
           </div>
           {creator_level.map((c, i) => (

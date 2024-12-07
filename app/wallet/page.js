@@ -45,7 +45,7 @@ function Page() {
                 className="aspect-[310/160] w-full sm:w-auto"
               />
               <div className="flex flex-row gap-3 sm:gap-1 justify-normal items-center sm:items-start sm:flex-col">
-                <span className="text-lg sm:text-lg">Geni Point:</span>
+                <span className="text-lg sm:text-lg">Geni Credit Point:</span>
                 <span className="font-bold text-xl sm:text-3xl">
                   {Number(getWalletInfoData?.CurrBal).toLocaleString()}
                 </span>
