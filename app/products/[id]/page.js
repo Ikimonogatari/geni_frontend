@@ -343,7 +343,7 @@ function Page() {
                   >
                     <HandleButton
                       disabled={getPublicProductByIdData?.LeftStock === 0}
-                      width={`mt-8 w-full aspect-[371/84] md:max-w-sm`}
+                      width={`mt-8 w-full aspect-[371/84] max-h-[84px] md:h-auto md:max-w-sm`}
                       text={"Бүтээгдэхүүн авах"}
                       bg={"bg-[#CA7FFE]"}
                       shadowbg={"shadow-[0.25rem_0.25rem_#9c44da]"}

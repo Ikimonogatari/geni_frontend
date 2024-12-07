@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useUpdateContentStatusMutation } from "../services/service";
 import toast from "react-hot-toast";
 
 import Cookies from "js-cookie";
@@ -9,6 +8,7 @@ import FeedbackModal from "../components/FeedbackModal";
 import ContentReviewModal from "../components/ContentReviewModal";
 import StatusIndicator from "../components/StatusIndicator";
 import DeadlineHover from "../components/DeadlineHover";
+import ContentReturnModal from "./ContentReturnModal";
 
 function ContentProgress({ currentContents }) {
   console.log(currentContents);
@@ -16,24 +16,6 @@ function ContentProgress({ currentContents }) {
   console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   console.log(parsedUserInfo);
-
-  const [
-    updateContentStatus,
-    {
-      data: updateContentStatusData,
-      error: updateContentStatusError,
-      isLoading: updateContentStatusLoading,
-    },
-  ] = useUpdateContentStatusMutation();
-
-  useEffect(() => {
-    if (updateContentStatusError) {
-      toast.error(updateContentStatusError?.data?.error);
-    }
-    if (updateContentStatusData) {
-      toast.success("Амжилттай");
-    }
-  }, [updateContentStatusData, updateContentStatusError]);
 
   return (
     <div className="w-full overflow-x-auto">
@@ -78,6 +60,11 @@ function ContentProgress({ currentContents }) {
               <div className="col-span-1"></div>
             )}
             <div className="col-span-1">
+              {p.Status === "Request" ? (
+                <ContentReturnModal requestId={p?.ContentId} />
+              ) : (
+                <></>
+              )}
               {p.Status === "ContentRejected" ? (
                 <FeedbackModal
                   parsedUserInfo={parsedUserInfo}

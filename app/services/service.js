@@ -326,6 +326,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    undoContentRequest: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -374,4 +380,5 @@ export const {
   useDeleteProductMutation,
   useEditProductMutation,
   useBecomeCreatorMutation,
+  useUndoContentRequestMutation,
 } = geniApi;
