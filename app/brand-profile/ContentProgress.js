@@ -186,7 +186,7 @@ function ContentProgress({ currentContents }) {
                   </DialogTrigger>
                   <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl">
                     <div className="flex flex-col lg:flex-row gap-6 h-full">
-                      <div className="flex flex-col gap-4 h-full">
+                      <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
                         <span className="text-base font-semibold">Контент</span>
                         {contentVideo ? (
                           <video
@@ -201,7 +201,7 @@ function ContentProgress({ currentContents }) {
                           <></>
                         )}
                       </div>
-                      <div className="flex flex-col gap-4 h-full">
+                      <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
                         <span className="text-base font-semibold">
                           Thumbnail зураг
                         </span>
@@ -216,7 +216,7 @@ function ContentProgress({ currentContents }) {
                         )}
                       </div>
 
-                      <div className="flex flex-col justify-between gap-4">
+                      <div className="flex flex-col justify-between gap-4 w-full">
                         <div className="w-full flex flex-row items-center justify-between">
                           <span className="text-base font-semibold">
                             Тайлбар
@@ -237,7 +237,7 @@ function ContentProgress({ currentContents }) {
                         <div className="w-full h-full flex flex-col justify-between">
                           <div className="flex flex-col gap-6">
                             <div className="flex flex-row items-start gap-2">
-                              <span className="text-sm text-[#6F6F6F] p-3 bg-[#F5F4F0] rounded-xl">
+                              <span className="w-full text-sm text-[#6F6F6F] p-3 bg-[#F5F4F0] rounded-xl">
                                 {p.Caption}
                               </span>
                               <button

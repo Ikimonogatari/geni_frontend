@@ -112,7 +112,7 @@ function BrandContentGallery({ contentsGallery }) {
                   </div>
                 </DialogTrigger>
                 <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
                     <span className="text-lg font-semibold">Контент</span>
 
                     <video
@@ -124,7 +124,7 @@ function BrandContentGallery({ contentsGallery }) {
                     </video>
                   </div>
 
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
                     <span className="text-lg font-semibold">
                       Thumbnail зураг
                     </span>
@@ -136,7 +136,7 @@ function BrandContentGallery({ contentsGallery }) {
                     />
                   </div>
 
-                  <div className="flex flex-col gap-4 h-full justify-between">
+                  <div className="flex flex-col gap-4 h-full justify-between w-full">
                     <span className="text-lg font-semibold">Дэлгэрэнгүй</span>
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-2">
