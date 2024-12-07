@@ -503,7 +503,7 @@ function Page() {
                 </DialogContent>
               </Dialog>
               <LoginButton
-                width={`w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
+                width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
                 text={"Нэвтрэх"}
                 shadowbg={
                   userType === "Creator"

@@ -11,10 +11,7 @@ function LogoutButton() {
     Cookies.remove("userType");
     Cookies.remove("user-info");
     geniApi.util.invalidateTags(["UserInfo"]);
-    setShouldRefetchUserInfo(true);
-
-    router.refresh();
-    router.replace("/");
+    router.replace("/login");
   };
   return (
     <button

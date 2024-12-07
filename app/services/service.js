@@ -338,6 +338,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getWalletInfo: builder.query({
+      query: () => ({
+        url: `/api/web/private/wallet`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -388,4 +394,5 @@ export const {
   useBecomeCreatorMutation,
   useUndoContentRequestMutation,
   useGetCompetitionInfoQuery,
+  useGetWalletInfoQuery,
 } = geniApi;
