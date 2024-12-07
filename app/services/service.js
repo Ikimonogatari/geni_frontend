@@ -332,6 +332,12 @@ export const geniApi = createApi({
         method: "DELETE",
       }),
     }),
+    getCompetitionInfo: builder.query({
+      query: (body) => ({
+        url: `/api/web/public/competition/active`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -381,4 +387,5 @@ export const {
   useEditProductMutation,
   useBecomeCreatorMutation,
   useUndoContentRequestMutation,
+  useGetCompetitionInfoQuery,
 } = geniApi;

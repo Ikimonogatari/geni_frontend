@@ -1,7 +1,5 @@
 import React from "react";
 import Creators from "./Creators";
-import MonthlyCompetition from "./MonthlyCompetition";
-import Leaderboard from "./Leaderboard";
 import BecomeCreatorBanner from "./BecomeCreatorBanner";
 import BecomeCreatorSection from "./BecomeCreatorSection";
 import CreatorBenefits from "./CreatorBenefits";
@@ -10,6 +8,7 @@ import CreatorAlumni from "./CreatorAlumni";
 import CreatorCycle from "./CreatorCycle";
 import CreatorHero from "./CreatorHero";
 import CreatorLogo from "./CreatorLogo";
+import MonthlyCompetitionLayout from "./MonthlyCompetitionLayout";
 
 export const metadata = {
   title: "Geni | Бүтээгчид",
@@ -26,8 +25,7 @@ function creators() {
           <CreatorCycle />
           <Creators />
           <CreatorAlumni />
-          {/* <MonthlyCompetition /> */}
-          {/* <Leaderboard /> */}
+          <MonthlyCompetitionLayout />
           {/* <BecomeCreatorBanner /> */}
         </div>
         <BecomeCreatorSection />
