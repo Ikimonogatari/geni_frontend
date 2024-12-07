@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import ContentGallery from "@/app/components/ContentGallery";
 import { useParams } from "next/navigation";
+import CreatorTier from "@/app/components/CreatorTier";
 
 function page() {
   const params = useParams();
@@ -57,25 +58,7 @@ function page() {
                   <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
                     {getUserInfoData?.Nickname}
                   </span>
-
-                  {(getUserInfoData?.Point >= 80 ||
-                    getUserInfoData?.LevelIconUrl) && (
-                    <Image
-                      src={
-                        getUserInfoData?.LevelIconUrl
-                          ? getUserInfoData?.LevelIconUrl
-                          : "/verified-icon.png"
-                      }
-                      width={getUserInfoData?.LevelIconUrl ? 58 : 24}
-                      height={getUserInfoData?.LevelIconUrl ? 22 : 24}
-                      alt=""
-                      className={`mt-[2px] ${
-                        getUserInfoData?.LevelIconUrl
-                          ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
-                          : "min-w-6 min-h-6 max-w-12 max-h-5"
-                      }`}
-                    />
-                  )}
+                  <CreatorTier tier={getUserInfoData?.LevelName} />
                 </div>
                 {getUserInfoData?.AverageRating &&
                 getUserInfoData?.ContentCount ? (

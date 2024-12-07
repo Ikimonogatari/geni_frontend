@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
 import { useGetPublicCreatorListQuery } from "../services/service";
+import PublicCreatorCard from "../components/PublicCreatorCard";
 
 function Creators() {
   const [isBeginning, setIsBeginning] = useState(true);
@@ -28,13 +29,13 @@ function Creators() {
 
   const checkViewportSize = () => {
     const width = window.innerWidth;
-    if (width <= 480) {
+    if (width <= 576) {
       // Mobile: display 1 slide
       setSlidesPerView(1);
-    } else if (width > 480 && width <= 768) {
+    } else if (width > 576 && width <= 924) {
       // Small to Medium devices: display 2 slides
       setSlidesPerView(2);
-    } else if (width > 768 && width <= 1024) {
+    } else if (width > 924 && width <= 1124) {
       // Medium to Large devices: display 3 slides
       setSlidesPerView(3);
     } else {
@@ -86,7 +87,6 @@ function Creators() {
               />
             </button>
           )}
-
           <Swiper
             spaceBetween={18}
             slidesPerView={slidesPerView}
@@ -105,111 +105,23 @@ function Creators() {
               const instagramLink = creator?.Socials?.find(
                 (channel) => channel.Name === "Instagram"
               )?.SocialAddress;
-
               const facebookLink = creator?.Socials?.find(
                 (channel) => channel.Name === "Facebook"
               )?.SocialAddress;
-
               return (
                 <SwiperSlide key={id} className="">
-                  <div className="bg-[#F5F4F0] min-h-[400px] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-1 sm:gap-2 h-full">
-                    <a href={`/public-profile/${creator.CreatorId}`}>
-                      <Image
-                        src={
-                          creator?.ProfileLink
-                            ? creator?.ProfileLink
-                            : "/dummy-creator.png"
-                        }
-                        width={194}
-                        height={194}
-                        alt=""
-                        className="aspect-square w-[194px] h-[194px] rounded-full border border-[#000000] object-cover"
-                      />
-                    </a>
-                    <div className="flex flex-row items-center gap-2">
-                      <a
-                        href={`/public-profile/${creator.CreatorId}`}
-                        className="hover:underline hover:underline-offset-3 text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden"
-                      >
-                        {creator?.Nickname ? creator?.Nickname : "Geni Бүтээгч"}
-                      </a>
-                      {(creator?.Point >= 80 || creator?.LevelIconUrl) && (
-                        <Image
-                          src={
-                            creator?.LevelIconUrl
-                              ? creator?.LevelIconUrl
-                              : "/verified-icon.png"
-                          }
-                          width={creator?.LevelIconUrl ? 58 : 24}
-                          height={creator?.LevelIconUrl ? 22 : 24}
-                          alt=""
-                          className={`mt-[2px] ${
-                            creator?.LevelIconUrl
-                              ? "min-w-[58px] min-h-[22px] max-w-[58px] max-h-[22px]"
-                              : "min-w-6 min-h-6 max-w-12 max-h-5"
-                          }`}
-                        />
-                      )}
-                    </div>
-                    {creator && (
-                      // creator?.AverageRating && creator?.ContentCount &&
-                      <div className="flex flex-row items-center gap-2">
-                        <Image
-                          src={"/star.png"}
-                          width={20}
-                          height={20}
-                          className="w-5 h-5"
-                          alt=""
-                        />
-                        <span className="text-base">
-                          {creator?.AverageRating} ({creator?.ContentCount}{" "}
-                          контент)
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex flex-row gap-2">
-                      {instagramLink && (
-                        <a
-                          href={instagramLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:opacity-75"
-                        >
-                          <Image
-                            src="/Instagram.png"
-                            width={24}
-                            height={24}
-                            alt=""
-                            className="w-6 h-6"
-                          />
-                        </a>
-                      )}
-                      {facebookLink && (
-                        <a
-                          href={facebookLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:opacity-75"
-                        >
-                          <Image
-                            src="/Facebook.png"
-                            width={24}
-                            height={24}
-                            alt=""
-                            className="w-6 h-6"
-                          />
-                        </a>
-                      )}
-                    </div>
-                    <p className="text-[#6F6F6F] text-xs line-clamp-3">
-                      {creator?.Bio}
-                    </p>
-                  </div>
+                  <PublicCreatorCard
+                    isSwiper={true}
+                    size={"h-[332px] sm:h-auto"}
+                    id={id}
+                    creator={creator}
+                    instagramLink={instagramLink}
+                    facebookLink={facebookLink}
+                  />
                 </SwiperSlide>
               );
             })}
           </Swiper>
-
           {!isEnd && (
             <button onClick={goNext}>
               <Image

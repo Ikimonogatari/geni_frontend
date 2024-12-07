@@ -21,6 +21,8 @@ import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { useUserInfo } from "../context/UserInfoContext";
+import CreatorTier from "../components/CreatorTier";
+import TierInfoModal from "../components/TierInfoModal";
 function Page() {
   const router = useRouter();
   const { setShouldRefetchUserInfo } = useUserInfo();
@@ -353,41 +355,8 @@ function Page() {
                     Бүтээгчийн оноо: &nbsp;
                     {parsedUserInfo ? parsedUserInfo.Point : 0} xp
                   </span>
-                  <button>
-                    <Image
-                      src={"/Info.png"}
-                      width={24}
-                      height={24}
-                      alt="info"
-                      className="w-6 h-6"
-                    />
-                  </button>
+                  <TierInfoModal />
                 </div>
-
-                {parsedUserInfo?.Point > 80 ? (
-                  <div className="flex flex-row items-center gap-3">
-                    <span className="text-sm sm:text-lg">
-                      Баталгаажсан бүтээгч
-                    </span>
-                    <Image
-                      src={"/verified-icon.png"}
-                      width={24}
-                      height={24}
-                      alt=""
-                      className="w-6 h-6"
-                    />
-                  </div>
-                ) : parsedUserInfo?.LevelIconUrl ? (
-                  <div className="flex flex-row items-center gap-3">
-                    <Image
-                      src={parsedUserInfo.LevelIconUrl}
-                      width={58}
-                      height={24}
-                      alt=""
-                      className="w-[58px] h-6"
-                    />
-                  </div>
-                ) : null}
 
                 <div
                   {...getRootProps()}

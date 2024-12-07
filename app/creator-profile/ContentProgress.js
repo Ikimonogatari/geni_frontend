@@ -8,7 +8,6 @@ import ContentUploadModal from "../components/ContentUploadModal";
 import FeedbackModal from "../components/FeedbackModal";
 import ContentReviewModal from "../components/ContentReviewModal";
 import StatusIndicator from "../components/StatusIndicator";
-import DeadlineModal from "../components/DeadlineModal";
 import DeadlineHover from "../components/DeadlineHover";
 
 function ContentProgress({ currentContents }) {
@@ -35,13 +34,6 @@ function ContentProgress({ currentContents }) {
       toast.success("Амжилттай");
     }
   }, [updateContentStatusData, updateContentStatusError]);
-
-  const handleUpdateContentStatus = async (contentId, status) => {
-    await updateContentStatus({
-      ContentId: contentId,
-      Status: status,
-    });
-  };
 
   return (
     <div className="w-full overflow-x-auto">
@@ -86,14 +78,6 @@ function ContentProgress({ currentContents }) {
               <div className="col-span-1"></div>
             )}
             <div className="col-span-1">
-              {p.Status === "ProdDelivering" ? (
-                <DeadlineModal
-                  p={p}
-                  handleUpdateContentStatus={handleUpdateContentStatus}
-                />
-              ) : (
-                <></>
-              )}
               {p.Status === "ContentRejected" ? (
                 <FeedbackModal
                   parsedUserInfo={parsedUserInfo}
