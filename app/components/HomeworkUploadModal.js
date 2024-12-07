@@ -199,7 +199,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       <Dialog>
         <DialogTrigger
           type="submit"
-          className="text-start text-xs sm:text-base bg-[#4FB755] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+          className="whitespace-nowrap text-start text-xs sm:text-base bg-[#4FB755] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
         >
           Гэрийн даалгавар илгээх
         </DialogTrigger>

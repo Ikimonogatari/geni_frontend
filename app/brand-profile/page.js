@@ -11,6 +11,7 @@ import {
 } from "@/app/services/service";
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
+import LogoutButton from "../components/common/LogoutButton";
 
 function page() {
   const {
@@ -234,47 +235,24 @@ function page() {
                     <></>
                   )}
                 </div>
-                <div className="flex flex-wrap items-center gap-1 sm:gap-2 lg:w-4/5">
-                  {getUserInfoData?.BrandTypes?.map((b, i) => (
-                    <button
-                      key={i}
-                      className="bg-[#4D55F5] whitespace-nowrap text-white rounded-full px-3 text-sm py-1 sm:py-[6px]"
-                    >
-                      {b.TypeName}
-                    </button>
-                  ))}
+                <div className="overflow-x-auto w-full">
+                  <div className="flex w-[220px] sm:w-full flex-row sm:flex-wrap items-center gap-1 sm:gap-2 lg:w-4/5">
+                    {getUserInfoData?.BrandTypes?.map((b, i) => (
+                      <button
+                        key={i}
+                        className="bg-[#4D55F5] whitespace-nowrap text-white rounded-full px-3 text-sm py-1 sm:py-[6px]"
+                      >
+                        {b.TypeName}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-row items-center gap-2 sm:gap-5 mt-5 md:mt-0">
-              <Link
-                href="/notifications"
-                className="rounded-xl bg-[#F5F4F0] p-2"
-              >
-                <Image
-                  src={"/notification-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="icon"
-                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                />
-              </Link>
-              <Link
-                href="/edit-profile-brand"
-                className="rounded-xl bg-[#F5F4F0] p-2"
-              >
-                <Image
-                  src={"/edit-profile-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="icon"
-                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                />
-              </Link>
-
+            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
               <Link
                 href="/add-product"
-                className="flex md:hidden flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+                className="flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
               >
                 Бүтээгдэхүүн нэмэх
                 <Image
@@ -284,12 +262,39 @@ function page() {
                   alt="arrow"
                 />
               </Link>
+              <div className="flex flex-row items-center gap-2 sm:gap-4">
+                <Link
+                  href="/notifications"
+                  className="rounded-xl bg-[#F5F4F0] p-2"
+                >
+                  <Image
+                    src={"/notification-icon.png"}
+                    width={24}
+                    height={24}
+                    alt="icon"
+                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                  />
+                </Link>
+                <Link
+                  href="/edit-profile-brand"
+                  className="rounded-xl bg-[#F5F4F0] p-2"
+                >
+                  <Image
+                    src={"/edit-profile-icon.png"}
+                    width={24}
+                    height={24}
+                    alt="icon"
+                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                  />
+                </Link>
+                <LogoutButton />
+              </div>
             </div>
           </div>
 
-          <div className="pl-7 md:px-7 mt-4 sm:mt-16 w-full flex flex-row items-center justify-between">
-            <div className="overflow-x-auto">
-              <div className="flex flex-row items-center min-w-[448px] gap-3">
+          <div className="overflow-x-auto pl-7 md:px-7 mt-4 sm:mt-16 w-full">
+            <div className="w-[350px] sm:w-full flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center gap-3">
                 {brandProfileButtons.map((b, i) => (
                   <button
                     key={i}
@@ -298,20 +303,25 @@ function page() {
                       b.value === profileState
                         ? "bg-[#4D55F5] text-white"
                         : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
-                    } px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
+                    } whitespace-nowrap px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
                   >
                     {b.title}
                   </button>
                 ))}
               </div>
+              <a
+                href="/add-product"
+                className="w-auto whitespace-nowrap hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+              >
+                Бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </a>
             </div>
-            <a
-              href="/add-product"
-              className="w-auto whitespace-nowrap hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
-            >
-              Бүтээгдэхүүн нэмэх
-              <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
-            </a>
           </div>
           {currentContents ? renderBrandProfile() : <>Loading</>}
         </div>

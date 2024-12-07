@@ -12,6 +12,7 @@ import Link from "next/link";
 import HomeworkUploadModal from "../components/HomeworkUploadModal";
 import ConvertToCreatorModal from "../components/ConvertToCreatorModal";
 import { useRouter } from "next/navigation";
+import LogoutButton from "../components/common/LogoutButton";
 
 function page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -219,7 +220,7 @@ function page() {
                 )}
               </div>
             </div>
-            <div className="flex flex-row items-center gap-2 sm:gap-5">
+            <div className="flex flex-row items-center gap-2 sm:gap-4">
               <Link
                 href={"/notifications"}
                 className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
@@ -244,18 +245,7 @@ function page() {
                   className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
                 />
               </Link>
-              <Link
-                href="/products"
-                className="flex sm:hidden flex-row items-center gap-2 text-xs sm:text-base bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
-              >
-                <Image
-                  src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
-                  alt="arrow"
-                  className="w-[9px] h-[9px] sm:w-[14px] sm:h-[14px]"
-                />
-              </Link>
+              <LogoutButton />
             </div>
           </div>
 
@@ -266,7 +256,7 @@ function page() {
                   target="_blank"
                   href={b.link}
                   key={i}
-                  className={`border-[1px] border-[#2D262D] bg-[#4FB755] text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-xs sm:text-base`}
+                  className={`border-[1px] whitespace-nowrap border-[#2D262D] bg-[#4FB755] text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-xs sm:text-base`}
                 >
                   {b.title}
                 </a>
@@ -343,7 +333,7 @@ export default page;
 
 const brandProfileButtons = [
   {
-    title: "Онлайн хичээл үзэх",
+    title: "Хичээл үзэх",
     value: "content-progress",
     link: "https://meirapage.gumroad.com/l/hxwkma/hic5m2k",
   },
