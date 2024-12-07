@@ -129,7 +129,7 @@ function Brands() {
                     )}
 
                     <div className="flex flex-row gap-2">
-                      {instagramLink && (
+                      {instagramLink ? (
                         <a
                           href={instagramLink}
                           target="_blank"
@@ -144,8 +144,10 @@ function Brands() {
                             className="w-6 h-6"
                           />
                         </a>
+                      ) : (
+                        <></>
                       )}
-                      {facebookLink && (
+                      {facebookLink ? (
                         <a
                           href={facebookLink}
                           target="_blank"
@@ -160,6 +162,8 @@ function Brands() {
                             className="w-6 h-6"
                           />
                         </a>
+                      ) : (
+                        <></>
                       )}
                     </div>
                   </div>

@@ -210,7 +210,7 @@ function page() {
                   <></>
                 )}
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
-                  {instagramLink && (
+                  {instagramLink ? (
                     <a
                       target="_blank"
                       href={`${instagramLink?.SocialAddress || ""}`}
@@ -223,8 +223,10 @@ function page() {
                         className="w-5 h-5 sm:w-6 sm:h-6"
                       />
                     </a>
+                  ) : (
+                    <></>
                   )}
-                  {facebookLink && (
+                  {facebookLink ? (
                     <a
                       target="_blank"
                       href={`${facebookLink?.SocialAddress || ""}`}
@@ -237,6 +239,8 @@ function page() {
                         className="w-5 h-5 sm:w-6 sm:h-6"
                       />
                     </a>
+                  ) : (
+                    <></>
                   )}
                 </div>
                 <span className="hidden sm:block text-[#6F6F6F] text-xs sm:text-base">

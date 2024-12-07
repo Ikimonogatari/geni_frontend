@@ -68,7 +68,7 @@ function AllBrands() {
                 </div>
               )}
               <div className="flex flex-row gap-2">
-                {instagramLink && (
+                {instagramLink ? (
                   <a
                     href={instagramLink}
                     target="_blank"
@@ -83,8 +83,10 @@ function AllBrands() {
                       className="h-5 w-5 sm:w-6 sm:h-6"
                     />
                   </a>
+                ) : (
+                  <></>
                 )}
-                {facebookLink && (
+                {facebookLink ? (
                   <a
                     href={facebookLink}
                     target="_blank"
@@ -99,6 +101,8 @@ function AllBrands() {
                       className="h-5 w-5 sm:w-6 sm:h-6"
                     />
                   </a>
+                ) : (
+                  <></>
                 )}
               </div>
             </div>

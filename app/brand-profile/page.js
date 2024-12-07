@@ -201,7 +201,7 @@ function page() {
                   {getUserInfoData?.Name ? getUserInfoData?.Name : "Geni брэнд"}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
-                  {instagramLink && (
+                  {instagramLink ? (
                     <a
                       target="_blank"
                       href={`${instagramLink?.SocialAddress || ""}`}
@@ -214,8 +214,10 @@ function page() {
                         className="w-5 h-5 sm:w-6 sm:h-6"
                       />
                     </a>
+                  ) : (
+                    <></>
                   )}
-                  {facebookLink && (
+                  {facebookLink ? (
                     <a
                       target="_blank"
                       href={`${facebookLink?.SocialAddress || ""}`}
@@ -228,6 +230,8 @@ function page() {
                         className="w-5 h-5 sm:w-6 sm:h-6"
                       />
                     </a>
+                  ) : (
+                    <></>
                   )}
                 </div>
                 <div className="flex flex-wrap items-center gap-1 sm:gap-2 lg:w-4/5">

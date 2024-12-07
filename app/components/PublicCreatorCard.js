@@ -70,7 +70,7 @@ function PublicCreatorCard({
         </div>
       )}
       <div className="flex flex-row gap-2">
-        {instagramLink && (
+        {instagramLink ? (
           <a
             href={instagramLink}
             target="_blank"
@@ -85,8 +85,10 @@ function PublicCreatorCard({
               className={`${isSwiper ? "w-6 h-6" : "h-4 w-4 sm:w-6 sm:h-6"} `}
             />
           </a>
+        ) : (
+          <></>
         )}
-        {facebookLink && (
+        {facebookLink ? (
           <a
             href={facebookLink}
             target="_blank"
@@ -101,6 +103,8 @@ function PublicCreatorCard({
               className={`${isSwiper ? "w-6 h-6" : "h-4 w-4 sm:w-6 sm:h-6"} `}
             />
           </a>
+        ) : (
+          <></>
         )}
       </div>
       <p
