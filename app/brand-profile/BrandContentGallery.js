@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import CreatorTier from "../components/CreatorTier";
 
 function BrandContentGallery({ contentsGallery }) {
   const [showModal, setShowModal] = useState(false);
@@ -87,7 +88,7 @@ function BrandContentGallery({ contentsGallery }) {
                               src={
                                 content?.CreatorProfileLink
                                   ? content?.CreatorProfileLink
-                                  : "/dummy-brand.png"
+                                  : "/dummy-creator.png"
                               }
                               width={20}
                               height={20}
@@ -97,13 +98,7 @@ function BrandContentGallery({ contentsGallery }) {
                             <span className="text-base sm:text-lg font-semibold">
                               {content?.Nickname}
                             </span>
-                            <Image
-                              src={"/verified-icon.png"}
-                              width={20}
-                              height={20}
-                              alt="verified"
-                              className="w-4 h-4 sm:w-5 sm:h-5"
-                            />
+                            <CreatorTier tier={content?.LevelName} />
                           </div>
                           <span>{content?.ProductName}</span>
                         </div>
