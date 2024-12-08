@@ -194,8 +194,12 @@ function Page() {
         price: getPublicProductByIdData?.Price || "",
         contentInfo: getPublicProductByIdData?.ContentInfo || [],
         productTypes: getPublicProductByIdData?.ProductTypes || [],
-        productPics: getPublicProductByIdData?.ProductPics || [],
+        productPics:
+          getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) || [],
       });
+      setImageUrls(
+        getPublicProductByIdData?.ProductPics?.map((pic) => pic.Url) || []
+      );
     }
   }, [getPublicProductByIdData]);
 
@@ -351,12 +355,7 @@ function Page() {
             onClick={() => router.back()}
             className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
           >
-            <Image
-              src={"/arrow-left.png"}
-              width={24}
-              height={24}
-              alt="arrow-left"
-            />
+            <Image src={"/arrow-left.png"} width={24} height={24} alt="" />
           </button>
           <span className="text-4xl sm:text-5xl xl:text-6xl font-bold mt-7">
             Мэдээлэл засах
@@ -413,7 +412,7 @@ function Page() {
                           <SwiperSlide key={index}>
                             <Image
                               src={url}
-                              alt={`Uploaded image ${index + 1}`}
+                              alt={``}
                               layout="responsive"
                               width={554}
                               height={554}
