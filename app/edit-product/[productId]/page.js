@@ -180,6 +180,9 @@ function Page() {
 
   useEffect(() => {
     if (getPublicProductByIdData) {
+      const initialProductTypes = getPublicProductByIdData?.ProductTypes || [];
+
+      // Set formik values
       formik.setValues({
         productName: getPublicProductByIdData?.ProductName || "",
         information: getPublicProductByIdData?.Information || "",
@@ -189,15 +192,28 @@ function Page() {
         quantity: getPublicProductByIdData?.Quantity || "",
         price: getPublicProductByIdData?.Price || "",
         contentInfo: getPublicProductByIdData?.ContentInfo || [],
-        productTypes: getPublicProductByIdData?.ProductTypes || [],
+        productTypes: initialProductTypes.map((type) => type.ProductTypeId), // Transform to ProductTypeId array
         productPics:
           getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) || [],
       });
+
+      // Set productTypes state
+      setProductTypes(initialProductTypes);
+
+      // Filter available product types
+      const initialAvailableProductTypes =
+        listProductTypesData.filter(
+          (p) =>
+            !initialProductTypes.some((type) => type.TypeName === p.TypeName)
+        ) || [];
+      setAvailableProductTypes(initialAvailableProductTypes);
+
+      // Set image URLs
       setImageUrls(
         getPublicProductByIdData?.ProductPics?.map((pic) => pic.Url) || []
       );
     }
-  }, [getPublicProductByIdData]);
+  }, [getPublicProductByIdData, listProductTypesData]);
 
   useEffect(() => {
     if (uploadFileError) {
@@ -213,12 +229,6 @@ function Page() {
       toast.success("Мэдээлэл засагдлаа");
     }
   }, [editProductSuccess, editProductError]);
-
-  useEffect(() => {
-    if (listProductTypesData) {
-      setAvailableProductTypes(listProductTypesData);
-    }
-  }, [listProductTypesData]);
 
   const handleProductType = (newType) => {
     if (!productTypes.some((p) => p.TypeName === newType.TypeName)) {
@@ -252,7 +262,7 @@ function Page() {
   };
 
   const handleContentTypeOption = (value) => {
-    const selectedItem = listProductDictsTypeData.find((c) => c.Val === value);
+    const selectedItem = listProductDictsTypeData?.find((c) => c.Val === value);
 
     // Add or remove selected content types
     if (selectedItem) {
@@ -613,7 +623,7 @@ function Page() {
                   <SelectContent>
                     {listProductDictsTypeData ? (
                       listProductDictsTypeData
-                        .filter((c) => c.Type === "Type")
+                        ?.filter((c) => c.Type === "Type")
                         .map((c, i) => (
                           <SelectItem
                             key={i}

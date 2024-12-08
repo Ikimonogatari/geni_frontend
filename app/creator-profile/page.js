@@ -176,7 +176,7 @@ function page() {
               )}
               <div className="flex flex-col gap-1 sm:gap-2">
                 <div className="flex flex-row items-center gap-3">
-                  <div className="flex flex-row items-center gap-1 sm:gap-3">
+                  <div className="flex flex-row items-center gap-1 sm:gap-2">
                     <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
                       {getUserInfoData?.Nickname
                         ? getUserInfoData?.Nickname
@@ -185,7 +185,7 @@ function page() {
 
                     <CreatorTier tier={getUserInfoData?.LevelName} />
                   </div>
-                  <div className="flex flex-row items-center gap-1 sm:gap-3">
+                  <div className="flex flex-row items-center gap-1 sm:gap-2">
                     <span className="text-sm sm:text-lg">
                       {getUserInfoData && <>{getUserInfoData.Point} xp</>}
                     </span>
