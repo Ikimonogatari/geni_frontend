@@ -439,7 +439,7 @@ function Page() {
                   src={
                     parsedUserInfo?.ProfileLink
                       ? parsedUserInfo?.ProfileLink
-                      : "/white-placeholder.png"
+                      : "/dummy-brand.png"
                   }
                   width={44}
                   height={44}
