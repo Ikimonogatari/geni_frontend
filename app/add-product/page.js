@@ -17,11 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../components/ui/hover-card";
 
 import {
   useUploadFileMutation,
@@ -35,6 +30,7 @@ import { ClipLoader } from "react-spinners";
 import Cookies from "js-cookie";
 import ProductAddedSuccessModal from "./ProductAddedSuccessModal";
 import HandleButton from "../components/common/HandleButton";
+import InfoHover from "../components/common/InfoHover";
 
 function Page() {
   const router = useRouter();
@@ -587,21 +583,11 @@ function Page() {
                   htmlFor="name"
                 >
                   Контентийн төрөл
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer">
-                      <Image
-                        src={"/info-icon.png"}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
-                      Та нэг болон түүнээс дээш төрөл сонгох боломжтой бөгөөд
-                      бүтээгч таны сонгосон контент хийцлэлийн төрлийг харгалзан
-                      контентоо бүтээнэ.
-                    </HoverCardContent>
-                  </HoverCard>
+                  <InfoHover
+                    contentText={
+                      "Та нэг болон түүнээс дээш төрөл сонгох боломжтой бөгөөд бүтээгч таны сонгосон контент хийцлэлийн төрлийг харгалзан контентоо бүтээнэ."
+                    }
+                  />
                 </label>
                 <Select
                   onValueChange={(value) => handleContentTypeOption(value)}
@@ -658,21 +644,11 @@ function Page() {
                   htmlFor="name"
                 >
                   Контент бүтээгчээс хүсэх хүсэлт
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer">
-                      <Image
-                        src={"/info-icon.png"}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
-                      Контентийн агуулга болон хийцлэлтэй хамааралтай брэндийн
-                      чиглүүлэг болон бүтээгчээс хүсэх хүсэлтээ бичсэнээр таны
-                      хүсэж буй контент гарах магадлал ихсэнэ.
-                    </HoverCardContent>
-                  </HoverCard>
+                  <InfoHover
+                    contentText={
+                      "Контентийн агуулга болон хийцлэлтэй хамааралтай брэндийн чиглүүлэг болон бүтээгчээс хүсэх хүсэлтээ бичсэнээр таны хүсэж буй контент гарах магадлал ихсэнэ."
+                    }
+                  />
                 </label>
                 <div className="p-2 border border-[#CDCDCD] rounded-lg flex flex-col">
                   <textarea
@@ -705,21 +681,11 @@ function Page() {
                   htmlFor="name"
                 >
                   Контентоос хүлээж буй гол үр дүн
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer">
-                      <Image
-                        src={"/info-icon.png"}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
-                      Хийлгэж буй контентоо ашиглаж хүрэх үр дүнгээ оруулсанаар
-                      контент бүтээгч таны зорилгыг илүү сайн мэдэж контентдоо
-                      шингээх болно.
-                    </HoverCardContent>
-                  </HoverCard>
+                  <InfoHover
+                    contentText={
+                      "Хийлгэж буй контентоо ашиглаж хүрэх үр дүнгээ оруулсанаар контент бүтээгч таны зорилгыг илүү сайн мэдэж контентдоо шингээх болно."
+                    }
+                  />
                 </label>
                 <Select
                   onValueChange={(value) => handleContentOutcomeOption(value)}
@@ -773,22 +739,16 @@ function Page() {
                   htmlFor="amount"
                 >
                   Бүтээгдэхүүний хэмжээ
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer">
-                      <Image
-                        src={"/info-icon.png"}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
-                      Таны бүтээгдэхүүн ямар хэмжих нэгжтэйгээс хамаарч энд
-                      ойлгомжтой оруулна уу. <br />
-                      <br />
-                      Жишээ: XL, L, 1 хайрцаг: 24 ширхэг, 2 литр гэх мэт
-                    </HoverCardContent>
-                  </HoverCard>
+                  <InfoHover
+                    contentText={
+                      <>
+                        Таны бүтээгдэхүүн ямар хэмжих нэгжтэйгээс хамаарч энд
+                        ойлгомжтой оруулна уу. <br />
+                        <br />
+                        Жишээ: XL, L, 1 хайрцаг: 24 ширхэг, 2 литр гэх мэт
+                      </>
+                    }
+                  />
                 </label>
                 <input
                   id="amount"
@@ -811,21 +771,11 @@ function Page() {
                   htmlFor="quantity"
                 >
                   Бүтээгчдэд илгээх бүтээгдэхүүний тоо
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer">
-                      <Image
-                        src={"/info-icon.png"}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
-                      Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа
-                      тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та
-                      контент хүлээн авна.
-                    </HoverCardContent>
-                  </HoverCard>
+                  <InfoHover
+                    contentText={
+                      "Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
+                    }
+                  />
                 </label>
                 <input
                   id="quantity"
@@ -848,21 +798,11 @@ function Page() {
                   htmlFor="price"
                 >
                   Бүтээгчдэд илгээж буй бүтээгдэхүүний үнэ
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer">
-                      <Image
-                        src={"/info-icon.png"}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full"
-                      />
-                    </HoverCardTrigger>
-                    <HoverCardContent className="bg-[#F49D19] rounded-2xl p-3 text-white text-sm font-normal">
-                      Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүнийхээ үнийг
-                      оруулна. Нэг бүтээгчид багц болгон илгээж байгаа бол
-                      багцын үнийг оруулна.
-                    </HoverCardContent>
-                  </HoverCard>
+                  <InfoHover
+                    contentText={
+                      "Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид багц болгон илгээж байгаа бол багцын үнийг оруулна."
+                    }
+                  />
                 </label>
 
                 <div className="flex flex-row gap-1 items-center border border-[#CDCDCD] rounded-lg h-12 p-2">
