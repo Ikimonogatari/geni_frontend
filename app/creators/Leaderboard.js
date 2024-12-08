@@ -19,7 +19,7 @@ function Leaderboard({ getCompetitionInfoData }) {
                   height={44}
                   loading="lazy"
                   alt=""
-                  className="w-11 h-11 rounded-full border border-black"
+                  className="object-cover w-11 h-11 rounded-full border border-black"
                 />
                 <span className="text-sm sm:text-lg font-semibold">
                   {c?.Nickname}
