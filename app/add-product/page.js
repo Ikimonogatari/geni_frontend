@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -33,11 +33,8 @@ import toast from "react-hot-toast";
 
 import { ClipLoader } from "react-spinners";
 import Cookies from "js-cookie";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/app/components/ui/dialog";
+import ProductAddedSuccessModal from "./ProductAddedSuccessModal";
+import HandleButton from "../components/common/HandleButton";
 
 function Page() {
   const router = useRouter();
@@ -50,8 +47,8 @@ function Page() {
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
-
+  // console.log(parsedUserInfo);
+  // TODO product type remove add formik error fix, product edit fix
   const formik = useFormik({
     initialValues: {
       productName: "",
@@ -216,6 +213,7 @@ function Page() {
       ...formik.values.productTypes,
       newType.ProductTypeId,
     ]);
+    console.log(formik.values.productTypes, "PROD TYPES");
   };
 
   const handleRemoveProductType = (typeNameToRemove) => {
@@ -232,6 +230,7 @@ function Page() {
         (id) => id !== typeNameToRemove.ProductTypeId
       )
     );
+    console.log(formik.values.productTypes, "PROD TYPES");
   };
 
   const handleContentTypeOption = (value) => {
@@ -324,11 +323,6 @@ function Page() {
         );
       }
     }
-  };
-
-  const handleThanks = () => {
-    setCreateProductSuccess(false);
-    router.push("/brand-profile");
   };
 
   return (
@@ -889,86 +883,35 @@ function Page() {
                   </div>
                 ) : null}
               </div>
-              <button
-                type="submit"
-                className={`ml-[6px] mt-3 relative transition-all duration-150 bg-[#131AAF] w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] ${
-                  !formik.dirty || !formik.isValid || formik.isSubmitting
-                    ? "opacity-80 cursor-not-allowed"
-                    : "opacity-100"
-                }`}
-                disabled={
-                  !formik.dirty || !formik.isValid || formik.isSubmitting
-                }
-              >
-                <div
-                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white bg-[#4D55F5] text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] flex items-center justify-center ${
-                    !formik.dirty || !formik.isValid || formik.isSubmitting
-                      ? "opacity-80"
-                      : "opacity-100"
-                  }`}
-                >
-                  <span>Бүтээгдэхүүн нэмэх</span>
-                </div>
-              </button>
-              <Dialog open={createProductSuccess}>
-                <DialogContent className="max-w-lg w-full flex flex-col items-center gap-2 rounded-3xl">
-                  <span className="text-[#4FB755] text-4xl sm:text-5xl text-center font-bold">
-                    БҮТЭЭГДЭХҮҮН НЭМЭГДЛЭЭ
-                  </span>
-                  <Image
-                    src={"/product-added.png"}
-                    width={209}
-                    height={220}
-                    alt="recieved"
-                  />
 
-                  <div className="w-full flex flex-col gap-5">
-                    <div className="w-full flex flex-row justify-between items-start bg-[#F5F4F0] rounded-3xl p-4 sm:p-5">
-                      <div className="w-full flex flex-row items-center gap-5">
-                        {parsedUserInfo ? (
-                          <Image
-                            src={
-                              parsedUserInfo.ProfileLink
-                                ? parsedUserInfo?.ProfileLink
-                                : "/dummy-brand.png"
-                            }
-                            width={77}
-                            height={77}
-                            alt=""
-                            className="aspect-square rounded-full border border-[#2D262D]"
-                          />
-                        ) : (
-                          <></>
-                        )}
-                        <div className="flex flex-row w-full items-start justify-between">
-                          <div className="w-full flex flex-col gap-1">
-                            <span className="font-bold text-xl">
-                              {parsedUserInfo?.Name}
-                            </span>
-                            <span className="text-lg">
-                              {createProductData?.ProductName}
-                            </span>
-                          </div>
-                          <div className="bg-[#4D55F5] text-white text-center font-medium text-xs rounded-3xl px-4 py-2">
-                            {parsedUserInfo?.BrandTypes?.[0]?.TypeName}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-[#F49D19] p-4 text-white rounded-2xl">
-                      Geni танай бүтээгдэхүүнийг дээрх тоо ширхэгийн дагуу
-                      баталгаажуулж, агуулахдаа хүлээн авсны дараа платформ дээр
-                      бүтээгчдэд санал болгох болно. Баярлалаа.
-                    </div>
-                    <button
-                      onClick={handleThanks}
-                      className="w-full py-4 text-white font-semibold bg-[#4D55F5] text-2xl border border-[#2D262D] rounded-2xl"
-                    >
-                      Баярлалаа
-                    </button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <HandleButton
+                disabled={
+                  !formik.dirty ||
+                  !formik.isValid ||
+                  formik.isSubmitting ||
+                  !formik.values.productTypes ||
+                  !formik.values.productPics
+                }
+                text={"Бүтээгдэхүүн нэмэх"}
+                bg={`bg-[#4D55F5] ${
+                  !formik.dirty ||
+                  !formik.isValid ||
+                  formik.isSubmitting ||
+                  !formik.values.productTypes ||
+                  !formik.values.productPics
+                    ? "opacity-80 cursor-not-allowed"
+                    : "opacity-100 cursor-pointer"
+                }`}
+                shadowbg={"shadow-[0.25rem_0.25rem_#131AAF]"}
+                width={"w-full max-w-[403px] h-[90px]"}
+              />
+
+              <ProductAddedSuccessModal
+                setCreateProductSuccess={setCreateProductSuccess}
+                createProductData={createProductData}
+                createProductSuccess={createProductSuccess}
+                parsedUserInfo={parsedUserInfo}
+              />
             </div>
           </form>
         </div>
