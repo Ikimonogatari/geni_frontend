@@ -68,15 +68,8 @@ function ContentGallery({ contentsGallery }) {
                   alt=""
                 />
                 <span className="text-xs md:text-base text-white">
-                  {content?.BrandName}
+                  {content?.BrandName ? content?.BrandName : "Geni Брэнд"}
                 </span>
-                <Image
-                  src={"/verified-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="verified"
-                  className="w-4 h-4 sm:w-6 sm:h-6"
-                />
               </div>
             </div>
           ))

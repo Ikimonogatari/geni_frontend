@@ -96,9 +96,11 @@ function BrandContentGallery({ contentsGallery }) {
                               alt=""
                             />
                             <span className="text-base sm:text-lg font-semibold">
-                              {content?.Nickname}
+                              {content?.Nickname
+                                ? content?.Nickname
+                                : "Geni Бүтээгч"}
                             </span>
-                            <CreatorTier tier={content?.LevelName} />
+                            <CreatorTier tier={content?.LvlName} />
                           </div>
                           <span>{content?.ProductName}</span>
                         </div>
