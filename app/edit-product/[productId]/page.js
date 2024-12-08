@@ -33,6 +33,7 @@ import {
 import toast from "react-hot-toast";
 
 import { ClipLoader } from "react-spinners";
+import HandleButton from "@/app/components/common/HandleButton";
 
 function Page() {
   const router = useRouter();
@@ -898,16 +899,27 @@ function Page() {
                   </div>
                 ) : null}
               </div>
-              <button
-                type="submit"
-                className={`ml-[6px] mt-3 relative transition-all duration-150 w-full max-w-[403px] h-[90px] shadow-2xl rounded-xl border-[1px] border-[#2D262D] bg-[#1920B4]`}
-              >
-                <div
-                  className={`absolute -top-[8px] -left-[6px] transition-all duration-150 z-50 text-white text-lg font-bold w-full max-w-[403px] h-[90px] rounded-xl border-[1px] border-[#2D262D] bg-[#4D55F5] flex items-center justify-center`}
-                >
-                  <span>Хадгалах</span>
-                </div>
-              </button>
+              <HandleButton
+                disabled={
+                  !formik.dirty ||
+                  !formik.isValid ||
+                  formik.isSubmitting ||
+                  !formik.values.productTypes ||
+                  !formik.values.productPics
+                }
+                text={"Хадгалах"}
+                bg={`bg-[#4D55F5] ${
+                  !formik.dirty ||
+                  !formik.isValid ||
+                  formik.isSubmitting ||
+                  !formik.values.productTypes ||
+                  !formik.values.productPics
+                    ? "opacity-80 cursor-not-allowed"
+                    : "opacity-100 cursor-pointer"
+                }`}
+                shadowbg={"shadow-[0.25rem_0.25rem_#131AAF]"}
+                width={"w-full max-w-[403px] h-[90px]"}
+              />
             </div>
           </form>
         </div>
