@@ -189,7 +189,7 @@ function Page() {
         information: getPublicProductByIdData?.Information || "",
         requestForCreators: getPublicProductByIdData?.RequestForCreators || "",
         amount: getPublicProductByIdData?.Amount || "",
-        addInfoSource: getPublicProductByIdData?.addInfoSource || "",
+        addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
         quantity: getPublicProductByIdData?.Quantity || "",
         price: getPublicProductByIdData?.Price || "",
         contentInfo: getPublicProductByIdData?.ContentInfo || [],
