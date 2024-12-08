@@ -9,7 +9,7 @@ function ProductAddedSuccessModal({
   createProductData,
   createProductSuccess,
 }) {
-  const router = useRouter;
+  const router = useRouter();
   const handleThanks = () => {
     setCreateProductSuccess(false);
     router.push("/brand-profile");

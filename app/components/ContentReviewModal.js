@@ -41,11 +41,7 @@ function ContentReviewModal({ p }) {
         <span className="text-3xl font-bold">Брэндийн сэтгэгдэл</span>
         <div className="flex flex-row items-center gap-4 mt-4">
           <Image
-            src={
-              p?.BrandProfileLink
-                ? p?.BrandProfileLink
-                : "/white-placeholder.png"
-            }
+            src={p?.BrandProfileLink ? p?.BrandProfileLink : "/dummy-brand.png"}
             width={84}
             height={84}
             className="w-[84px] h-[84px] aspect-square rounded-full border border-[#2D262D]"

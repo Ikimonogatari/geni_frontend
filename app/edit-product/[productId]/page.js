@@ -181,6 +181,12 @@ function Page() {
   useEffect(() => {
     if (getPublicProductByIdData) {
       const initialProductTypes = getPublicProductByIdData?.ProductTypes || [];
+      const initialContentTypes =
+        getPublicProductByIdData?.ContentType?.map((type) => type?.Name) || [];
+      const initialContentOutcomes =
+        getPublicProductByIdData?.ContentResult?.map(
+          (result) => result?.Name
+        ) || [];
 
       // Set formik values
       formik.setValues({
@@ -191,7 +197,13 @@ function Page() {
         addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
         quantity: getPublicProductByIdData?.Quantity || "",
         price: getPublicProductByIdData?.Price || "",
-        contentInfo: getPublicProductByIdData?.ContentInfo || [],
+        contentInfo: [
+          ...initialContentTypes.map((type) => ({ Type: "Type", Name: type })),
+          ...initialContentOutcomes.map((outcome) => ({
+            Type: "Result",
+            Name: outcome,
+          })),
+        ],
         productTypes: initialProductTypes.map((type) => type.ProductTypeId), // Transform to ProductTypeId array
         productPics:
           getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) || [],
@@ -199,10 +211,12 @@ function Page() {
 
       // Set productTypes state
       setProductTypes(initialProductTypes);
+      setSelectedContentTypes(initialContentTypes);
+      setSelectedContentOutcomes(initialContentOutcomes);
 
       // Filter available product types
       const initialAvailableProductTypes =
-        listProductTypesData.filter(
+        listProductTypesData?.filter(
           (p) =>
             !initialProductTypes.some((type) => type.TypeName === p.TypeName)
         ) || [];
@@ -465,7 +479,7 @@ function Page() {
                   src={
                     getPublicProductByIdData?.BrandProfileUrl
                       ? getPublicProductByIdData?.BrandProfileUrl
-                      : "/white-placeholder.png"
+                      : "/dummy-brand.png"
                   }
                   width={44}
                   height={44}
