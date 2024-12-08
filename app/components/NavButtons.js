@@ -6,7 +6,7 @@ function NavButtons() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-row items-center gap-6 lg:gap-12">
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-row items-center gap-6 lg:gap-12">
       <a
         href="/creators"
         className={`${

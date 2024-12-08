@@ -124,7 +124,7 @@ function Navbar() {
                   : userType === "Student"
                   ? "bg-[#4FB755]"
                   : "opacity-0"
-              } rounded-xl px-2 sm:px-6 py-2 border-[1px] border-[#2D262D]`}
+              } rounded-xl px-2 sm:px-6 py-2 border-[1px] border-[#2D262D] max-w-[220px] whitespace-nowrap max-h-[42px]`}
             >
               <Image
                 src={"/user-icon.png"}
@@ -133,7 +133,7 @@ function Navbar() {
                 alt=""
                 className="w-6 h-6"
               />
-              <span className="text-white text-base font-semibold">
+              <span className="text-white text-base font-semibold line-clamp-1">
                 {userType === "Creator"
                   ? getUserInfoData?.Nickname
                   : userType === "Brand"
@@ -144,9 +144,9 @@ function Navbar() {
               </span>
             </a>
           ) : getUserInfoLoading ? (
-            <div className="w-[110.73px] h-[42px]"></div>
+            <></>
           ) : (
-            <div className="w-[110.73px] h-[42px]"></div>
+            <></>
           )}
 
           <button
