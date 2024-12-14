@@ -11,7 +11,9 @@ function MonthlyCompetition({ getCompetitionInfoData }) {
       <div className="flex flex-col md:flex-row gap-6 h-full">
         <div className="h-full w-full md:w-3/5 flex flex-col sm:flex-row gap-5 justify-between border border-[#CA7FFE] bg-[#F5F4F0] rounded-3xl p-7">
           <div className="flex flex-col gap-1 sm:gap-2">
-            <span className="text-base sm:text-xl">Энэ сарын уралдаан</span>
+            <span className="text-base sm:text-xl">
+              Энэ сарын уралдааны шагнал
+            </span>
             <span className="text-lg sm:text-2xl font-bold uppercase">
               {getCompetitionInfoData?.PrizeName}
             </span>
