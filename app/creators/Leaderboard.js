@@ -30,7 +30,7 @@ function Leaderboard({ getCompetitionInfoData }) {
                 Нийт хамтрал: {c?.ContentCount}
               </span>
               <span className="text-xs sm:text-base col-span-1">
-                Цуглуулсан оноо: {c?.Point} XP
+                Цуглуулсан оноо: {c?.Xp} XP
               </span>
               <div className="text-xs sm:text-base col-span-1 flex flex-row items-center gap-3">
                 <Image
