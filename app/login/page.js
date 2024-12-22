@@ -226,7 +226,7 @@ function Page() {
                   Student
                 </div>
               </div>
-              <span className="text-base sm:text-lg">И-мэйл</span>
+              <span className="text-base sm:text-lg">Имэйл хаяг</span>
               <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
                 <input
                   id="email"
