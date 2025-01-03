@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import LoginButton from "./LoginButton";
-import OtpTimeLeft from "./OtpTimeLeft";
+import OtpTimeLeft from "../components/OtpTimeLeft";
 
 function Page() {
   const router = useRouter();

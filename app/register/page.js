@@ -3,32 +3,13 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  geniApi,
-  useCreatorLoginMutation,
-  useForgotPasswordMutation,
-  useSendOtpToEmailMutation,
-} from "../services/service";
-import Cookies from "js-cookie";
+import { useBrandRegisterMutation } from "../services/service";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/app/components/ui/dialog";
-import LoginButton from "./LoginButton";
-import OtpTimeLeft from "./OtpTimeLeft";
+import Verification from "./Verification";
 
 function Page() {
-  const router = useRouter();
-  const [userType, setUserType] = useState("Creator");
-  const [forgotPasswordState, setForgotPasswordState] = useState("1");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const handleMouseDownLoginPassword = () => setShowLoginPassword(true);
-  const handleMouseUpLoginPassword = () => setShowLoginPassword(false);
 
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
@@ -36,151 +17,54 @@ function Page() {
   const handleMouseDownConfirmPassword = () => setShowConfirmPassword(true);
   const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
-  const [loginRequest, { data, error, isLoading }] = useCreatorLoginMutation();
   const [
-    sendOtpToEmail,
+    brandRegister,
     {
-      data: sendOtpToEmailData,
-      error: sendOtpToEmailError,
-      isLoading: sendOtpToEmailLoading,
-      isSuccess: sendOtpToEmailSuccess,
+      data: brandRegisterData,
+      error: brandRegisterError,
+      isLoading: brandRegisterLoading,
+      isSuccess: brandRegisterSuccess,
     },
-  ] = useSendOtpToEmailMutation();
+  ] = useBrandRegisterMutation();
 
-  const [
-    forgotPassword,
-    {
-      data: forgotPasswordData,
-      error: forgotPasswordError,
-      isLoading: forgotPasswordLoading,
-      isSuccess: forgotPasswordSuccess,
-    },
-  ] = useForgotPasswordMutation();
-
-  const emailForm = useFormik({
+  const registerForm = useFormik({
     initialValues: {
-      forgotEmail: "",
-    },
-    validationSchema: Yup.object({
-      forgotEmail: Yup.string()
-        .email("Зөв имэйл хаяг оруулна уу")
-        .required("Required"),
-    }),
-    onSubmit: (value) => {
-      sendOtpToEmail({
-        To: value.forgotEmail,
-        UserType: userType, //Student, Brand, Creator
-        Channel: "smtp", //smtp, sms
-        Type: "forgotpassword",
-      });
-    },
-  });
-  const otpForm = useFormik({
-    initialValues: {
-      otp: "",
-    },
-    validationSchema: Yup.object({
-      otp: Yup.string()
-        .matches(/^\d{4}$/, "Зөв код оруулна уу")
-        .required("Required"),
-    }),
-    onSubmit: () => {
-      setForgotPasswordState("3");
-    },
-  });
-  const forgotPasswordForm = useFormik({
-    initialValues: {
+      email: "",
       newPassword: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Зөв имэйл хаяг оруулна уу")
+        .required("Required"),
       newPassword: Yup.string().required("Required"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("newPassword"), null], "Нууц үг таарч байх ёстой")
         .required("Required"),
     }),
     onSubmit: (values) => {
-      forgotPassword({
-        UserType: userType, //Brand, Creator, Student
-        Channel: "smtp", //smtp, sms
-        OTP: otpForm.values.otp,
-        To: emailForm.values.forgotEmail,
+      brandRegister({
+        Email: values.email,
         NewPassword: values.newPassword,
+        ConfirmPassword: values.confirmPassword,
       });
     },
   });
 
-  const login = useFormik({
-    initialValues: {
-      UserType: userType,
-      email: "",
-      password: "",
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().required("Required"),
-    }),
-
-    onSubmit: (values) => {
-      Cookies.remove("auth");
-      Cookies.remove("userType");
-      Cookies.remove("user-info");
-      loginRequest(values);
-    },
-  });
-
   useEffect(() => {
-    if (data) {
-      // Set cookies first
-      Cookies.set("auth", data.JWT, { expires: 1 / 24 });
-      Cookies.set("userType", userType, { expires: 1 / 24 });
-
-      // Invalidate cache after cookies are set
-      geniApi.util.invalidateTags(["UserInfo"]);
-
-      // Ensure navigation only after cookies are set
-
-      if (userType === "Creator") {
-        router.push("/creator-profile");
-      } else if (userType === "Brand") {
-        router.push("/brand-profile");
-      } else if (userType === "Student") {
-        router.push("/student-profile");
-      }
-    } else if (error) {
-      toast.error(error?.data?.error);
+    if (brandRegisterSuccess) {
+      toast.success("Амжилттай бүртгэгдлээ");
+    } else if (brandRegisterError) {
+      toast.error(brandRegister?.data?.error);
     }
-  }, [data, error]);
-
-  useEffect(() => {
-    if (sendOtpToEmailSuccess) {
-      toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
-      setForgotPasswordState("2");
-    } else if (sendOtpToEmailError) {
-      toast.error(sendOtpToEmailError?.data?.error);
-    }
-  }, [sendOtpToEmailSuccess, sendOtpToEmailError]);
-
-  useEffect(() => {
-    if (forgotPasswordSuccess) {
-      toast.success("Нууц үг шинэчлэгдлээ");
-      setForgotPasswordState("1");
-    } else if (forgotPasswordError) {
-      toast.error(forgotPassword?.data?.error);
-    }
-  }, [forgotPasswordSuccess, forgotPasswordError]);
-
-  const handleUserType = (value) => {
-    setUserType(value);
-    login.setFieldValue("UserType", value);
-  };
+  }, [brandRegisterSuccess, brandRegisterError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-20 sm:mt-32">
         <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
           <form
-            onSubmit={login.handleSubmit}
+            onSubmit={brandRegister.handleSubmit}
             className="sm:mt-11 flex flex-col xl:flex-row items-center gap-6 sm:gap-16"
           >
             <div className="rounded-2xl max-w-3xl w-full">
@@ -205,34 +89,36 @@ function Page() {
                   type="email"
                   placeholder=""
                   className="w-full outline-none text-sm sm:text-base"
-                  onChange={login.handleChange}
-                  value={login.values.email}
+                  onChange={registerForm.handleChange}
+                  value={registerForm.values.email}
                 />
               </div>
 
-              {login.touched.email && login.errors.email ? (
-                <div className="text-red-500 text-sm">{login.errors.email}</div>
+              {registerForm.touched.email && registerForm.errors.email ? (
+                <div className="text-red-500 text-sm">
+                  {registerForm.errors.email}
+                </div>
               ) : null}
               <span className="text-base sm:text-lg">Нууц үг</span>
               <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
                 <input
-                  name="password"
-                  id="password"
-                  type={showLoginPassword ? "text" : "password"}
+                  name="newPassword"
+                  id="newPassword"
+                  type={showNewPassword ? "text" : "password"}
                   placeholder=""
                   className="w-full outline-none text-sm sm:text-base"
-                  onChange={login.handleChange}
-                  value={login.values.password}
+                  onChange={registerForm.handleChange}
+                  value={registerForm.values.newPassword}
                 />
                 <button
                   type="button"
-                  onMouseDown={handleMouseDownLoginPassword}
-                  onMouseUp={handleMouseUpLoginPassword}
-                  onMouseLeave={handleMouseUpLoginPassword} // For when the user moves the mouse away from the button
-                  onTouchStart={handleMouseDownLoginPassword} // For mobile
-                  onTouchEnd={handleMouseUpLoginPassword} // For mobile
+                  onMouseDown={handleMouseDownNewPassword}
+                  onMouseUp={handleMouseUpNewPassword}
+                  onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
+                  onTouchStart={handleMouseDownNewPassword} // For mobile
+                  onTouchEnd={handleMouseUpNewPassword} // For mobile
                   className={`${
-                    login.values.password === "" ? "hidden" : "block"
+                    registerForm.values.newPassword === "" ? "hidden" : "block"
                   } text-sm opacity-90`}
                 >
                   <Image
@@ -247,23 +133,25 @@ function Page() {
               <span className="text-base sm:text-lg">Нууц үг давтах</span>
               <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
                 <input
-                  name="password"
-                  id="password"
-                  type={showLoginPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder=""
                   className="w-full outline-none text-sm sm:text-base"
-                  onChange={login.handleChange}
-                  value={login.values.password}
+                  onChange={registerForm.handleChange}
+                  value={registerForm.values.confirmPassword}
                 />
                 <button
                   type="button"
-                  onMouseDown={handleMouseDownLoginPassword}
-                  onMouseUp={handleMouseUpLoginPassword}
-                  onMouseLeave={handleMouseUpLoginPassword} // For when the user moves the mouse away from the button
-                  onTouchStart={handleMouseDownLoginPassword} // For mobile
-                  onTouchEnd={handleMouseUpLoginPassword} // For mobile
+                  onMouseDown={handleMouseDownConfirmPassword}
+                  onMouseUp={handleMouseUpConfirmPassword}
+                  onMouseLeave={handleMouseUpConfirmPassword} // For when the user moves the mouse away from the button
+                  onTouchStart={handleMouseDownConfirmPassword} // For mobile
+                  onTouchEnd={handleMouseUpConfirmPassword} // For mobile
                   className={`${
-                    login.values.password === "" ? "hidden" : "block"
+                    registerForm.values.confirmPassword === ""
+                      ? "hidden"
+                      : "block"
                   } text-sm opacity-90`}
                 >
                   <Image
@@ -275,16 +163,19 @@ function Page() {
                   />
                 </button>
               </div>
-              {login.touched.password && login.errors.password ? (
+              {registerForm.touched.confirmPassword &&
+              registerForm.errors.confirmPassword ? (
                 <div className="text-red-500 text-sm">
-                  {login.errors.password}
+                  {registerForm.errors.confirmPassword}
                 </div>
               ) : null}
-              <LoginButton
+              <Verification
                 width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
-                text={"Бүртгүүлэх"}
+                text={"Нууц үг сэргээх"}
                 shadowbg={"shadow-[0.25rem_0.25rem_#1920B4]"}
                 bg={"bg-[#4D55F5]"}
+                brandRegisterSuccess={brandRegisterSuccess}
+                brandRegisterData={brandRegisterData}
               />
             </div>
           </form>

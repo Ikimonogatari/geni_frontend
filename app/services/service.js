@@ -26,6 +26,20 @@ export const geniApi = createApi({
       }),
       invalidatesTags: ["UserInfo"],
     }),
+    brandRegister: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/brand-register",
+        method: "POST",
+        body,
+      }),
+    }),
+    brandVerification: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/brand-verification",
+        method: "POST",
+        body,
+      }),
+    }),
     editCreatorProfile: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/user/creator",
@@ -349,6 +363,8 @@ export const geniApi = createApi({
 
 export const {
   useCreatorLoginMutation,
+  useBrandRegisterMutation,
+  useBrandVerificationMutation,
   useEditCreatorProfileMutation,
   useEditBrandProfileMutation,
   useCreateProductMutation,
