@@ -160,7 +160,7 @@ export const geniApi = createApi({
     }),
     listPublicProducts: builder.query({
       query: (body) => ({
-        url: `/api/web/public/product?searchKey=&limit=100&offset=0`,
+        url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
         method: "GET",
         body,
       }),
