@@ -50,9 +50,12 @@ function MonthlyCompetition({ getCompetitionInfoData }) {
               />
               <div className="flex flex-col gap-1 sm:gap-3">
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
-                  <span className="text-base sm:text-xl font-semibold">
+                  <a
+                    href={`/public-profile/${getCompetitionInfoData?.PreviousWinner?.CreatorId}`}
+                    className="text-base sm:text-xl font-semibold hover:underline"
+                  >
                     {getCompetitionInfoData?.PreviousWinner?.Nickname}
-                  </span>
+                  </a>
                   <CreatorTier
                     tier={getCompetitionInfoData?.PreviousWinner?.LvlName}
                   />
