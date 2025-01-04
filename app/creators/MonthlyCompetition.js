@@ -58,7 +58,7 @@ function MonthlyCompetition({ getCompetitionInfoData }) {
                   />
                 </div>
                 <span className="text-sm sm:text-base">
-                  Цуглуулсан оноо: {getCompetitionInfoData?.PreviousWinner?.XP}
+                  Цуглуулсан оноо: {getCompetitionInfoData?.PreviousWinner?.Xp}
                   XP
                 </span>
               </div>
