@@ -1,0 +1,116 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useRouter } from "next/navigation";
+import { useEditBrandProfileMutation } from "@/app/services/service";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import BrandDetails from "./BrandDetails";
+import BrandDetailsSubmit from "./BrandDetailsSubmit";
+import BrandDetailsSuccess from "./BrandDetailsSuccess";
+
+function Page() {
+  const router = useRouter();
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+
+  const [step, setStep] = useState(1);
+
+  const handleNextStep = () => {
+    if (step < 2) {
+      setStep((prevStep) => prevStep + 1);
+    }
+  };
+
+  const handlePreviousStep = () => {
+    if (step > 1) setStep((prevStep) => prevStep - 1);
+  };
+
+  const [editBrandProfile, { data, error, isLoading, isSuccess }] =
+    useEditBrandProfileMutation();
+
+  const formik = useFormik({
+    initialValues: {
+      Name: parsedUserInfo ? parsedUserInfo?.Name : "",
+      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
+      Website: parsedUserInfo ? parsedUserInfo?.Website : "",
+      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
+      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
+      Address: parsedUserInfo ? parsedUserInfo?.Address : "",
+      BrandAoADescription: "temp-desc",
+    },
+    validationSchema: Yup.object({
+      Name: Yup.string().required("Required"),
+      PhoneNumber: Yup.string().required("Required"),
+      Bio: Yup.string().required("Required"),
+      Website: Yup.string().required("Required"),
+      RegNo: Yup.string().required("Required"),
+      Address: Yup.string().required("Required"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        await editBrandProfile(values).unwrap();
+        setStep(3);
+      } catch (error) {
+        toast.error("Алдаа гарлаа");
+        console.error("Error submitting the form", error);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Амжилттай");
+    }
+    if (error) {
+      toast.error(error?.data?.error);
+    }
+  }, [data, error]);
+
+  const renderStepContent = () => {
+    switch (step) {
+      case 1:
+        return (
+          <BrandDetails
+            formik={formik}
+            parsedUserInfo={parsedUserInfo}
+            handleNextStep={handleNextStep}
+          />
+        );
+      case 2:
+        return (
+          <BrandDetailsSubmit
+            formik={formik}
+            handlePreviousStep={handlePreviousStep}
+            parsedUserInfo={parsedUserInfo}
+          />
+        );
+      case 3:
+        return <BrandDetailsSuccess router={router} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen w-full bg-white">
+      <div className="mt-36 sm:mt-48 mb-12 px-5">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="max-w-4xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"
+        >
+          <div className="flex flex-row justify-between items-center gap-5 my-7 w-full">
+            <p className="text-xl sm:text-3xl xl:text-4xl font-bold">
+              Мэдээлэл оруулах
+            </p>
+            <span className="text-[#6F6F6F] text-base sm:text-lg xl:text-xl">
+              Алхам {step}/3
+            </span>
+          </div>
+          {renderStepContent()}
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Page;

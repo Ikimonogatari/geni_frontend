@@ -551,7 +551,7 @@ function Page() {
                         src={"/Instagram.png"}
                         width={24}
                         height={24}
-                        alt="fb"
+                        alt=""
                         className="w-6 h-6"
                       />
                       <input
@@ -573,7 +573,7 @@ function Page() {
                         src={"/Facebook.png"}
                         width={24}
                         height={24}
-                        alt="fb"
+                        alt=""
                         className="w-6 h-6"
                       />
                       <input

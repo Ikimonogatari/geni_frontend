@@ -489,32 +489,35 @@ function Page() {
                       </button>
                     </div>
                   ))}
-                  <div
-                    onClick={() => setdropdownOpen(!dropdownOpen)}
-                    className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
-                  >
-                    <Image
-                      src={"/plus-icon-black.png"}
-                      width={24}
-                      height={24}
-                      className="aspect-square w-2 h-2 sm:w-3 sm:h-3"
-                    />
-                  </div>
-                  {brandTypes.length > 0 ? (
+
+                  <div className="flex flex-row items-center">
                     <div
-                      onClick={handleBrandTypesChange}
+                      onClick={() => setdropdownOpen(!dropdownOpen)}
                       className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
                     >
                       <Image
-                        src={"/check-icon.png"}
-                        width={16}
-                        height={16}
-                        className="aspect-square w-3 h-3 sm:w-4 sm:h-4"
+                        src={"/plus-icon-black.png"}
+                        width={24}
+                        height={24}
+                        className="aspect-square w-2 h-2 sm:w-3 sm:h-3"
                       />
                     </div>
-                  ) : (
-                    <></>
-                  )}
+                    {brandTypes.length > 0 ? (
+                      <div
+                        onClick={handleBrandTypesChange}
+                        className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
+                      >
+                        <Image
+                          src={"/check-icon.png"}
+                          width={16}
+                          height={16}
+                          className="aspect-square w-3 h-3 sm:w-4 sm:h-4"
+                        />
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
 
                   <div
                     className={`${
@@ -666,7 +669,7 @@ function Page() {
                         src={"/Instagram.png"}
                         width={24}
                         height={24}
-                        alt="fb"
+                        alt=""
                         className="w-6 h-6"
                       />
                       <input
@@ -688,7 +691,7 @@ function Page() {
                         src={"/Facebook.png"}
                         width={24}
                         height={24}
-                        alt="fb"
+                        alt=""
                         className="w-6 h-6"
                       />
                       <input
@@ -810,12 +813,6 @@ function Page() {
                 </div>
               )}
             </div>
-            <button
-              type="submit"
-              className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
-            >
-              Хадгалах
-            </button>
           </form>
           <button
             onClick={handleLogout}

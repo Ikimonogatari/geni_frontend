@@ -227,7 +227,7 @@ function page() {
                         src={"/Facebook.png"}
                         width={24}
                         height={24}
-                        alt="fb"
+                        alt=""
                         className="w-5 h-5 sm:w-6 sm:h-6"
                       />
                     </a>
