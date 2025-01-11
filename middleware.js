@@ -8,14 +8,9 @@ export function middleware(req) {
 
   const url = req.nextUrl.clone();
 
-  // Allow access to public paths without authentication
-  if (["/payment", "/products"].includes(url.pathname)) {
-    return NextResponse.next();
-  }
-
+  // Allow access to the login page
   if (url.pathname === "/login") {
     if (authToken && userType?.value !== "Student") {
-      console.log("User already authenticated, redirecting from login");
       return NextResponse.redirect(new URL("/", req.nextUrl)); // Redirect to homepage or dashboard
     } else {
       return NextResponse.next(); // Allow unauthenticated users or Student users to access the login page
@@ -27,34 +22,52 @@ export function middleware(req) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Handle role-specific redirection
+  // Handle role-specific access control
   if (userType?.value === "Creator") {
     if (
-      url.pathname === "/brand-profile" ||
-      url.pathname === "/edit-profile-brand" ||
-      url.pathname === "/add-product"
+      [
+        "/brand-profile",
+        "/edit-profile-brand",
+        "/add-product",
+        "/edit-product",
+        "/add-brand-details",
+        "/student-profile",
+        "/edit-profile-student",
+        "/payment",
+      ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
-      console.log("Redirecting Creator to home"); // Log redirection for debugging
-      return NextResponse.redirect(new URL("/", req.nextUrl));
+      return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
     }
   } else if (userType?.value === "Brand") {
     if (
-      url.pathname === "/creator-profile" ||
-      url.pathname === "/edit-profile-creator"
+      [
+        "/wallet",
+        "/products",
+        "/creator-profile",
+        "/student-profile",
+        "/edit-profile-creator",
+        "/edit-profile-student",
+      ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
-      console.log("Redirecting Brand to home"); // Log redirection for debugging
-      return NextResponse.redirect(new URL("/", req.nextUrl));
+      return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
     }
   } else if (userType?.value === "Student") {
     if (
-      url.pathname === "/brand-profile" ||
-      url.pathname === "/edit-profile-brand" ||
-      url.pathname === "/add-product" ||
-      url.pathname === "/creator-profile" ||
-      url.pathname === "/edit-profile-creator"
+      [
+        "/brand-profile",
+        "/edit-profile-brand",
+        "/add-product",
+        "/edit-product",
+        "/creator-profile",
+        "/edit-profile-creator",
+        "/add-brand-details",
+        "/products",
+        "/products/:path*",
+        "/wallet",
+        "/payment",
+      ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
-      console.log("Redirecting Student to home"); // Log redirection for debugging
-      return NextResponse.redirect(new URL("/", req.nextUrl));
+      return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
     }
   }
 
@@ -65,6 +78,7 @@ export function middleware(req) {
 export const config = {
   matcher: [
     "/add-product",
+    "/add-brand-details",
     "/edit-profile-brand",
     "/edit-profile-creator",
     "/edit-profile-student",
