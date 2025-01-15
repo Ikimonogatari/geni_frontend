@@ -813,6 +813,12 @@ function Page() {
                 </div>
               )}
             </div>
+            <button
+              type="submit"
+              className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+            >
+              Хадгалах
+            </button>
           </form>
           <button
             onClick={handleLogout}
