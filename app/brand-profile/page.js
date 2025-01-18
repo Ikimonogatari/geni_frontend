@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
 import LogoutButton from "../components/common/LogoutButton";
+import PlatformUseCaseModal from "./PlatformUseCaseModal";
 
 function page() {
   const {
@@ -250,18 +251,7 @@ function page() {
               </div>
             </div>
             <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
-              <Link
-                href="/add-product"
-                className="flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
-              >
-                Бүтээгдэхүүн нэмэх
-                <Image
-                  src={"/add-icon.png"}
-                  width={14}
-                  height={14}
-                  alt="arrow"
-                />
-              </Link>
+              <PlatformUseCaseModal responsive={"flex md:hidden "} />
               <div className="flex flex-row items-center gap-2 sm:gap-4">
                 <Link
                   href="/notifications"
@@ -309,18 +299,7 @@ function page() {
                   </button>
                 ))}
               </div>
-              <a
-                href="/add-product"
-                className="w-auto whitespace-nowrap hidden md:flex flex-row text-[10px] sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
-              >
-                Бүтээгдэхүүн нэмэх
-                <Image
-                  src={"/add-icon.png"}
-                  width={14}
-                  height={14}
-                  alt="arrow"
-                />
-              </a>
+              <PlatformUseCaseModal responsive={"hidden md:flex"} />
             </div>
           </div>
           {currentContents ? renderBrandProfile() : <>Loading</>}
