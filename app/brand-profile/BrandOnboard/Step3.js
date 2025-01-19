@@ -26,10 +26,16 @@ function Step3() {
       </span>
 
       <div className="rounded-3xl border border-[#4D55F5] py-4 px-3 sm:py-10 sm:px-6 w-full">
-        <div className="flex flex-row items-center gap-9">
-          <Image src={selectedBrandImage} width={200} height={200} alt="" />
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-row items-start gap-10">
+        <div className="flex flex-row items-center gap-5 sm:gap-9">
+          <Image
+            src={selectedBrandImage}
+            width={200}
+            height={200}
+            alt=""
+            className="w-1/2 sm:w-[200px] h-auto sm:h-[200px]"
+          />
+          <div className="flex flex-col gap-3 sm:gap-6">
+            <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-10">
               <div className="flex flex-col">
                 <span className="text-sm sm:text-base">Geni credit:</span>
                 <span className="text-lg sm:text-2xl">15</span>
@@ -53,12 +59,15 @@ function Step3() {
                 </span>
               </div>
             </div>
-            <span className="rounded-full px-6 py-3 bg-[#F49D19] text-white">
+            <span className="hidden sm:block rounded-full px-6 py-3 bg-[#F49D19] text-white">
               1 credit гэдэг нь 1 бүтээгдэхүүн нэмээд 1 контент авах эрхийг
               хэлнэ.
             </span>
           </div>
         </div>
+        <span className="mt-4 block sm:hidden rounded-3xl text-sm px-3 py-2 bg-[#F49D19] text-white">
+          1 credit гэдэг нь 1 бүтээгдэхүүн нэмээд 1 контент авах эрхийг хэлнэ.
+        </span>
       </div>
 
       <div className="relative flex flex-col items-center justify-center my-8">

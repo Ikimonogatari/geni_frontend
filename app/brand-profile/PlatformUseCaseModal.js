@@ -4,6 +4,7 @@ import Image from "next/image";
 import Step1 from "./BrandOnboard/Step1";
 import Step2 from "./BrandOnboard/Step2";
 import Step3 from "./BrandOnboard/Step3";
+import Step4 from "./BrandOnboard/Step4";
 
 function PlatformUseCaseModal({ responsive }) {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -33,7 +34,7 @@ function PlatformUseCaseModal({ responsive }) {
       case 3:
         return <Step3 />;
       case 4:
-        return <div>Step 4 Content</div>; // Replace with actual content for Step 4
+        return <Step4 />;
       default:
         return null;
     }

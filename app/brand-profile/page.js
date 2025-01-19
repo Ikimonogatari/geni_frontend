@@ -237,7 +237,7 @@ function page() {
                   )}
                 </div>
                 <div className="overflow-x-auto w-full">
-                  <div className="flex w-[220px] sm:w-full flex-row sm:flex-wrap items-center gap-1 sm:gap-2 lg:w-4/5">
+                  <div className="flex w-[220px] sm:w-full flex-row sm:flex-wrap items-center gap-1 sm:gap-2 lg:w-5/6">
                     {getUserInfoData?.BrandTypes?.map((b, i) => (
                       <button
                         key={i}
