@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 function PlatformUseCaseModal({ responsive, userInfo }) {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const initialStep = userInfo?.IsUsedFreeContent
     ? userInfo?.IsCheckedTerm
       ? 3
@@ -62,10 +63,6 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
     }
   };
 
-  const handleUseFreeContent = () => {
-    useFreeContent();
-  };
-
   const nextStep = () => {
     if (selectedOption === "freecontent") {
       useFreeContent();
@@ -104,9 +101,14 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
       case 2:
         return <Step2 setIsAgreed={setIsAgreed} />;
       case 3:
-        return <Step3 />;
+        return (
+          <Step3
+            setSelectedPackageIndex={setSelectedPackageIndex}
+            selectedPackageIndex={selectedPackageIndex}
+          />
+        );
       case 4:
-        return <Step4 />;
+        return <Step4 selectedPackageIndex={selectedPackageIndex} />;
       default:
         return null;
     }
@@ -192,7 +194,7 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
               />
             </button>
           ) : (
-            <PaymentModal planId={1} />
+            <PaymentModal selectedPackage={selectedPackageIndex} />
           )}
         </div>
       </DialogContent>

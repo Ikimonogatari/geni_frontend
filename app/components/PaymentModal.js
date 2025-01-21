@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
@@ -14,7 +15,7 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 
-function PaymentModal({ selectedPlan }) {
+function PaymentModal({ selectedPackage }) {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
 
@@ -33,28 +34,35 @@ function PaymentModal({ selectedPlan }) {
     error: checkPaymentError,
     isLoading: checkPaymentLoading,
     refetch: checkPayment,
-  } = useCheckPaymentQuery(txId);
+  } = useCheckPaymentQuery(txId, { skip: !txId });
 
   useEffect(() => {
     if (subscribePlanSuccess) {
-      setTxId(subscribePlanData.UserTxnId);
+      setTxId(subscribePlanData?.UserTxnId);
     }
     if (subscribePlanError) {
       toast.error(subscribePlanError?.data?.error);
     }
   }, [subscribePlanSuccess, subscribePlanError]);
 
-  useEffect(() => {
-    if (checkPaymentData && checkPaymentData?.IsPaid) {
-      setIsPaymentSuccess(true);
-    }
-    if (checkPaymentError) {
-      toast.error(checkPaymentError?.data?.error);
-    }
-  }, [checkPaymentData, checkPaymentError, subscribePlanData]);
-
   const handleSubscription = () => {
-    subscribePlan({ planId: selectedPlan });
+    subscribePlan({ planId: selectedPackage });
+  };
+
+  const handleCheckPayment = async () => {
+    if (txId) {
+      const checkPaymentResposne = await checkPayment(txId);
+      console.log(checkPaymentResposne);
+      if (checkPaymentResposne?.data && checkPaymentResposne?.isSuccess) {
+        if (checkPaymentResposne?.data?.IsPaid) {
+          setIsPaymentSuccess(true);
+        } else {
+          toast.error("Төлбөр төлөгдөөгүй байна");
+        }
+      } else {
+        toast.error("Алдаа гарлаа");
+      }
+    }
   };
 
   return (
@@ -87,11 +95,11 @@ function PaymentModal({ selectedPlan }) {
                 width={394}
                 height={394}
                 alt="dummy-qr"
-                className="w-[394px] h-[394px] rounded-2xl"
+                className="aspect-square w-full rounded-2xl"
               />
 
               <button
-                onClick={() => checkPayment(subscribePlanData.UserTxnId)}
+                onClick={handleCheckPayment}
                 className="bg-[#4D55F5] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
               >
                 Төлбөр шалгах

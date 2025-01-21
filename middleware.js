@@ -33,7 +33,6 @@ export function middleware(req) {
         "/add-brand-details",
         "/student-profile",
         "/edit-profile-student",
-        "/payment",
       ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
       return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
@@ -64,7 +63,6 @@ export function middleware(req) {
         "/products",
         "/products/:path*",
         "/wallet",
-        "/payment",
       ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
       return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
@@ -90,7 +88,6 @@ export const config = {
     "/student-profile",
     "/notifications/:path*",
     "/notifications",
-    "/payment/:path*",
     "/products/:path*",
     "/login",
   ],

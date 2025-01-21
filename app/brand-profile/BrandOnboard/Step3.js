@@ -1,17 +1,27 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import PriceFormatter from "@/app/components/common/FormatPrice";
+import { useListPaymentPlansQuery } from "@/app/services/service";
 
-function Step3() {
-  const [selectedBundle, setSelectedBundle] = useState(0);
-  const [selectedBrandImage, setSelectedBrandImage] = useState(
+function Step3({ selectedPackageIndex, setSelectedPackageIndex }) {
+  const [selectedPackageImage, setSelectedPackageImage] = useState(
     "/brand-bundle-1.png"
   );
 
+  const {
+    data: listPaymentPlansData,
+    error: listPaymentPlansError,
+    isLoading: listPaymentPlansLoading,
+  } = useListPaymentPlansQuery();
+
   const handleCircleClick = (index) => {
-    setSelectedBundle(index);
-    setSelectedBrandImage(`/brand-bundle-${index + 1}.png`);
+    setSelectedPackageIndex(index);
+    setSelectedPackageImage(`/brand-bundle-${index + 1}.png`);
   };
+
+  const selectedPackageData = listPaymentPlansData
+    ? listPaymentPlansData[selectedPackageIndex]
+    : null;
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xl sm:text-2xl xl:text-3xl font-bold">
@@ -28,7 +38,7 @@ function Step3() {
       <div className="rounded-3xl border border-[#4D55F5] py-4 px-3 sm:py-10 sm:px-6 w-full">
         <div className="flex flex-row items-center gap-5 sm:gap-9">
           <Image
-            src={selectedBrandImage}
+            src={selectedPackageImage}
             width={200}
             height={200}
             alt=""
@@ -38,24 +48,30 @@ function Step3() {
             <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-10">
               <div className="flex flex-col">
                 <span className="text-sm sm:text-base">Geni credit:</span>
-                <span className="text-lg sm:text-2xl">15</span>
+                <span className="text-lg sm:text-2xl">
+                  {selectedPackageData?.Credit}
+                </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-sm sm:text-base">Контентийн үнэ:</span>
                 <span className="text-lg sm:text-2xl">
-                  <PriceFormatter price={15000} />
+                  <PriceFormatter price={selectedPackageData?.ContentPrice} />
                 </span>
                 <span className="text-[#4FB755] text-sm sm:text-base">
-                  Хэмнэлт: <PriceFormatter price={40000} />
+                  Хэмнэлт:{" "}
+                  <PriceFormatter
+                    price={selectedPackageData?.ContentPriceDiscount}
+                  />
                 </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-sm sm:text-base">Нийт үнэ:</span>
                 <span className="text-lg sm:text-2xl">
-                  <PriceFormatter price={15000} />
+                  <PriceFormatter price={selectedPackageData?.Price} />
                 </span>
                 <span className="text-[#4FB755] text-sm sm:text-base">
-                  Хэмнэлт: <PriceFormatter price={15000} />
+                  Хэмнэлт:{" "}
+                  <PriceFormatter price={selectedPackageData?.PriceDiscount} />
                 </span>
               </div>
             </div>
@@ -78,7 +94,7 @@ function Step3() {
                 key={index}
                 onClick={() => handleCircleClick(index)}
                 className={`w-8 h-8 rounded-full cursor-pointer flex items-center justify-center border ${
-                  selectedBundle >= index
+                  selectedPackageIndex >= index
                     ? "bg-[#4D55F5] text-white border-[#4D55F5]"
                     : "bg-white text-[#4D55F5] border-[#E0E0E0]"
                 }`}
@@ -91,7 +107,7 @@ function Step3() {
             <div className="absolute inset-0 bg-[#E0E0E0] rounded-lg h-1 w-full"></div>
             <div
               className={`absolute inset-0 bg-[#4D55F5] rounded-lg h-1 transition-width duration-300 ease-in-out`}
-              style={{ width: `${(selectedBundle / 3) * 100}%` }}
+              style={{ width: `${(selectedPackageIndex / 3) * 100}%` }}
             ></div>
           </div>
         </div>
