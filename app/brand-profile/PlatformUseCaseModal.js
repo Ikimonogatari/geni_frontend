@@ -6,18 +6,55 @@ import Step2 from "./BrandOnboard/Step2";
 import Step3 from "./BrandOnboard/Step3";
 import Step4 from "./BrandOnboard/Step4";
 import PaymentModal from "../components/PaymentModal";
+import { useBrandTermCheckMutation } from "../services/service";
 
-function PlatformUseCaseModal({ responsive }) {
+function PlatformUseCaseModal({ responsive, userInfo }) {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [isAgreed, setIsAgreed] = useState(false);
+  const initialStep = userInfo?.IsUsedFreeContent
+    ? userInfo?.IsCheckedTerm
+      ? 3
+      : 2
+    : 1;
+  const [currentStep, setCurrentStep] = useState(initialStep);
+  const [isAgreed, setIsAgreed] = useState(userInfo?.IsCheckedTerm);
+
+  const [
+    brandTermCheck,
+    {
+      data: brandTermCheckData,
+      error: brandTermCheckError,
+      isLoading: brandTermCheckLoading,
+      isSuccess: brandTermCheckSuccess,
+    },
+  ] = useBrandTermCheckMutation();
+
+  const handleCheckboxChange = (e) => {
+    const isChecked = e.target.checked;
+    setIsAgreed(isChecked);
+    if (isChecked) {
+      brandTermCheck();
+    }
+  };
 
   const nextStep = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, 4));
+    setCurrentStep((prevStep) => {
+      if (userInfo?.IsCheckedTerm && prevStep === 1) {
+        return 3;
+      }
+      return Math.min(prevStep + 1, 4);
+    });
   };
 
   const previousStep = () => {
-    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
+    setCurrentStep((prevStep) => {
+      if (userInfo?.IsUsedFreeContent && prevStep === 3) {
+        return 3;
+      }
+      if (userInfo?.IsCheckedTerm && prevStep === 3) {
+        return 1;
+      }
+      return Math.max(prevStep - 1, 1);
+    });
   };
 
   const handleSelect = (option) => {
@@ -55,7 +92,14 @@ function PlatformUseCaseModal({ responsive }) {
           {currentStep == 2 ? (
             <div className="flex flex-row items-center gap-2 sm:gap-3">
               <div className="relative">
-                <input type="checkbox" id="checkbox" className="peer hidden" />
+                <input
+                  type="checkbox"
+                  id="checkbox"
+                  className="peer hidden"
+                  checked={isAgreed}
+                  defaultChecked={userInfo?.IsCheckedTerm}
+                  onChange={handleCheckboxChange}
+                />
                 <label
                   htmlFor="checkbox"
                   className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-[#4D55F5] peer-checked:border-[#4D55F5]"
@@ -70,7 +114,8 @@ function PlatformUseCaseModal({ responsive }) {
                 Хүлээн зөвшөөрч байна
               </span>
             </div>
-          ) : currentStep > 2 ? (
+          ) : currentStep > 3 ||
+            (currentStep > 2 && !userInfo?.IsCheckedTerm) ? (
             <button
               onClick={previousStep}
               className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
@@ -90,7 +135,14 @@ function PlatformUseCaseModal({ responsive }) {
           {currentStep < 4 ? (
             <button
               onClick={nextStep}
-              className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              disabled={currentStep === 2 && !isAgreed}
+              className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 
+                ${
+                  currentStep === 2 && !isAgreed
+                    ? "opacity-70 cursor-not-allowed"
+                    : "opacity-100"
+                } 
+                bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
             >
               Үргэлжлүүлэх
               <Image

@@ -347,7 +347,7 @@ export const geniApi = createApi({
       }),
     }),
     getCompetitionInfo: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: `/api/web/public/competition/active`,
         method: "GET",
       }),
@@ -356,6 +356,12 @@ export const geniApi = createApi({
       query: () => ({
         url: `/api/web/private/wallet`,
         method: "GET",
+      }),
+    }),
+    brandTermCheck: builder.mutation({
+      query: () => ({
+        url: "/api/web/private/user/term-check",
+        method: "POST",
       }),
     }),
   }),
@@ -411,4 +417,5 @@ export const {
   useUndoContentRequestMutation,
   useGetCompetitionInfoQuery,
   useGetWalletInfoQuery,
+  useBrandTermCheckMutation,
 } = geniApi;
