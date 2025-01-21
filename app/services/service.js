@@ -364,6 +364,12 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
+    useFreeContent: builder.mutation({
+      query: () => ({
+        url: "/api/web/private/subscribe/free",
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -418,4 +424,5 @@ export const {
   useGetCompetitionInfoQuery,
   useGetWalletInfoQuery,
   useBrandTermCheckMutation,
+  useUseFreeContentMutation,
 } = geniApi;

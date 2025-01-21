@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
 import Image from "next/image";
 import Step1 from "./BrandOnboard/Step1";
@@ -6,9 +6,15 @@ import Step2 from "./BrandOnboard/Step2";
 import Step3 from "./BrandOnboard/Step3";
 import Step4 from "./BrandOnboard/Step4";
 import PaymentModal from "../components/PaymentModal";
-import { useBrandTermCheckMutation } from "../services/service";
+import {
+  useBrandTermCheckMutation,
+  useUseFreeContentMutation,
+} from "../services/service";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function PlatformUseCaseModal({ responsive, userInfo }) {
+  const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
   const initialStep = userInfo?.IsUsedFreeContent
     ? userInfo?.IsCheckedTerm
@@ -28,6 +34,26 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
     },
   ] = useBrandTermCheckMutation();
 
+  const [
+    useFreeContent,
+    {
+      data: useFreeContentData,
+      error: useFreeContentError,
+      isLoading: useFreeContentLoading,
+      isSuccess: useFreeContentSuccess,
+    },
+  ] = useUseFreeContentMutation();
+
+  useEffect(() => {
+    if (useFreeContentSuccess) {
+      toast.success("Танд 1ш үнэгүй контэнт хийлгэх эрх үүслээ");
+      router.push("/add-product");
+    }
+    if (useFreeContentError) {
+      toast.error(useFreeContentError?.data?.error);
+    }
+  }, [useFreeContentSuccess, useFreeContentError]);
+
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
     setIsAgreed(isChecked);
@@ -36,13 +62,21 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
     }
   };
 
+  const handleUseFreeContent = () => {
+    useFreeContent();
+  };
+
   const nextStep = () => {
-    setCurrentStep((prevStep) => {
-      if (userInfo?.IsCheckedTerm && prevStep === 1) {
-        return 3;
-      }
-      return Math.min(prevStep + 1, 4);
-    });
+    if (selectedOption === "freecontent") {
+      useFreeContent();
+    } else {
+      setCurrentStep((prevStep) => {
+        if (userInfo?.IsCheckedTerm && prevStep === 1) {
+          return 3;
+        }
+        return Math.min(prevStep + 1, 4);
+      });
+    }
   };
 
   const previousStep = () => {
@@ -135,13 +169,17 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
           {currentStep < 4 ? (
             <button
               onClick={nextStep}
-              disabled={currentStep === 2 && !isAgreed}
+              disabled={
+                (currentStep === 1 && selectedOption === null) ||
+                (currentStep === 2 && !isAgreed)
+              }
               className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 
-                ${
-                  currentStep === 2 && !isAgreed
-                    ? "opacity-70 cursor-not-allowed"
-                    : "opacity-100"
-                } 
+               ${
+                 (currentStep === 1 && selectedOption === null) ||
+                 (currentStep === 2 && !isAgreed)
+                   ? "opacity-70 cursor-not-allowed"
+                   : "opacity-100"
+               } 
                 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
             >
               Үргэлжлүүлэх
