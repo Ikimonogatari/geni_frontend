@@ -5,6 +5,7 @@ import Step1 from "./BrandOnboard/Step1";
 import Step2 from "./BrandOnboard/Step2";
 import Step3 from "./BrandOnboard/Step3";
 import Step4 from "./BrandOnboard/Step4";
+import PaymentModal from "../components/PaymentModal";
 
 function PlatformUseCaseModal({ responsive }) {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -86,7 +87,7 @@ function PlatformUseCaseModal({ responsive }) {
           ) : (
             <></>
           )}
-          {currentStep < 5 && (
+          {currentStep < 4 ? (
             <button
               onClick={nextStep}
               className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -100,6 +101,8 @@ function PlatformUseCaseModal({ responsive }) {
                 className="w-[10px] h-[10px]"
               />
             </button>
+          ) : (
+            <PaymentModal planId={1} />
           )}
         </div>
       </DialogContent>
