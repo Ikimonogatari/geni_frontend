@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,jsx}",
-    "./components/**/*.{js,jsx}",
-    "./app/**/*.{js,jsx}",
-    "./src/**/*.{js,jsx}",
+    "./pages/**/*.{js,jsx,tsx}",
+    "./components/**/*.{js,jsx,tsx}",
+    "./app/**/*.{js,jsx,tsx}",
+    "./src/**/*.{js,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -17,6 +17,12 @@ module.exports = {
       },
     },
     extend: {
+      colors: {
+        "geni-blue": "#4D55F5",
+        primary: "#2D262D",
+        "geni-gray": "#CDCDCD",
+        secondary: "#CA7FFE",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
