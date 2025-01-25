@@ -27,6 +27,7 @@ function Brands() {
   } = useGetPublicBrandListQuery();
 
   const checkViewportSize = () => {
+    // TODO use breakpoints of Swiper
     const width = window.innerWidth;
     if (width <= 480) {
       // Mobile: display 1 slide

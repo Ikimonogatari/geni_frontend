@@ -16,7 +16,7 @@ function Step3({
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery({});
+  } = useListPaymentPlansQuery();
 
   const handleCircleClick = (index) => {
     const scopeSelectedPackageId = listPaymentPlansData
@@ -28,6 +28,8 @@ function Step3({
     setSelectedPackageIndex(index);
     setSelectedPackageImage(`/brand-bundle-${index + 1}.png`);
   };
+
+  console.log(listPaymentPlansData && listPaymentPlansData);
 
   const selectedPackageData = listPaymentPlansData
     ? listPaymentPlansData[selectedPackageIndex]
