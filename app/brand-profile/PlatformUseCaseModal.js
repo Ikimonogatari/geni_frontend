@@ -17,6 +17,7 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
+  const [selectedPackageId, setSelectedPackageId] = useState(1);
   const initialStep = userInfo?.IsUsedFreeContent
     ? userInfo?.IsCheckedTerm
       ? 3
@@ -105,6 +106,7 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
           <Step3
             setSelectedPackageIndex={setSelectedPackageIndex}
             selectedPackageIndex={selectedPackageIndex}
+            setSelectedPackageId={setSelectedPackageId}
           />
         );
       case 4:
@@ -194,7 +196,7 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
               />
             </button>
           ) : (
-            <PaymentModal selectedPackage={selectedPackageIndex} />
+            <PaymentModal selectedPackageId={selectedPackageId} />
           )}
         </div>
       </DialogContent>

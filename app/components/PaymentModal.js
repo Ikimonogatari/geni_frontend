@@ -15,9 +15,10 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 
-function PaymentModal({ selectedPackage }) {
+function PaymentModal({ selectedPackageId }) {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false); // Local state for dialog open/close
 
   const [
     subscribePlan,
@@ -39,6 +40,7 @@ function PaymentModal({ selectedPackage }) {
   useEffect(() => {
     if (subscribePlanSuccess) {
       setTxId(subscribePlanData?.UserTxnId);
+      setDialogOpen(true); // Open dialog when subscription succeeds
     }
     if (subscribePlanError) {
       toast.error(subscribePlanError?.data?.error);
@@ -46,15 +48,15 @@ function PaymentModal({ selectedPackage }) {
   }, [subscribePlanSuccess, subscribePlanError]);
 
   const handleSubscription = () => {
-    subscribePlan({ planId: selectedPackage });
+    subscribePlan({ planId: selectedPackageId });
   };
 
   const handleCheckPayment = async () => {
     if (txId) {
-      const checkPaymentResposne = await checkPayment(txId);
-      console.log(checkPaymentResposne);
-      if (checkPaymentResposne?.data && checkPaymentResposne?.isSuccess) {
-        if (checkPaymentResposne?.data?.IsPaid) {
+      const checkPaymentResponse = await checkPayment(txId);
+      console.log(checkPaymentResponse);
+      if (checkPaymentResponse?.data && checkPaymentResponse?.isSuccess) {
+        if (checkPaymentResponse?.data?.IsPaid) {
           setIsPaymentSuccess(true);
         } else {
           toast.error("Төлбөр төлөгдөөгүй байна");
@@ -65,8 +67,13 @@ function PaymentModal({ selectedPackage }) {
     }
   };
 
+  const handleCloseDialog = () => {
+    setDialogOpen(false); // Close dialog when the "Баярлалаа" button is clicked
+    setIsPaymentSuccess(false); // Reset payment success state for next use
+  };
+
   return (
-    <Dialog open={subscribePlanSuccess}>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger
         onClick={handleSubscription}
         className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -116,7 +123,10 @@ function PaymentModal({ selectedPackage }) {
               <span className="uppercase font-bold text-[#4FB755] text-4xl sm:text-5xl text-center">
                 АМЖИЛТТАЙ ТӨЛӨГДЛӨӨ
               </span>
-              <DialogClose className="mt-24 bg-[#4D55F5] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4">
+              <DialogClose
+                onClick={handleCloseDialog}
+                className="mt-24 bg-[#4D55F5] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
+              >
                 Баярлалаа
               </DialogClose>
             </div>

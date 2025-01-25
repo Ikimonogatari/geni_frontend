@@ -3,7 +3,11 @@ import Image from "next/image";
 import PriceFormatter from "@/app/components/common/FormatPrice";
 import { useListPaymentPlansQuery } from "@/app/services/service";
 
-function Step3({ selectedPackageIndex, setSelectedPackageIndex }) {
+function Step3({
+  selectedPackageIndex,
+  setSelectedPackageIndex,
+  setSelectedPackageId,
+}) {
   const [selectedPackageImage, setSelectedPackageImage] = useState(
     "/brand-bundle-1.png"
   );
@@ -15,6 +19,12 @@ function Step3({ selectedPackageIndex, setSelectedPackageIndex }) {
   } = useListPaymentPlansQuery();
 
   const handleCircleClick = (index) => {
+    const scopeSelectedPackageId = listPaymentPlansData
+      ? listPaymentPlansData[index]?.PlanId
+      : null;
+    console.log(index, "SELECTED INDEX IN STEP3");
+    console.log(scopeSelectedPackageId, "PACKAGE ID HERE");
+    setSelectedPackageId(scopeSelectedPackageId);
     setSelectedPackageIndex(index);
     setSelectedPackageImage(`/brand-bundle-${index + 1}.png`);
   };
