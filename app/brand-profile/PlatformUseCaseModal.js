@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import Step1 from "./BrandOnboard/Step1";
 import Step2 from "./BrandOnboard/Step2";
 import Step3 from "./BrandOnboard/Step3";
 import Step4 from "./BrandOnboard/Step4";
-import PaymentModal from "../components/PaymentModal";
+import PaymentModal from "@/components/PaymentModal";
 import {
   useBrandTermCheckMutation,
   useUseFreeContentMutation,

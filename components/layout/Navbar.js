@@ -62,9 +62,7 @@ function Navbar() {
           </a>
           {userType && getUserInfoData ? (
             <a
-              href={
-                userType === "Creator" ? "/creator-profile" : "/brand-profile"
-              }
+              href="/profile"
               className="block py-2 px-5 text-base font-semibold text-body-color hover:bg-primary hover:bg-opacity-5 hover:text-primary"
             >
               Профайл
@@ -109,13 +107,7 @@ function Navbar() {
 
           {!getUserInfoError && getUserInfoData ? (
             <a
-              href={
-                userType === "Creator"
-                  ? "/creator-profile"
-                  : userType === "Brand"
-                  ? "/brand-profile"
-                  : "/student-profile"
-              }
+              href="/profile"
               className={`hidden md:flex flex-row items-center gap-[6px] ${
                 userType === "Creator"
                   ? "bg-[#CA7FFE]"

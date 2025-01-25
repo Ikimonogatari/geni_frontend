@@ -17,14 +17,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/app/components/ui/dialog";
+} from "@/components/ui/dialog";
 import {
   useGetPublicProductByIdQuery,
   useRequestProductContentMutation,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import HandleButton from "@/app/components/common/HandleButton";
+import HandleButton from "@/components/common/HandleButton";
 
 function Page() {
   const router = useRouter();
@@ -363,7 +363,7 @@ function Page() {
                       />
                       <DialogClose className="w-full">
                         <button
-                          onClick={() => router.push("/creator-profile")}
+                          onClick={() => router.push("/profile")}
                           className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
                         >
                           Баярлалаа

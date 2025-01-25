@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useGetPublicCreatorListQuery } from "../services/service";
-import PublicCreatorCard from "../components/PublicCreatorCard";
+import PublicCreatorCard from "@/components/PublicCreatorCard";
 
 function AllCreators() {
   const [searchQuery, setSearchQuery] = useState("");

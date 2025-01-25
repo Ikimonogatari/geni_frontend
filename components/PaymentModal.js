@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "@/app/components/ui/dialog";
+} from "@/components/ui/dialog";
 import {
   useCheckPaymentQuery,
   useSubscribePlanMutation,

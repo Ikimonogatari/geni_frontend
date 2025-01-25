@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent } from "../components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -12,7 +12,7 @@ function ProductAddedSuccessModal({
   const router = useRouter();
   const handleThanks = () => {
     setCreateProductSuccess(false);
-    router.push("/brand-profile");
+    router.push("/profile");
   };
   return (
     <Dialog open={createProductSuccess}>

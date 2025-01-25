@@ -21,8 +21,8 @@ import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { useUserInfo } from "../context/UserInfoContext";
-import CreatorTier from "../components/CreatorTier";
-import TierInfoModal from "../components/TierInfoModal";
+import CreatorTier from "@/components/CreatorTier";
+import TierInfoModal from "@/components/TierInfoModal";
 function Page() {
   const router = useRouter();
   const { setShouldRefetchUserInfo } = useUserInfo();

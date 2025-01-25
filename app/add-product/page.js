@@ -16,17 +16,17 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-} from "../components/ui/select";
-import BackButton from "../components/common/BackButton";
-import HandleButton from "../components/common/HandleButton";
-import InfoHover from "../components/common/InfoHover";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
+} from "@/components/ui/select";
+import BackButton from "@/components/common/BackButton";
+import HandleButton from "@/components/common/HandleButton";
+import InfoHover from "@/components/common/InfoHover";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import ProductAddedSuccessModal from "./ProductAddedSuccessModal";
-import MediaUploader from "../components/common/MediaUploader";
+import MediaUploader from "@/components/common/MediaUploader";
 import { addProductSchema } from "./schema";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { ErrorText } from "../components/ui/error-text";
+import { ErrorText } from "@/components/ui/error-text";
 
 function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);

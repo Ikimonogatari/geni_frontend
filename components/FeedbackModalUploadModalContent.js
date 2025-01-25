@@ -11,7 +11,7 @@ import {
   useUploadByPresignUrlMutation,
   useUploadHomeworkMutation,
   useCreatorContentSubmitMutation,
-} from "../services/service";
+} from "../app/services/service";
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 

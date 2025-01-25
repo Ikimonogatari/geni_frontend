@@ -6,9 +6,9 @@ import {
   useGetPublicCreatorByIdQuery,
 } from "@/app/services/service";
 import Link from "next/link";
-import ContentGallery from "@/app/components/ContentGallery";
+import ContentGallery from "@/components/ContentGallery";
 import { useParams } from "next/navigation";
-import CreatorTier from "@/app/components/CreatorTier";
+import CreatorTier from "@/components/CreatorTier";
 
 function page() {
   const params = useParams();
