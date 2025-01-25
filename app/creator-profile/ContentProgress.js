@@ -3,11 +3,11 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 
 import Cookies from "js-cookie";
-import ContentUploadModal from "../components/ContentUploadModal";
-import FeedbackModal from "../components/FeedbackModal";
-import ContentReviewModal from "../components/ContentReviewModal";
-import StatusIndicator from "../components/StatusIndicator";
-import DeadlineHover from "../components/DeadlineHover";
+import ContentUploadModal from "@/components/ContentUploadModal";
+import FeedbackModal from "@/components/FeedbackModal";
+import ContentReviewModal from "@/components/ContentReviewModal";
+import StatusIndicator from "@/components/StatusIndicator";
+import DeadlineHover from "@/components/DeadlineHover";
 import ContentReturnModal from "./ContentReturnModal";
 
 function ContentProgress({ currentContents }) {

@@ -25,7 +25,7 @@ function BrandDetailsSuccess({ router }) {
       </p>
       <button
         type="button"
-        onClick={() => router.push("/brand-profile")}
+        onClick={() => router.push("/profile")}
         className="mt-8 sm:mt-16 w-full flex flex-row items-center
 justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
 border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"

@@ -6,8 +6,8 @@ import {
   useGetVideoPresignedUrlMutation,
 } from "../services/service";
 import toast from "react-hot-toast";
-import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
-import StatusIndicator from "../components/StatusIndicator";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import StatusIndicator from "@/components/StatusIndicator";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (

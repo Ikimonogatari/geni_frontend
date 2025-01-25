@@ -1,9 +1,16 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { FormikErrors } from "formik";
 
 interface ErrorTextProps extends React.ComponentProps<"div"> {
   visible: boolean;
-  text?: string | React.ReactNode;
+  text?:
+    | string
+    | React.ReactNode
+    | string
+    | string[]
+    | FormikErrors<any>
+    | FormikErrors<any>[];
 }
 
 const ErrorText = React.forwardRef<HTMLDivElement, ErrorTextProps>(
@@ -15,7 +22,7 @@ const ErrorText = React.forwardRef<HTMLDivElement, ErrorTextProps>(
         ref={ref}
         {...props}
       >
-        {text}
+        {React.isValidElement(text) ? text : String(text)}
       </div>
     );
   }

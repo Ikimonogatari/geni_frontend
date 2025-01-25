@@ -9,10 +9,10 @@ import {
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import HomeworkUploadModal from "../components/HomeworkUploadModal";
-import ConvertToCreatorModal from "../components/ConvertToCreatorModal";
+import HomeworkUploadModal from "@/components/HomeworkUploadModal";
+import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { useRouter } from "next/navigation";
-import LogoutButton from "../components/common/LogoutButton";
+import LogoutButton from "@/components/common/LogoutButton";
 
 function page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -234,7 +234,7 @@ function page() {
                 />
               </Link>
               <Link
-                href={"/edit-profile-student"}
+                href="/profile/edit"
                 className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
                 <Image
