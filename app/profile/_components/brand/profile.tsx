@@ -13,6 +13,7 @@ import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
 import LogoutButton from "@/components/common/LogoutButton";
 import PlatformUseCaseModal from "./PlatformUseCaseModal";
+import GuideModal from "@/components/common/GuideModal";
 
 function BrandProfile() {
   const {
@@ -395,6 +396,9 @@ function BrandProfile() {
           <></>
         )}
       </div>
+      {getUserInfoData && (
+        <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
+      )}
     </div>
   );
 }
