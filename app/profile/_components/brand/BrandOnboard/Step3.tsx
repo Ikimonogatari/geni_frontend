@@ -16,7 +16,7 @@ function Step3({
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery();
+  } = useListPaymentPlansQuery(null);
 
   const handleCircleClick = (index) => {
     const scopeSelectedPackageId = listPaymentPlansData
