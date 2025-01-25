@@ -57,7 +57,7 @@ function GuideModal({ hasSeenGuide }) {
     setIsChecked(isChecked);
 
     if (isChecked) {
-      brandGuideCheck();
+      brandGuideCheck(null);
     }
   };
 
