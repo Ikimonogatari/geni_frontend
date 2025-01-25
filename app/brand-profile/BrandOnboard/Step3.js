@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import PriceFormatter from "@/app/components/common/FormatPrice";
+import PriceFormatter from "@/components/common/FormatPrice";
 import { useListPaymentPlansQuery } from "@/app/services/service";
 
 function Step3({

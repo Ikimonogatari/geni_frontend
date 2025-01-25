@@ -11,7 +11,7 @@ import {
 } from "@/app/services/service";
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
-import LogoutButton from "../components/common/LogoutButton";
+import LogoutButton from "@/components/common/LogoutButton";
 import PlatformUseCaseModal from "./PlatformUseCaseModal";
 
 function page() {
@@ -285,7 +285,7 @@ function page() {
                   />
                 </Link>
                 <Link
-                  href="/edit-profile-brand"
+                  href="/profile/edit"
                   className="rounded-xl bg-[#F5F4F0] p-2"
                 >
                   <Image

@@ -9,21 +9,21 @@ import {
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
   useUploadByPresignUrlMutation,
-  useCreatorContentSubmitMutation,
-} from "../services/service";
+  useUploadHomeworkMutation,
+} from "../app/services/service";
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 
-function ContentUploadModal({ parsedUserInfo, contentId }) {
+function HomeworkUploadModal({ parsedUserInfo }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
-  const [isContentSuccess, setIsContentSuccess] = useState(false);
+  const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
   const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
-  console.log(parsedUserInfo);
+
   const [
     getImagePresignedUrl,
     {
@@ -51,14 +51,14 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   ] = useUploadByPresignUrlMutation();
 
   const [
-    creatorContentSubmit,
+    uploadHomework,
     {
-      data: creatorContentSubmitData,
-      error: creatorContentSubmitError,
-      isLoading: creatorContentSubmitLoading,
-      isSuccess: creatorContentSubmitSuccess,
+      data: uploadHomeworkData,
+      error: uploadHomeworkError,
+      isLoading: uploadHomeworkLoading,
+      isSuccess,
     },
-  ] = useCreatorContentSubmitMutation();
+  ] = useUploadHomeworkMutation();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -86,13 +86,13 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
   useEffect(() => {
-    if (creatorContentSubmitError) {
-      toast.error(creatorContentSubmitError?.data.error);
+    if (uploadHomeworkError) {
+      toast.error(uploadHomeworkError?.data.error);
     }
-    if (creatorContentSubmitSuccess) {
-      setIsContentSuccess(true);
+    if (isSuccess) {
+      setIsHomeworkUploadSuccess(true);
     }
-  }, [creatorContentSubmitSuccess, creatorContentSubmitError]);
+  }, [uploadHomeworkData, uploadHomeworkError]);
 
   useEffect(() => {
     if (uploadFileError) {
@@ -187,8 +187,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
     }
   };
   const handleContentSubmit = () => {
-    creatorContentSubmit({
-      ContentId: contentId,
+    uploadHomework({
       Caption: caption,
       ContentThumbnailFileId: contentThumbnailId,
       ContentVideoFileId: contentVideoId,
@@ -200,12 +199,12 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
       <Dialog>
         <DialogTrigger
           type="submit"
-          className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+          className="whitespace-nowrap text-start text-xs sm:text-base bg-[#4FB755] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
         >
-          Контент илгээх
+          Гэрийн даалгавар илгээх
         </DialogTrigger>
 
-        <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
+        <DialogContent className="overflow-y-auto flex flex-col p-6 w-full sm:w-auto lg:w-full max-h-[739px] max-w-[1000px] rounded-3xl">
           <span className="text-3xl font-bold">Контент илгээх</span>
           <div className="w-full flex flex-col lg:flex-row gap-6">
             <div className="w-full flex flex-col gap-4">
@@ -232,7 +231,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               ) : (
                 <div
                   {...getRootPropsForVideo()}
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl bg-[#F5F4F0]"
                 >
                   <input {...getInputPropsForVideo()} />
 
@@ -275,6 +274,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
                   className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                 >
                   <input {...getInputPropsForImage()} />
+
                   <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
                     <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
                       <Image
@@ -301,28 +301,27 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
                   className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
                 />
               </div>
-              <button
-                onClick={handleContentSubmit}
-                disabled={!(contentThumbnail && contentVideo && caption)} // Disable when conditions are not met
-                className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${
-                  contentThumbnail && contentVideo && caption
-                    ? "opacity-100"
-                    : "opacity-55 cursor-not-allowed"
-                }`}
-              >
-                Илгээх
-              </button>
+              {contentThumbnail && contentVideo && caption ? (
+                <button
+                  onClick={handleContentSubmit}
+                  className="mt-6 bg-[#4FB755] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                >
+                  Илгээх
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </DialogContent>
       </Dialog>
       <UploadSuccessModal
-        isContentSubmitSuccess={isContentSuccess}
+        isContentSubmitSuccess={isHomeworkUploadSuccess}
         parsedUserInfo={parsedUserInfo}
-        setIsContentSubmitSuccess={setIsContentSuccess}
+        setIsContentSubmitSuccess={setIsHomeworkUploadSuccess}
       />
     </>
   );
 }
 
-export default ContentUploadModal;
+export default HomeworkUploadModal;

@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
+} from "../@/components/ui/select";
 
 import {
   useUploadFileMutation,
@@ -27,15 +27,15 @@ import {
 import toast from "react-hot-toast";
 
 import { ClipLoader } from "react-spinners";
-import HandleButton from "@/app/components/common/HandleButton";
-import InfoHover from "@/app/components/common/InfoHover";
+import HandleButton from "@/components/common/HandleButton";
+import InfoHover from "@/components/common/InfoHover";
 import { editProductSchema } from "./schema";
-import BackButton from "@/app/components/common/BackButton";
-import MediaUploader from "@/app/components/common/MediaUploader";
-import { Input } from "@/app/components/ui/input";
+import BackButton from "@/components/common/BackButton";
+import MediaUploader from "@/components/common/MediaUploader";
+import { Input } from "@/components/ui/input";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { ErrorText } from "@/app/components/ui/error-text";
-import { Textarea } from "@/app/components/ui/textarea";
+import { ErrorText } from "@/components/ui/error-text";
+import { Textarea } from "@/components/ui/textarea";
 
 function Page() {
   const router = useRouter();

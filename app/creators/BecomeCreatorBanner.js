@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import BecomeGeniButton from "../components/common/BecomeGeniButton";
+import BecomeGeniButton from "@/components/common/BecomeGeniButton";
 
 function BecomeCreatorBanner() {
   return (

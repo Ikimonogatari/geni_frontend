@@ -5,7 +5,7 @@ import {
   DialogClose,
   DialogContent,
   DialogTrigger,
-} from "../components/ui/dialog";
+} from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { useUndoContentRequestMutation } from "../services/service";
 

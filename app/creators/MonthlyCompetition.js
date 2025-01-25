@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import CreatorTier from "../components/CreatorTier";
+import CreatorTier from "@/components/CreatorTier";
 
 function MonthlyCompetition({ getCompetitionInfoData }) {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useBrandVerificationMutation } from "../services/service";

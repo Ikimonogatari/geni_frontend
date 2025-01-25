@@ -12,13 +12,9 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/app/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import LoginButton from "./LoginButton";
-import OtpTimeLeft from "../components/OtpTimeLeft";
+import OtpTimeLeft from "@/components/OtpTimeLeft";
 
 function Page() {
   const router = useRouter();
@@ -139,14 +135,7 @@ function Page() {
       geniApi.util.invalidateTags(["UserInfo"]);
 
       // Ensure navigation only after cookies are set
-
-      if (userType === "Creator") {
-        router.push("/creator-profile");
-      } else if (userType === "Brand") {
-        router.push("/brand-profile");
-      } else if (userType === "Student") {
-        router.push("/student-profile");
-      }
+      router.push("/profile");
     } else if (error) {
       toast.error(error?.data?.error);
     }

@@ -2,16 +2,16 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
-import ContentGallery from "../components/ContentGallery";
+import ContentGallery from "@/components/ContentGallery";
 import {
   useGetUserInfoQuery,
   useListContentGalleryQuery,
   useListCreatorContentsQuery,
 } from "@/app/services/service";
 import Link from "next/link";
-import CreatorTier from "../components/CreatorTier";
-import TierInfoModal from "../components/TierInfoModal";
-import LogoutButton from "../components/common/LogoutButton";
+import CreatorTier from "@/components/CreatorTier";
+import TierInfoModal from "@/components/TierInfoModal";
+import LogoutButton from "@/components/common/LogoutButton";
 
 function page() {
   const [profileState, setProfileState] = useState("content-progress");
@@ -282,7 +282,7 @@ function page() {
                   />
                 </Link>
                 <Link
-                  href={"/edit-profile-creator"}
+                  href="/profile/edit"
                   className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
                 >
                   <Image
