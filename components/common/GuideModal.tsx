@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent } from "../ui/dialog";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -7,6 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useBrandGuideCheckMutation } from "@/app/services/service";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 function GuideModal({ hasSeenGuide }) {
   const [swiper, setSwiper] = useState(null);
@@ -63,11 +63,12 @@ function GuideModal({ hasSeenGuide }) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+      {/*@ts-ignore*/}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-4 sm:gap-2 max-h-[739px] w-full lg:w-full max-w-4xl rounded-3xl">
         <Swiper
           slidesPerView={1}
           onSwiper={(s) => setSwiper(s)}
-          onSlideChange={() => setCurrentIndex(swiper.activeIndex)} // Update current index on slide change
+          onSlideChange={() => setCurrentIndex(swiper.activeIndex)}
           modules={[Pagination]}
           className="w-full h-full"
           pagination={{ clickable: true, el: ".swiper-pagination" }}
@@ -95,7 +96,6 @@ function GuideModal({ hasSeenGuide }) {
             </SwiperSlide>
           ))}
         </Swiper>
-
         <div className="relative flex justify-between items-center w-full">
           {currentIndex > 0 && currentIndex < 4 ? (
             <button
