@@ -187,10 +187,9 @@ export const geniApi = createApi({
     }),
 
     listPaymentPlans: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: "/api/web/private/subscription-package",
         method: "GET",
-        body,
       }),
     }),
     subscribePlan: builder.mutation({
