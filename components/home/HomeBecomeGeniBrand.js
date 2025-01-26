@@ -36,7 +36,8 @@ function HomeBecomeGeniBrand() {
         />
         <HomeBecomeGeniButton
           text={"Geni Brand болох"}
-          link={"https://forms.gle/snf9FWo5WKXaqb2C8"}
+          // link={"https://forms.gle/snf9FWo5WKXaqb2C8"}
+          link={"/register"}
           shadowbg={"shadow-[0.25rem_0.25rem_#131aaf]"}
           bg={"bg-[#4D55F5]"}
           width={"w-full max-w-[532px] max-h-[90px] aspect-[532/90]"}

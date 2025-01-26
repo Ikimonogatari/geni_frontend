@@ -28,7 +28,8 @@ function FreeContentWave() {
             width={
               "aspect-[371/84] max-w-[320px] lg:max-w-[371px] lg:max-h-[84px]"
             }
-            link={"https://forms.gle/EbjaLfTfRCzH4Acr8"}
+            // link={"https://forms.gle/EbjaLfTfRCzH4Acr8"}
+            link={"/register"}
             text={"Давалгаанд нэгдэх"}
             bg={"bg-[#4D55F5]"}
             shadowbg={"shadow-[0.25rem_0.25rem_#131aaf]"}
