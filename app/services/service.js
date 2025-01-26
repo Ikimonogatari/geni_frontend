@@ -26,13 +26,6 @@ export const geniApi = createApi({
       }),
       invalidatesTags: ["UserInfo"],
     }),
-    brandRegister: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/public/brand-register",
-        method: "POST",
-        body,
-      }),
-    }),
     brandVerification: builder.mutation({
       query: (body) => ({
         url: "/api/web/public/brand-verification",
@@ -373,6 +366,13 @@ export const geniApi = createApi({
       query: () => ({
         url: "/api/web/private/user/no-guide",
         method: "POST",
+      }),
+    }),
+    brandRegister: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/brand/signup",
+        method: "POST",
+        body,
       }),
     }),
   }),

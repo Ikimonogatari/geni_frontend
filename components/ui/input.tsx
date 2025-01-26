@@ -7,8 +7,10 @@ interface InputProps extends React.ComponentProps<"input"> {
   errorText?: React.ReactNode;
   errorVisible?: boolean;
   leftSection?: React.ReactNode;
+  rightSection?: React.ReactNode;
   label?: React.ReactNode;
   hoverInfo?: string;
+  labelClassName?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -17,7 +19,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className,
       hoverInfo,
       leftSection,
+      rightSection,
       label,
+      labelClassName,
       type,
       errorText,
       errorVisible,
@@ -27,7 +31,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const labelComponent =
       typeof label === "string" ? (
-        <label className="font-bold" htmlFor={props.name}>
+        <label className={cn("font-bold", labelClassName)} htmlFor={props.name}>
           {label}
         </label>
       ) : (
@@ -49,6 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               ref={ref}
               {...props}
             />
+            {rightSection && rightSection}
           </div>
           {errorVisible && (
             <ErrorText text={errorText} visible={errorVisible} />

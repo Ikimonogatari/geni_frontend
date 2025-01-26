@@ -3,13 +3,19 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useBrandRegisterMutation } from "../services/service";
+import {
+  useBrandRegisterMutation,
+  useSendOtpToEmailMutation,
+} from "../services/service";
 import toast from "react-hot-toast";
 import Verification from "./Verification";
+import { Input } from "@/components/ui/input";
 
 function Page() {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [brandRegisterFinished, setBrandRegisterFinished] = useState(false); // Track registration success
 
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
@@ -27,33 +33,66 @@ function Page() {
     },
   ] = useBrandRegisterMutation();
 
+  const [
+    brandVerification,
+    {
+      data: brandVerificationData,
+      error: brandVerificationError,
+      isLoading: brandVerificationLoading,
+      isSuccess: brandVerificationSuccess,
+    },
+  ] = useSendOtpToEmailMutation();
+
   const registerForm = useFormik({
     initialValues: {
-      email: "",
-      newPassword: "",
-      confirmPassword: "",
+      Email: "",
+      Password: "",
+      ConfirmPassword: "",
+      OTP: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
+      Email: Yup.string()
         .email("Зөв имэйл хаяг оруулна уу")
         .required("Required"),
-      newPassword: Yup.string().required("Required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("newPassword"), null], "Нууц үг таарч байх ёстой")
+      Password: Yup.string().required("Required"),
+      ConfirmPassword: Yup.string()
+        .oneOf([Yup.ref("Password"), null], "Нууц үг таарсангүй")
         .required("Required"),
+      OTP: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
+      setBrandRegisterFinished(false);
       brandRegister({
-        Email: values.email,
-        NewPassword: values.newPassword,
-        ConfirmPassword: values.confirmPassword,
+        Email: values.Email,
+        Password: values.Password,
+        OTP: values.OTP,
+        Channel: "smtp",
       });
     },
   });
 
+  const handleSendOtp = () => {
+    brandVerification({
+      To: registerForm.values.Email,
+      UserType: "Brand",
+      Channel: "smtp",
+      Type: "register",
+    });
+  };
+
+  useEffect(() => {
+    if (brandVerificationSuccess) {
+      toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
+      setDialogOpen(true);
+    } else if (brandVerificationError) {
+      toast.error(brandVerificationError?.data?.error);
+    }
+  }, [brandVerificationSuccess, brandVerificationError]);
+
   useEffect(() => {
     if (brandRegisterSuccess) {
       toast.success("Амжилттай бүртгэгдлээ");
+      setBrandRegisterSuccess(true);
     } else if (brandRegisterError) {
       toast.error(brandRegister?.data?.error);
     }
@@ -81,101 +120,114 @@ function Page() {
                 Geni Брэнд Бүртгүүлэх
               </span>
 
-              <span className="text-base sm:text-lg">Имэйл хаяг</span>
-              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder=""
-                  className="w-full outline-none text-sm sm:text-base"
-                  onChange={registerForm.handleChange}
-                  value={registerForm.values.email}
-                />
-              </div>
+              <Input
+                id="Email"
+                name="Email"
+                type="Email"
+                className="w-full outline-none text-sm sm:text-base"
+                onChange={registerForm.handleChange}
+                value={registerForm.values.Email}
+                errorText={registerForm.errors.Email}
+                errorVisible={
+                  registerForm.touched.Email && registerForm.errors.Email
+                }
+                label={"Имэйл хаяг"}
+                labelClassName="text-base sm:text-lg font-normal"
+              />
 
-              {registerForm.touched.email && registerForm.errors.email ? (
-                <div className="text-red-500 text-sm">
-                  {registerForm.errors.email}
-                </div>
-              ) : null}
-              <span className="text-base sm:text-lg">Нууц үг</span>
-              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
-                <input
-                  name="newPassword"
-                  id="newPassword"
-                  type={showNewPassword ? "text" : "password"}
-                  placeholder=""
-                  className="w-full outline-none text-sm sm:text-base"
-                  onChange={registerForm.handleChange}
-                  value={registerForm.values.newPassword}
-                />
-                <button
-                  type="button"
-                  onMouseDown={handleMouseDownNewPassword}
-                  onMouseUp={handleMouseUpNewPassword}
-                  onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
-                  onTouchStart={handleMouseDownNewPassword} // For mobile
-                  onTouchEnd={handleMouseUpNewPassword} // For mobile
-                  className={`${
-                    registerForm.values.newPassword === "" ? "hidden" : "block"
-                  } text-sm opacity-90`}
-                >
-                  <Image
-                    src={"/show-pwd.png"}
-                    width={24}
-                    height={24}
-                    alt=""
-                    className="w-6 h-6"
-                  />
-                </button>
-              </div>
-              <span className="text-base sm:text-lg">Нууц үг давтах</span>
-              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
-                <input
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder=""
-                  className="w-full outline-none text-sm sm:text-base"
-                  onChange={registerForm.handleChange}
-                  value={registerForm.values.confirmPassword}
-                />
-                <button
-                  type="button"
-                  onMouseDown={handleMouseDownConfirmPassword}
-                  onMouseUp={handleMouseUpConfirmPassword}
-                  onMouseLeave={handleMouseUpConfirmPassword} // For when the user moves the mouse away from the button
-                  onTouchStart={handleMouseDownConfirmPassword} // For mobile
-                  onTouchEnd={handleMouseUpConfirmPassword} // For mobile
-                  className={`${
-                    registerForm.values.confirmPassword === ""
-                      ? "hidden"
-                      : "block"
-                  } text-sm opacity-90`}
-                >
-                  <Image
-                    src={"/show-pwd.png"}
-                    width={24}
-                    height={24}
-                    alt=""
-                    className="w-6 h-6"
-                  />
-                </button>
-              </div>
-              {registerForm.touched.confirmPassword &&
-              registerForm.errors.confirmPassword ? (
-                <div className="text-red-500 text-sm">
-                  {registerForm.errors.confirmPassword}
-                </div>
-              ) : null}
+              <Input
+                name="Password"
+                id="Password"
+                type={showNewPassword ? "text" : "password"}
+                placeholder=""
+                className="w-full outline-none text-sm sm:text-base"
+                onChange={registerForm.handleChange}
+                value={registerForm.values.Password}
+                errorText={registerForm.errors.Password}
+                errorVisible={
+                  registerForm.touched.Password && registerForm.errors.Password
+                }
+                label={"Нууц үг"}
+                labelClassName="text-base sm:text-lg font-normal"
+                rightSection={
+                  <button
+                    type="button"
+                    onMouseDown={handleMouseDownNewPassword}
+                    onMouseUp={handleMouseUpNewPassword}
+                    onMouseLeave={handleMouseUpNewPassword}
+                    onTouchStart={handleMouseDownNewPassword}
+                    onTouchEnd={handleMouseUpNewPassword}
+                    className={`${
+                      registerForm.values.Password === "" ? "hidden" : "block"
+                    } text-sm opacity-90`}
+                  >
+                    <Image
+                      src={showNewPassword ? "/hide-pwd.png" : "/show-pwd.png"}
+                      width={24}
+                      height={24}
+                      alt={""}
+                      className="w-6 h-6"
+                    />
+                  </button>
+                }
+              />
+
+              <Input
+                name="ConfirmPassword"
+                id="ConfirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder=""
+                className="w-full outline-none text-sm sm:text-base"
+                onChange={registerForm.handleChange}
+                value={registerForm.values.ConfirmPassword}
+                errorText={registerForm.errors.ConfirmPassword}
+                errorVisible={
+                  registerForm.touched.ConfirmPassword &&
+                  registerForm.errors.ConfirmPassword
+                }
+                label="Нууц үг давтах"
+                labelClassName="text-base sm:text-lg font-normal"
+                rightSection={
+                  <button
+                    type="button"
+                    onMouseDown={handleMouseDownConfirmPassword}
+                    onMouseUp={handleMouseUpConfirmPassword}
+                    onMouseLeave={handleMouseUpConfirmPassword}
+                    onTouchStart={handleMouseDownConfirmPassword}
+                    onTouchEnd={handleMouseUpConfirmPassword}
+                    className={`${
+                      registerForm.values.ConfirmPassword === ""
+                        ? "hidden"
+                        : "block"
+                    } text-sm opacity-90`}
+                  >
+                    <Image
+                      src={
+                        showConfirmPassword ? "/hide-pwd.png" : "/show-pwd.png"
+                      }
+                      width={24}
+                      height={24}
+                      alt=""
+                      className="w-6 h-6"
+                    />
+                  </button>
+                }
+              />
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                className={`bg-[#4D55F5] shadow-[0.25rem_0.25rem_#1920B4] mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-4 text-white text-lg font-bold cursor-pointer border border-[#2D262D] rounded-md transition-all transform translate-x-[-0.25rem] translate-y-[-0.25rem] active:translate-x-0 active:translate-y-0 active:shadow-none flex flex-row items-center justify-center gap-2`}
+              >
+                Бүртгүүлэх
+              </button>
               <Verification
-                width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
-                text={"Нууц үг сэргээх"}
-                shadowbg={"shadow-[0.25rem_0.25rem_#1920B4]"}
-                bg={"bg-[#4D55F5]"}
-                brandRegisterSuccess={brandRegisterSuccess}
-                brandRegisterData={brandRegisterData}
+                dialogOpen={dialogOpen}
+                setDialogOpen={setDialogOpen}
+                handleSendOtp={handleSendOtp}
+                registerForm={registerForm}
+                brandRegisterFinished={brandRegisterFinished}
+                brandVerificationData={brandVerificationData}
+                brandVerificationSuccess={brandVerificationSuccess}
               />
             </div>
           </form>
