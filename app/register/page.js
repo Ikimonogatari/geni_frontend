@@ -109,7 +109,7 @@ function Page() {
   useEffect(() => {
     if (brandRegisterSuccess) {
       toast.success("Амжилттай бүртгэгдлээ");
-      setBrandRegisterSuccess(true);
+      setBrandRegisterFinished(true);
     } else if (brandRegisterError) {
       toast.error(brandRegister?.data?.error);
     }
