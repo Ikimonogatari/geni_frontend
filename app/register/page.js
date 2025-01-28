@@ -15,7 +15,7 @@ function Page() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [brandRegisterFinished, setBrandRegisterFinished] = useState(false); // Track registration success
+  const [brandRegisterFinished, setBrandRegisterFinished] = useState(false);
 
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
@@ -53,12 +53,17 @@ function Page() {
     validationSchema: Yup.object({
       Email: Yup.string()
         .email("Зөв имэйл хаяг оруулна уу")
-        .required("Required"),
-      Password: Yup.string().required("Required"),
+        .required("Заавал бөглөнө үү"),
+      Password: Yup.string()
+        .matches(
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Нууц үг багадаа 8 тэмдэгттэй ба үсэг, тоо, тусгай тэмдэгт агуулсан байх шаардлагатай"
+        )
+        .required("Заавал бөглөнө үү"),
       ConfirmPassword: Yup.string()
         .oneOf([Yup.ref("Password"), null], "Нууц үг таарсангүй")
-        .required("Required"),
-      OTP: Yup.string().required("Required"),
+        .required("Заавал бөглөнө үү"),
+      OTP: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
       setBrandRegisterFinished(false);
@@ -71,30 +76,37 @@ function Page() {
     },
   });
 
-  const handleSendOtp = () => {
-    const { Email, Password, ConfirmPassword } = registerForm.values;
-
-    if (!Email) {
-      toast.error("Имэйл хаягаа оруулна уу");
-      return;
+  const handleSendOtp = async () => {
+    try {
+      await registerForm.validateForm({
+        Email: registerForm.values.Email,
+        Password: registerForm.values.Password,
+        ConfirmPassword: registerForm.values.ConfirmPassword,
+      });
+      registerForm.setTouched({
+        Email: true,
+        Password: true,
+        ConfirmPassword: true,
+      });
+      console.log(registerForm.isValid, "Pzda");
+      if (
+        !registerForm.errors.Email &&
+        !registerForm.errors.Password &&
+        !registerForm.errors.ConfirmPassword
+      ) {
+        const { Email } = registerForm.values;
+        brandVerification({
+          To: Email,
+          UserType: "Brand",
+          Channel: "smtp",
+          Type: "register",
+        });
+      } else {
+        toast.error("Та бүх талбарыг зөв бөглөнө үү");
+      }
+    } catch (error) {
+      toast.error("Валидацийн алдаа гарлаа");
     }
-
-    if (!Password) {
-      toast.error("Нууц үгээ оруулна уу");
-      return;
-    }
-
-    if (Password !== ConfirmPassword) {
-      toast.error("Нууц үг таарахгүй байна");
-      return;
-    }
-
-    brandVerification({
-      To: Email,
-      UserType: "Brand",
-      Channel: "smtp",
-      Type: "register",
-    });
   };
 
   useEffect(() => {
@@ -120,7 +132,7 @@ function Page() {
       <div className="mt-20 sm:mt-32">
         <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
           <form
-            onSubmit={brandRegister.handleSubmit}
+            onSubmit={registerForm.handleSubmit}
             className="sm:mt-11 flex flex-col xl:flex-row items-center gap-6 sm:gap-16"
           >
             <div className="rounded-2xl max-w-3xl w-full">
