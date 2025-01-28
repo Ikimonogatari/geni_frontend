@@ -72,8 +72,25 @@ function Page() {
   });
 
   const handleSendOtp = () => {
+    const { Email, Password, ConfirmPassword } = registerForm.values;
+
+    if (!Email) {
+      toast.error("Имэйл хаягаа оруулна уу");
+      return;
+    }
+
+    if (!Password) {
+      toast.error("Нууц үгээ оруулна уу");
+      return;
+    }
+
+    if (Password !== ConfirmPassword) {
+      toast.error("Нууц үг таарахгүй байна");
+      return;
+    }
+
     brandVerification({
-      To: registerForm.values.Email,
+      To: Email,
       UserType: "Brand",
       Channel: "smtp",
       Type: "register",
