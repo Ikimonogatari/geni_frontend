@@ -4,7 +4,18 @@ import {
   useUpdateSocialChannelMutation,
   useCreateSocialChannelMutation,
 } from "@/app/services/service";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+
 import toast from "react-hot-toast";
+import { ErrorText } from "@/components/ui/error-text";
+import { SelectLabel } from "@radix-ui/react-select";
 
 function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   const [socials, setSocials] = useState({
@@ -77,65 +88,128 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   return (
     <div
       onSubmit={formik.handleSubmit}
-      className="flex flex-col items-start justify-between w-full gap-6 sm:gap-11"
+      className="flex flex-col items-start justify-between w-full gap-6 sm:gap-9"
     >
-      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-7 xl:gap-10 w-full">
-        <div className="flex flex-col gap-3 w-full">
-          <label className="text-[#6F6F6F] text-lg" htmlFor="RegNo">
-            Регистрийн дугаар
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+        <Input
+          id="RegNo"
+          name="RegNo"
+          type="text"
+          className="text-base sm:text-xl w-full"
+          wrapperClassName="w-full"
+          labelClassName="text-[#6F6F6F] text-lg font-normal"
+          layoutClassName="h-full p-4 sm:p-5 w-full"
+          label="Байгууллагын регистер"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.RegNo}
+          errorText={formik.errors.RegNo}
+          errorVisible={formik.touched.RegNo && formik.errors.RegNo}
+        />
+        <Input
+          id="PhoneNumber"
+          name="PhoneNumber"
+          type="text"
+          className="text-base sm:text-xl w-full"
+          wrapperClassName="w-full"
+          labelClassName="text-[#6F6F6F] text-lg font-normal"
+          layoutClassName="h-full p-4 sm:p-5 w-full"
+          label="Утасны дугаар"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.PhoneNumber}
+          errorText={formik.errors.PhoneNumber}
+          errorVisible={formik.touched.PhoneNumber && formik.errors.PhoneNumber}
+        />
+      </div>
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+        <Input
+          id="AvgProductSalesMonthly"
+          name="AvgProductSalesMonthly"
+          className="text-base sm:text-xl w-full"
+          type="text"
+          wrapperClassName="w-full"
+          labelClassName="text-[#6F6F6F] text-lg font-normal"
+          layoutClassName="h-full p-4 sm:p-5 w-full"
+          label="Сарын дундаж борлуулдаг бүтээгдэхүүны тоо"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.AvgProductSalesMonthly}
+          errorText={formik.errors.AvgProductSalesMonthly}
+          errorVisible={
+            formik.touched.AvgProductSalesMonthly &&
+            formik.errors.AvgProductSalesMonthly
+          }
+        />
+        <div className="flex flex-col gap-1  w-full">
+          <label className="text-[#6F6F6F] text-lg mb-2 block">
+            Маркетинг хариуцсан баг эсвэл хүнтэй эсэх
           </label>
-          <input
-            id="RegNo"
-            name="RegNo"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.RegNo}
-            className="p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl w-full"
+          <Select
+            onValueChange={(value) =>
+              formik.setFieldValue("HasMarketingPersonel", value === "true")
+            }
+            value={formik.values.HasMarketingPersonel?.toString() || ""}
+          >
+            <SelectTrigger className="w-full outline-none border border-[#CDCDCD] h-[50px] sm:h-[62px] text-base sm:text-xl">
+              <SelectValue placeholder="Сонгоно уу" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                className="text-base sm:text-xl rounded-lg min-h-12 my-1 w-full text-start p-4"
+                value="true"
+              >
+                Байна
+              </SelectItem>
+              <SelectItem
+                className="text-base sm:text-xl rounded-lg min-h-12 my-1 w-full text-start p-4"
+                value="false"
+              >
+                Байхгүй
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <ErrorText
+            text={
+              typeof formik.errors.HasMarketingPersonel === "string"
+                ? formik.errors.HasMarketingPersonel
+                : null
+            }
+            visible={formik.touched.HasMarketingPersonel}
           />
-          {formik.touched.RegNo && formik.errors.RegNo && (
-            <div className="text-red-500 text-sm">{formik.errors.RegNo}</div>
-          )}
-        </div>
-        <div className="flex flex-col gap-3 w-full">
-          <label className="text-[#6F6F6F] text-lg" htmlFor="phoneNumber">
-            Утасны дугаар
-          </label>
-          <input
-            id="PhoneNumber"
-            name="PhoneNumber"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.PhoneNumber}
-            className="p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl w-full"
-          />
-          {formik.touched.PhoneNumber && formik.errors.PhoneNumber && (
-            <div className="text-red-500 text-sm">
-              {formik.errors.PhoneNumber}
-            </div>
-          )}
         </div>
       </div>
-      <div className="flex flex-row items-center gap-4 sm:gap-7 xl:gap-10 w-full">
-        <div className="flex flex-col gap-3 w-full">
-          <label className="text-[#6F6F6F] text-lg" htmlFor="Website">
-            Вэбсайт
-          </label>
-          <input
-            id="Website"
-            name="Website"
-            type="text"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.Website}
-            className="p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl w-full"
-          />
-          {formik.touched.Website && formik.errors.Website && (
-            <div className="text-red-500 text-sm">{formik.errors.Website}</div>
-          )}
-        </div>
-        <div className="hidden sm:block w-full"></div>
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+        <Input
+          id="AvgPrice"
+          name="AvgPrice"
+          className="text-base sm:text-xl w-full"
+          type="text"
+          wrapperClassName="w-full"
+          labelClassName="text-[#6F6F6F] text-lg font-normal"
+          layoutClassName="h-full p-4 sm:p-5 w-full"
+          label="Бүтээгдэхүүний дундаж үнэ"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.AvgPrice}
+          errorText={formik.errors.AvgPrice}
+          errorVisible={formik.touched.AvgPrice && formik.errors.AvgPrice}
+        />
+        <Input
+          id="Website"
+          name="Website"
+          type="text"
+          className="text-base sm:text-xl w-full"
+          wrapperClassName="w-full"
+          labelClassName="text-[#6F6F6F] text-lg font-normal"
+          layoutClassName="h-full p-4 sm:p-5 w-full"
+          label="Вэбсайт"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.Website}
+          errorText={formik.errors.Website}
+          errorVisible={formik.touched.Website && formik.errors.Website}
+        />
       </div>
       <div className="flex flex-row gap-4 w-full">
         <div className="flex flex-col gap-3 w-full">
@@ -143,7 +217,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
             Сошиал хаягууд
           </label>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full items-start">
-            <div className="w-full p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl flex flex-row items-center justify-between gap-3">
+            <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
               <div className="flex flex-row items-center gap-3 w-full">
                 <Image
                   src={"/Instagram.png"}
@@ -179,7 +253,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 />
               </div>
             </div>
-            <div className="w-full p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl flex flex-row items-center justify-between gap-3">
+            <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
               <div className="flex flex-row items-center gap-3 w-full">
                 <Image
                   src={"/Facebook.png"}
@@ -222,7 +296,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         <button
           type="button"
           onClick={handlePreviousStep}
-          className="mt-8 sm:mt-16 w-full flex flex-row items-center
+          className="w-full flex flex-row items-center
     justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
     border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
         >
@@ -237,7 +311,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         </button>
         <button
           type="submit"
-          className="mt-8 sm:mt-16 w-full flex flex-row items-center
+          className="w-full flex flex-row items-center
     justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
     border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
         >

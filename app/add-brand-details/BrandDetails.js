@@ -176,7 +176,7 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full">
           <div className="flex flex-col gap-3 w-full">
             <label className="text-[#6F6F6F] text-lg" htmlFor="Name">
               Брэндийн нэр

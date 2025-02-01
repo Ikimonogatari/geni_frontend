@@ -39,14 +39,21 @@ function Page() {
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       Address: parsedUserInfo ? parsedUserInfo?.Address : "",
       BrandAoADescription: "temp-desc",
+      hasMarketingPersonel: false,
+      AvgProductSalesMonthly: parsedUserInfo
+        ? parsedUserInfo?.AvgProductSalesMonthly
+        : "",
+      AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : "",
     },
     validationSchema: Yup.object({
-      Name: Yup.string().required("Required"),
-      PhoneNumber: Yup.string().required("Required"),
-      Bio: Yup.string().required("Required"),
-      Website: Yup.string().required("Required"),
-      RegNo: Yup.string().required("Required"),
-      Address: Yup.string().required("Required"),
+      Name: Yup.string().required("Заавал бөглөнө үү"),
+      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
+      Bio: Yup.string().required("Заавал бөглөнө үү"),
+      Website: Yup.string().required("Заавал бөглөнө ү"),
+      RegNo: Yup.string().required("Заавал бөглөнө үү"),
+      Address: Yup.string().required("Заавал бөглөнө үү"),
+      AvgPrice: Yup.string().required("Заавал бөглөнө үү"),
+      AvgProductSalesMonthly: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
       try {
@@ -96,7 +103,7 @@ function Page() {
       <div className="mt-36 sm:mt-48 mb-12 px-5">
         <form
           onSubmit={formik.handleSubmit}
-          className="max-w-4xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"
+          className="max-w-5xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"
         >
           <div className="flex flex-row justify-between items-center gap-5 my-7 w-full">
             <p className="text-xl sm:text-3xl xl:text-4xl font-bold">

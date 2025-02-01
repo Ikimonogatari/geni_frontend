@@ -11,12 +11,16 @@ interface InputProps extends React.ComponentProps<"input"> {
   label?: React.ReactNode;
   hoverInfo?: string;
   labelClassName?: string;
+  layoutClassName?: string;
+  wrapperClassName?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
+      wrapperClassName,
       className,
+      layoutClassName,
       hoverInfo,
       leftSection,
       rightSection,
@@ -38,14 +42,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         label
       );
     return (
-      <div className={cn("flex flex-col gap-3", className)} ref={ref}>
+      <div className={cn("flex flex-col gap-3", wrapperClassName)} ref={ref}>
         <div className="flex justify-between">
           {labelComponent}
           {hoverInfo && <InfoHover contentText={hoverInfo} />}
         </div>
 
-        <div className="flex flex-col gap-1">
-          <div className="flex gap-1 items-center p-2 border border-[#CDCDCD] rounded-lg h-12">
+        <div className="flex flex-col gap-1 sm:gap-2">
+          <div
+            className={cn(
+              "bg-white flex gap-1 items-center p-2 border border-[#CDCDCD] rounded-lg h-12",
+              layoutClassName
+            )}
+          >
             {leftSection && leftSection}
             <input
               type={type}
