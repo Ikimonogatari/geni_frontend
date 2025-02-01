@@ -1,12 +1,11 @@
-import Image from "next/image";
-import HomeHero from "@/components/home/HomeHero";
-import HomeCycle from "@/components/home/HomeCycle";
+import HomeAlumniBrand from "@/components/home/HomeAlumniBrand";
+import HomeAlumniCreator from "@/components/home/HomeAlumniCreator";
 import HomeBecomeCreator from "@/components/home/HomeBecomeCreator";
 import HomeBecomeGeniBrand from "@/components/home/HomeBecomeGeniBrand";
-import HomeBecomeGeniSectionLayout from "@/components/home/layout/HomeBecomeGeniSectionLayout";
+import HomeCycle from "@/components/home/HomeCycle";
+import HomeHero from "@/components/home/HomeHero";
 import HomeAlumniLayout from "@/components/home/layout/HomeAlumniLayout";
-import HomeAlumniCreator from "@/components/home/HomeAlumniCreator";
-import HomeAlumniBrand from "@/components/home/HomeAlumniBrand";
+import HomeBecomeGeniSectionLayout from "@/components/home/layout/HomeBecomeGeniSectionLayout";
 
 export default function Home() {
   return (

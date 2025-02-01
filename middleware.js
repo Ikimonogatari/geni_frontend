@@ -25,40 +25,25 @@ export function middleware(req) {
   // Handle role-specific access control
   if (userType?.value === "Creator") {
     if (
-      [
-        "/brand-profile",
-        "/edit-profile-brand",
-        "/add-product",
-        "/edit-product",
-        "/add-brand-details",
-        "/student-profile",
-        "/edit-profile-student",
-      ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
+      ["/add-product", "/edit-product", "/add-brand-details"].some((path) =>
+        url.pathname.startsWith(path.replace(":path*", ""))
+      )
     ) {
       return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
     }
   } else if (userType?.value === "Brand") {
     if (
-      [
-        "/wallet",
-        "/products",
-        "/creator-profile",
-        "/student-profile",
-        "/edit-profile-creator",
-        "/edit-profile-student",
-      ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
+      ["/wallet", "/products"].some((path) =>
+        url.pathname.startsWith(path.replace(":path*", ""))
+      )
     ) {
       return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
     }
   } else if (userType?.value === "Student") {
     if (
       [
-        "/brand-profile",
-        "/edit-profile-brand",
         "/add-product",
         "/edit-product",
-        "/creator-profile",
-        "/edit-profile-creator",
         "/add-brand-details",
         "/products",
         "/products/:path*",
@@ -77,15 +62,9 @@ export const config = {
   matcher: [
     "/add-product",
     "/add-brand-details",
-    "/edit-profile-brand",
-    "/edit-profile-creator",
-    "/edit-profile-student",
     "/edit-product/:path*",
     "/edit-product",
     "/wallet",
-    "/brand-profile",
-    "/creator-profile",
-    "/student-profile",
     "/notifications/:path*",
     "/notifications",
     "/products/:path*",
