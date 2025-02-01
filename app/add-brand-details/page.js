@@ -39,7 +39,7 @@ function Page() {
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       Address: parsedUserInfo ? parsedUserInfo?.Address : "",
       BrandAoADescription: "temp-desc",
-      hasMarketingPersonel: false,
+      HasMarketingPersonel: false,
       AvgProductSalesMonthly: parsedUserInfo
         ? parsedUserInfo?.AvgProductSalesMonthly
         : "",

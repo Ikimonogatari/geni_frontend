@@ -169,14 +169,6 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
               </SelectItem>
             </SelectContent>
           </Select>
-          <ErrorText
-            text={
-              typeof formik.errors.HasMarketingPersonel === "string"
-                ? formik.errors.HasMarketingPersonel
-                : null
-            }
-            visible={formik.touched.HasMarketingPersonel}
-          />
         </div>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
@@ -189,6 +181,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           labelClassName="text-[#6F6F6F] text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full"
           label="Бүтээгдэхүүний дундаж үнэ"
+          leftSection={<span className="text-base sm:text-xl">₮</span>}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.AvgPrice}

@@ -518,7 +518,7 @@ function Page() {
                 id="amount"
                 name="amount"
                 type="text"
-                label="Бүтээгдэхүүний хэмжээ"
+                label="Хэмжээ"
                 hoverInfo={
                   <>
                     Таны бүтээгдэхүүн ямар хэмжих нэгжтэйгээс хамаарч энд
@@ -546,7 +546,21 @@ function Page() {
                 errorText={formik.errors.quantity}
                 errorVisible={formik.touched.quantity && formik.errors.quantity}
               />
-
+              <Input
+                id="contentQuantity"
+                name="contentQuantity"
+                type="text"
+                label="Хүсэж буй контентийн тоо"
+                hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.contentQuantity}
+                errorText={formik.errors.contentQuantity}
+                errorVisible={
+                  formik.touched.contentQuantity &&
+                  formik.errors.contentQuantity
+                }
+              />
               <Input
                 id="price"
                 name="price"
