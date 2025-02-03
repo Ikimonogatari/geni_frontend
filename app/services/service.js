@@ -375,12 +375,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    brandRequestReview: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/brand/review",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
   useCreatorLoginMutation,
   useBrandRegisterMutation,
+  useBrandRequestReviewMutation,
   useBrandVerificationMutation,
   useEditCreatorProfileMutation,
   useEditBrandProfileMutation,

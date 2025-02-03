@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { useEditBrandProfileMutation } from "@/app/services/service";
+import {
+  useEditBrandProfileMutation,
+  useBrandRequestReviewMutation,
+} from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import BrandDetails from "./BrandDetails";
@@ -30,6 +33,16 @@ function Page() {
   const [editBrandProfile, { data, error, isLoading, isSuccess }] =
     useEditBrandProfileMutation();
 
+  const [
+    requestReview,
+    {
+      data: requestReviewData,
+      error: requestReviewError,
+      isLoading: requestReviewLoading,
+      isSuccess: requestReviewSuccess,
+    },
+  ] = useBrandRequestReviewMutation();
+
   const formik = useFormik({
     initialValues: {
       Name: parsedUserInfo ? parsedUserInfo?.Name : "",
@@ -51,6 +64,7 @@ function Page() {
     onSubmit: async (values) => {
       try {
         await editBrandProfile(values).unwrap();
+        await requestReview();
         setStep(3);
       } catch (error) {
         toast.error("Алдаа гарлаа");
@@ -60,11 +74,11 @@ function Page() {
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || requestReviewSuccess) {
       toast.success("Амжилттай");
     }
-    if (error) {
-      toast.error(error?.data?.error);
+    if (error || requestReviewError) {
+      toast.error(error?.data?.error || requestReviewError?.data?.error);
     }
   }, [data, error]);
 
