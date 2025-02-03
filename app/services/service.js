@@ -267,8 +267,8 @@ export const geniApi = createApi({
       }),
     }),
     listContentGallery: builder.query({
-      query: () => ({
-        url: `/api/web/private/content/my`,
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/content/my?&limit=${limit}&offset=${offset}`,
         method: "GET",
       }),
     }),
