@@ -14,8 +14,10 @@ import BrandContentGallery from "./BrandContentGallery";
 import LogoutButton from "@/components/common/LogoutButton";
 import PlatformUseCaseModal from "./PlatformUseCaseModal";
 import GuideModal from "@/components/common/GuideModal";
+import { useRouter } from "next/navigation";
 
 function BrandProfile() {
+  const router = useRouter();
   const {
     data: getUserInfoData,
     error: getUserInfoError,
@@ -61,6 +63,12 @@ function BrandProfile() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+
+  useEffect(() => {
+    if (getUserInfoData && !getUserInfoData?.isVerified) {
+      router.push("/add-brand-details");
+    }
+  }, [getUserInfoData, router]);
 
   useEffect(() => {
     const contents = getCurrentContents();

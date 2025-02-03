@@ -87,7 +87,7 @@ function Page() {
     if (error || requestReviewError) {
       toast.error(error?.data?.error || requestReviewError?.data?.error);
     }
-  }, [data, error]);
+  }, [data, error, requestReviewSuccess, requestReviewError]);
 
   const renderStepContent = () => {
     switch (step) {
