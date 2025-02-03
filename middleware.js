@@ -26,12 +26,10 @@ export function middleware(req) {
   if (userType?.value === "Creator") {
     if (
       [
-        "/brand-profile",
         "/edit-profile-brand",
         "/add-product",
         "/edit-product",
         "/add-brand-details",
-        "/student-profile",
         "/edit-profile-student",
       ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
@@ -42,8 +40,6 @@ export function middleware(req) {
       [
         "/wallet",
         "/products",
-        "/creator-profile",
-        "/student-profile",
         "/edit-profile-creator",
         "/edit-profile-student",
       ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
@@ -53,11 +49,9 @@ export function middleware(req) {
   } else if (userType?.value === "Student") {
     if (
       [
-        "/brand-profile",
         "/edit-profile-brand",
         "/add-product",
         "/edit-product",
-        "/creator-profile",
         "/edit-profile-creator",
         "/add-brand-details",
         "/products",
@@ -83,9 +77,7 @@ export const config = {
     "/edit-product/:path*",
     "/edit-product",
     "/wallet",
-    "/brand-profile",
-    "/creator-profile",
-    "/student-profile",
+    "/profile",
     "/notifications/:path*",
     "/notifications",
     "/products/:path*",
