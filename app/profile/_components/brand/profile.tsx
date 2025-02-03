@@ -26,7 +26,7 @@ function BrandProfile() {
 
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 12;
+  const contentsPerPage = 16;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
 
@@ -43,7 +43,10 @@ function BrandProfile() {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-  } = useListContentGalleryQuery({});
+  } = useListContentGalleryQuery(
+    { limit: contentsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const {
     data: listBrandProductsData,
