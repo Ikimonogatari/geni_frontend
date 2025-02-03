@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CreatorTier from "@/components/CreatorTier";
 
 function BrandContentGallery({ contentsGallery }) {
+  console.log(contentsGallery, "GALLERY HERE");
   const [showModal, setShowModal] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
   console.log(contentsGallery);
