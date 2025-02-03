@@ -67,11 +67,11 @@ function BrandProfile() {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  // useEffect(() => {
-  //   if (getUserInfoData && !getUserInfoData?.isVerified) {
-  //     router.push("/add-brand-details");
-  //   }
-  // }, [getUserInfoData, router]);
+  useEffect(() => {
+    if (getUserInfoData && !getUserInfoData?.isVerified) {
+      router.push("/add-brand-details");
+    }
+  }, [getUserInfoData, router]);
 
   useEffect(() => {
     const contents = getCurrentContents();
@@ -407,9 +407,9 @@ function BrandProfile() {
           <></>
         )}
       </div>
-      {/* {getUserInfoData && (
+      {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
-      )} */}
+      )}
     </div>
   );
 }
