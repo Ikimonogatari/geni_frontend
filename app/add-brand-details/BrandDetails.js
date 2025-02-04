@@ -9,6 +9,8 @@ import {
   useChangeBrandTypeMutation,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
   const [dropdownOpen, setdropdownOpen] = useState(false);
@@ -149,22 +151,18 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
     <>
       <div className="flex flex-col sm:flex-row items-start justify-between w-full gap-6 sm:gap-11">
         <div className="flex flex-col items-center gap-4 sm:gap-7 w-full sm:max-w-[194px] xl:max-w-[258px]">
-          {parsedUserInfo ? (
-            <Image
-              src={
-                parsedUserInfo?.ProfileLink
-                  ? parsedUserInfo?.ProfileLink
-                  : "/dummy-brand.png"
-              }
-              width={194}
-              height={194}
-              loading="lazy"
-              className="object-cover rounded-xl border-[1px] border-[#2D262D] w-full aspect-square sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"
-              alt=""
-            />
-          ) : (
-            <div className="w-[100px] h-[100px] sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"></div>
-          )}
+          <Image
+            src={
+              parsedUserInfo?.ProfileLink
+                ? parsedUserInfo?.ProfileLink
+                : "/dummy-brand.png"
+            }
+            width={194}
+            height={194}
+            loading="lazy"
+            className="object-cover rounded-xl border-[1px] border-[#2D262D] w-full aspect-square sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"
+            alt=""
+          />
           <div
             {...getRootProps()}
             className="cursor-pointer mt-2 py-2 sm:py-3 w-full text-center bg-[#4D55F5] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
@@ -177,23 +175,22 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
         </div>
 
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex flex-col gap-3 w-full">
-            <label className="text-[#6F6F6F] text-lg" htmlFor="Name">
-              Брэндийн нэр
-            </label>
-            <input
-              id="Name"
-              name="Name"
-              type="text"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.Name}
-              className="p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl w-full"
-            />
-            {formik.touched.Name && formik.errors.Name && (
-              <div className="text-red-500 text-sm">{formik.errors.Name}</div>
-            )}
-          </div>
+          <Input
+            id="Name"
+            name="Name"
+            type="text"
+            className="text-base sm:text-xl w-full"
+            wrapperClassName="w-full"
+            labelClassName="text-[#6F6F6F] text-lg font-normal"
+            layoutClassName="h-full p-4 sm:p-5 w-full"
+            label="Брэндийн нэр"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.Name}
+            errorText={formik.errors.Name}
+            errorVisible={formik.touched.Name && formik.errors.Name}
+          />
+
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-col gap-3 w-full">
               <label className="text-[#6F6F6F] text-lg" htmlFor="type">
@@ -288,28 +285,27 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 w-full">
-            <label className="text-[#6F6F6F] text-lg" htmlFor="bio">
-              Брэндийн богино танилцуулга
-            </label>
-            <textarea
-              id="Bio"
-              name="Bio"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.Bio}
-              rows={4}
-              className="p-3 sm:p-4 bg-white rounded-lg border text-base sm:text-xl"
-            />
-            {formik.touched.Bio && formik.errors.Bio && (
-              <div className="text-red-500 text-sm">{formik.errors.Bio}</div>
-            )}
-          </div>
+          <Textarea
+            id="Bio"
+            name="Bio"
+            className="text-base sm:text-xl w-full"
+            layoutClassName="bg-white p-4 sm:p-5"
+            labelClassName="text-[#6F6F6F] text-lg font-normal"
+            label=" Брэндийн богино танилцуулга"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.Bio}
+            rows={4}
+            maxLength={600}
+            charCount={formik.values.Bio.length}
+            errorText={formik.errors.Bio}
+            errorVisible={formik.touched.Bio && formik.errors.Bio}
+          />
         </div>
       </div>
       <button
         onClick={handleNextStep}
-        type={"button"}
+        type="button"
         className="mt-8 sm:mt-16 w-full flex flex-row items-center
 justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
 border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"

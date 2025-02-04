@@ -367,6 +367,7 @@ export const geniApi = createApi({
         url: "/api/web/private/user/no-guide",
         method: "POST",
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     brandRegister: builder.mutation({
       query: (body) => ({

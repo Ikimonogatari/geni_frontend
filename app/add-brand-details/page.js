@@ -20,9 +20,16 @@ function Page() {
 
   const [step, setStep] = useState(1);
 
-  const handleNextStep = () => {
-    if (step < 2) {
-      setStep((prevStep) => prevStep + 1);
+  const handleNextStep = async () => {
+    if (step === 1) {
+      await formik.validateField("Name");
+      await formik.validateField("Bio");
+      console.log("hello");
+      if (!formik.errors.Name && !formik.errors.Bio) {
+        setStep(2);
+      }
+    } else if (step === 2) {
+      await formik.validateForm();
     }
   };
 
@@ -55,8 +62,8 @@ function Page() {
       HasMarketingPersonel: false,
       AvgProductSalesMonthly: parsedUserInfo
         ? parsedUserInfo?.AvgProductSalesMonthly
-        : "",
-      AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : "",
+        : 0,
+      AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : 0,
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Заавал бөглөнө үү"),
@@ -65,11 +72,13 @@ function Page() {
       Website: Yup.string().required("Заавал бөглөнө ү"),
       RegNo: Yup.string().required("Заавал бөглөнө үү"),
       Address: Yup.string().required("Заавал бөглөнө үү"),
-      AvgPrice: Yup.string().required("Заавал бөглөнө үү"),
-      AvgProductSalesMonthly: Yup.string().required("Заавал бөглөнө үү"),
+      AvgPrice: Yup.number().required("Заавал бөглөнө үү"),
+      AvgProductSalesMonthly: Yup.number().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
+      console.log(values, "VALUES");
       try {
+        console.log("SUBMITTED");
         await editBrandProfile(values).unwrap();
         await requestReview();
         setStep(3);

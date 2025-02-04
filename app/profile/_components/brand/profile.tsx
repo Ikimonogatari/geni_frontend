@@ -68,7 +68,11 @@ function BrandProfile() {
   };
 
   useEffect(() => {
-    if (getUserInfoData && !getUserInfoData?.isVerified) {
+    if (
+      getUserInfoData &&
+      !getUserInfoData?.isVerified &&
+      getUserInfoData?.HasSeenGuide
+    ) {
       router.push("/add-brand-details");
     }
   }, [getUserInfoData, router]);
