@@ -585,7 +585,7 @@ function Page() {
               <Input
                 id="totalPrice"
                 name="totalPrice"
-                type="text"
+                type="number"
                 label="Нийт илгээх бүтээгдэхүүний үнэ"
                 hoverInfo="Нийт бүтээгдэхүүний үнийг оруулна."
                 onChange={formik.handleChange}

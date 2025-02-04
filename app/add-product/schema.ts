@@ -29,8 +29,18 @@ const addProductSchema = Yup.object({
   information: Yup.string().required("Заавал бөглөнө үү"),
   amount: Yup.string().required("Заавал бөглөнө үү"),
   requestForCreators: Yup.string().required("Заавал бөглөнө үү"),
+  contentQuantity: Yup.string().required("Заавал бөглөнө үү"),
   quantity: Yup.string().required("Заавал бөглөнө үү"),
   price: Yup.string().required("Заавал бөглөнө үү"),
+  totalPrice: Yup.number()
+    .required("Заавал бөглөнө үү")
+    .test(
+      "totalPrice-test",
+      "Та 30’000 төгрөгнөөс доош үнийн дүнтэй бүтээгдэхүүн оруулж болохгүй бөгөөд бага үнийн үнтэй бүтээгдэхүүн байгаа бол тоо ширхэгийг нь нэмж илгээх хэрэгтэй.",
+      function (value) {
+        return value >= 30000;
+      }
+    ),
 });
 
 export { addProductSchema };
