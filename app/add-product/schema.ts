@@ -11,7 +11,7 @@ const addProductSchema = Yup.object({
         Name: Yup.string(),
       })
     )
-    .required("Content info is required")
+    .required("Заавал бөглөнө үү")
     .test("custom-validation", function (contentInfo) {
       const hasOutcome = contentInfo?.some((item) => item.Type === "Type");
       const hasResult = contentInfo?.some((item) => item.Type === "Result");
@@ -32,13 +32,13 @@ const addProductSchema = Yup.object({
   contentQuantity: Yup.string().required("Заавал бөглөнө үү"),
   quantity: Yup.string().required("Заавал бөглөнө үү"),
   price: Yup.string().required("Заавал бөглөнө үү"),
-  totalPrice: Yup.number()
+  totalPrice: Yup.string()
     .required("Заавал бөглөнө үү")
     .test(
       "totalPrice-test",
       "Та 30’000 төгрөгнөөс доош үнийн дүнтэй бүтээгдэхүүн оруулж болохгүй бөгөөд бага үнийн үнтэй бүтээгдэхүүн байгаа бол тоо ширхэгийг нь нэмж илгээх хэрэгтэй.",
       function (value) {
-        return value >= 30000;
+        return parseFloat(value) >= 30000;
       }
     ),
 });

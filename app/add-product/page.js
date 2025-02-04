@@ -47,8 +47,10 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
+      contentQuantity: "",
       quantity: "",
       price: "",
+      totalPrice: "",
       contentInfo: [],
       productTypes: [],
       productPics: [],
@@ -229,7 +231,6 @@ function Page() {
     const price = parseFloat(e.target.value);
     const quantity = parseInt(formik.values.quantity, 10);
 
-    // If price is a valid number, update totalPrice, else set totalPrice to 0
     if (!isNaN(quantity) && !isNaN(price)) {
       formik.setFieldValue("price", e.target.value);
       formik.setFieldValue("totalPrice", price * quantity);
@@ -243,7 +244,6 @@ function Page() {
     const quantity = parseInt(e.target.value, 10);
     const price = parseFloat(formik.values.price);
 
-    // If both quantity and price are valid numbers, update totalPrice, else set totalPrice to 0
     if (!isNaN(quantity) && !isNaN(price)) {
       formik.setFieldValue("quantity", e.target.value);
       formik.setFieldValue("totalPrice", price * quantity);
@@ -253,12 +253,7 @@ function Page() {
     }
   };
 
-  const isFormDisabled =
-    !formik.dirty ||
-    !formik.isValid ||
-    formik.isSubmitting ||
-    !formik.values.productTypes ||
-    !formik.values.productPics;
+  const isFormDisabled = false;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -325,6 +320,7 @@ function Page() {
                     >
                       {p.TypeName}
                       <button
+                        type="button"
                         className="rounded-full w-6 h-6 bg-white"
                         onClick={() => handleRemoveProductType(p.TypeName)}
                       >
@@ -442,6 +438,7 @@ function Page() {
                   >
                     {selected}
                     <button
+                      type="button"
                       className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
                       onClick={() => removeContentItem(selected)}
                     >
@@ -523,6 +520,7 @@ function Page() {
                   >
                     {selected}
                     <button
+                      type="button"
                       className="w-6 h-6 bg-secondary rounded-full aspect-square"
                       onClick={() => removeContentItem(selected)}
                     >
@@ -573,7 +571,7 @@ function Page() {
               <Input
                 id="quantity"
                 name="quantity"
-                type="number"
+                type="text"
                 label="Бүтээгчдэд илгээх бүтээгдэхүүний тоо"
                 hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
                 onChange={handleQuantityChange}
@@ -585,7 +583,7 @@ function Page() {
               <Input
                 id="totalPrice"
                 name="totalPrice"
-                type="number"
+                type="text"
                 label="Нийт илгээх бүтээгдэхүүний үнэ"
                 hoverInfo="Нийт бүтээгдэхүүний үнийг оруулна."
                 onChange={formik.handleChange}
@@ -615,6 +613,7 @@ function Page() {
               />
 
               <HandleButton
+                type="submit"
                 disabled={isFormDisabled}
                 text={"Бүтээгдэхүүн нэмэх"}
                 bg={`bg-geni-blue ${
