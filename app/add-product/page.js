@@ -55,11 +55,7 @@ function Page() {
     },
     validationSchema: addProductSchema,
     onSubmit: (values) => {
-      const modifiedValues = {
-        ...values,
-        quantity: parseInt(values.quantity, 10),
-      };
-      createProduct(modifiedValues);
+      createProduct(values);
     },
     validateOnMount: true,
   });
@@ -226,6 +222,34 @@ function Page() {
           prev.filter((n) => n !== item.Name)
         );
       }
+    }
+  };
+
+  const handlePriceChange = (e) => {
+    const price = parseFloat(e.target.value);
+    const quantity = parseInt(formik.values.quantity, 10);
+
+    // If price is a valid number, update totalPrice, else set totalPrice to 0
+    if (!isNaN(quantity) && !isNaN(price)) {
+      formik.setFieldValue("price", e.target.value);
+      formik.setFieldValue("totalPrice", price * quantity);
+    } else {
+      formik.setFieldValue("price", e.target.value);
+      formik.setFieldValue("totalPrice", 0);
+    }
+  };
+
+  const handleQuantityChange = (e) => {
+    const quantity = parseInt(e.target.value, 10);
+    const price = parseFloat(formik.values.price);
+
+    // If both quantity and price are valid numbers, update totalPrice, else set totalPrice to 0
+    if (!isNaN(quantity) && !isNaN(price)) {
+      formik.setFieldValue("quantity", e.target.value);
+      formik.setFieldValue("totalPrice", price * quantity);
+    } else {
+      formik.setFieldValue("quantity", e.target.value);
+      formik.setFieldValue("totalPrice", 0);
     }
   };
 
@@ -533,19 +557,47 @@ function Page() {
                 errorText={formik.errors.amount}
                 errorVisible={formik.touched.amount && formik.errors.amount}
               />
-
+              <Input
+                id="price"
+                name="price"
+                type="text"
+                label="Бүтээгчдэд илгээж буй бүтээгдэхүүний ширхэгийн үнэ"
+                hoverInfo="Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүний ширхэгийн үнийг оруулна."
+                onChange={handlePriceChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.price}
+                leftSection="₮"
+                errorText={formik.errors.price}
+                errorVisible={formik.touched.price && formik.errors.price}
+              />
               <Input
                 id="quantity"
                 name="quantity"
-                type="text"
+                type="number"
                 label="Бүтээгчдэд илгээх бүтээгдэхүүний тоо"
                 hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
-                onChange={formik.handleChange}
+                onChange={handleQuantityChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.quantity}
                 errorText={formik.errors.quantity}
                 errorVisible={formik.touched.quantity && formik.errors.quantity}
               />
+              <Input
+                id="totalPrice"
+                name="totalPrice"
+                type="text"
+                label="Нийт илгээх бүтээгдэхүүний үнэ"
+                hoverInfo="Нийт бүтээгдэхүүний үнийг оруулна."
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.totalPrice}
+                leftSection="₮"
+                errorText={formik.errors.totalPrice}
+                errorVisible={
+                  formik.touched.totalPrice && formik.errors.totalPrice
+                }
+              />
+
               <Input
                 id="contentQuantity"
                 name="contentQuantity"
@@ -561,19 +613,6 @@ function Page() {
                   formik.errors.contentQuantity
                 }
               />
-              <Input
-                id="price"
-                name="price"
-                type="text"
-                label="Бүтээгчдэд илгээж буй бүтээгдэхүүний үнэ"
-                hoverInfo="Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид багц болгон илгээж байгаа бол багцын үнийг оруулна."
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.price}
-                leftSection="₮"
-                errorText={formik.errors.price}
-                errorVisible={formik.touched.price && formik.errors.price}
-              />
 
               <HandleButton
                 disabled={isFormDisabled}
@@ -584,7 +623,7 @@ function Page() {
                     : "opacity-100 cursor-pointer"
                 }`}
                 shadowbg={"shadow-[0.25rem_0.25rem_#131AAF]"}
-                width={"w-full max-w-[403px] h-[90px]"}
+                width={"mt-3 w-full max-w-[403px] h-[90px]"}
               />
 
               <ProductAddedSuccessModal
