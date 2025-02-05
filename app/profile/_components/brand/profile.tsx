@@ -67,15 +67,15 @@ function BrandProfile() {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  // useEffect(() => {
-  //   if (
-  //     getUserInfoData &&
-  //     !getUserInfoData?.isVerified &&
-  //     getUserInfoData?.HasSeenGuide
-  //   ) {
-  //     router.push("/add-brand-details");
-  //   }
-  // }, [getUserInfoData, router]);
+  useEffect(() => {
+    if (
+      !getUserInfoData?.isVerified &&
+      getUserInfoData?.HasSeenGuide &&
+      getUserInfoData?.OnBoardingStatus == "Rejected"
+    ) {
+      router.push("/add-brand-details");
+    }
+  }, [getUserInfoData, router]);
 
   useEffect(() => {
     const contents = getCurrentContents();

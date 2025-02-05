@@ -90,7 +90,7 @@ function Page() {
   });
 
   useEffect(() => {
-    if (isSuccess || requestReviewSuccess) {
+    if (isSuccess && requestReviewSuccess) {
       toast.success("Амжилттай");
     }
     if (error || requestReviewError) {

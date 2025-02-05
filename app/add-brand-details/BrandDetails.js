@@ -110,10 +110,9 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
           const response = await uploadFile(formData);
           if (response.data) {
             const id = response.data.FileId;
-            await changeProfilePicture({ FileId: id });
+            const profileChangeRes = await changeProfilePicture({ FileId: id });
 
-            setProfileImage(parsedUserInfo?.ProfileLink);
-            toast.success("Profile picture updated successfully!");
+            setProfileImage(profileChangeRes?.data?.url);
           }
         } catch (error) {
           console.error("File upload or profile picture update failed:", error);
@@ -158,7 +157,12 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
         <div className="flex flex-col items-center gap-4 sm:gap-7 w-full sm:max-w-[194px] xl:max-w-[258px]">
           {parsedUserInfo ? (
             <Image
-              src={profileImage}
+              // src={profileImage}
+              src={
+                parsedUserInfo?.ProfileLink
+                  ? parsedUserInfo?.ProfileLink
+                  : "/dummy-brand.png"
+              }
               width={194}
               height={194}
               loading="lazy"
