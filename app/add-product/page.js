@@ -641,6 +641,7 @@ function Page() {
                 </FadeInAnimation>
                 <CreditPurchase
                   buttonText={"Geni Credit цэнэглэх"}
+                  buttonIconSize={"w-4 h-4"}
                   className={
                     "text-lg flex flex-row items-center justify-center py-4 w-full"
                   }

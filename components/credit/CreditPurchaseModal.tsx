@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-function CreditPurchase({ className, buttonText, userInfo }) {
+function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
@@ -124,7 +124,13 @@ function CreditPurchase({ className, buttonText, userInfo }) {
         className={`${className} whitespace-nowrap gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] rounded-lg text-white font-bold`}
       >
         {buttonText}
-        <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
+        <Image
+          src={"/add-icon.png"}
+          width={14}
+          height={14}
+          alt="arrow"
+          className={buttonIconSize}
+        />
       </DialogTrigger>
       {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-4xl rounded-3xl">
