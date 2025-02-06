@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
-import Step1 from "./BrandOnboard/Step1";
-import Step2 from "./BrandOnboard/Step2";
-import Step3 from "./BrandOnboard/Step3";
-import Step4 from "./BrandOnboard/Step4";
+import Step1 from "@/components/credit/Step1";
+import Step2 from "@/components/credit/Step2";
+import Step3 from "@/components/credit/Step3";
+import Step4 from "@/components/credit/Step4";
 import PaymentModal from "@/components/PaymentModal";
 import {
   useBrandTermCheckMutation,
@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-function PlatformUseCaseModal({ responsive, userInfo }) {
+function CreditPurchase({ className, buttonText, userInfo }) {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
@@ -121,9 +121,9 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
   return (
     <Dialog>
       <DialogTrigger
-        className={`${responsive} whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+        className={`${className} whitespace-nowrap gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] rounded-lg text-white font-bold`}
       >
-        Бүтээгдэхүүн нэмэх
+        {buttonText}
         <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
       </DialogTrigger>
       {/* @ts-ignore */}
@@ -207,4 +207,4 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
   );
 }
 
-export default PlatformUseCaseModal;
+export default CreditPurchase;

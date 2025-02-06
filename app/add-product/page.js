@@ -28,6 +28,7 @@ import { addProductSchema } from "./schema";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { ErrorText } from "@/components/ui/error-text";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 
 function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
@@ -638,13 +639,13 @@ function Page() {
                     visible={true}
                   />
                 </FadeInAnimation>
-
-                <button
-                  type="button"
-                  className="rounded-lg py-4 w-full border border-primary bg-geni-blue text-white font-bold text-lg"
-                >
-                  Geni Credit цэнэглэх
-                </button>
+                <CreditPurchase
+                  buttonText={"Geni Credit цэнэглэх"}
+                  className={
+                    "text-lg flex flex-row items-center justify-center py-4 w-full"
+                  }
+                  userInfo={parsedUserInfo}
+                />
               </div>
               <HandleButton
                 type="submit"

@@ -296,7 +296,7 @@ function Page() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
-        <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container flex flex-col">
+        <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container flex flex-col">
           <BackButton />
           <span className="text-4xl sm:text-5xl xl:text-6xl font-bold mt-7">
             Мэдээлэл засах
