@@ -17,24 +17,28 @@ function ProductAddedSuccessModal({
 
   return (
     <Dialog open={true}>
-      <DialogContent className="max-w-lg sm:max-w-2xl w-full flex flex-col items-center gap-2 rounded-3xl">
+      <DialogContent className="max-w-lg sm:max-w-3xl w-full flex flex-col items-center gap-2 rounded-3xl">
         <span className="text-[#4FB755] text-3xl sm:text-5xl text-center font-bold">
           БҮТЭЭГДЭХҮҮН НЭМЭГДЛЭЭ
         </span>
         <Image
           src={"/product-added.png"}
-          width={209}
-          height={220}
-          className="w-[138px] sm:w-[209px] h-[146px] sm:h-[220px]"
+          width={150}
+          height={157}
+          className="w-[138px] sm:w-[160px] h-[146px] sm:h-[168px]"
           alt="recieved"
         />
 
         <div className="w-full flex flex-col gap-5">
-          <div className="bg-[#F49D19] p-4 text-white rounded-2xl text-sm sm:text-base">
+          <div className="bg-[#F49D19] p-4 text-white rounded-2xl text-xs sm:text-sm">
             Geni танай бүтээгдэхүүнийг дээрх тоо ширхэгийн дагуу баталгаажуулж,
             агуулахдаа хүлээн авсны дараа платформ дээр бүтээгчдэд санал болгох
             болно. Баярлалаа.
           </div>
+          <span className="bg-primary-bg rounded-2xl p-4 text-black text-xs sm:text-sm">
+            Хаяг: Сүхбаатар дүүрэг 6-р хороо, МУИС-н 2-р байрны чанх хойно,
+            Atimos 48 барилга, 2 давхар 206 тоот
+          </span>
 
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d239.85338714233515!2d106.91942416728344!3d47.923687497893826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d9693003fa987db%3A0xff31256ae323248d!2sApartment%20buidling%20No48!5e0!3m2!1sen!2smn!4v1675705420593!5m2!1sen!2smn"
