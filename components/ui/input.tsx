@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { ErrorText } from "./error-text";
 import InfoHover from "../common/InfoHover";
+import FadeInAnimation from "../common/FadeInAnimation";
 
 interface InputProps extends React.ComponentProps<"input"> {
   errorText?: React.ReactNode;
@@ -65,7 +66,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {rightSection && rightSection}
           </div>
           {errorVisible && (
-            <ErrorText text={errorText} visible={errorVisible} />
+            <FadeInAnimation visible={errorVisible}>
+              <ErrorText text={errorText} visible={errorVisible} />
+            </FadeInAnimation>
           )}
         </div>
       </div>

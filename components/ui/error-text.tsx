@@ -18,7 +18,7 @@ const ErrorText = React.forwardRef<HTMLDivElement, ErrorTextProps>(
     if (!visible) return null;
     return (
       <div
-        className={cn("text-red-500 text-sm", className)}
+        className={cn("text-geni-red text-sm", className)}
         ref={ref}
         {...props}
       >

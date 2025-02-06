@@ -27,6 +27,7 @@ import MediaUploader from "@/components/common/MediaUploader";
 import { addProductSchema } from "./schema";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { ErrorText } from "@/components/ui/error-text";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
 
 function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
@@ -258,7 +259,7 @@ function Page() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
-        <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
+        <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
           <BackButton />
           <form
             onSubmit={formik.handleSubmit}
@@ -434,7 +435,7 @@ function Page() {
                 {selectedContentTypes.map((selected) => (
                   <div
                     key={selected}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[1px] border-geni-blue rounded-md flex flex-row items-center justify-between"
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
                   >
                     {selected}
                     <button
@@ -516,12 +517,12 @@ function Page() {
                 {selectedContentOutcomes.map((selected) => (
                   <div
                     key={selected}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-secondary rounded-md flex flex-row items-center justify-between"
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
                   >
                     {selected}
                     <button
                       type="button"
-                      className="w-6 h-6 bg-secondary rounded-full aspect-square"
+                      className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
                       onClick={() => removeContentItem(selected)}
                     >
                       <MinusIcon color="white" />
@@ -558,9 +559,11 @@ function Page() {
               <Input
                 id="price"
                 name="price"
-                type="text"
-                label="Бүтээгчдэд илгээж буй бүтээгдэхүүний ширхэгийн үнэ"
-                hoverInfo="Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүний ширхэгийн үнийг оруулна."
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="Бүтээгчид илгээх нэгж бүтээгдэхүүний үнийн дүн"
+                hoverInfo="Нэг бүтээгчид санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид нэгээс дээш бүтээгдэхүүн илгээж байгаа бол нийт үнийг оруулна."
                 onChange={handlePriceChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.price}
@@ -571,9 +574,12 @@ function Page() {
               <Input
                 id="quantity"
                 name="quantity"
-                type="text"
-                label="Бүтээгчдэд илгээх бүтээгдэхүүний тоо"
-                hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
+                type="number"
+                min={0}
+                max={30}
+                className="no-spinner"
+                label="1 бүтээгчид илгээх бүтээгдэхүүний тоо"
+                hoverInfo="Энд та нэг бүтээгчид илгээж буй бүтээгдэхүүнийхээ тоо ширхэгийг оруулна."
                 onChange={handleQuantityChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.quantity}
@@ -583,9 +589,10 @@ function Page() {
               <Input
                 id="totalPrice"
                 name="totalPrice"
-                type="text"
-                label="Нийт илгээх бүтээгдэхүүний үнэ"
-                hoverInfo="Нийт бүтээгдэхүүний үнийг оруулна."
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="1 бүтээгчид илгээж буй нийт бүтээгдэхүүний үнийн дүн"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.totalPrice}
@@ -599,9 +606,12 @@ function Page() {
               <Input
                 id="contentQuantity"
                 name="contentQuantity"
-                type="text"
-                label="Хүсэж буй контентийн тоо"
-                hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
+                type="number"
+                min={0}
+                max={30}
+                className="no-spinner"
+                label="Нийт хэдэн бүтээгчидтэй хамтрах вэ?"
+                hoverInfo="/1 хамтрал = 1 credit/"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.contentQuantity}
@@ -611,11 +621,36 @@ function Page() {
                   formik.errors.contentQuantity
                 }
               />
+              <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
+                <span className="font-bold">
+                  Таны Geni Credit Үлдэгдэл:{" "}
+                  {parsedUserInfo?.Credit ? parsedUserInfo?.Credit : 0}
+                </span>
+                <FadeInAnimation
+                  visible={
+                    parsedUserInfo?.Credit < formik.values.contentQuantity
+                  }
+                >
+                  <ErrorText
+                    text={
+                      "Таны Geni Credit үлдэгдэл хүрэлцэхгүй байна. Та Geni Credit-ээ цэнэглэнэ үү."
+                    }
+                    visible={true}
+                  />
+                </FadeInAnimation>
 
+                <button
+                  type="button"
+                  className="rounded-lg py-4 w-full border border-primary bg-geni-blue text-white font-bold text-lg"
+                >
+                  Geni Credit цэнэглэх
+                </button>
+              </div>
               <HandleButton
                 type="submit"
                 disabled={isFormDisabled}
                 text={"Бүтээгдэхүүн нэмэх"}
+                className={"text-lg"}
                 bg={`bg-geni-blue ${
                   isFormDisabled
                     ? "opacity-80 cursor-not-allowed"

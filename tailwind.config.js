@@ -22,6 +22,8 @@ module.exports = {
         primary: "#2D262D",
         "geni-gray": "#CDCDCD",
         secondary: "#CA7FFE",
+        "primary-bg": "#F5F4F0",
+        "geni-red": "#DD2B1F",
       },
       keyframes: {
         "accordion-down": {

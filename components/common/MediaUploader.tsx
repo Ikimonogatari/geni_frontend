@@ -23,7 +23,7 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
         {imageUrls.length < 1 && !uploadFileLoading ? (
           <div
             {...getRootProps()}
-            className="cursor-pointer bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:max-w-[554px] lg:max-h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
+            className="cursor-pointer bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:w-[554px] lg:h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
           >
             <input {...getInputProps()} />
             <div className="rounded-xl bg-geni-blue w-14 h-14 flex justify-center items-center">
