@@ -49,7 +49,7 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
-      contentQuantity: "",
+      credit: "",
       quantity: "",
       price: "",
       totalPrice: "",
@@ -614,8 +614,8 @@ function Page() {
               />
 
               <Input
-                id="contentQuantity"
-                name="contentQuantity"
+                id="credit"
+                name="credit"
                 type="number"
                 min={0}
                 max={30}
@@ -624,11 +624,11 @@ function Page() {
                 hoverInfo="/1 хамтрал = 1 credit/"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.contentQuantity}
-                errorText={formik.errors.contentQuantity}
+                value={formik.values.credit}
+                errorText={formik.errors.credit}
                 errorVisible={
-                  formik.touched.contentQuantity &&
-                  formik.errors.contentQuantity
+                  formik.touched.credit &&
+                  formik.errors.credit
                 }
               />
               <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
