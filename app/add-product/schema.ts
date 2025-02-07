@@ -29,7 +29,7 @@ const addProductSchema = Yup.object({
   information: Yup.string().required("Заавал бөглөнө үү"),
   amount: Yup.string().required("Заавал бөглөнө үү"),
   requestForCreators: Yup.string().required("Заавал бөглөнө үү"),
-  contentQuantity: Yup.string().required("Заавал бөглөнө үү"),
+  credit: Yup.string().required("Заавал бөглөнө үү"),
   quantity: Yup.string().required("Заавал бөглөнө үү"),
   price: Yup.string().required("Заавал бөглөнө үү"),
   totalPrice: Yup.string()
