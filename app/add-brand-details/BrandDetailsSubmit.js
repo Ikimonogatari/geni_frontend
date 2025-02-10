@@ -121,7 +121,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         <Input
           id="AvgProductSalesMonthly"
           name="AvgProductSalesMonthly"
-          className="text-base sm:text-xl w-full"
+          className="text-base sm:text-xl w-full no-spinner"
           type="number"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -170,7 +170,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         <Input
           id="AvgPrice"
           name="AvgPrice"
-          className="text-base sm:text-xl w-full"
+          className="text-base sm:text-xl w-full no-spinner"
           type="number"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
