@@ -1,7 +1,16 @@
 import React from "react";
 import Image from "next/image";
+import Cookies from "js-cookie";
+import { geniApi } from "../services/service";
 
 function BrandDetailsSuccess({ router }) {
+  const handleLogout = () => {
+    Cookies.remove("auth");
+    Cookies.remove("userType");
+    Cookies.remove("user-info");
+    geniApi.util.invalidateTags(["UserInfo"]);
+    router.replace("/login");
+  };
   return (
     <div className="flex flex-col gap-5">
       <Image
@@ -25,7 +34,7 @@ function BrandDetailsSuccess({ router }) {
       </p>
       <button
         type="button"
-        onClick={() => router.push("/add-brand-details")}
+        onClick={handleLogout}
         className="mt-8 sm:mt-16 w-full flex flex-row items-center
 justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
 border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
