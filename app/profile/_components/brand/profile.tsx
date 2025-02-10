@@ -395,10 +395,10 @@ function BrandProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={10}
-                  height={10}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="rotate-180 w-[10px] h-[10px]"
+                  className="rotate-180 w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
@@ -426,10 +426,10 @@ function BrandProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={10}
-                  height={10}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="w-[10px] h-[10px]"
+                  className="w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
