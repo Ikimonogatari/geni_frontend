@@ -267,21 +267,21 @@ function BrandProfile() {
               </div>
             </div>
             <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
-              {getUserInfoData?.IsSubscribed === true ||
-              getUserInfoData?.Credit > 0 ? (
-                <Link
-                  href={"/add-product"}
-                  className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-                >
-                  Бүтээгдэхүүн нэмэх
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              ) : (
+              {/* {getUserInfoData?.IsSubscribed === true ||
+              getUserInfoData?.Credit > 0 ? ( */}
+              <Link
+                href={"/add-product"}
+                className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              >
+                Бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Link>
+              {/* ) : (
                 <CreditPurchase
                   buttonIconSize={""}
                   className={
@@ -290,7 +290,7 @@ function BrandProfile() {
                   buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
-              )}
+              )} */}
               <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-center sm:flex-col gap-2 sm:gap-4">
                 <Link
                   href={"/wallet"}
@@ -355,21 +355,21 @@ function BrandProfile() {
                   </button>
                 ))}
               </div>
-              {getUserInfoData?.IsSubscribed === true ||
-              getUserInfoData?.Credit > 0 ? (
-                <Link
-                  href={"/add-product"}
-                  className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-                >
-                  Бүтээгдэхүүн нэмэх
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              ) : (
+              {/* {getUserInfoData?.IsSubscribed === true ||
+              getUserInfoData?.Credit > 0 ? ( */}
+              <Link
+                href={"/add-product"}
+                className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              >
+                Бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Link>
+              {/* ) : (
                 <CreditPurchase
                   buttonIconSize={""}
                   className={
@@ -378,7 +378,7 @@ function BrandProfile() {
                   buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
-              )}
+              )} */}
             </div>
           </div>
           {currentContents ? renderBrandProfile() : <>Loading</>}
