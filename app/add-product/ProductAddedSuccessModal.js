@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ function ProductAddedSuccessModal({
   };
 
   return (
-    <Dialog open={createProductSuccess}>
+    <Dialog open={createProductSuccess} onOpenChange={setCreateProductSuccess}>
       <DialogContent className="max-w-lg sm:max-w-3xl w-full flex flex-col items-center gap-2 rounded-3xl">
         <span className="text-[#4FB755] text-3xl sm:text-5xl text-center font-bold">
           БҮТЭЭГДЭХҮҮН НЭМЭГДЛЭЭ

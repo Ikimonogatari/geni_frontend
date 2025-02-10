@@ -49,8 +49,8 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
-      credit: "",
-      quantity: "",
+      credit: 0,
+      quantity: 0,
       price: "",
       totalPrice: "",
       contentInfo: [],
@@ -59,10 +59,7 @@ function Page() {
     },
     validationSchema: addProductSchema,
     onSubmit: async (values) => {
-      const submitValues = {
-        ...values,
-        totalPrice: undefined, // Explicitly set to undefined
-      };
+      const { totalPrice, ...submitValues } = values;
       await createProduct(submitValues);
     },
     validateOnMount: true,
@@ -251,10 +248,10 @@ function Page() {
     const price = parseFloat(formik.values.price);
 
     if (!isNaN(quantity) && !isNaN(price)) {
-      formik.setFieldValue("quantity", e.target.value);
+      formik.setFieldValue("quantity", quantity); // Set as number
       formik.setFieldValue("totalPrice", price * quantity);
     } else {
-      formik.setFieldValue("quantity", e.target.value);
+      formik.setFieldValue("quantity", quantity); // Set as number
       formik.setFieldValue("totalPrice", 0);
     }
   };
@@ -626,10 +623,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.credit}
                 errorText={formik.errors.credit}
-                errorVisible={
-                  formik.touched.credit &&
-                  formik.errors.credit
-                }
+                errorVisible={formik.touched.credit && formik.errors.credit}
               />
               <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
                 <span className="font-bold">
