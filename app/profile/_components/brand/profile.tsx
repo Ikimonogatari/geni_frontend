@@ -71,7 +71,8 @@ function BrandProfile() {
     if (
       !getUserInfoData?.isVerified &&
       getUserInfoData?.HasSeenGuide &&
-      getUserInfoData?.OnBoardingStatus == "Rejected"
+      getUserInfoData?.OnBoardingStatus == "Rejected" &&
+      getUserInfoData?.OnBoardingStatus == "New"
     ) {
       router.push("/add-brand-details");
     }

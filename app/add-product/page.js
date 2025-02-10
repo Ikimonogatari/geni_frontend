@@ -631,9 +631,7 @@ function Page() {
                   {parsedUserInfo?.Credit ? parsedUserInfo?.Credit : 0}
                 </span>
                 <FadeInAnimation
-                  visible={
-                    parsedUserInfo?.Credit < formik.values.contentQuantity
-                  }
+                  visible={parsedUserInfo?.Credit < formik.values.credit}
                 >
                   <ErrorText
                     text={
