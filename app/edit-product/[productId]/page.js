@@ -130,6 +130,8 @@ function Page() {
         requestForCreators: getPublicProductByIdData?.RequestForCreators || "",
         amount: getPublicProductByIdData?.Amount || "",
         addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
+        credit: getPublicProductByIdData?.Credit || "",
+        totalPrice: getPublicProductByIdData?.TotalPrice || "",
         quantity: getPublicProductByIdData?.Quantity || "",
         price: getPublicProductByIdData?.Price || "",
         contentInfo: [
