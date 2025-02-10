@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { ErrorText } from "@/components/ui/error-text";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
+import NoProductList from "@/components/NoProductList";
 
 function BrandProducts({ brandProducts, brandData }) {
   const router = useRouter();
@@ -101,261 +102,177 @@ function BrandProducts({ brandProducts, brandData }) {
 
   return (
     <div className="w-full overflow-x-auto">
-      <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
-        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[2fr,1fr,2fr,2fr] sm:grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
-          <div className="col-span-1 flex flex-row gap-2 items-center justify-between">
-            <span>Бүтээгдэхүүн</span>
-            <Image
-              src={"/brand-profile-arrow-icon.png"}
-              width={24}
-              height={24}
-              alt="arrow"
-              className="w-4 h-4 sm:w-6 sm:h-6"
-            />
-          </div>
-          <span className="col-span-1">Тоо хэмжээ</span>
+      {brandProducts?.length === 0 ? (
+        <NoProductList />
+      ) : (
+        <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+          <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[2fr,1fr,2fr,2fr] sm:grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
+            <div className="col-span-1 flex flex-row gap-2 items-center justify-between">
+              <span>Бүтээгдэхүүн</span>
+              <Image
+                src={"/brand-profile-arrow-icon.png"}
+                width={24}
+                height={24}
+                alt="arrow"
+                className="w-4 h-4 sm:w-6 sm:h-6"
+              />
+            </div>
+            <span className="col-span-1">Тоо хэмжээ</span>
 
-          <div className="col-span-1 flex flex-row gap-2 items-center justify-between">
-            <span>Статус</span>
-            <Image
-              src={"/brand-profile-arrow-icon.png"}
-              width={24}
-              height={24}
-              alt="arrow"
-              className="w-4 h-4 sm:w-6 sm:h-6"
-            />
+            <div className="col-span-1 flex flex-row gap-2 items-center justify-between">
+              <span>Статус</span>
+              <Image
+                src={"/brand-profile-arrow-icon.png"}
+                width={24}
+                height={24}
+                alt="arrow"
+                className="w-4 h-4 sm:w-6 sm:h-6"
+              />
+            </div>
+            <span className="col-span-1">Үйлдэл</span>
           </div>
-          <span className="col-span-1">Үйлдэл</span>
-        </div>
-        {
-          // sortedBrandProducts
-          brandProducts?.map((p, i) => {
-            const stockStatus = getStockStatus(p.LeftStock, p.Quantity);
-            const requestStatus = getRequestStatus(p.Status);
-            return (
-              <div
-                key={i}
-                className="text-[10px] sm:text-base px-5 py-1 sm:p-5 grid grid-cols-[2fr,1fr,2fr,2fr] sm:grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
-              >
-                <span className="col-span-1">{p.ProductName}</span>
+          {
+            // sortedBrandProducts
+            brandProducts?.map((p, i) => {
+              const stockStatus = getStockStatus(p.LeftStock, p.Quantity);
+              const requestStatus = getRequestStatus(p.Status);
+              return (
+                <div
+                  key={i}
+                  className="text-[10px] sm:text-base px-5 py-1 sm:p-5 grid grid-cols-[2fr,1fr,2fr,2fr] sm:grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
+                >
+                  <span className="col-span-1">{p.ProductName}</span>
 
-                <span className="col-span-1">
-                  {p.LeftStock} / {p.Quantity}
-                </span>
-                {p.Status === "Approved" ? (
-                  <div
-                    className={`${stockStatus.className} col-span-1 flex flex-row items-center gap-3`}
-                  >
-                    <Image
-                      src={"/product-supply-icon.png"}
-                      width={24}
-                      height={24}
-                      alt="stage"
-                      className="w-4 h-4 sm:w-6 sm:h-6"
-                    />
-                    <span className="">{stockStatus.status}</span>
-                  </div>
-                ) : (
-                  <span className={`${requestStatus?.className}`}>
-                    {requestStatus?.text}
+                  <span className="col-span-1">
+                    {p.LeftStock} / {p.Quantity}
                   </span>
-                )}
-                <div className="col-span-1">
-                  <Dialog>
-                    <DialogTrigger className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
-                      Харах
-                    </DialogTrigger>
-                    {/*@ts-ignore*/}
-                    <DialogContent className="overflow-y-auto h-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 py-12 w-full lg:w-full max-w-[1000px] rounded-3xl">
-                      {/*@ts-ignore*/}
-                      <DialogHeader>
-                        <DialogTitle></DialogTitle>
-                      </DialogHeader>
+                  {p.Status === "Approved" ? (
+                    <div
+                      className={`${stockStatus.className} col-span-1 flex flex-row items-center gap-3`}
+                    >
                       <Image
-                        src={
-                          p.ProductPics
-                            ? p.ProductPics[0]?.Url
-                            : "/white-placeholder.png"
-                        }
-                        width={400}
-                        height={400}
-                        alt=""
-                        className="w-[400px] h-[400px] aspect-square rounded-2xl object-cover border"
+                        src={"/product-supply-icon.png"}
+                        width={24}
+                        height={24}
+                        alt="stage"
+                        className="w-4 h-4 sm:w-6 sm:h-6"
                       />
-                      <div className="lg:h-[400px] h-auto flex flex-col gap-5 w-full justify-between">
-                        <div className="h-full flex flex-col gap-5">
-                          <div className="flex flex-row items-center gap-6">
-                            <Image
-                              src={brandData ? brandData.ProfileLink : ""}
-                              width={84}
-                              height={84}
-                              alt=""
-                              className="w-[84px] h-[84px] aspect-square rounded-full border-[1px] border-[#2D262D]"
-                            />
-                            <div className="flex flex-col gap-2">
-                              <span className="text-xl font-bold">
-                                {p.BrandName}
-                              </span>
-                              <span className="text-base">{p.ProductName}</span>
+                      <span className="">{stockStatus.status}</span>
+                    </div>
+                  ) : (
+                    <span className={`${requestStatus?.className}`}>
+                      {requestStatus?.text}
+                    </span>
+                  )}
+                  <div className="col-span-1">
+                    <Dialog>
+                      <DialogTrigger className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
+                        Харах
+                      </DialogTrigger>
+                      {/*@ts-ignore*/}
+                      <DialogContent className="overflow-y-auto h-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 py-12 w-full lg:w-full max-w-[1000px] rounded-3xl">
+                        {/*@ts-ignore*/}
+                        <DialogHeader>
+                          <DialogTitle></DialogTitle>
+                        </DialogHeader>
+                        <Image
+                          src={
+                            p.ProductPics
+                              ? p.ProductPics[0]?.Url
+                              : "/white-placeholder.png"
+                          }
+                          width={400}
+                          height={400}
+                          alt=""
+                          className="w-[400px] h-[400px] aspect-square rounded-2xl object-cover border"
+                        />
+                        <div className="lg:h-[400px] h-auto flex flex-col gap-5 w-full justify-between">
+                          <div className="h-full flex flex-col gap-5">
+                            <div className="flex flex-row items-center gap-6">
+                              <Image
+                                src={brandData ? brandData.ProfileLink : ""}
+                                width={84}
+                                height={84}
+                                alt=""
+                                className="w-[84px] h-[84px] aspect-square rounded-full border-[1px] border-[#2D262D]"
+                              />
+                              <div className="flex flex-col gap-2">
+                                <span className="text-xl font-bold">
+                                  {p.BrandName}
+                                </span>
+                                <span className="text-base">
+                                  {p.ProductName}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex flex-row">
-                            <div className="flex flex-col gap-2 w-1/2">
-                              <span className="text-base text-[#6F6F6F]">
-                                Тоо хэмжээ
-                              </span>
-                              <span className="text-xl font-semibold text-[#6F6F6F]">
-                                {p.LeftStock}/{p.Quantity}
-                              </span>
-                            </div>
-                            <div className="flex flex-col gap-2 w-1/2">
-                              <span className="text-base text-[#6F6F6F]">
-                                Статус
-                              </span>
-                              <span
-                                className={`${requestStatus?.className} text-[#4FB755] text-xl`}
-                              >
-                                {requestStatus?.text}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-col sm:flex-row items-center gap-4 text-lg sm:text-xl text-[#2D262D] font-semibold">
-                          <a
-                            href={`/edit-product/${p.ProductId}`}
-                            className="whitespace-nowrap w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6"
-                          >
-                            <Image
-                              src={"/edit-product-icon.png"}
-                              width={24}
-                              height={24}
-                              alt=""
-                              className="w-6 h-6 aspect-square"
-                            />
-                            Мэдээлэл засах
-                          </a>
-                          {p.Status === "Approved" ? (
-                            <Dialog>
-                              <DialogTrigger className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6">
-                                <Image
-                                  src={"/add-supply-icon.png"}
-                                  width={24}
-                                  height={24}
-                                  alt=""
-                                  className="w-6 h-6 aspect-square"
-                                />
-                                Нэмэх
-                              </DialogTrigger>
-                              {/*@ts-ignore*/}
-                              <DialogContent className="w-full max-w-xl flex flex-col gap-4 rounded-3xl">
-                                {/*@ts-ignore*/}
-                                <DialogHeader>
-                                  {/*@ts-ignore*/}
-                                  <DialogTitle className="text-3xl">
-                                    Контент бүтээгчидтэй хамтрах хүсэлт нэмэх
-                                  </DialogTitle>
-                                  {/*@ts-ignore*/}
-                                </DialogHeader>
-                                {p.ProductPics ? (
-                                  <Image
-                                    src={p.ProductPics[0]?.Url}
-                                    width={445}
-                                    height={239}
-                                    alt=""
-                                    className="w-[445px] h-[239px] rounded-2xl mt-8 object-cover"
-                                  />
-                                ) : (
-                                  <></>
-                                )}
-                                <div className="flex flex-row items-center gap-6">
-                                  <Image
-                                    src={brandData ? brandData.ProfileLink : ""}
-                                    width={84}
-                                    height={84}
-                                    alt=""
-                                    className="w-[84px] h-[84px] aspect-square rounded-full border-[1px] border-[#2D262D]"
-                                  />
-                                  <div className="flex flex-col gap-2">
-                                    <span className="text-xl font-bold">
-                                      {p.BrandName}
-                                    </span>
-                                    <span className="text-base">
-                                      {p.ProductName}
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="rounded-xl bg-[#F5F4F0] flex flex-row items-center justify-between text-3xl py-4 px-16">
-                                  <button onClick={decrement}>-</button>
-                                  {count}
-                                  <button onClick={increment}>+</button>
-                                </div>
-                                <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
-                                  <span className="font-bold">
-                                    Таны Geni Credit Үлдэгдэл:{" "}
-                                    {brandData?.Credit ? brandData?.Credit : 0}
-                                  </span>
-                                  <FadeInAnimation
-                                    visible={brandData?.Credit < count}
-                                  >
-                                    <ErrorText
-                                      text={
-                                        "Таны Geni Credit үлдэгдэл хүрэлцэхгүй байна. Та Geni Credit-ээ цэнэглэнэ үү."
-                                      }
-                                      visible={true}
-                                    />
-                                  </FadeInAnimation>
-                                  <CreditPurchase
-                                    buttonText={"Geni Credit цэнэглэх"}
-                                    buttonIconSize={"w-4 h-4"}
-                                    className={
-                                      "text-lg flex flex-row items-center justify-center py-4 w-full"
-                                    }
-                                    userInfo={brandData}
-                                  />
-                                </div>
-                                <button
-                                  onClick={() => addSupply(p.ProductId)}
-                                  className="bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
+                            <div className="flex flex-row">
+                              <div className="flex flex-col gap-2 w-1/2">
+                                <span className="text-base text-[#6F6F6F]">
+                                  Тоо хэмжээ
+                                </span>
+                                <span className="text-xl font-semibold text-[#6F6F6F]">
+                                  {p.LeftStock}/{p.Quantity}
+                                </span>
+                              </div>
+                              <div className="flex flex-col gap-2 w-1/2">
+                                <span className="text-base text-[#6F6F6F]">
+                                  Статус
+                                </span>
+                                <span
+                                  className={`${requestStatus?.className} text-[#4FB755] text-xl`}
                                 >
-                                  Нэмэх
-                                </button>
-                              </DialogContent>
-                            </Dialog>
-                          ) : (
-                            <button
-                              onClick={() => setIsDeleting(true)}
-                              className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6"
+                                  {requestStatus?.text}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-col sm:flex-row items-center gap-4 text-lg sm:text-xl text-[#2D262D] font-semibold">
+                            <a
+                              href={`/edit-product/${p.ProductId}`}
+                              className="whitespace-nowrap w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6"
                             >
                               <Image
-                                src={"/delete-product-icon.png"}
+                                src={"/edit-product-icon.png"}
                                 width={24}
                                 height={24}
                                 alt=""
                                 className="w-6 h-6 aspect-square"
                               />
-                              Устгах
-                            </button>
-                          )}
-
-                          <Dialog
-                            open={isDeleting}
-                            onOpenChange={setIsDeleting}
-                          >
-                            {/*@ts-ignore*/}
-                            <DialogContent className="overflow-y-auto h-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 py-12 w-full lg:w-full max-w-[1000px] rounded-3xl">
-                              <Image
-                                src={
-                                  p.ProductPics
-                                    ? p.ProductPics[0]?.Url
-                                    : "/white-placeholder.png"
-                                }
-                                width={400}
-                                height={400}
-                                alt=""
-                                className="w-[400px] h-[400px] aspect-square rounded-2xl object-cover border"
-                              />
-                              <div className="lg:h-[400px] h-auto flex flex-col gap-5 w-full">
-                                <div className="h-full flex flex-col gap-5">
+                              Мэдээлэл засах
+                            </a>
+                            {p.Status === "Approved" ? (
+                              <Dialog>
+                                <DialogTrigger className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6">
+                                  <Image
+                                    src={"/add-supply-icon.png"}
+                                    width={24}
+                                    height={24}
+                                    alt=""
+                                    className="w-6 h-6 aspect-square"
+                                  />
+                                  Нэмэх
+                                </DialogTrigger>
+                                {/*@ts-ignore*/}
+                                <DialogContent className="w-full max-w-xl flex flex-col gap-4 rounded-3xl">
+                                  {/*@ts-ignore*/}
+                                  <DialogHeader>
+                                    {/*@ts-ignore*/}
+                                    <DialogTitle className="text-3xl">
+                                      Контент бүтээгчидтэй хамтрах хүсэлт нэмэх
+                                    </DialogTitle>
+                                    {/*@ts-ignore*/}
+                                  </DialogHeader>
+                                  {p.ProductPics ? (
+                                    <Image
+                                      src={p.ProductPics[0]?.Url}
+                                      width={445}
+                                      height={239}
+                                      alt=""
+                                      className="w-[445px] h-[239px] rounded-2xl mt-8 object-cover"
+                                    />
+                                  ) : (
+                                    <></>
+                                  )}
                                   <div className="flex flex-row items-center gap-6">
                                     <Image
                                       src={
@@ -375,43 +292,137 @@ function BrandProducts({ brandProducts, brandData }) {
                                       </span>
                                     </div>
                                   </div>
-                                  <span className="text-[#6F6F6F] line-clamp-5 text-sm">
-                                    {p.Information}
+                                  <div className="rounded-xl bg-[#F5F4F0] flex flex-row items-center justify-between text-3xl py-4 px-16">
+                                    <button onClick={decrement}>-</button>
+                                    {count}
+                                    <button onClick={increment}>+</button>
+                                  </div>
+                                  <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
+                                    <span className="font-bold">
+                                      Таны Geni Credit Үлдэгдэл:{" "}
+                                      {brandData?.Credit
+                                        ? brandData?.Credit
+                                        : 0}
+                                    </span>
+                                    <FadeInAnimation
+                                      visible={brandData?.Credit < count}
+                                    >
+                                      <ErrorText
+                                        text={
+                                          "Таны Geni Credit үлдэгдэл хүрэлцэхгүй байна. Та Geni Credit-ээ цэнэглэнэ үү."
+                                        }
+                                        visible={true}
+                                      />
+                                    </FadeInAnimation>
+                                    <CreditPurchase
+                                      buttonText={"Geni Credit цэнэглэх"}
+                                      buttonIconSize={"w-4 h-4"}
+                                      className={
+                                        "text-lg flex flex-row items-center justify-center py-4 w-full"
+                                      }
+                                      userInfo={brandData}
+                                    />
+                                  </div>
+                                  <button
+                                    onClick={() => addSupply(p.ProductId)}
+                                    className="bg-[#CA7FFE] text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
+                                  >
+                                    Нэмэх
+                                  </button>
+                                </DialogContent>
+                              </Dialog>
+                            ) : (
+                              <button
+                                onClick={() => setIsDeleting(true)}
+                                className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6"
+                              >
+                                <Image
+                                  src={"/delete-product-icon.png"}
+                                  width={24}
+                                  height={24}
+                                  alt=""
+                                  className="w-6 h-6 aspect-square"
+                                />
+                                Устгах
+                              </button>
+                            )}
+
+                            <Dialog
+                              open={isDeleting}
+                              onOpenChange={setIsDeleting}
+                            >
+                              {/*@ts-ignore*/}
+                              <DialogContent className="overflow-y-auto h-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 py-12 w-full lg:w-full max-w-[1000px] rounded-3xl">
+                                <Image
+                                  src={
+                                    p.ProductPics
+                                      ? p.ProductPics[0]?.Url
+                                      : "/white-placeholder.png"
+                                  }
+                                  width={400}
+                                  height={400}
+                                  alt=""
+                                  className="w-[400px] h-[400px] aspect-square rounded-2xl object-cover border"
+                                />
+                                <div className="lg:h-[400px] h-auto flex flex-col gap-5 w-full">
+                                  <div className="h-full flex flex-col gap-5">
+                                    <div className="flex flex-row items-center gap-6">
+                                      <Image
+                                        src={
+                                          brandData ? brandData.ProfileLink : ""
+                                        }
+                                        width={84}
+                                        height={84}
+                                        alt=""
+                                        className="w-[84px] h-[84px] aspect-square rounded-full border-[1px] border-[#2D262D]"
+                                      />
+                                      <div className="flex flex-col gap-2">
+                                        <span className="text-xl font-bold">
+                                          {p.BrandName}
+                                        </span>
+                                        <span className="text-base">
+                                          {p.ProductName}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <span className="text-[#6F6F6F] line-clamp-5 text-sm">
+                                      {p.Information}
+                                    </span>
+                                  </div>
+                                  <span className="text-xl sm:text-2xl font-semibold">
+                                    Та энэ бүтээгдэхүүнийг устгахдаа итгэлтэй
+                                    байна уу?
                                   </span>
+                                  <div className="flex flex-col-reverse sm:flex-row items-center gap-2 sm:gap-4 text-lg text-white font-semibold">
+                                    <button
+                                      onClick={() => setIsDeleting(false)}
+                                      className="w-full sm:w-1/2 rounded-xl bg-[#F41919] gap-2 py-3 px-6"
+                                    >
+                                      Үгүй
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleDeleteProduct(p.ProductId)
+                                      }
+                                      className="w-full sm:w-1/2 rounded-xl bg-[#4FB755] py-3 px-6"
+                                    >
+                                      Тийм
+                                    </button>
+                                  </div>
                                 </div>
-                                <span className="text-xl sm:text-2xl font-semibold">
-                                  Та энэ бүтээгдэхүүнийг устгахдаа итгэлтэй
-                                  байна уу?
-                                </span>
-                                <div className="flex flex-col-reverse sm:flex-row items-center gap-2 sm:gap-4 text-lg text-white font-semibold">
-                                  <button
-                                    onClick={() => setIsDeleting(false)}
-                                    className="w-full sm:w-1/2 rounded-xl bg-[#F41919] gap-2 py-3 px-6"
-                                  >
-                                    Үгүй
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      handleDeleteProduct(p.ProductId)
-                                    }
-                                    className="w-full sm:w-1/2 rounded-xl bg-[#4FB755] py-3 px-6"
-                                  >
-                                    Тийм
-                                  </button>
-                                </div>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
                         </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        }
-      </div>
+              );
+            })
+          }
+        </div>
+      )}
     </div>
   );
 }
