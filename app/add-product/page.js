@@ -49,8 +49,8 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
-      credit: 0,
-      quantity: 0,
+      credit: "",
+      quantity: "",
       price: "",
       totalPrice: "",
       contentInfo: [],
@@ -256,12 +256,12 @@ function Page() {
     }
   };
 
-  const isFormDisabled =
-    !formik.dirty ||
-    !formik.isValid ||
-    formik.isSubmitting ||
-    !formik.values.productTypes ||
-    !formik.values.productPics;
+  const isFormDisabled = false;
+  // !formik.dirty ||
+  // !formik.isValid ||
+  // formik.isSubmitting ||
+  // !formik.values.productTypes ||
+  // !formik.values.productPics;
 
   return (
     <div className="min-h-screen w-full bg-white">

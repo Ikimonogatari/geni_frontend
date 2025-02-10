@@ -437,9 +437,9 @@ function BrandProfile() {
           <></>
         )}
       </div>
-      {getUserInfoData && (
+      {/* {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
-      )}
+      )} */}
     </div>
   );
 }
