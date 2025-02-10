@@ -74,7 +74,6 @@ function Page() {
         quantity: parseInt(values.quantity, 10),
       };
       editProduct(modifiedValues);
-      console.log(formik.values.contentInfo, "infos here");
     },
     enableReinitialize: true,
   });
