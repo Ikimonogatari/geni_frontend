@@ -10,25 +10,7 @@ function Step2({ setIsAgreed }: { setIsAgreed?: any }) {
         Сүүлд шинэчлэгдсэн: 2024.12.13
       </span>
 
-      <div className="text-sm sm:text-base md:text-lg lg:text-xl font-thin rounded-3xl border border-[#CDCDCD] py-3 sm:py-6 px-5 sm:px-8 w-full overflow-y-auto max-h-[160px] sm:max-h-[330px]">
-        2. Танилцуулга 2.1 Geni platform-н хэрэглээ 2.2 Үг хэллэгүүд 3. Үндсэн
-        нөхцлүүд 3.1 Geni platform хэрхэн ажиллах вэ? 3.1.1 Geni platform-н
-        үндсэн бөгөөд цорын ганц үүрэг нь Geni Creator болон Brand-н хоорондын
-        хамтралыг үр дүнтэй зохицуулахад туслах технологийн шийдэл бүхий
-        платформоор хангах юм.  3.1.2 Харин Geni creator хөтөлбөр нь Geni
-        Certified UGC creator бэлтгэх өөрийн 2. Танилцуулга 2.1 Geni platform-н
-        хэрэглээ 2.2 Үг хэллэгүүд 3. Үндсэн нөхцлүүд 3.1 Geni platform хэрхэн
-        ажиллах вэ? 3.1.1 Geni platform-н үндсэн бөгөөд цорын ганц үүрэг нь Geni
-        Creator болон Brand-н хоорондын хамтралыг үр дүнтэй зохицуулахад туслах
-        технологийн шийдэл бүхий платформоор хангах юм.  3.1.2 Харин Geni
-        creator хөтөлбөр нь Geni Certified UGC creator бэлтгэх өөрийн2.
-        Танилцуулга 2.1 Geni platform-н хэрэглээ 2.2 Үг хэллэгүүд 3. Үндсэн
-        нөхцлүүд 3.1 Geni platform хэрхэн ажиллах вэ? 3.1.1 Geni platform-н
-        үндсэн бөгөөд цорын ганц үүрэг нь Geni Creator болон Brand-н хоорондын
-        хамтралыг үр дүнтэй зохицуулахад туслах технологийн шийдэл бүхий
-        платформоор хангах юм.  3.1.2 Харин Geni creator хөтөлбөр нь Geni
-        Certified UGC creator бэлтгэх өөрийн
-      </div>
+      <div className="text-sm sm:text-base md:text-lg lg:text-xl font-thin rounded-3xl border border-[#CDCDCD] py-3 sm:py-6 px-5 sm:px-8 w-full overflow-y-auto max-h-[160px] sm:max-h-[330px]"></div>
     </div>
   );
 }
