@@ -267,22 +267,22 @@ function BrandProfile() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
-              {getUserInfoData?.IsSubscribed === true ||
-              getUserInfoData?.Credit > 0 ? (
-                <Link
-                  href={"/add-product"}
-                  className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-                >
-                  Бүтээгдэхүүн нэмэх
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              ) : (
+            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-end sm:items-center gap-2 sm:gap-4 mt-5 md:mt-0">
+              {/* {getUserInfoData?.IsSubscribed === true ||
+              getUserInfoData?.Credit > 0 ? ( */}
+              <Link
+                href={"/add-product"}
+                className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              >
+                Бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Link>
+              {/* ) : (
                 <CreditPurchase
                   buttonIconSize={""}
                   className={
@@ -291,11 +291,11 @@ function BrandProfile() {
                   buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
-              )}
-              <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-center sm:flex-col gap-2 sm:gap-4">
+              )} */}
+              <div className="flex items-center justify-between sm:items-center flex-col-reverse sm:flex-col gap-4">
                 <Link
-                  href={"/wallet"}
-                  className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg"
+                  href={""}
+                  className="flex flex-row items-center gap-2 px-2 py-[9px] sm:px-4 sm:py-3 bg-[#4FB755] rounded-lg"
                 >
                   <Image
                     src={"/rating-geni.png"}
@@ -304,7 +304,7 @@ function BrandProfile() {
                     alt=""
                     className="w-4 h-4 sm:w-6 sm:h-6"
                   />
-                  <span className="text-white text-sm sm:text-base font-bold">
+                  <span className="text-white text-xs sm:text-base font-bold">
                     Geni Кредит: {getUserInfoData?.Credit}
                   </span>
                 </Link>
@@ -356,21 +356,21 @@ function BrandProfile() {
                   </button>
                 ))}
               </div>
-              {getUserInfoData?.IsSubscribed === true ||
-              getUserInfoData?.Credit > 0 ? (
-                <Link
-                  href={"/add-product"}
-                  className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-                >
-                  Бүтээгдэхүүн нэмэх
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              ) : (
+              {/* {getUserInfoData?.IsSubscribed === true ||
+              getUserInfoData?.Credit > 0 ? ( */}
+              <Link
+                href={"/add-product"}
+                className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              >
+                Бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Link>
+              {/* ) : (
                 <CreditPurchase
                   buttonIconSize={""}
                   className={
@@ -379,7 +379,7 @@ function BrandProfile() {
                   buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
-              )}
+              )} */}
             </div>
           </div>
           {currentContents ? renderBrandProfile() : <>Loading</>}
@@ -395,10 +395,10 @@ function BrandProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={10}
-                  height={10}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="rotate-180 w-[10px] h-[10px]"
+                  className="rotate-180 w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
@@ -426,10 +426,10 @@ function BrandProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={10}
-                  height={10}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="w-[10px] h-[10px]"
+                  className="w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
@@ -438,9 +438,9 @@ function BrandProfile() {
           <></>
         )}
       </div>
-      {getUserInfoData && (
+      {/* {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
-      )}
+      )} */}
     </div>
   );
 }

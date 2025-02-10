@@ -49,8 +49,8 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
-      credit: 0,
-      quantity: 0,
+      credit: "",
+      quantity: "",
       price: "",
       totalPrice: "",
       contentInfo: [],
@@ -256,12 +256,12 @@ function Page() {
     }
   };
 
-  const isFormDisabled =
-    !formik.dirty ||
-    !formik.isValid ||
-    formik.isSubmitting ||
-    !formik.values.productTypes ||
-    !formik.values.productPics;
+  const isFormDisabled = false;
+  // !formik.dirty ||
+  // !formik.isValid ||
+  // formik.isSubmitting ||
+  // !formik.values.productTypes ||
+  // !formik.values.productPics;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -460,7 +460,9 @@ function Page() {
                       ? formik.errors.contentInfo
                       : null
                   }
-                  visible={formik.touched.contentInfo}
+                  visible={
+                    formik.touched.contentInfo && formik.errors.contentInfo
+                  }
                 />
               </div>
 
@@ -631,9 +633,7 @@ function Page() {
                   {parsedUserInfo?.Credit ? parsedUserInfo?.Credit : 0}
                 </span>
                 <FadeInAnimation
-                  visible={
-                    parsedUserInfo?.Credit < formik.values.contentQuantity
-                  }
+                  visible={parsedUserInfo?.Credit < formik.values.credit}
                 >
                   <ErrorText
                     text={

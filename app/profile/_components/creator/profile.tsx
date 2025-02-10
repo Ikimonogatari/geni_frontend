@@ -345,12 +345,11 @@ function CreatorProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="rotate-180"
+                  className="rotate-180 w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
-                Prev
               </button>
             )}
 
@@ -375,12 +374,12 @@ function CreatorProfile() {
                 disabled={currentPage === totalPages}
                 className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
               >
-                Next
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                   alt="arrow"
+                  className="w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
