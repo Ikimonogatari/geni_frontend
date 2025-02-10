@@ -15,6 +15,9 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
+import { ErrorText } from "@/components/ui/error-text";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 
 function BrandProducts({ brandProducts, brandData }) {
   const router = useRouter();
@@ -95,16 +98,6 @@ function BrandProducts({ brandProducts, brandData }) {
     await deleteProduct(productId);
     router.replace("/profile");
   };
-
-  // const sortedBrandProducts = [...brandProducts].sort((a, b) => {
-  //   if (a.Status === "Approved" && b.Status !== "Approved") {
-  //     return -1;
-  //   } else if (a.Status !== "Approved" && b.Status === "Approved") {
-  //     return 1;
-  //   } else {
-  //     return 0;
-  //   }
-  // });
 
   return (
     <div className="w-full overflow-x-auto">
@@ -254,12 +247,12 @@ function BrandProducts({ brandProducts, brandData }) {
                                 Нэмэх
                               </DialogTrigger>
                               {/*@ts-ignore*/}
-                              <DialogContent className="w-full max-w-lg flex flex-col gap-6 rounded-3xl">
+                              <DialogContent className="w-full max-w-xl flex flex-col gap-4 rounded-3xl">
                                 {/*@ts-ignore*/}
                                 <DialogHeader>
                                   {/*@ts-ignore*/}
                                   <DialogTitle className="text-3xl">
-                                    Бүтээгдэхүүн нэмэх
+                                    Контент бүтээгчидтэй хамтрах хүсэлт нэмэх
                                   </DialogTitle>
                                   {/*@ts-ignore*/}
                                 </DialogHeader>
@@ -269,7 +262,7 @@ function BrandProducts({ brandProducts, brandData }) {
                                     width={445}
                                     height={239}
                                     alt=""
-                                    className="w-[445px] h-[239px] rounded-2xl mt-11 object-cover"
+                                    className="w-[445px] h-[239px] rounded-2xl mt-8 object-cover"
                                   />
                                 ) : (
                                   <></>
@@ -295,6 +288,30 @@ function BrandProducts({ brandProducts, brandData }) {
                                   <button onClick={decrement}>-</button>
                                   {count}
                                   <button onClick={increment}>+</button>
+                                </div>
+                                <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
+                                  <span className="font-bold">
+                                    Таны Geni Credit Үлдэгдэл:{" "}
+                                    {brandData?.Credit ? brandData?.Credit : 0}
+                                  </span>
+                                  <FadeInAnimation
+                                    visible={brandData?.Credit < count}
+                                  >
+                                    <ErrorText
+                                      text={
+                                        "Таны Geni Credit үлдэгдэл хүрэлцэхгүй байна. Та Geni Credit-ээ цэнэглэнэ үү."
+                                      }
+                                      visible={true}
+                                    />
+                                  </FadeInAnimation>
+                                  <CreditPurchase
+                                    buttonText={"Geni Credit цэнэглэх"}
+                                    buttonIconSize={"w-4 h-4"}
+                                    className={
+                                      "text-lg flex flex-row items-center justify-center py-4 w-full"
+                                    }
+                                    userInfo={brandData}
+                                  />
                                 </div>
                                 <button
                                   onClick={() => addSupply(p.ProductId)}
