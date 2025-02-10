@@ -273,10 +273,9 @@ export const geniApi = createApi({
       }),
     }),
     listBrandTypes: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: "/api/web/private/user/brand/type",
         method: "GET",
-        body,
       }),
     }),
     sendOtpToEmail: builder.mutation({
