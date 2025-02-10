@@ -74,7 +74,9 @@ function Page() {
         quantity: parseInt(values.quantity, 10),
       };
       editProduct(modifiedValues);
+      console.log(formik.values.contentInfo, "infos here");
     },
+    enableReinitialize: true,
   });
 
   const [
@@ -286,12 +288,12 @@ function Page() {
     }
   };
 
-  const isFormDisabled =
-    !formik.dirty ||
-    !formik.isValid ||
-    formik.isSubmitting ||
-    !formik.values.productTypes ||
-    !formik.values.productPics;
+  const isFormDisabled = false;
+  // !formik.dirty ||
+  // !formik.isValid ||
+  // formik.isSubmitting ||
+  // !formik.values.productTypes ||
+  // !formik.values.productPics;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -488,12 +490,10 @@ function Page() {
                   </div>
                 ))}
                 <ErrorText
-                  text={
-                    typeof formik.errors.contentInfo === "string"
-                      ? formik.errors.contentInfo
-                      : null
+                  text={formik.errors.contentInfo}
+                  visible={
+                    formik.touched.contentInfo && formik.errors.contentInfo
                   }
-                  visible={formik.touched.contentInfo}
                 />
               </div>
 
