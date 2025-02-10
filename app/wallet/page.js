@@ -9,7 +9,6 @@ function Page() {
   const router = useRouter();
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
 
   const {
     data: getWalletInfoData,

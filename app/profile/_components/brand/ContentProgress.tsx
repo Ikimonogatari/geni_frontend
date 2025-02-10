@@ -39,8 +39,6 @@ function ContentProgress({ currentContents }) {
   const [comment, setComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
 
-  console.log(currentContents);
-
   const [
     getImagePresignedUrl,
     {
@@ -64,7 +62,6 @@ function ContentProgress({ currentContents }) {
     }
     if (getImagePresignedUrlData) {
       setContentThumbnail(getImagePresignedUrlData.url);
-      console.log(getImagePresignedUrlData.url);
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 

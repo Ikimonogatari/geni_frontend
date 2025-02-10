@@ -9,11 +9,8 @@ import Cookies from "js-cookie";
 import ContentReturnModal from "./ContentReturnModal";
 
 function ContentProgress({ currentContents }) {
-  console.log(currentContents);
   const userInfo = Cookies.get("user-info");
-  console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
 
   return (
     <div className="w-full overflow-x-auto">

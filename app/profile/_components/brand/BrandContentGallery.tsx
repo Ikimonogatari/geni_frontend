@@ -7,10 +7,8 @@ import CreatorTier from "@/components/CreatorTier";
 import NoContentList from "@/components/NoContentList";
 
 function BrandContentGallery({ contentsGallery }) {
-  console.log(contentsGallery, "GALLERY HERE");
   const [showModal, setShowModal] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
-  console.log(contentsGallery);
   const handleMouseEnter = (e) => {
     const vid = e.target;
     vid.muted = true;

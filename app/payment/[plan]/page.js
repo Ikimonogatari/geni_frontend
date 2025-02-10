@@ -21,7 +21,6 @@ function page() {
   const router = useRouter();
   const params = useParams();
   const { plan } = params; // assuming the URL parameter is named 'plan'
-  console.log(plan);
   const [txId, setTxId] = useState(null);
 
   const planMap = {
@@ -59,19 +58,16 @@ function page() {
 
   useEffect(() => {
     if (listPaymentPlansData) {
-      console.log(listPaymentPlansData);
       const sortedPlans = [...listPaymentPlansData]?.sort((a, b) => {
         return planOrder.indexOf(a.type) - planOrder.indexOf(b.type);
       });
 
       setSelectedType(sortedPlans[id]);
-      console.log(sortedPlans[id]);
     }
   }, [listPaymentPlansData]);
 
   useEffect(() => {
     if (checkPaymentData && checkPaymentData?.IsPaid) {
-      console.log(checkPaymentData);
       setIsPaymentSuccess(true);
     }
     if (checkPaymentError) {

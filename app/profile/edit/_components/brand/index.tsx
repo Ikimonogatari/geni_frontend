@@ -273,8 +273,6 @@ function EditProfileBrand() {
 
   const [availableBrandTypes, setAvailableBrandTypes] = useState([]);
 
-  console.log(parsedUserInfo);
-
   const handleAddBrandTypes = (value) => {
     setBrandTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {

@@ -118,7 +118,6 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
         return null;
     }
   };
-  console.log(setMainDialogOpen);
   return (
     <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
       <DialogTrigger

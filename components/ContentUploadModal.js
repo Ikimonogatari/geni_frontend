@@ -23,7 +23,6 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
-  console.log(parsedUserInfo);
   const [
     getImagePresignedUrl,
     {
@@ -69,7 +68,6 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
       setIsImageUploadLoading(false);
 
       setContentThumbnail(getImagePresignedUrlData.url);
-      console.log(getImagePresignedUrlData.url);
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 
@@ -79,7 +77,6 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
       setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
-      console.log(getVideoPresignedUrlData.url);
       setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
@@ -166,9 +163,6 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   });
 
   const uploadToS3 = async (url, file) => {
-    console.log(url);
-    console.log(file);
-
     try {
       const response = await axios.put(url, file, {
         headers: {
@@ -177,7 +171,6 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
       });
 
       if (response.status == 200) {
-        console.log(response);
       } else {
         throw new Error(`HTTP error! status: ${response}`);
       }

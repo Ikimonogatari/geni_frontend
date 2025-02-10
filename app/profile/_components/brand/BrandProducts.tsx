@@ -22,8 +22,6 @@ import NoProductList from "@/components/NoProductList";
 
 function BrandProducts({ brandProducts, brandData }) {
   const router = useRouter();
-  console.log(brandData);
-  console.log(brandProducts);
   const [count, setCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 

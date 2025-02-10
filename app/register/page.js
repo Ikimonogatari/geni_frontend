@@ -88,7 +88,6 @@ function Page() {
         Password: true,
         ConfirmPassword: true,
       });
-      console.log(registerForm.isValid, "Pzda");
       if (
         !registerForm.errors.Email &&
         !registerForm.errors.Password &&

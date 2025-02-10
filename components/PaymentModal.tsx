@@ -64,7 +64,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     if (txId) {
       //@ts-ignore
       const checkPaymentResponse = await checkPayment(txId);
-      console.log(checkPaymentResponse);
       if (checkPaymentResponse?.data && checkPaymentResponse?.isSuccess) {
         if (checkPaymentResponse?.data?.IsPaid) {
           setIsPaymentSuccess(true);

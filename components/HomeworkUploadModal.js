@@ -69,7 +69,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       setIsImageUploadLoading(false);
 
       setContentThumbnail(getImagePresignedUrlData.url);
-      console.log(getImagePresignedUrlData.url);
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 
@@ -79,7 +78,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
-      console.log(getVideoPresignedUrlData.url);
       setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
@@ -166,9 +164,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   });
 
   const uploadToS3 = async (url, file) => {
-    console.log(url);
-    console.log(file);
-
     try {
       const response = await axios.put(url, file, {
         headers: {
@@ -177,7 +172,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       });
 
       if (response.status == 200) {
-        console.log(response);
       } else {
         throw new Error(`HTTP error! status: ${response}`);
       }

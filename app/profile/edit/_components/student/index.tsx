@@ -30,7 +30,6 @@ function EditProfileStudent() {
   const userInfo = Cookies.get("user-info");
   const userType = Cookies.get("userType");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -145,7 +144,6 @@ function EditProfileStudent() {
       RegNo: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      console.log(values);
       editCreatorProfile(values).unwrap();
     },
   });
@@ -163,7 +161,6 @@ function EditProfileStudent() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("folder", "profile-pic");
-        console.log(formData);
         uploadFile(formData).then((response) => {
           if (response.data) {
             const id = response.data.FileId;
@@ -205,7 +202,6 @@ function EditProfileStudent() {
 
   useEffect(() => {
     if (changePasswordData) {
-      console.log("Success:", data);
       toast.success("Амжилттай");
     }
     if (changePasswordError) {

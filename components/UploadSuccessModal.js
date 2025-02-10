@@ -7,7 +7,6 @@ function UploadSuccessModal({
   parsedUserInfo,
   setIsContentSubmitSuccess,
 }) {
-  console.log(parsedUserInfo);
   return (
     <Dialog open={isContentSubmitSuccess}>
       <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">

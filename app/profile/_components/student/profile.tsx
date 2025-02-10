@@ -121,7 +121,6 @@ function StudentProfile() {
   };
 
   const userInfo = Cookies.get("user-info");
-  console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
   const instagramLink = getUserInfoData?.SocialChannels?.find(

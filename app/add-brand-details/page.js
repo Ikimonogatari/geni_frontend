@@ -24,7 +24,6 @@ function Page() {
     if (step === 1) {
       await formik.validateField("Name");
       await formik.validateField("Bio");
-      console.log("hello");
       if (!formik.errors.Name && !formik.errors.Bio) {
         setStep(2);
       }
@@ -76,9 +75,7 @@ function Page() {
       AvgProductSalesMonthly: Yup.number().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
-      console.log(values, "VALUES");
       try {
-        console.log("SUBMITTED");
         await editBrandProfile(values).unwrap();
         await requestReview();
         setStep(3);
