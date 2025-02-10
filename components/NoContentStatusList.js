@@ -10,7 +10,7 @@ function NoContentStatusList() {
         height={154}
         alt=""
       />
-      <span className="text-2xl text-[#6F6F6F]">
+      <span className="text-xl text-[#6F6F6F]">
         Хамтрал хараахан хийгдээгүй байна
       </span>
     </div>
