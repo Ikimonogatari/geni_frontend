@@ -70,7 +70,7 @@ function BrandProducts({ brandProducts, brandData }) {
   const addSupply = (productId) => {
     addProductSupply({
       ProductId: productId,
-      SupplyCnt: count,
+      Credit: count,
     });
   };
 
