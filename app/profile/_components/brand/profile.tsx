@@ -70,7 +70,6 @@ function BrandProfile() {
   useEffect(() => {
     if (
       !getUserInfoData?.isVerified &&
-      getUserInfoData?.HasSeenGuide &&
       getUserInfoData?.OnBoardingStatus !== "Approved" &&
       getUserInfoData?.OnBoardingStatus !== "Request"
     ) {
