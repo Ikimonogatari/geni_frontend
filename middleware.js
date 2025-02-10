@@ -36,12 +36,9 @@ export function middleware(req) {
     }
   } else if (userType?.value === "Brand") {
     if (
-      [
-        "/wallet",
-        "/products",
-        "/edit-profile-creator",
-        "/edit-profile-student",
-      ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
+      ["/products", "/edit-profile-creator", "/edit-profile-student"].some(
+        (path) => url.pathname.startsWith(path.replace(":path*", ""))
+      )
     ) {
       return NextResponse.rewrite(new URL("/not-allowed", req.nextUrl));
     }

@@ -15,6 +15,7 @@ import LogoutButton from "@/components/common/LogoutButton";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
 import { useRouter } from "next/navigation";
+import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
 
 function BrandProfile() {
   const router = useRouter();
@@ -66,12 +67,12 @@ function BrandProfile() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
+  console.log(getUserInfoData?.IsVerified);
   useEffect(() => {
     if (
-      !getUserInfoData?.isVerified &&
-      getUserInfoData?.OnBoardingStatus !== "Approved" &&
-      getUserInfoData?.OnBoardingStatus !== "Request"
+      getUserInfoData?.IsVerified &&
+      getUserInfoData?.OnBoardingStatus != "Approved" &&
+      getUserInfoData?.OnBoardingStatus != "Request"
     ) {
       router.push("/add-brand-details");
     }
@@ -293,7 +294,7 @@ function BrandProfile() {
               )} */}
               <div className="flex items-center justify-between sm:items-center flex-col-reverse sm:flex-col gap-4">
                 <Link
-                  href={""}
+                  href={"/wallet"}
                   className="flex flex-row items-center gap-2 px-2 py-[9px] sm:px-4 sm:py-3 bg-[#4FB755] rounded-lg"
                 >
                   <Image
@@ -440,6 +441,11 @@ function BrandProfile() {
       {/* {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
       )} */}
+      {getUserInfoData && (
+        <OnBoardRequestStateModal
+          isRequested={getUserInfoData?.OnBoardingStatus === "Request"}
+        />
+      )}
     </div>
   );
 }

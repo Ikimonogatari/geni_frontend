@@ -358,7 +358,7 @@ function EditProfileStudent() {
                   </span>
                   <button>
                     <Image
-                      src={"/Info.png"}
+                      src={"/info-icon.png"}
                       width={24}
                       height={24}
                       alt="info"
