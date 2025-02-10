@@ -367,6 +367,7 @@ export const geniApi = createApi({
         url: "/api/web/private/user/no-guide",
         method: "POST",
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     brandRegister: builder.mutation({
       query: (body) => ({
@@ -378,7 +379,7 @@ export const geniApi = createApi({
     brandRequestReview: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/user/brand/review",
-        method: "POST",
+        method: "PUT",
         body,
       }),
     }),

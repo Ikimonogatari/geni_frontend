@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
-import Step1 from "./BrandOnboard/Step1";
-import Step2 from "./BrandOnboard/Step2";
-import Step3 from "./BrandOnboard/Step3";
-import Step4 from "./BrandOnboard/Step4";
-import PaymentModal from "@/components/PaymentModal";
+import Step1 from "./Step1";
+import Step2 from "./Step2";
+import Step3 from "./Step3";
+import Step4 from "./Step4";
 import {
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
@@ -13,9 +12,11 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import PaymentModal from "../PaymentModal";
 
-function PlatformUseCaseModal({ responsive, userInfo }) {
+function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   const router = useRouter();
+  const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const [selectedPackageId, setSelectedPackageId] = useState(1);
@@ -117,14 +118,20 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
         return null;
     }
   };
-
+  console.log(setMainDialogOpen);
   return (
-    <Dialog>
+    <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
       <DialogTrigger
-        className={`${responsive} whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+        className={`${className} whitespace-nowrap gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] rounded-lg text-white font-bold`}
       >
-        Бүтээгдэхүүн нэмэх
-        <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
+        {buttonText}
+        <Image
+          src={"/add-icon.png"}
+          width={14}
+          height={14}
+          alt="arrow"
+          className={buttonIconSize}
+        />
       </DialogTrigger>
       {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-4xl rounded-3xl">
@@ -199,7 +206,10 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
               />
             </button>
           ) : (
-            <PaymentModal selectedPackageId={selectedPackageId} />
+            <PaymentModal
+              selectedPackageId={selectedPackageId}
+              setIsMainDialogOpen={setMainDialogOpen}
+            />
           )}
         </div>
       </DialogContent>
@@ -207,4 +217,4 @@ function PlatformUseCaseModal({ responsive, userInfo }) {
   );
 }
 
-export default PlatformUseCaseModal;
+export default CreditPurchase;

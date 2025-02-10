@@ -296,7 +296,7 @@ function Page() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
-        <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container flex flex-col">
+        <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container flex flex-col">
           <BackButton />
           <span className="text-4xl sm:text-5xl xl:text-6xl font-bold mt-7">
             Мэдээлэл засах
@@ -412,7 +412,7 @@ function Page() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.information}
-                rows={4}
+                rows={5}
                 maxLength={600}
                 charCount={formik.values.information.length}
                 errorText={formik.errors.information}
@@ -506,7 +506,7 @@ function Page() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.requestForCreators}
-                rows={4}
+                rows={5}
                 maxLength={600}
                 charCount={formik.values.requestForCreators.length}
                 errorText={formik.errors.requestForCreators}
@@ -624,15 +624,20 @@ function Page() {
               />
 
               <HandleButton
+                type="submit"
                 disabled={isFormDisabled}
                 text={"Хадгалах"}
                 bg={`bg-geni-blue ${
                   isFormDisabled
-                    ? "opacity-80 cursor-not-allowed"
-                    : "opacity-100 cursor-pointer"
+                    ? "bg-primary-bg cursor-not-allowed text-[#CDCDCD]"
+                    : "bg-geni-blue cursor-pointer"
                 }`}
-                shadowbg={"shadow-[0.25rem_0.25rem_#131AAF]"}
-                width={"w-full max-w-[403px] h-[90px]"}
+                shadowbg={`${
+                  isFormDisabled
+                    ? "shadow-[0.25rem_0.25rem_#CDCDCD] cursor-not-allowed"
+                    : "shadow-[0.25rem_0.25rem_#131AAF] cursor-pointer"
+                }`}
+                width={"mt-3 w-full max-w-[403px] h-[90px]"}
               />
             </div>
           </form>

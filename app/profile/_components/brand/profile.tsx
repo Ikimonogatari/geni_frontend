@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
 import LogoutButton from "@/components/common/LogoutButton";
-import PlatformUseCaseModal from "./PlatformUseCaseModal";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
 import { useRouter } from "next/navigation";
 
@@ -68,7 +68,11 @@ function BrandProfile() {
   };
 
   useEffect(() => {
-    if (getUserInfoData && !getUserInfoData?.isVerified) {
+    if (
+      !getUserInfoData?.isVerified &&
+      getUserInfoData?.HasSeenGuide &&
+      getUserInfoData?.OnBoardingStatus == "Rejected"
+    ) {
       router.push("/add-brand-details");
     }
   }, [getUserInfoData, router]);
@@ -263,7 +267,7 @@ function BrandProfile() {
               </div>
             </div>
             <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
-              {getUserInfoData?.isSubscribed ? (
+              {getUserInfoData?.IsSubscribed || getUserInfoData?.Credit == 0 ? (
                 <Link
                   href={"/add-product"}
                   className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -277,8 +281,12 @@ function BrandProfile() {
                   />
                 </Link>
               ) : (
-                <PlatformUseCaseModal
-                  responsive={"flex md:hidden"}
+                <CreditPurchase
+                  buttonIconSize={""}
+                  className={
+                    "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                  }
+                  buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
               )}
@@ -329,7 +337,7 @@ function BrandProfile() {
                   </button>
                 ))}
               </div>
-              {getUserInfoData?.isSubscribed ? (
+              {getUserInfoData?.IsSubscribed || getUserInfoData?.Credit == 0 ? (
                 <Link
                   href={"/add-product"}
                   className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -343,8 +351,12 @@ function BrandProfile() {
                   />
                 </Link>
               ) : (
-                <PlatformUseCaseModal
-                  responsive={"hidden md:flex"}
+                <CreditPurchase
+                  buttonIconSize={""}
+                  className={
+                    "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                  }
+                  buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
               )}

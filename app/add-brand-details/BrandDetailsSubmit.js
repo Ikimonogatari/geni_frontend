@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/select";
 
 import toast from "react-hot-toast";
-import { ErrorText } from "@/components/ui/error-text";
-import { SelectLabel } from "@radix-ui/react-select";
 
 function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   const [socials, setSocials] = useState({
@@ -86,10 +84,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
     }
   };
   return (
-    <div
-      onSubmit={formik.handleSubmit}
-      className="flex flex-col items-start justify-between w-full gap-6 sm:gap-9"
-    >
+    <div className="flex flex-col items-start justify-between w-full gap-6 sm:gap-9">
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
         <Input
           id="RegNo"
@@ -127,7 +122,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           id="AvgProductSalesMonthly"
           name="AvgProductSalesMonthly"
           className="text-base sm:text-xl w-full"
-          type="text"
+          type="number"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full"
@@ -159,13 +154,13 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 className="text-base sm:text-xl rounded-lg min-h-12 my-1 w-full text-start p-4"
                 value="true"
               >
-                Байна
+                Тийм
               </SelectItem>
               <SelectItem
                 className="text-base sm:text-xl rounded-lg min-h-12 my-1 w-full text-start p-4"
                 value="false"
               >
-                Байхгүй
+                Үгүй
               </SelectItem>
             </SelectContent>
           </Select>
@@ -176,7 +171,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           id="AvgPrice"
           name="AvgPrice"
           className="text-base sm:text-xl w-full"
-          type="text"
+          type="number"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full"
@@ -203,6 +198,24 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           errorText={formik.errors.Website}
           errorVisible={formik.touched.Website && formik.errors.Website}
         />
+      </div>
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+        <Input
+          id="Address"
+          name="Address"
+          type="text"
+          className="text-base sm:text-xl w-full"
+          wrapperClassName="w-full"
+          labelClassName="text-[#6F6F6F] text-lg font-normal"
+          layoutClassName="h-full p-4 sm:p-5 w-full"
+          label="Байршил"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.Address}
+          errorText={formik.errors.Address}
+          errorVisible={formik.touched.Address && formik.errors.Address}
+        />
+        <div className="w-full"></div>
       </div>
       <div className="flex flex-row gap-4 w-full">
         <div className="flex flex-col gap-3 w-full">
@@ -308,7 +321,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
     justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
     border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
         >
-          Илгээх
+          Дараах
           <Image
             src={"/arrow-forward-icon.png"}
             width={20}
