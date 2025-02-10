@@ -460,7 +460,9 @@ function Page() {
                       ? formik.errors.contentInfo
                       : null
                   }
-                  visible={formik.touched.contentInfo}
+                  visible={
+                    formik.touched.contentInfo && formik.errors.contentInfo
+                  }
                 />
               </div>
 

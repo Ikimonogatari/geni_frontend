@@ -2,10 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import Cookies from "js-cookie";
 import { useFormik } from "formik";
-import { useDropzone } from "react-dropzone";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -14,7 +12,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 
 import {
@@ -36,6 +33,8 @@ import { Input } from "@/components/ui/input";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { ErrorText } from "@/components/ui/error-text";
 import { Textarea } from "@/components/ui/textarea";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 
 function Page() {
   const router = useRouter();
@@ -46,6 +45,9 @@ function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
   const [selectedContentOutcomes, setSelectedContentOutcomes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
+
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
   const {
     data: getPublicProductByIdData,
@@ -60,22 +62,24 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
+      credit: "",
       quantity: "",
       price: "",
+      totalPrice: "",
       contentInfo: [],
       productTypes: [],
       productPics: [],
     },
     validationSchema: editProductSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const modifiedValues = {
         productId: productId,
         ...values,
-        quantity: parseInt(values.quantity, 10),
       };
-      editProduct(modifiedValues);
+      await editProduct(modifiedValues);
     },
     enableReinitialize: true,
+    validateOnMount: true,
   });
 
   const [
@@ -284,6 +288,32 @@ function Page() {
           prev.filter((n) => n !== item.Name)
         );
       }
+    }
+  };
+
+  const handlePriceChange = (e) => {
+    const price = parseFloat(e.target.value);
+    const quantity = parseInt(formik.values.quantity, 10);
+
+    if (!isNaN(quantity) && !isNaN(price)) {
+      formik.setFieldValue("price", e.target.value);
+      formik.setFieldValue("totalPrice", price * quantity);
+    } else {
+      formik.setFieldValue("price", e.target.value);
+      formik.setFieldValue("totalPrice", 0);
+    }
+  };
+
+  const handleQuantityChange = (e) => {
+    const quantity = parseInt(e.target.value, 10);
+    const price = parseFloat(formik.values.price);
+
+    if (!isNaN(quantity) && !isNaN(price)) {
+      formik.setFieldValue("quantity", quantity); // Set as number
+      formik.setFieldValue("totalPrice", price * quantity);
+    } else {
+      formik.setFieldValue("quantity", quantity); // Set as number
+      formik.setFieldValue("totalPrice", 0);
     }
   };
 
@@ -596,32 +626,90 @@ function Page() {
               />
 
               <Input
-                id="quantity"
-                name="quantity"
-                type="text"
-                label="Бүтээгчдэд илгээх бүтээгдэхүүний тоо"
-                hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.quantity}
-                errorText={formik.errors.quantity}
-                errorVisible={formik.touched.quantity && formik.errors.quantity}
-              />
-
-              <Input
                 id="price"
                 name="price"
-                type="text"
-                label="Бүтээгчдэд илгээж буй бүтээгдэхүүний үнэ"
-                hoverInfo="Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид багц болгон илгээж байгаа бол багцын үнийг оруулна."
-                onChange={formik.handleChange}
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="Бүтээгчид илгээх нэгж бүтээгдэхүүний үнийн дүн"
+                hoverInfo="Нэг бүтээгчид санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид нэгээс дээш бүтээгдэхүүн илгээж байгаа бол нийт үнийг оруулна."
+                onChange={handlePriceChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.price}
                 leftSection="₮"
                 errorText={formik.errors.price}
                 errorVisible={formik.touched.price && formik.errors.price}
               />
-
+              <Input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="1 бүтээгчид илгээх бүтээгдэхүүний тоо"
+                hoverInfo="Энд та нэг бүтээгчид илгээж буй бүтээгдэхүүнийхээ тоо ширхэгийг оруулна."
+                onChange={handleQuantityChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.quantity}
+                errorText={formik.errors.quantity}
+                errorVisible={formik.touched.quantity && formik.errors.quantity}
+              />
+              <Input
+                disabled={true}
+                id="totalPrice"
+                name="totalPrice"
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="1 бүтээгчид илгээж буй нийт бүтээгдэхүүний үнийн дүн"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.totalPrice}
+                leftSection="₮"
+                errorText={formik.errors.totalPrice}
+                errorVisible={
+                  formik.touched.totalPrice && formik.errors.totalPrice
+                }
+              />
+              <Input
+                id="credit"
+                name="credit"
+                type="number"
+                min={0}
+                max={30}
+                className="no-spinner"
+                label="Нийт хэдэн бүтээгчидтэй хамтрах вэ?"
+                hoverInfo="/1 хамтрал = 1 credit/"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.credit}
+                errorText={formik.errors.credit}
+                errorVisible={formik.touched.credit && formik.errors.credit}
+              />
+              <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
+                <span className="font-bold">
+                  Таны Geni Credit Үлдэгдэл:{" "}
+                  {parsedUserInfo?.Credit ? parsedUserInfo?.Credit : 0}
+                </span>
+                <FadeInAnimation
+                  visible={parsedUserInfo?.Credit < formik.values.credit}
+                >
+                  <ErrorText
+                    text={
+                      "Таны Geni Credit үлдэгдэл хүрэлцэхгүй байна. Та Geni Credit-ээ цэнэглэнэ үү."
+                    }
+                    visible={true}
+                  />
+                </FadeInAnimation>
+                <CreditPurchase
+                  buttonText={"Geni Credit цэнэглэх"}
+                  buttonIconSize={"w-4 h-4"}
+                  className={
+                    "text-lg flex flex-row items-center justify-center py-4 w-full"
+                  }
+                  userInfo={parsedUserInfo}
+                />
+              </div>
               <HandleButton
                 type="submit"
                 disabled={isFormDisabled}

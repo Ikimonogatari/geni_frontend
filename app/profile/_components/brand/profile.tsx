@@ -267,7 +267,7 @@ function BrandProfile() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
+            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-end sm:items-center gap-2 sm:gap-4 mt-5 md:mt-0">
               {/* {getUserInfoData?.IsSubscribed === true ||
               getUserInfoData?.Credit > 0 ? ( */}
               <Link
@@ -292,10 +292,10 @@ function BrandProfile() {
                   userInfo={getUserInfoData}
                 />
               )} */}
-              <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-center sm:flex-col gap-2 sm:gap-4">
+              <div className="flex items-center justify-between sm:items-center flex-col-reverse sm:flex-col gap-4">
                 <Link
-                  href={"/wallet"}
-                  className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg"
+                  href={""}
+                  className="flex flex-row items-center gap-2 px-2 py-[9px] sm:px-4 sm:py-3 bg-[#4FB755] rounded-lg"
                 >
                   <Image
                     src={"/rating-geni.png"}
@@ -304,7 +304,7 @@ function BrandProfile() {
                     alt=""
                     className="w-4 h-4 sm:w-6 sm:h-6"
                   />
-                  <span className="text-white text-sm sm:text-base font-bold">
+                  <span className="text-white text-xs sm:text-base font-bold">
                     Geni Кредит: {getUserInfoData?.Credit}
                   </span>
                 </Link>
