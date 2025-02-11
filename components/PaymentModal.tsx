@@ -15,10 +15,18 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 
-function PaymentModal({ selectedPackageId }) {
+interface PaymentModalProps {
+  selectedPackageId: number;
+  setIsMainDialogOpen: (open: boolean) => void;
+}
+
+const PaymentModal: React.FC<PaymentModalProps> = ({
+  selectedPackageId,
+  setIsMainDialogOpen,
+}) => {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false); // Local state for dialog open/close
+  const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
   const [
     subscribePlan,
@@ -39,10 +47,11 @@ function PaymentModal({ selectedPackageId }) {
 
   useEffect(() => {
     if (subscribePlanSuccess) {
-      setTxId(subscribePlanData?.UserTxnId);
-      setDialogOpen(true); // Open dialog when subscription succeeds
+      setTxId(subscribePlanData?.UserTxnId || null);
+      setPaymentDialogOpen(true); // Open dialog when subscription succeeds
     }
     if (subscribePlanError) {
+      //@ts-ignore
       toast.error(subscribePlanError?.data?.error);
     }
   }, [subscribePlanSuccess, subscribePlanError]);
@@ -53,8 +62,8 @@ function PaymentModal({ selectedPackageId }) {
 
   const handleCheckPayment = async () => {
     if (txId) {
+      //@ts-ignore
       const checkPaymentResponse = await checkPayment(txId);
-      console.log(checkPaymentResponse);
       if (checkPaymentResponse?.data && checkPaymentResponse?.isSuccess) {
         if (checkPaymentResponse?.data?.IsPaid) {
           setIsPaymentSuccess(true);
@@ -68,12 +77,13 @@ function PaymentModal({ selectedPackageId }) {
   };
 
   const handleCloseDialog = () => {
-    setDialogOpen(false); // Close dialog when the "Баярлалаа" button is clicked
-    setIsPaymentSuccess(false); // Reset payment success state for next use
+    setPaymentDialogOpen(false);
+    setIsMainDialogOpen(false);
+    setIsPaymentSuccess(false);
   };
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog open={isPaymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
       <DialogTrigger
         onClick={handleSubscription}
         className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -87,10 +97,12 @@ function PaymentModal({ selectedPackageId }) {
           className="w-[10px] h-[10px]"
         />
       </DialogTrigger>
-
+      {/* @ts-ignore */}
       <DialogContent className={"max-w-lg rounded-3xl w-full"}>
         {!isPaymentSuccess && (
+          //@ts-ignore
           <DialogHeader>
+            {/* @ts-ignore */}
             <DialogTitle className="text-3xl">QPay Payment</DialogTitle>
           </DialogHeader>
         )}
@@ -119,6 +131,7 @@ function PaymentModal({ selectedPackageId }) {
                 width={353}
                 height={271}
                 className=""
+                alt=""
               />
               <span className="uppercase font-bold text-[#4FB755] text-4xl sm:text-5xl text-center">
                 АМЖИЛТТАЙ ТӨЛӨГДЛӨӨ
@@ -137,6 +150,6 @@ function PaymentModal({ selectedPackageId }) {
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default PaymentModal;

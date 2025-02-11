@@ -8,6 +8,8 @@ interface TextareaProps extends React.ComponentProps<"textarea"> {
   errorVisible?: boolean;
   charCount?: number | string;
   label?: React.ReactNode;
+  labelClassName?: string;
+  layoutClassName?: string;
   hoverInfo?: string;
 }
 
@@ -16,6 +18,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     {
       className,
       label,
+      labelClassName,
+      layoutClassName,
       hoverInfo,
       charCount,
       errorText,
@@ -26,7 +30,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ) => {
     const labelComponent =
       typeof label === "string" ? (
-        <label className="font-bold" htmlFor={props.name}>
+        <label className={cn("font-bold", labelClassName)} htmlFor={props.name}>
           {label}
         </label>
       ) : (
@@ -38,8 +42,13 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {labelComponent}
           {hoverInfo && <InfoHover contentText={hoverInfo} />}
         </div>
-        <div className="flex flex-col gap-1">
-          <div className="p-2 border border-geni-gray rounded-lg flex flex-col">
+        <div className="flex flex-col gap-1 sm:gap-2">
+          <div
+            className={cn(
+              "p-2 border border-geni-gray rounded-lg flex flex-col",
+              layoutClassName
+            )}
+          >
             <textarea
               ref={ref}
               className={cn("overflow-y-auto outline-none", className)}

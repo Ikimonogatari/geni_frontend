@@ -18,9 +18,7 @@ function Page() {
   } = useListNotificationQuery();
 
   const totalPages = Math.ceil(listNotificationData?.length / ITEMS_PER_PAGE);
-  if (listNotificationData) {
-    console.log(listNotificationData);
-  }
+
   const paginatedNotifications = listNotificationData?.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE

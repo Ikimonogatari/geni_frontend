@@ -22,14 +22,10 @@ function Step3({
     const scopeSelectedPackageId = listPaymentPlansData
       ? listPaymentPlansData[index]?.PlanId
       : null;
-    console.log(index, "SELECTED INDEX IN STEP3");
-    console.log(scopeSelectedPackageId, "PACKAGE ID HERE");
     setSelectedPackageId(scopeSelectedPackageId);
     setSelectedPackageIndex(index);
     setSelectedPackageImage(`/brand-bundle-${index + 1}.png`);
   };
-
-  console.log(listPaymentPlansData && listPaymentPlansData);
 
   const selectedPackageData = listPaymentPlansData
     ? listPaymentPlansData[selectedPackageIndex]

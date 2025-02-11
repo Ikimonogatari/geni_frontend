@@ -4,7 +4,6 @@ export function middleware(req) {
   const { cookies } = req;
   const authToken = cookies.get("auth");
   const userType = cookies.get("userType");
-  console.log("User Type:", userType); // Log userType for debugging
 
   const url = req.nextUrl.clone();
 

@@ -184,7 +184,6 @@ function EditProfileBrand() {
           if (response.data) {
             const id = response.data.FileId;
             await changeProfilePicture({ FileId: id }); // Update the profile picture with the file ID
-            console.log("Profile picture updated successfully!");
           }
         } catch (error) {
           console.error("File upload or profile picture update failed:", error);
@@ -273,8 +272,6 @@ function EditProfileBrand() {
   }, [listBrandTypesData]);
 
   const [availableBrandTypes, setAvailableBrandTypes] = useState([]);
-
-  console.log(parsedUserInfo);
 
   const handleAddBrandTypes = (value) => {
     setBrandTypes((prev) => {

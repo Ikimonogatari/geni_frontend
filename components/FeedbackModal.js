@@ -4,7 +4,6 @@ import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 
 function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
   const [resubmitting, setIsResubmitting] = useState(false);
-  console.log(feedbacks);
   return (
     <Dialog>
       <DialogTrigger

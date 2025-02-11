@@ -3,18 +3,17 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { useGetWalletInfoQuery } from "../services/service";
+import { useGetWalletInfoQuery } from "@/app/services/service";
 
-function Page() {
+function CreatorWallet() {
   const router = useRouter();
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
-
   const {
     data: getWalletInfoData,
     error: getWalletInfoError,
     isLoading: getWalletInfoLoading,
+    //@ts-ignore
   } = useGetWalletInfoQuery();
 
   return (
@@ -66,4 +65,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default CreatorWallet;

@@ -256,7 +256,7 @@ function CreatorProfile() {
             <span className="block sm:hidden text-[#6F6F6F] text-xs sm:text-base">
               {getUserInfoData ? getUserInfoData.Bio : ""}
             </span>
-            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-start sm:flex-col gap-2 sm:gap-4">
+            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-center sm:flex-col gap-2 sm:gap-4">
               <Link
                 href={"/wallet"}
                 className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg"
@@ -345,12 +345,11 @@ function CreatorProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="rotate-180"
+                  className="rotate-180 w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
-                Prev
               </button>
             )}
 
@@ -375,12 +374,12 @@ function CreatorProfile() {
                 disabled={currentPage === totalPages}
                 className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#CA7FFE] px-5 py-2 rounded-lg text-white font-bold"
               >
-                Next
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                   alt="arrow"
+                  className="w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}

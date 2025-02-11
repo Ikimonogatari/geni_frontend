@@ -12,10 +12,13 @@ import {
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
 import LogoutButton from "@/components/common/LogoutButton";
-import PlatformUseCaseModal from "./PlatformUseCaseModal";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
+import { useRouter } from "next/navigation";
+import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
 
 function BrandProfile() {
+  const router = useRouter();
   const {
     data: getUserInfoData,
     error: getUserInfoError,
@@ -24,7 +27,7 @@ function BrandProfile() {
 
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 12;
+  const contentsPerPage = 16;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
 
@@ -41,7 +44,10 @@ function BrandProfile() {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-  } = useListContentGalleryQuery({});
+  } = useListContentGalleryQuery(
+    { limit: contentsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const {
     data: listBrandProductsData,
@@ -61,6 +67,16 @@ function BrandProfile() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+  console.log(getUserInfoData?.IsVerified);
+  useEffect(() => {
+    if (
+      getUserInfoData?.IsVerified &&
+      getUserInfoData?.OnBoardingStatus != "Approved" &&
+      getUserInfoData?.OnBoardingStatus != "Request"
+    ) {
+      router.push("/add-brand-details");
+    }
+  }, [getUserInfoData, router]);
 
   useEffect(() => {
     const contents = getCurrentContents();
@@ -251,8 +267,9 @@ function BrandProfile() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-center gap-2 sm:gap-4 mt-5 md:mt-0">
-              {/* {getUserInfoData?.isSubscribed ? ( */}
+            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-end sm:items-center gap-2 sm:gap-4 mt-5 md:mt-0">
+              {/* {getUserInfoData?.IsSubscribed === true ||
+              getUserInfoData?.Credit > 0 ? ( */}
               <Link
                 href={"/add-product"}
                 className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -266,38 +283,58 @@ function BrandProfile() {
                 />
               </Link>
               {/* ) : (
-                <PlatformUseCaseModal
-                  responsive={"flex md:hidden"}
+                <CreditPurchase
+                  buttonIconSize={""}
+                  className={
+                    "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                  }
+                  buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
               )} */}
-
-              <div className="flex flex-row items-center gap-2 sm:gap-4">
+              <div className="flex items-center justify-between sm:items-center flex-col-reverse sm:flex-col gap-4">
                 <Link
-                  href="/notifications"
-                  className="rounded-xl bg-[#F5F4F0] p-2"
+                  href={"/wallet"}
+                  className="flex flex-row items-center gap-2 px-2 py-[9px] sm:px-4 sm:py-3 bg-[#4FB755] rounded-lg"
                 >
                   <Image
-                    src={"/notification-icon.png"}
-                    width={24}
+                    src={"/rating-geni.png"}
                     height={24}
-                    alt="icon"
-                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                  />
-                </Link>
-                <Link
-                  href="/profile/edit"
-                  className="rounded-xl bg-[#F5F4F0] p-2"
-                >
-                  <Image
-                    src={"/edit-profile-icon.png"}
                     width={24}
-                    height={24}
-                    alt="icon"
-                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    alt=""
+                    className="w-4 h-4 sm:w-6 sm:h-6"
                   />
+                  <span className="text-white text-xs sm:text-base font-bold">
+                    Geni Кредит: {getUserInfoData?.Credit}
+                  </span>
                 </Link>
-                <LogoutButton />
+                <div className="flex flex-row items-center gap-2 sm:gap-4">
+                  <Link
+                    href="/notifications"
+                    className="rounded-xl bg-[#F5F4F0] p-2"
+                  >
+                    <Image
+                      src={"/notification-icon.png"}
+                      width={24}
+                      height={24}
+                      alt="icon"
+                      className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    />
+                  </Link>
+                  <Link
+                    href="/profile/edit"
+                    className="rounded-xl bg-[#F5F4F0] p-2"
+                  >
+                    <Image
+                      src={"/edit-profile-icon.png"}
+                      width={24}
+                      height={24}
+                      alt="icon"
+                      className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    />
+                  </Link>
+                  <LogoutButton />
+                </div>
               </div>
             </div>
           </div>
@@ -319,7 +356,8 @@ function BrandProfile() {
                   </button>
                 ))}
               </div>
-              {/* {getUserInfoData?.isSubscribed ? ( */}
+              {/* {getUserInfoData?.IsSubscribed === true ||
+              getUserInfoData?.Credit > 0 ? ( */}
               <Link
                 href={"/add-product"}
                 className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
@@ -333,8 +371,12 @@ function BrandProfile() {
                 />
               </Link>
               {/* ) : (
-                <PlatformUseCaseModal
-                  responsive={"hidden md:flex"}
+                <CreditPurchase
+                  buttonIconSize={""}
+                  className={
+                    "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                  }
+                  buttonText={"Бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
               )} */}
@@ -353,10 +395,10 @@ function BrandProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={10}
-                  height={10}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="rotate-180 w-[10px] h-[10px]"
+                  className="rotate-180 w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
@@ -384,10 +426,10 @@ function BrandProfile() {
               >
                 <Image
                   src={"/arrow-right-icon.png"}
-                  width={10}
-                  height={10}
+                  width={12}
+                  height={12}
                   alt="arrow"
-                  className="w-[10px] h-[10px]"
+                  className="w-[10px] h-[10px] sm:w-3 sm:h-3"
                 />
               </button>
             )}
@@ -396,8 +438,13 @@ function BrandProfile() {
           <></>
         )}
       </div>
-      {getUserInfoData && (
+      {/* {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
+      )} */}
+      {getUserInfoData && (
+        <OnBoardRequestStateModal
+          isRequested={getUserInfoData?.OnBoardingStatus === "Request"}
+        />
       )}
     </div>
   );

@@ -21,9 +21,7 @@ function page() {
       const singleNotification = listNotificationData?.find(
         (n) => n.NotifId === parseInt(id)
       );
-      console.log(listNotificationData);
       setNotification(singleNotification);
-      console.log(singleNotification);
     }
   }, [listNotificationData]);
 

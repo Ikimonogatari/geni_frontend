@@ -30,9 +30,7 @@ function Page() {
   const router = useRouter();
   const params = useParams();
   const userInfo = Cookies.get("user-info");
-  console.log(userInfo ? userInfo : "");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
   const userType = Cookies.get("userType");
   const { id } = params;
   const [productContentRequestMsg, setProductContentRequestMsg] = useState("");
@@ -45,7 +43,6 @@ function Page() {
     isLoading: getPublicProductByIdLoading,
   } = useGetPublicProductByIdQuery(id);
   if (getPublicProductByIdData) {
-    console.log(getPublicProductByIdData);
   }
   const [
     requestProductContent,
@@ -64,10 +61,7 @@ function Page() {
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
     }),
-    onSubmit: (values) => {
-      // Handle form submission
-      console.log(values);
-    },
+    onSubmit: (values) => {},
   });
 
   const [contentTypeOption, setContentTypeOption] = useState("");

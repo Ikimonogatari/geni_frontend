@@ -31,7 +31,6 @@ function EditProfileCreator() {
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  console.log(parsedUserInfo);
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -147,7 +146,6 @@ function EditProfileCreator() {
       RegNo: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      console.log(values);
       editCreatorProfile(values).unwrap();
     },
   });
@@ -165,7 +163,6 @@ function EditProfileCreator() {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("folder", "profile-pic");
-        console.log(formData);
         uploadFile(formData).then((response) => {
           if (response.data) {
             const id = response.data.FileId;
@@ -180,7 +177,6 @@ function EditProfileCreator() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       toast.success("Амжилттай хадгаллаа");
     }
     if (error) {
@@ -208,7 +204,6 @@ function EditProfileCreator() {
 
   useEffect(() => {
     if (changePasswordData) {
-      console.log("Success:", data);
       toast.success("Амжилттай");
     }
     if (changePasswordError) {

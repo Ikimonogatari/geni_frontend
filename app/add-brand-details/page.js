@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { useEditBrandProfileMutation } from "@/app/services/service";
+import {
+  useEditBrandProfileMutation,
+  useBrandRequestReviewMutation,
+} from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import BrandDetails from "./BrandDetails";
@@ -17,9 +20,15 @@ function Page() {
 
   const [step, setStep] = useState(1);
 
-  const handleNextStep = () => {
-    if (step < 2) {
-      setStep((prevStep) => prevStep + 1);
+  const handleNextStep = async () => {
+    if (step === 1) {
+      await formik.validateField("Name");
+      await formik.validateField("Bio");
+      if (!formik.errors.Name && !formik.errors.Bio) {
+        setStep(2);
+      }
+    } else if (step === 2) {
+      await formik.validateForm();
     }
   };
 
@@ -30,6 +39,16 @@ function Page() {
   const [editBrandProfile, { data, error, isLoading, isSuccess }] =
     useEditBrandProfileMutation();
 
+  const [
+    requestReview,
+    {
+      data: requestReviewData,
+      error: requestReviewError,
+      isLoading: requestReviewLoading,
+      isSuccess: requestReviewSuccess,
+    },
+  ] = useBrandRequestReviewMutation();
+
   const formik = useFormik({
     initialValues: {
       Name: parsedUserInfo ? parsedUserInfo?.Name : "",
@@ -39,18 +58,26 @@ function Page() {
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       Address: parsedUserInfo ? parsedUserInfo?.Address : "",
       BrandAoADescription: "temp-desc",
+      HasMarketingPersonel: false,
+      AvgProductSalesMonthly: parsedUserInfo
+        ? parsedUserInfo?.AvgProductSalesMonthly
+        : 0,
+      AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : 0,
     },
     validationSchema: Yup.object({
-      Name: Yup.string().required("Required"),
-      PhoneNumber: Yup.string().required("Required"),
-      Bio: Yup.string().required("Required"),
-      Website: Yup.string().required("Required"),
-      RegNo: Yup.string().required("Required"),
-      Address: Yup.string().required("Required"),
+      Name: Yup.string().required("Заавал бөглөнө үү"),
+      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
+      Bio: Yup.string().required("Заавал бөглөнө үү"),
+      Website: Yup.string().required("Заавал бөглөнө ү"),
+      RegNo: Yup.string().required("Заавал бөглөнө үү"),
+      Address: Yup.string().required("Заавал бөглөнө үү"),
+      AvgPrice: Yup.number().required("Заавал бөглөнө үү"),
+      AvgProductSalesMonthly: Yup.number().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
       try {
         await editBrandProfile(values).unwrap();
+        await requestReview();
         setStep(3);
       } catch (error) {
         toast.error("Алдаа гарлаа");
@@ -60,13 +87,13 @@ function Page() {
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && requestReviewSuccess) {
       toast.success("Амжилттай");
     }
-    if (error) {
-      toast.error(error?.data?.error);
+    if (error || requestReviewError) {
+      toast.error(error?.data?.error || requestReviewError?.data?.error);
     }
-  }, [data, error]);
+  }, [data, error, requestReviewSuccess, requestReviewError]);
 
   const renderStepContent = () => {
     switch (step) {
@@ -96,7 +123,7 @@ function Page() {
       <div className="mt-36 sm:mt-48 mb-12 px-5">
         <form
           onSubmit={formik.handleSubmit}
-          className="max-w-4xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"
+          className="max-w-5xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"
         >
           <div className="flex flex-row justify-between items-center gap-5 my-7 w-full">
             <p className="text-xl sm:text-3xl xl:text-4xl font-bold">

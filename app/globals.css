@@ -48,3 +48,15 @@
     --ring: 253 91% 58%;
   }
 }
+
+@layer utilities {
+  .no-spinner::-webkit-outer-spin-button,
+  .no-spinner::-webkit-inner-spin-button {
+    @apply appearance-none;
+    margin: 0;
+  }
+
+  .no-spinner[type="number"] {
+    @apply appearance-none;
+  }
+}

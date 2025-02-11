@@ -9,7 +9,6 @@ function ContentGallery({ contentsGallery }) {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
-  console.log(contentsGallery);
   const handleMouseEnter = (e) => {
     const vid = e.target;
     vid.muted = true;

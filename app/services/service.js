@@ -267,16 +267,15 @@ export const geniApi = createApi({
       }),
     }),
     listContentGallery: builder.query({
-      query: () => ({
-        url: `/api/web/private/content/my`,
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/content/my?&limit=${limit}&offset=${offset}`,
         method: "GET",
       }),
     }),
     listBrandTypes: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: "/api/web/private/user/brand/type",
         method: "GET",
-        body,
       }),
     }),
     sendOtpToEmail: builder.mutation({
@@ -367,11 +366,19 @@ export const geniApi = createApi({
         url: "/api/web/private/user/no-guide",
         method: "POST",
       }),
+      invalidatesTags: ["UserInfo"],
     }),
     brandRegister: builder.mutation({
       query: (body) => ({
         url: "/api/web/public/brand/signup",
         method: "POST",
+        body,
+      }),
+    }),
+    brandRequestReview: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/brand/review",
+        method: "PUT",
         body,
       }),
     }),
@@ -381,6 +388,7 @@ export const geniApi = createApi({
 export const {
   useCreatorLoginMutation,
   useBrandRegisterMutation,
+  useBrandRequestReviewMutation,
   useBrandVerificationMutation,
   useEditCreatorProfileMutation,
   useEditBrandProfileMutation,

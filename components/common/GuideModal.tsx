@@ -13,7 +13,6 @@ function GuideModal({ hasSeenGuide }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDialogOpen, setDialogOpen] = useState(!hasSeenGuide);
   const [isChecked, setIsChecked] = useState(hasSeenGuide);
-  console.log(!hasSeenGuide);
 
   const slides = [
     {

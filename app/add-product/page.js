@@ -27,6 +27,8 @@ import MediaUploader from "@/components/common/MediaUploader";
 import { addProductSchema } from "./schema";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { ErrorText } from "@/components/ui/error-text";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 
 function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
@@ -47,19 +49,18 @@ function Page() {
       requestForCreators: "",
       amount: "",
       addInfoSource: "",
+      credit: "",
       quantity: "",
       price: "",
+      totalPrice: "",
       contentInfo: [],
       productTypes: [],
       productPics: [],
     },
     validationSchema: addProductSchema,
-    onSubmit: (values) => {
-      const modifiedValues = {
-        ...values,
-        quantity: parseInt(values.quantity, 10),
-      };
-      createProduct(modifiedValues);
+    onSubmit: async (values) => {
+      const { totalPrice, ...submitValues } = values;
+      await createProduct(submitValues);
     },
     validateOnMount: true,
   });
@@ -229,17 +230,43 @@ function Page() {
     }
   };
 
-  const isFormDisabled =
-    !formik.dirty ||
-    !formik.isValid ||
-    formik.isSubmitting ||
-    !formik.values.productTypes ||
-    !formik.values.productPics;
+  const handlePriceChange = (e) => {
+    const price = parseFloat(e.target.value);
+    const quantity = parseInt(formik.values.quantity, 10);
+
+    if (!isNaN(quantity) && !isNaN(price)) {
+      formik.setFieldValue("price", e.target.value);
+      formik.setFieldValue("totalPrice", price * quantity);
+    } else {
+      formik.setFieldValue("price", e.target.value);
+      formik.setFieldValue("totalPrice", 0);
+    }
+  };
+
+  const handleQuantityChange = (e) => {
+    const quantity = parseInt(e.target.value, 10);
+    const price = parseFloat(formik.values.price);
+
+    if (!isNaN(quantity) && !isNaN(price)) {
+      formik.setFieldValue("quantity", quantity); // Set as number
+      formik.setFieldValue("totalPrice", price * quantity);
+    } else {
+      formik.setFieldValue("quantity", quantity); // Set as number
+      formik.setFieldValue("totalPrice", 0);
+    }
+  };
+
+  const isFormDisabled = false;
+  // !formik.dirty ||
+  // !formik.isValid ||
+  // formik.isSubmitting ||
+  // !formik.values.productTypes ||
+  // !formik.values.productPics;
 
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
-        <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
+        <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
           <BackButton />
           <form
             onSubmit={formik.handleSubmit}
@@ -301,6 +328,7 @@ function Page() {
                     >
                       {p.TypeName}
                       <button
+                        type="button"
                         className="rounded-full w-6 h-6 bg-white"
                         onClick={() => handleRemoveProductType(p.TypeName)}
                       >
@@ -350,7 +378,7 @@ function Page() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.information}
-                rows={4}
+                rows={5}
                 maxLength={600}
                 charCount={formik.values.information.length}
                 errorText={formik.errors.information}
@@ -414,10 +442,11 @@ function Page() {
                 {selectedContentTypes.map((selected) => (
                   <div
                     key={selected}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-[1px] border-geni-blue rounded-md flex flex-row items-center justify-between"
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
                   >
                     {selected}
                     <button
+                      type="button"
                       className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
                       onClick={() => removeContentItem(selected)}
                     >
@@ -431,7 +460,9 @@ function Page() {
                       ? formik.errors.contentInfo
                       : null
                   }
-                  visible={formik.touched.contentInfo}
+                  visible={
+                    formik.touched.contentInfo && formik.errors.contentInfo
+                  }
                 />
               </div>
 
@@ -444,7 +475,7 @@ function Page() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.requestForCreators}
-                rows={4}
+                rows={5}
                 maxLength={600}
                 charCount={formik.values.requestForCreators.length}
                 errorText={formik.errors.requestForCreators}
@@ -495,11 +526,12 @@ function Page() {
                 {selectedContentOutcomes.map((selected) => (
                   <div
                     key={selected}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-secondary rounded-md flex flex-row items-center justify-between"
+                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
                   >
                     {selected}
                     <button
-                      className="w-6 h-6 bg-secondary rounded-full aspect-square"
+                      type="button"
+                      className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
                       onClick={() => removeContentItem(selected)}
                     >
                       <MinusIcon color="white" />
@@ -518,7 +550,7 @@ function Page() {
                 id="amount"
                 name="amount"
                 type="text"
-                label="Бүтээгдэхүүний хэмжээ"
+                label="Хэмжээ"
                 hoverInfo={
                   <>
                     Таны бүтээгдэхүүн ямар хэмжих нэгжтэйгээс хамаарч энд
@@ -533,44 +565,108 @@ function Page() {
                 errorText={formik.errors.amount}
                 errorVisible={formik.touched.amount && formik.errors.amount}
               />
-
-              <Input
-                id="quantity"
-                name="quantity"
-                type="text"
-                label="Бүтээгчдэд илгээх бүтээгдэхүүний тоо"
-                hoverInfo="Энд та хэдэн бүтээгчдэд бүтээгдэхүүнээ санал болгож байгаа тоогоо оруулна. Энд оруулсан бүтээгдэхүүний тоогоор та контент хүлээн авна."
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.quantity}
-                errorText={formik.errors.quantity}
-                errorVisible={formik.touched.quantity && formik.errors.quantity}
-              />
-
               <Input
                 id="price"
                 name="price"
-                type="text"
-                label="Бүтээгчдэд илгээж буй бүтээгдэхүүний үнэ"
-                hoverInfo="Нэг бүтээгчдэд санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид багц болгон илгээж байгаа бол багцын үнийг оруулна."
-                onChange={formik.handleChange}
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="Бүтээгчид илгээх нэгж бүтээгдэхүүний үнийн дүн"
+                hoverInfo="Нэг бүтээгчид санал болгож буй бүтээгдэхүүнийхээ үнийг оруулна. Нэг бүтээгчид нэгээс дээш бүтээгдэхүүн илгээж байгаа бол нийт үнийг оруулна."
+                onChange={handlePriceChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.price}
                 leftSection="₮"
                 errorText={formik.errors.price}
                 errorVisible={formik.touched.price && formik.errors.price}
               />
+              <Input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="1 бүтээгчид илгээх бүтээгдэхүүний тоо"
+                hoverInfo="Энд та нэг бүтээгчид илгээж буй бүтээгдэхүүнийхээ тоо ширхэгийг оруулна."
+                onChange={handleQuantityChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.quantity}
+                errorText={formik.errors.quantity}
+                errorVisible={formik.touched.quantity && formik.errors.quantity}
+              />
+              <Input
+                disabled={true}
+                id="totalPrice"
+                name="totalPrice"
+                type="number"
+                min={0}
+                className="no-spinner"
+                label="1 бүтээгчид илгээж буй нийт бүтээгдэхүүний үнийн дүн"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.totalPrice}
+                leftSection="₮"
+                errorText={formik.errors.totalPrice}
+                errorVisible={
+                  formik.touched.totalPrice && formik.errors.totalPrice
+                }
+              />
 
+              <Input
+                id="credit"
+                name="credit"
+                type="number"
+                min={0}
+                max={30}
+                className="no-spinner"
+                label="Нийт хэдэн бүтээгчидтэй хамтрах вэ?"
+                hoverInfo="/1 хамтрал = 1 credit/"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.credit}
+                errorText={formik.errors.credit}
+                errorVisible={formik.touched.credit && formik.errors.credit}
+              />
+              <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
+                <span className="font-bold">
+                  Таны Geni Credit Үлдэгдэл:{" "}
+                  {parsedUserInfo?.Credit ? parsedUserInfo?.Credit : 0}
+                </span>
+                <FadeInAnimation
+                  visible={parsedUserInfo?.Credit < formik.values.credit}
+                >
+                  <ErrorText
+                    text={
+                      "Таны Geni Credit үлдэгдэл хүрэлцэхгүй байна. Та Geni Credit-ээ цэнэглэнэ үү."
+                    }
+                    visible={true}
+                  />
+                </FadeInAnimation>
+                <CreditPurchase
+                  buttonText={"Geni Credit цэнэглэх"}
+                  buttonIconSize={"w-4 h-4"}
+                  className={
+                    "text-lg flex flex-row items-center justify-center py-4 w-full"
+                  }
+                  userInfo={parsedUserInfo}
+                />
+              </div>
               <HandleButton
+                type="submit"
                 disabled={isFormDisabled}
                 text={"Бүтээгдэхүүн нэмэх"}
+                className={"text-lg"}
                 bg={`bg-geni-blue ${
                   isFormDisabled
-                    ? "opacity-80 cursor-not-allowed"
-                    : "opacity-100 cursor-pointer"
+                    ? "bg-primary-bg cursor-not-allowed text-[#CDCDCD]"
+                    : "bg-geni-blue cursor-pointer"
                 }`}
-                shadowbg={"shadow-[0.25rem_0.25rem_#131AAF]"}
-                width={"w-full max-w-[403px] h-[90px]"}
+                shadowbg={`${
+                  isFormDisabled
+                    ? "shadow-[0.25rem_0.25rem_#CDCDCD] cursor-not-allowed"
+                    : "shadow-[0.25rem_0.25rem_#131AAF] cursor-pointer"
+                }`}
+                width={"mt-3 w-full max-w-[403px] h-[90px]"}
               />
 
               <ProductAddedSuccessModal

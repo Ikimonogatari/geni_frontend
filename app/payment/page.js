@@ -16,7 +16,6 @@ function page() {
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     if (listPaymentPlansData) {
-      console.log(listPaymentPlansData);
       const sortedPlans = [...listPaymentPlansData]?.sort((a, b) => {
         return planOrder.indexOf(a.type) - planOrder.indexOf(b.type);
       });

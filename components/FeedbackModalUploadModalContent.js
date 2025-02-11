@@ -16,7 +16,6 @@ import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 
 function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
-  console.log(parsedUserInfo);
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
@@ -82,7 +81,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
       setIsImageUploadLoading(false);
 
       setContentThumbnail(getImagePresignedUrlData.url);
-      console.log(getImagePresignedUrlData.url);
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 
@@ -92,7 +90,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
       setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
-      console.log(getVideoPresignedUrlData.url);
       setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
@@ -188,9 +185,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
   });
 
   const uploadToS3 = async (url, file) => {
-    console.log(url);
-    console.log(file);
-
     try {
       const response = await axios.put(url, file, {
         headers: {
@@ -199,7 +193,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
       });
 
       if (response.status == 200) {
-        console.log(response);
       } else {
         throw new Error(`HTTP error! status: ${response}`);
       }
@@ -209,7 +202,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
     }
   };
   const handleContentSubmit = () => {
-    console.log("handling feedback content submit");
     // if (parsedUserInfo?.UserType === "Student") {
     //   uploadHomework({
     //     Caption: caption,
