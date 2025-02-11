@@ -52,7 +52,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div className="flex flex-col gap-1 sm:gap-2">
           <div
             className={cn(
-              "bg-white flex gap-1 items-center p-2 border border-[#CDCDCD] rounded-lg h-12",
+              "bg-white flex gap-1 items-center p-2 border-[1px] border-[#CDCDCD] rounded-lg h-12",
               layoutClassName
             )}
           >

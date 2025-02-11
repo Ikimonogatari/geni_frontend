@@ -14,11 +14,9 @@ import BrandContentGallery from "./BrandContentGallery";
 import LogoutButton from "@/components/common/LogoutButton";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
-import { useRouter } from "next/navigation";
 import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
 
 function BrandProfile() {
-  const router = useRouter();
   const {
     data: getUserInfoData,
     error: getUserInfoError,
@@ -67,16 +65,6 @@ function BrandProfile() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-  console.log(getUserInfoData?.IsVerified);
-  useEffect(() => {
-    if (
-      getUserInfoData?.IsVerified &&
-      getUserInfoData?.OnBoardingStatus != "Approved" &&
-      getUserInfoData?.OnBoardingStatus != "Request"
-    ) {
-      router.push("/add-brand-details");
-    }
-  }, [getUserInfoData, router]);
 
   useEffect(() => {
     const contents = getCurrentContents();
@@ -147,8 +135,8 @@ function BrandProfile() {
   const totalPages = getTotalPages();
 
   const getPageNumbers = () => {
-    const totalNumbers = 3; // Number of page numbers to show
-    const totalBlocks = totalNumbers + 2; // Including first and last page
+    const totalNumbers = 3;
+    const totalBlocks = totalNumbers + 2;
 
     if (totalPages > totalBlocks) {
       let pages = [];
