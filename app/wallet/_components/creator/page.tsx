@@ -47,7 +47,9 @@ function CreatorWallet() {
               <div className="flex flex-row gap-3 sm:gap-1 justify-normal items-center sm:items-start sm:flex-col">
                 <span className="text-lg sm:text-lg">Geni Credit Point:</span>
                 <span className="font-bold text-xl sm:text-3xl">
-                  {Number(getWalletInfoData?.CurrBal).toLocaleString()}
+                  {getWalletInfoLoading
+                    ? ""
+                    : Number(getWalletInfoData?.CurrBal || 0).toLocaleString()}
                 </span>
               </div>
             </div>
