@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import BrandProducts from "./BrandProducts";
@@ -15,6 +15,7 @@ import LogoutButton from "@/components/common/LogoutButton";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
 import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function BrandProfile() {
   const {
@@ -55,6 +56,18 @@ function BrandProfile() {
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
   );
+
+  const isLoading = useMemo(() => {
+    return (
+      listBrandContentsLoading ||
+      listContentGalleryLoading ||
+      listBrandProductsLoading
+    );
+  }, [
+    listBrandContentsLoading,
+    listContentGalleryLoading,
+    listBrandProductsLoading,
+  ]);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -370,7 +383,18 @@ function BrandProfile() {
               )}
             </div>
           </div>
-          {currentContents ? renderBrandProfile() : <>Loading</>}
+          {currentContents && !isLoading ? (
+            renderBrandProfile()
+          ) : (
+            <div className="space-y-6 mt-10 px-3 sm:px-7">
+              {[...Array(8)].map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="h-[59px] sm:h-[84px] w-full rounded-3xl"
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {listBrandContentsData && totalPages > 1 ? (

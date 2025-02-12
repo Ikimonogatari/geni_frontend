@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import ContentProgress from "./ContentProgress";
 import LogoutButton from "@/components/common/LogoutButton";
 import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function StudentProfile() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,6 +48,10 @@ function StudentProfile() {
     },
   ] = useBecomeCreatorMutation();
 
+  const isLoading = useMemo(() => {
+    return listCreatorContentsLoading;
+  }, [listCreatorContentsLoading]);
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleNextPage = () => {
@@ -73,7 +78,7 @@ function StudentProfile() {
     return Math.ceil(totalCount / contentsPerPage);
   };
 
-  const renderBrandProfile = () => {
+  const renderStudentProfile = () => {
     return <ContentProgress currentContents={currentContents} />;
   };
 
@@ -248,7 +253,6 @@ function StudentProfile() {
               <LogoutButton />
             </div>
           </div>
-
           <div className="mt-4 sm:mt-16 w-full flex flex-row items-center justify-between gap-4">
             <div className="flex flex-row items-center gap-3">
               {brandProfileButtons.map((b, i) => (
@@ -265,8 +269,20 @@ function StudentProfile() {
 
             <HomeworkUploadModal parsedUserInfo={parsedUserInfo} />
           </div>
-          {renderBrandProfile()}
+          {currentContents && !isLoading ? (
+            renderStudentProfile()
+          ) : (
+            <div className="space-y-6 mt-10">
+              {[...Array(8)].map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="h-[42px] sm:h-[66px] w-full rounded-3xl"
+                />
+              ))}
+            </div>
+          )}
         </div>
+
         {listCreatorContentsData && totalPages > 1 ? (
           <div className="container px-7 mx-auto text-[#2D262D] flex flex-row gap-3 items-end justify-end mt-5">
             {currentPage > 1 && (

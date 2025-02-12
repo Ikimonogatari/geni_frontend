@@ -8,7 +8,7 @@ import {
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
-import NoContentStatusList from "@/components/NoContentStatusList";
+import EmptyList from "@/components/common/EmptyList";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -128,7 +128,11 @@ function ContentProgress({ currentContents }) {
   return (
     <div className="w-full overflow-x-auto">
       {currentContents?.length === 0 ? (
-        <NoContentStatusList />
+        <EmptyList
+          text="Хамтрал хараахан хийгдээгүй байна"
+          image="/no-content-status-image.png"
+          imageClassName="w-[212px] h-[154px]"
+        />
       ) : (
         <div className="min-w-[900px] sm:min-w-[1200px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
           <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">

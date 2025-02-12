@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CreatorTier from "@/components/CreatorTier";
-import NoContentList from "@/components/NoContentList";
+import EmptyList from "@/components/common/EmptyList";
 
 function BrandContentGallery({ contentsGallery }) {
   const [showModal, setShowModal] = useState(false);
@@ -46,10 +46,15 @@ function BrandContentGallery({ contentsGallery }) {
       </span>
     ));
   }
+
   return (
     <div>
       {contentsGallery?.length === 0 ? (
-        <NoContentList />
+        <EmptyList
+          text="Контент хараахан ирээгүй байна"
+          imageClassName="w-[149px] h-[153px]"
+          image="/no-content-image.png"
+        />
       ) : (
         <div className="mt-7 px-3 pt-6 border-t-[1px] border-[#CDCDCD] relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
           {contentsGallery ? (

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   useGetUserInfoQuery,
@@ -13,6 +13,7 @@ import ContentGallery from "@/components/ContentGallery";
 import CreatorTier from "@/components/CreatorTier";
 import TierInfoModal from "@/components/TierInfoModal";
 import LogoutButton from "@/components/common/LogoutButton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function CreatorProfile() {
   const [profileState, setProfileState] = useState("content-progress");
@@ -41,6 +42,10 @@ function CreatorProfile() {
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
   );
+
+  const isLoading = useMemo(() => {
+    return listCreatorContentsLoading || listContentGalleryLoading;
+  }, [listCreatorContentsLoading, listContentGalleryLoading]);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -91,7 +96,7 @@ function CreatorProfile() {
     return Math.ceil(totalCount / contentsPerPage);
   };
 
-  const renderBrandProfile = () => {
+  const renderCreatorProfile = () => {
     switch (profileState) {
       case "content-progress":
         return <ContentProgress currentContents={currentContents} />;
@@ -333,7 +338,18 @@ function CreatorProfile() {
               </Link>
             </div>
           </div>
-          {renderBrandProfile()}
+          {currentContents && !isLoading ? (
+            renderCreatorProfile()
+          ) : (
+            <div className="space-y-6 mt-10">
+              {[...Array(8)].map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="h-[42px] sm:h-[66px] w-full rounded-3xl"
+                />
+              ))}
+            </div>
+          )}
         </div>
         {listCreatorContentsData && totalPages > 1 ? (
           <div className="container px-7 mx-auto text-[#2D262D] flex flex-row gap-3 items-end justify-end mt-5">

@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { ErrorText } from "@/components/ui/error-text";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
-import NoProductList from "@/components/NoProductList";
+import EmptyList from "@/components/common/EmptyList";
 
 function BrandProducts({ brandProducts, brandData }) {
   const router = useRouter();
@@ -101,7 +101,11 @@ function BrandProducts({ brandProducts, brandData }) {
   return (
     <div className="w-full overflow-x-auto">
       {brandProducts?.length === 0 ? (
-        <NoProductList />
+        <EmptyList
+          text="Бүтээгдэхүүн хараахан нэмээгүй байна"
+          imageClassName="w-[155px] h-[154px]"
+          image="/no-product-image.png"
+        />
       ) : (
         <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
           <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[2fr,1fr,2fr,2fr] sm:grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">

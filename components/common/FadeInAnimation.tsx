@@ -4,7 +4,7 @@ import React from "react";
 interface FadeInAnimationProps {
   children: React.ReactNode;
   visible: boolean;
-  className: string;
+  className?: string;
 }
 
 const FadeInAnimation: React.FC<FadeInAnimationProps> = ({
