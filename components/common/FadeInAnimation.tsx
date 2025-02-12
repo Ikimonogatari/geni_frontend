@@ -4,16 +4,19 @@ import React from "react";
 interface FadeInAnimationProps {
   children: React.ReactNode;
   visible: boolean;
+  className: string;
 }
 
 const FadeInAnimation: React.FC<FadeInAnimationProps> = ({
   children,
   visible,
+  className,
 }) => {
   return (
     <AnimatePresence>
       {visible ? (
         <motion.div
+          className={`${className}`}
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}

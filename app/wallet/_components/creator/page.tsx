@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { useGetWalletInfoQuery } from "@/app/services/service";
 import AddBalance from "./AddBalance";
+import WithdrawCredit from "./WithdrawCredit";
 function CreatorWallet() {
   const router = useRouter();
   const userInfo = Cookies.get("user-info");
@@ -51,10 +52,8 @@ function CreatorWallet() {
               </div>
             </div>
             <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
-              <AddBalance />
-              <button className="aspect-[200/50] text-sm sm:text-base w-[200px] rounded-lg border-[1px] border-[#2D262D] flex justify-center items-center">
-                Шилжүүлэг хийх
-              </button>
+              <AddBalance walletInfo={getWalletInfoData} />
+              <WithdrawCredit walletInfo={getWalletInfoData} />
             </div>
           </div>
         </div>

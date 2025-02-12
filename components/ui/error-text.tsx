@@ -11,10 +11,12 @@ interface ErrorTextProps extends React.ComponentProps<"div"> {
     | string[]
     | FormikErrors<any>
     | FormikErrors<any>[];
+  leftSection?: React.ReactNode;
+  rightSection?: React.ReactNode;
 }
 
 const ErrorText = React.forwardRef<HTMLDivElement, ErrorTextProps>(
-  ({ className, text, visible, ...props }, ref) => {
+  ({ className, text, visible, leftSection, rightSection, ...props }, ref) => {
     if (!visible) return null;
     return (
       <div
@@ -22,7 +24,10 @@ const ErrorText = React.forwardRef<HTMLDivElement, ErrorTextProps>(
         ref={ref}
         {...props}
       >
+        {" "}
+        {leftSection && leftSection}
         {React.isValidElement(text) ? text : String(text)}
+        {rightSection && rightSection}
       </div>
     );
   }
