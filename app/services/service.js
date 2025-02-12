@@ -382,6 +382,12 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getBrandCreditInfo: builder.query({
+      query: () => ({
+        url: "/api/web/private/user/credit",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -439,4 +445,5 @@ export const {
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
   useBrandGuideCheckMutation,
+  useGetBrandCreditInfoQuery,
 } = geniApi;

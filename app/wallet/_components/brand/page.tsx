@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { useGetWalletInfoQuery } from "@/app/services/service";
+import { useGetBrandCreditInfoQuery } from "@/app/services/service";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 
 function BrandWallet() {
@@ -11,11 +11,11 @@ function BrandWallet() {
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   const {
-    data: getWalletInfoData,
-    error: getWalletInfoError,
-    isLoading: getWalletInfoLoading,
+    data: getBrandCreditInfoData,
+    error: getBrandCreditInfoError,
+    isLoading: getBrandCreditInfoLoading,
     //@ts-ignore
-  } = useGetWalletInfoQuery();
+  } = useGetBrandCreditInfoQuery();
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -32,10 +32,10 @@ function BrandWallet() {
               alt="arrow-left"
             />
           </button>
-          <p className="text-3xl sm:text-4xl xl:text-5xl font-bold my-7">
+          <p className="text-3xl sm:text-4xl xl:text-5xl font-extrabold my-7">
             Таны Geni Credit
           </p>
-          <div className="rounded-3xl bg-[#F5F4F0] p-5 w-full flex flex-col md:flex-row items-center justify-between gap-2 sm:gap-8">
+          <div className="rounded-3xl bg-[#F5F4F0] p-5 sm:p-10 w-full flex flex-col md:flex-row items-center justify-between gap-2 sm:gap-8">
             <Image
               src={"/brands-image1.png"}
               width={237}
@@ -47,12 +47,14 @@ function BrandWallet() {
               <div className="rounded-3xl p-4 sm:p-8 border border-geni-gray flex flex-col gap-4">
                 <div className="grid grid-cols-3 gap-5 text-base sm:text-xl">
                   <span className="font-bold col-span-2">Үлдэгдэл:</span>
-                  <span className="col-span-1">{parsedUserInfo?.Credit}</span>
+                  <span className="col-span-1">
+                    {getBrandCreditInfoData?.CreditExist}
+                  </span>
                 </div>
                 <div className="grid grid-cols-3 gap-5 text-base sm:text-xl">
                   <span className="font-bold col-span-2">Ашигласан:</span>
                   <span className="col-span-1">
-                    {parsedUserInfo?.CreditSpent}
+                    {getBrandCreditInfoData?.CreditUsed}
                   </span>
                 </div>
                 <div className="grid grid-cols-3 gap-5 text-base sm:text-xl">
@@ -60,9 +62,13 @@ function BrandWallet() {
                     Сүүлд цэнэглэсэн:
                   </span>
                   <div className="col-span-1 flex flex-col gap-4">
-                    <span>{parsedUserInfo?.LatestSubscription?.Credit}</span>
                     <span>
-                      {parsedUserInfo?.LatestSubscription?.StartedDate}
+                      {getBrandCreditInfoData?.LastDepositedCredit} Кредит
+                    </span>
+                    <span>
+                      {new Date(getBrandCreditInfoData?.LastDepositedDate)
+                        .toLocaleDateString("en-CA")
+                        .replace(/-/g, ".")}
                     </span>
                   </div>
                 </div>

@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useGetWalletInfoQuery } from "@/app/services/service";
 import AddBalance from "./AddBalance";
 import WithdrawCredit from "./WithdrawCredit";
+import ListRowLayout from "@/components/common/ListRowLayout";
 function CreatorWallet() {
   const router = useRouter();
   const userInfo = Cookies.get("user-info");
@@ -58,6 +59,15 @@ function CreatorWallet() {
               <WithdrawCredit walletInfo={getWalletInfoData} />
             </div>
           </div>
+          {/* <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+            <span className="text-2xl font-bold">Дансны түүх</span>
+            <ListRowLayout layout="grid grid-cols-[3fr,1fr,2fr,1fr] sm:grid-cols-[3fr,1fr,2fr,1fr]">
+              <span>1</span>
+              <span>1</span>
+              <span>1</span>
+              <span>1</span>
+            </ListRowLayout>
+          </div> */}
         </div>
       </div>
     </div>
