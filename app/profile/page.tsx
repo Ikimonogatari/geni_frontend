@@ -13,7 +13,7 @@ export default async function Page() {
   if (
     userType === "Brand" &&
     !parsedUserInfo?.IsVerified &&
-    parsedUserInfo?.IsVerified == "New"
+    parsedUserInfo?.OnBoardingStatus == "New"
   ) {
     return redirect("/add-brand-details");
   }

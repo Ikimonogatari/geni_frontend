@@ -182,7 +182,7 @@ function Page() {
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
                     <b>Үлдэгдэл: </b>
                     {getPublicProductByIdData?.LeftStock}/
-                    {getPublicProductByIdData?.Quantity}
+                    {getPublicProductByIdData?.Credit}
                   </span>
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
                     <b>Үнэ:</b> ₮
@@ -307,7 +307,7 @@ function Page() {
                 <span className="font-bold">Тоо ширхэг</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
                   {getPublicProductByIdData ? (
-                    getPublicProductByIdData.Quantity
+                    getPublicProductByIdData.Credit
                   ) : (
                     <></>
                   )}

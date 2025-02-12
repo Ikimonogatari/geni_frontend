@@ -132,7 +132,7 @@ function BrandProducts({ brandProducts, brandData }) {
           {
             // sortedBrandProducts
             brandProducts?.map((p, i) => {
-              const stockStatus = getStockStatus(p.LeftStock, p.Quantity);
+              const stockStatus = getStockStatus(p.LeftStock, p.Credit);
               const requestStatus = getRequestStatus(p.Status);
               return (
                 <div
@@ -142,7 +142,7 @@ function BrandProducts({ brandProducts, brandData }) {
                   <span className="col-span-1">{p.ProductName}</span>
 
                   <span className="col-span-1">
-                    {p.LeftStock} / {p.Quantity}
+                    {p.LeftStock} / {p.Credit}
                   </span>
                   {p.Status === "Approved" ? (
                     <div
@@ -209,7 +209,7 @@ function BrandProducts({ brandProducts, brandData }) {
                                   Тоо хэмжээ
                                 </span>
                                 <span className="text-xl font-semibold text-[#6F6F6F]">
-                                  {p.LeftStock}/{p.Quantity}
+                                  {p.LeftStock}/{p.Credit}
                                 </span>
                               </div>
                               <div className="flex flex-col gap-2 w-1/2">

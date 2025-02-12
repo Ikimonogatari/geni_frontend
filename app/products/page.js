@@ -72,8 +72,8 @@ function Page() {
 
       // Sort by the ratio of LeftStock to Quantity
       filtered.sort((a, b) => {
-        const ratioA = a.LeftStock / a.Quantity;
-        const ratioB = b.LeftStock / b.Quantity;
+        const ratioA = a.LeftStock / a.Credit;
+        const ratioB = b.LeftStock / b.Credit;
         return ratioB - ratioA; // Descending order
       });
 
@@ -133,7 +133,7 @@ function Page() {
               filteredProducts.map((product) => {
                 const stockStatus = getStockStatus(
                   product.LeftStock,
-                  product.Quantity,
+                  product.Credit,
                   product.CreatedAt
                 );
                 return (
@@ -187,7 +187,7 @@ function Page() {
                       </span>
                       <div className="text-[#6F6F6F] flex flex-col text-xs sm:text-base mt-2">
                         <span className="">
-                          Үлдэгдэл: {product.LeftStock}/{product.Quantity}
+                          Үлдэгдэл: {product.LeftStock}/{product.Credit}
                         </span>
                         <span className="">
                           Үнэ: ₮{Number(product.Price).toLocaleString()}
