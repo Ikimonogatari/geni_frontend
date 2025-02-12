@@ -218,7 +218,9 @@ function BrandProfile() {
               )}
               <div className="flex flex-col gap-1 sm:gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
-                  {getUserInfoData?.Name ? getUserInfoData?.Name : "Geni брэнд"}
+                  {getUserInfoLoading
+                    ? ""
+                    : getUserInfoData?.Name || "Geni брэнд"}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink ? (

@@ -184,9 +184,9 @@ function CreatorProfile() {
                 <div className="flex flex-row items-center gap-3">
                   <div className="flex flex-row items-center gap-1 sm:gap-2">
                     <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
-                      {getUserInfoData?.Nickname
-                        ? getUserInfoData?.Nickname
-                        : "Geni бүтээгч"}
+                      {getUserInfoLoading
+                        ? ""
+                        : getUserInfoData?.Nickname || "Geni бүтээгч"}
                     </span>
 
                     <CreatorTier
