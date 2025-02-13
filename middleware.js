@@ -28,7 +28,6 @@ export function middleware(req) {
         "/edit-profile-brand",
         "/add-product",
         "/edit-product",
-        "/add-brand-details",
         "/edit-profile-student",
       ].some((path) => url.pathname.startsWith(path.replace(":path*", "")))
     ) {
@@ -49,7 +48,6 @@ export function middleware(req) {
         "/add-product",
         "/edit-product",
         "/edit-profile-creator",
-        "/add-brand-details",
         "/products",
         "/products/:path*",
         "/wallet",
@@ -66,7 +64,7 @@ export function middleware(req) {
 export const config = {
   matcher: [
     "/add-product",
-    "/add-brand-details",
+    "/onboarding",
     "/edit-profile-brand",
     "/edit-profile-creator",
     "/edit-profile-student",

@@ -13,7 +13,7 @@ import BrandDetails from "./BrandDetails";
 import BrandDetailsSubmit from "./BrandDetailsSubmit";
 import BrandDetailsSuccess from "./BrandDetailsSuccess";
 
-function Page() {
+function BrandOnboarding() {
   const router = useRouter();
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -77,6 +77,7 @@ function Page() {
     onSubmit: async (values) => {
       try {
         await editBrandProfile(values).unwrap();
+        // @ts-ignore
         await requestReview();
         setStep(3);
       } catch (error) {
@@ -91,6 +92,7 @@ function Page() {
       toast.success("Амжилттай");
     }
     if (error || requestReviewError) {
+      // @ts-ignore
       toast.error(error?.data?.error || requestReviewError?.data?.error);
     }
   }, [data, error, requestReviewSuccess, requestReviewError]);
@@ -140,4 +142,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default BrandOnboarding;

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
-import { geniApi } from "../services/service";
+import { geniApi } from "@/app/services/service";
 
 function BrandDetailsSuccess({ router }) {
   const handleLogout = () => {

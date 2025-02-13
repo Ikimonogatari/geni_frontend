@@ -11,11 +11,11 @@ export default async function Page() {
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
   if (
-    userType === "Brand" &&
+    (userType === "Brand" || userType === "Creator") &&
     !parsedUserInfo?.IsVerified &&
     parsedUserInfo?.OnBoardingStatus == "New"
   ) {
-    return redirect("/add-brand-details");
+    return redirect("/onboarding");
   }
 
   return (
