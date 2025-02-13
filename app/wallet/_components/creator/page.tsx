@@ -59,13 +59,23 @@ function CreatorWallet() {
               <WithdrawCredit walletInfo={getWalletInfoData} />
             </div>
           </div>
-          {/* <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+          {/* <div className="min-w-[540px] w-full pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
             <span className="text-2xl font-bold">Дансны түүх</span>
-            <ListRowLayout layout="grid grid-cols-[3fr,1fr,2fr,1fr] sm:grid-cols-[3fr,1fr,2fr,1fr]">
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
-              <span>1</span>
+            <ListRowLayout layout="grid grid-cols-[3fr,2fr,2fr,2fr] sm:grid-cols-[3fr,2fr,2fr,2fr]">
+              <span>Geni Point reward</span>
+              <span className="bg-geni-green rounded-xl text-white py-1 px-4 text-center text-base sm:text-lg">
+                Орлого
+              </span>
+              <span>2024.09.11 18:32</span>
+              <span>32’000₮</span>
+            </ListRowLayout>
+            <ListRowLayout layout="grid grid-cols-[3fr,2fr,2fr,2fr] sm:grid-cols-[3fr,2fr,2fr,2fr]">
+              <span>Банкны дансруу шилжүүлэг</span>
+              <span className="bg-geni-red rounded-xl text-white py-1 px-4 text-center text-base sm:text-lg">
+                Зарлага
+              </span>
+              <span>2024.09.11 18:32</span>
+              <span>32’000₮</span>
             </ListRowLayout>
           </div> */}
         </div>
