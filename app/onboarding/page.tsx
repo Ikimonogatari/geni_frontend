@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import BrandOnboarding from "./_components/brand/page";
+import CreatorOnboarding from "./_components/creator/page";
 
 export default async function Page() {
   const cookieStore = cookies();
@@ -9,7 +10,7 @@ export default async function Page() {
 
   return (
     <>
-      {userType === "Creator" && <></>}
+      {userType === "Creator" && <CreatorOnboarding />}
       {userType === "Brand" && <BrandOnboarding />}
     </>
   );

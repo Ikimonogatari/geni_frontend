@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import BrandDetails from "./BrandDetails";
 import BrandDetailsSubmit from "./BrandDetailsSubmit";
 import BrandDetailsSuccess from "./BrandDetailsSuccess";
+import { addBrandDetailsSchema } from "./schema";
 
 function BrandOnboarding() {
   const router = useRouter();
@@ -64,16 +65,7 @@ function BrandOnboarding() {
         : 0,
       AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : 0,
     },
-    validationSchema: Yup.object({
-      Name: Yup.string().required("Заавал бөглөнө үү"),
-      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
-      Bio: Yup.string().required("Заавал бөглөнө үү"),
-      Website: Yup.string().required("Заавал бөглөнө ү"),
-      RegNo: Yup.string().required("Заавал бөглөнө үү"),
-      Address: Yup.string().required("Заавал бөглөнө үү"),
-      AvgPrice: Yup.number().required("Заавал бөглөнө үү"),
-      AvgProductSalesMonthly: Yup.number().required("Заавал бөглөнө үү"),
-    }),
+    validationSchema: addBrandDetailsSchema,
     onSubmit: async (values) => {
       try {
         await editBrandProfile(values).unwrap();
