@@ -11,7 +11,7 @@ export default async function Page() {
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
   if (
-    (userType === "Brand" || userType === "Creator") &&
+    userType === "Brand" &&
     !parsedUserInfo?.IsVerified &&
     parsedUserInfo?.OnBoardingStatus == "New"
   ) {
