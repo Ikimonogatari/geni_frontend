@@ -446,9 +446,9 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
           <></>
         )}
       </div>
-      {/* {getUserInfoData && (
+      {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
-      )} */}
+      )}
       {getUserInfoData && (
         <OnBoardRequestStateModal
           isRequested={getUserInfoData?.OnBoardingStatus === "Request"}

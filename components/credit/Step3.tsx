@@ -36,8 +36,8 @@ function Step3({
         Та идэвхжүүлэх багцаа сонгоно уу
       </span>
       <span className="text-sm sm:text-base">
-        Та Geni credit-н тоогоор бүтээгдэхүүнээ байршуулах эрхтэй болох бөгөөд
-        байршуулсан бүтээгдэхүүний тоогоор эргүүлэн контент хүлээн авах юм.
+        Та Geni credit-н тоогоор контент бүтээгчидтэй хамтрах эрхтэй болох
+        бөгөөд хамтралын тоогоор эргүүлэн контент хүлээн авах юм.
       </span>
       <span className="text-sm sm:text-base text-[#4D55F5]">
         Та өөрийн хэрэглээнд тохируулан цэнэглэх багцаа сонгоно уу.
@@ -65,32 +65,43 @@ function Step3({
                 <span className="text-lg sm:text-2xl">
                   <PriceFormatter price={selectedPackageData?.ContentPrice} />
                 </span>
-                <span className="text-[#4FB755] text-sm sm:text-base">
-                  Хэмнэлт:{" "}
-                  <PriceFormatter
-                    price={selectedPackageData?.ContentPriceDiscount}
-                  />
-                </span>
+                {selectedPackageData?.ContentPriceDiscount &&
+                selectedPackageData?.ContentPriceDiscount !== "0.00" ? (
+                  <span className="text-[#4FB755] text-sm sm:text-base">
+                    Хэмнэлт:{" "}
+                    <PriceFormatter
+                      price={selectedPackageData?.ContentPriceDiscount}
+                    />
+                  </span>
+                ) : (
+                  <></>
+                )}
               </div>
               <div className="flex flex-col">
                 <span className="text-sm sm:text-base">Нийт үнэ:</span>
                 <span className="text-lg sm:text-2xl">
                   <PriceFormatter price={selectedPackageData?.Price} />
                 </span>
-                <span className="text-[#4FB755] text-sm sm:text-base">
-                  Хэмнэлт:{" "}
-                  <PriceFormatter price={selectedPackageData?.PriceDiscount} />
-                </span>
+                {selectedPackageData?.PriceDiscount &&
+                selectedPackageData?.PriceDiscount !== "0.00" ? (
+                  <span className="text-[#4FB755] text-sm sm:text-base">
+                    Хэмнэлт:{" "}
+                    <PriceFormatter
+                      price={selectedPackageData?.PriceDiscount}
+                    />
+                  </span>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <span className="hidden sm:block rounded-full px-6 py-3 bg-[#F49D19] text-white">
-              1 credit гэдэг нь 1 бүтээгдэхүүн нэмээд 1 контент авах эрхийг
-              хэлнэ.
+              1 credit гэдэг нь 1 контент бүтээгчтэй хамтрах эрхийг хэлнэ.
             </span>
           </div>
         </div>
         <span className="mt-4 block sm:hidden rounded-3xl text-sm px-3 py-2 bg-[#F49D19] text-white">
-          1 credit гэдэг нь 1 бүтээгдэхүүн нэмээд 1 контент авах эрхийг хэлнэ.
+          1 credit гэдэг нь 1 контент бүтээгчтэй хамтрах эрхийг хэлнэ.
         </span>
       </div>
 
