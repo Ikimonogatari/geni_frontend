@@ -119,7 +119,7 @@ function BrandProducts({ brandProducts, brandData }) {
                 className="w-4 h-4 sm:w-6 sm:h-6"
               />
             </div>
-            <span className="col-span-1">Тоо хэмжээ</span>
+            <span className="col-span-1">Контентын тоо</span>
 
             <div className="col-span-1 flex flex-row gap-2 items-center justify-between">
               <span>Статус</span>
@@ -146,7 +146,7 @@ function BrandProducts({ brandProducts, brandData }) {
                   <span className="col-span-1">{p.ProductName}</span>
 
                   <span className="col-span-1">
-                    {p.LeftStock} / {p.Credit}
+                    {p.ContentLeft} / {p.ContentLimit}
                   </span>
                   {p.Status === "Approved" ? (
                     <div
@@ -210,10 +210,10 @@ function BrandProducts({ brandProducts, brandData }) {
                             <div className="flex flex-row">
                               <div className="flex flex-col gap-2 w-1/2">
                                 <span className="text-base text-[#6F6F6F]">
-                                  Тоо хэмжээ
+                                  Контентын тоо
                                 </span>
                                 <span className="text-xl font-semibold text-[#6F6F6F]">
-                                  {p.LeftStock}/{p.Credit}
+                                  {p.ContentLeft}/{p.ContentLimit}
                                 </span>
                               </div>
                               <div className="flex flex-col gap-2 w-1/2">

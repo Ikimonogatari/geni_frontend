@@ -12,15 +12,21 @@ import { PlusCircleIcon } from "lucide-react";
 interface MediaUploaderProps {
   onChange: (file: string) => void;
   onDrop: ({ ids }: { ids: string[] }) => void;
+  initialImageUrls?: string[]; // Add this prop for preset values
 }
+
 const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
-  ({ onChange, onDrop, ...props }, ref) => {
+  ({ onChange, onDrop, initialImageUrls = [], ...props }, ref) => {
+    // Destructure initialImageUrls and merge with imageUrls from the hook
     const { getRootProps, getInputProps, imageUrls, uploadFileLoading } =
-      useMediaUpload({ onDrop });
+      useMediaUpload({ onDrop }); // No need to pass initialImageUrls to the hook
+
+    // Combine the initialImageUrls and the imageUrls from the hook
+    const allImageUrls = [...initialImageUrls, ...imageUrls];
 
     return (
       <div className="flex flex-col w-full">
-        {imageUrls.length < 1 && !uploadFileLoading ? (
+        {allImageUrls.length < 1 && !uploadFileLoading ? (
           <div
             {...getRootProps()}
             className="cursor-pointer bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:w-[554px] lg:h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
@@ -45,12 +51,11 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
         )}
 
         {!uploadFileLoading ? (
-          imageUrls.length > 0 && (
+          allImageUrls.length > 0 && (
             <div className="flex flex-col gap-10 w-full">
               <div className="w-full max-w-[554px]">
                 <Swiper
                   style={{
-                    // @ts-ignore
                     "--swiper-pagination-color": "#CA7FFE",
                     "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
                     "--swiper-pagination-bullet-inactive-opacity": "1",
@@ -62,7 +67,7 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
                   pagination={{ clickable: true }}
                   modules={[Pagination]}
                 >
-                  {imageUrls.map((url, index) => (
+                  {allImageUrls.map((url, index) => (
                     <SwiperSlide key={index}>
                       <Image
                         src={url}
@@ -95,27 +100,11 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
               loading={uploadFileLoading}
               aria-label="Loading Spinner"
               data-testid="loader"
-              className=""
               size={50}
             />
           </div>
         )}
       </div>
-      //   <Dropzone onDrop={handleDrop}>
-      //     {({ getRootProps, getInputProps, isDragActive }) => (
-      //       <div
-      //         {...getRootProps()}
-      //         className={`h-40 w-full cursor-pointer border-2 border-dashed border-slate-400 rounded-lg p-2 ${
-      //           isDragActive ? "bg-slate-50" : ""
-      //         }`}
-      //       >
-      //         <input {...getInputProps()} ref={ref} />
-      //         <p className="text-center text-slate-500">
-      //           {isDragActive ? "Drop the file here" : "Drag and drop or click to upload"}
-      //         </p>
-      //       </div>
-      //     )}
-      //   </Dropzone>
     );
   }
 );

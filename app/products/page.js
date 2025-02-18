@@ -24,18 +24,18 @@ function Page() {
     isLoading: listProductTypesLoading,
   } = useListProductTypesQuery();
 
-  const getStockStatus = (leftStock, quantity, createdAt) => {
-    const ratio = leftStock / quantity;
+  const getStockStatus = (contentLeft, contentLimit, createdAt) => {
+    const ratio = contentLeft / contentLimit;
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
     if (
       new Date(createdAt).getTime() > twentyFourHoursAgo.getTime() &&
-      leftStock > 0 &&
+      contentLeft > 0 &&
       ratio > 0.2
     ) {
       return { status: "Шинэ", className: "bg-[#4FB755]" };
-    } else if (leftStock === 0) {
+    } else if (contentLeft === 0) {
       return { status: "Дууссан", className: "bg-[#F41919]" };
     } else if (ratio <= 0.2) {
       return { status: "Цөөхөн үлдсэн", className: "bg-[#F49D19]" };
@@ -70,10 +70,10 @@ function Page() {
         );
       }
 
-      // Sort by the ratio of LeftStock to Quantity
+      // Sort by the ratio
       filtered.sort((a, b) => {
-        const ratioA = a.LeftStock / a.Credit;
-        const ratioB = b.LeftStock / b.Credit;
+        const ratioA = a.ContentLeft / a.ContentLimit;
+        const ratioB = b.ContentLeft / b.ContentLimit;
         return ratioB - ratioA; // Descending order
       });
 
@@ -132,8 +132,8 @@ function Page() {
             {listProductsData ? (
               filteredProducts.map((product) => {
                 const stockStatus = getStockStatus(
-                  product.LeftStock,
-                  product.Credit,
+                  product.ContentLeft,
+                  product.ContentLimit,
                   product.CreatedAt
                 );
                 return (
@@ -187,7 +187,7 @@ function Page() {
                       </span>
                       <div className="text-[#6F6F6F] flex flex-col text-xs sm:text-base mt-2">
                         <span className="">
-                          Үлдэгдэл: {product.LeftStock}/{product.Credit}
+                          Үлдэгдэл: {product.ContentLeft}/{product.ContentLimit}
                         </span>
                         <span className="">
                           Үнэ: ₮{Number(product.Price).toLocaleString()}

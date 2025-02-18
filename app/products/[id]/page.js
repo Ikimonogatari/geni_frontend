@@ -181,8 +181,8 @@ function Page() {
                 <div className="flex flex-row items-center gap-4">
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
                     <b>Үлдэгдэл: </b>
-                    {getPublicProductByIdData?.LeftStock}/
-                    {getPublicProductByIdData?.Credit}
+                    {getPublicProductByIdData?.ContentLeft}/
+                    {getPublicProductByIdData?.ContentLimit}
                   </span>
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
                     <b>Үнэ:</b> ₮
@@ -307,7 +307,7 @@ function Page() {
                 <span className="font-bold">Тоо ширхэг</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
                   {getPublicProductByIdData ? (
-                    getPublicProductByIdData.Credit
+                    getPublicProductByIdData.ContentLimit
                   ) : (
                     <></>
                   )}
@@ -332,11 +332,12 @@ function Page() {
                     onClick={() => setRequestState("not-sent")}
                     type="submit"
                     className={
-                      getPublicProductByIdData?.LeftStock === 0 && "opacity-55"
+                      getPublicProductByIdData?.ContentLeft === 0 &&
+                      "opacity-55"
                     }
                   >
                     <HandleButton
-                      disabled={getPublicProductByIdData?.LeftStock === 0}
+                      disabled={getPublicProductByIdData?.ContentLeft === 0}
                       width={`mt-8 w-full aspect-[371/84] max-h-[84px] md:h-auto md:max-w-sm`}
                       text={"Бүтээгдэхүүн авах"}
                       bg={"bg-[#CA7FFE]"}

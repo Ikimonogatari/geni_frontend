@@ -50,6 +50,7 @@ function Page() {
       amount: "",
       addInfoSource: "",
       credit: "",
+      creditUsage: "",
       quantity: "",
       price: "",
       totalPrice: "",
@@ -59,8 +60,17 @@ function Page() {
     },
     validationSchema: addProductSchema,
     onSubmit: async (values) => {
-      const { totalPrice, ...submitValues } = values;
-      await createProduct(submitValues);
+      const { credit, creditUsage, totalPrice, ...restValues } = values;
+      const calculatedQuantity = creditUsage * credit;
+
+      const modifiedValues = {
+        ...restValues,
+        credit: credit,
+        creditUsage: creditUsage,
+        quantity: calculatedQuantity,
+      };
+
+      await createProduct(modifiedValues);
     },
     validateOnMount: true,
   });
@@ -232,26 +242,26 @@ function Page() {
 
   const handlePriceChange = (e) => {
     const price = parseFloat(e.target.value);
-    const quantity = parseInt(formik.values.quantity, 10);
+    const creditUsage = parseInt(formik.values.creditUsage, 10);
 
-    if (!isNaN(quantity) && !isNaN(price)) {
+    if (!isNaN(creditUsage) && !isNaN(price)) {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", price * quantity);
+      formik.setFieldValue("totalPrice", price * creditUsage);
     } else {
       formik.setFieldValue("price", e.target.value);
       formik.setFieldValue("totalPrice", 0);
     }
   };
 
-  const handleQuantityChange = (e) => {
-    const quantity = parseInt(e.target.value, 10);
+  const handleCreditUsageChange = (e) => {
+    const creditUsage = parseInt(e.target.value, 10);
     const price = parseFloat(formik.values.price);
 
-    if (!isNaN(quantity) && !isNaN(price)) {
-      formik.setFieldValue("quantity", quantity); // Set as number
-      formik.setFieldValue("totalPrice", price * quantity);
+    if (!isNaN(creditUsage) && !isNaN(price)) {
+      formik.setFieldValue("creditUsage", creditUsage);
+      formik.setFieldValue("totalPrice", price * creditUsage);
     } else {
-      formik.setFieldValue("quantity", quantity); // Set as number
+      formik.setFieldValue("creditUsage", creditUsage);
       formik.setFieldValue("totalPrice", 0);
     }
   };
@@ -581,18 +591,20 @@ function Page() {
                 errorVisible={formik.touched.price && formik.errors.price}
               />
               <Input
-                id="quantity"
-                name="quantity"
+                id="creditUsage"
+                name="creditUsage"
                 type="number"
                 min={0}
                 className="no-spinner"
                 label="1 бүтээгчид илгээх бүтээгдэхүүний тоо"
                 hoverInfo="Энд та нэг бүтээгчид илгээж буй бүтээгдэхүүнийхээ тоо ширхэгийг оруулна."
-                onChange={handleQuantityChange}
+                onChange={handleCreditUsageChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.quantity}
-                errorText={formik.errors.quantity}
-                errorVisible={formik.touched.quantity && formik.errors.quantity}
+                value={formik.values.creditUsage}
+                errorText={formik.errors.creditUsage}
+                errorVisible={
+                  formik.touched.creditUsage && formik.errors.creditUsage
+                }
               />
               <Input
                 disabled={true}
@@ -617,7 +629,6 @@ function Page() {
                 name="credit"
                 type="number"
                 min={0}
-                max={30}
                 className="no-spinner"
                 label="Нийт хэдэн бүтээгчидтэй хамтрах вэ?"
                 hoverInfo="/1 хамтрал = 1 credit/"
