@@ -17,13 +17,7 @@ import GuideModal from "@/components/common/GuideModal";
 import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function BrandProfile() {
-  const {
-    data: getUserInfoData,
-    error: getUserInfoError,
-    isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery({});
-
+function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 16;

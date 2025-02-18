@@ -15,7 +15,7 @@ import TierInfoModal from "@/components/TierInfoModal";
 import LogoutButton from "@/components/common/LogoutButton";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function CreatorProfile() {
+function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 12;
@@ -27,12 +27,6 @@ function CreatorProfile() {
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
   } = useListContentGalleryQuery({});
-
-  const {
-    data: getUserInfoData,
-    error: getUserInfoError,
-    isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery({});
 
   const {
     data: listCreatorContentsData,

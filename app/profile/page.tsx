@@ -1,28 +1,48 @@
-import { cookies } from "next/headers";
+"use client";
 import BrandProfile from "./_components/brand/profile";
 import CreatorProfile from "./_components/creator/profile";
 import StudentProfile from "./_components/student/profile";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useGetUserInfoQuery } from "../services/service";
+import Loader from "@/components/common/Loader";
 
-export default async function Page() {
-  const cookieStore = cookies();
-  const userType = cookieStore.get("userType")?.value;
-  const userInfo = cookieStore.get("user-info")?.value;
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+export default function Page() {
+  // @ts-ignore
+  const { data: userInfo, isLoading, error } = useGetUserInfoQuery();
+  if (isLoading) {
+    return <Loader />;
+  }
+  const router = useRouter();
 
   if (
-    userType === "Brand" &&
-    !parsedUserInfo?.IsVerified &&
-    parsedUserInfo?.OnBoardingStatus == "New"
+    userInfo?.UserType === "Brand" &&
+    userInfo?.IsVerified === false &&
+    userInfo?.OnBoardingStatus === "New"
   ) {
-    return redirect("/onboarding");
+    router.push("/onboarding");
+    return null;
   }
 
   return (
     <>
-      {userType === "Student" && <StudentProfile />}
-      {userType === "Creator" && <CreatorProfile />}
-      {userType === "Brand" && <BrandProfile />}
+      {userInfo?.UserType === "Student" && (
+        <StudentProfile
+          getUserInfoData={userInfo}
+          getUserInfoLoading={isLoading}
+        />
+      )}
+      {userInfo?.UserType === "Creator" && (
+        <CreatorProfile
+          getUserInfoData={userInfo}
+          getUserInfoLoading={isLoading}
+        />
+      )}
+      {userInfo?.UserType === "Brand" && (
+        <BrandProfile
+          getUserInfoData={userInfo}
+          getUserInfoLoading={isLoading}
+        />
+      )}
     </>
   );
 }

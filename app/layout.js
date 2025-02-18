@@ -10,6 +10,8 @@ import { store } from "./store";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { UserInfoProvider } from "./context/UserInfoContext";
+import { Suspense } from "react";
+import Loader from "@/components/common/Loader";
 
 const mabryPro = localFont({
   src: [
@@ -40,7 +42,7 @@ export default function RootLayout({ children }) {
         <Head>
           <title>GENI</title>
         </Head>
-        <body className="bg-white text-[#2D262D]">
+        <body className="bg-white text-[#2D262D] min-h-screen">
           <Toaster
             toastOptions={{
               className: "text-lg",
@@ -49,9 +51,13 @@ export default function RootLayout({ children }) {
             reverseOrder="false"
           />
           <UserInfoProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <Suspense fallback={<Loader />}>
+              <div className="flex flex-col min-h-screen h-full">
+                <Navbar />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
+            </Suspense>
           </UserInfoProvider>
         </body>
       </html>

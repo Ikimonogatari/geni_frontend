@@ -16,18 +16,12 @@ import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
 
-function StudentProfile() {
+function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 12;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
   const router = useRouter();
-
-  const {
-    data: getUserInfoData,
-    error: getUserInfoError,
-    isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery({});
 
   const {
     data: listCreatorContentsData,
