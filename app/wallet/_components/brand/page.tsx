@@ -62,13 +62,25 @@ function BrandWallet() {
                     Сүүлд цэнэглэсэн:
                   </span>
                   <div className="col-span-1 flex flex-col gap-4">
+                    {getBrandCreditInfoData?.LastDepositedCredit ? (
+                      <span>
+                        {getBrandCreditInfoData?.LastDepositedCredit} Кредит
+                      </span>
+                    ) : (
+                      <></>
+                    )}
+
                     <span>
-                      {getBrandCreditInfoData?.LastDepositedCredit} Кредит
-                    </span>
-                    <span>
-                      {new Date(getBrandCreditInfoData?.LastDepositedDate)
-                        .toLocaleDateString("en-CA")
-                        .replace(/-/g, ".")}
+                      {getBrandCreditInfoData?.LastDepositedDate &&
+                      !isNaN(
+                        new Date(
+                          getBrandCreditInfoData?.LastDepositedDate
+                        ).getTime()
+                      )
+                        ? new Date(getBrandCreditInfoData?.LastDepositedDate)
+                            .toLocaleDateString("en-CA")
+                            .replace(/-/g, ".")
+                        : ""}
                     </span>
                   </div>
                 </div>
