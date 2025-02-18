@@ -56,6 +56,7 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
               <div className="w-full max-w-[554px]">
                 <Swiper
                   style={{
+                    // @ts-ignore
                     "--swiper-pagination-color": "#CA7FFE",
                     "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
                     "--swiper-pagination-bullet-inactive-opacity": "1",
