@@ -179,15 +179,16 @@ function Page() {
                           </div>
                         ))}
                       </div>
-                      <span className="font-bold text-sm sm:text-xl">
+                      <span className="text-xs sm:text-lg">
                         {product.BrandName}
                       </span>
-                      <span className="text-xs sm:text-lg">
+                      <span className="font-bold text-sm sm:text-xl">
                         {product.ProductName}
                       </span>
                       <div className="text-[#6F6F6F] flex flex-col text-xs sm:text-base mt-2">
                         <span className="">
-                          Үлдэгдэл: {product.ContentLeft}/{product.ContentLimit}
+                          Хамтрах хүсэлт:: {product.ContentLeft}/
+                          {product.ContentLimit}
                         </span>
                         <span className="">
                           Үнэ: ₮{Number(product.Price).toLocaleString()}
