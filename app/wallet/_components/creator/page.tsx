@@ -54,10 +54,10 @@ function CreatorWallet() {
                 </span>
               </div>
             </div>
-            <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
+            {/* <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
               <AddBalance walletInfo={getWalletInfoData} />
               <WithdrawCredit walletInfo={getWalletInfoData} />
-            </div>
+            </div> */}
           </div>
           {/* <div className="min-w-[540px] w-full pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
             <span className="text-2xl font-bold">Дансны түүх</span>
