@@ -312,6 +312,12 @@ export const geniApi = createApi({
         method: "DELETE",
       }),
     }),
+    disableProduct: builder.mutation({
+      query: (productId) => ({
+        url: `/api/web/private/product/active?productId=${productId}`,
+        method: "PUT",
+      }),
+    }),
     editProduct: builder.mutation({
       query: (body) => ({
         url: `/api/web/private/product`,
@@ -437,6 +443,7 @@ export const {
   useGetPublicCreatorByIdQuery,
   useListPublicCreatorContentGalleryQuery,
   useDeleteProductMutation,
+  useDisableProductMutation,
   useEditProductMutation,
   useBecomeCreatorMutation,
   useUndoContentRequestMutation,

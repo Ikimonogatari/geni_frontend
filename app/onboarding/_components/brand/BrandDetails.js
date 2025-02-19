@@ -157,12 +157,7 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
         <div className="flex flex-col items-center gap-4 sm:gap-7 w-full sm:max-w-[194px] xl:max-w-[258px]">
           {parsedUserInfo ? (
             <Image
-              // src={profileImage}
-              src={
-                parsedUserInfo?.ProfileLink
-                  ? parsedUserInfo?.ProfileLink
-                  : "/dummy-brand.png"
-              }
+              src={profileImage}
               width={194}
               height={194}
               loading="lazy"

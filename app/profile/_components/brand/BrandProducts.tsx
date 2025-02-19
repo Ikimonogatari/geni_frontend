@@ -12,6 +12,7 @@ import {
 import {
   useAddProductSupplyMutation,
   useDeleteProductMutation,
+  useDisableProductMutation,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -19,11 +20,13 @@ import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { ErrorText } from "@/components/ui/error-text";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import EmptyList from "@/components/common/EmptyList";
+import DisableProductModal from "./DisableProductModal";
 
 function BrandProducts({ brandProducts, brandData }) {
   const router = useRouter();
   const [count, setCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDisabling, setIsDisabling] = useState(false);
 
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count > 0 ? count - 1 : 0);
@@ -37,6 +40,16 @@ function BrandProducts({ brandProducts, brandData }) {
       isSuccess: deleteProductSuccess,
     },
   ] = useDeleteProductMutation();
+
+  const [
+    disableProduct,
+    {
+      data: disableProductData,
+      error: disableProductError,
+      isLoading: disableProductLoading,
+      isSuccess: disableProductSuccess,
+    },
+  ] = useDisableProductMutation();
 
   const [
     addProductSupply,
@@ -67,6 +80,16 @@ function BrandProducts({ brandProducts, brandData }) {
     }
   }, [deleteProductSuccess, deleteProductError]);
 
+  useEffect(() => {
+    if (disableProductSuccess) {
+      toast.success("Амжилттай");
+      setIsDisabling(false);
+    } else if (disableProductError) {
+      //@ts-ignore
+      toast.error(disableProductError?.data?.error);
+    }
+  }, [disableProductSuccess, disableProductError]);
+
   const addSupply = (productId) => {
     addProductSupply({
       ProductId: productId,
@@ -74,14 +97,18 @@ function BrandProducts({ brandProducts, brandData }) {
     });
   };
 
-  const getStockStatus = (leftStock, quantity) => {
+  const getStockStatus = (leftStock, quantity, isActive) => {
     const ratio = leftStock / quantity;
-    if (leftStock === 0) {
-      return { status: "Дууссан", className: "text-[#F41919]" };
-    } else if (ratio <= 0.2) {
-      return { status: "Дуусах дөхөж байна", className: "text-[#F49D19]" };
+    if (isActive) {
+      if (leftStock === 0) {
+        return { status: "Дууссан", className: "text-[#F41919]" };
+      } else if (ratio <= 0.2) {
+        return { status: "Дуусах дөхөж байна", className: "text-[#F49D19]" };
+      } else {
+        return { status: "Хангалттай байна", className: "text-[#4FB755]" };
+      }
     } else {
-      return { status: "Хангалттай байна", className: "text-[#4FB755]" };
+      return { status: "Идэвхгүй", className: "text-[#F41919]" };
     }
   };
 
@@ -96,6 +123,10 @@ function BrandProducts({ brandProducts, brandData }) {
   const handleDeleteProduct = async (productId) => {
     await deleteProduct(productId);
     router.replace("/profile");
+  };
+
+  const handleDisableProduct = async (productId) => {
+    await disableProduct(productId);
   };
 
   return (
@@ -136,7 +167,11 @@ function BrandProducts({ brandProducts, brandData }) {
           {
             // sortedBrandProducts
             brandProducts?.map((p, i) => {
-              const stockStatus = getStockStatus(p.LeftStock, p.Credit);
+              const stockStatus = getStockStatus(
+                p.LeftStock,
+                p.Credit,
+                p.IsActive
+              );
               const requestStatus = getRequestStatus(p.Status);
               return (
                 <div
@@ -240,8 +275,17 @@ function BrandProducts({ brandProducts, brandData }) {
                                 alt=""
                                 className="w-6 h-6 aspect-square"
                               />
-                              Мэдээлэл засах
+                              Засах
                             </a>
+                            {p.Status === "Approved" && (
+                              <DisableProductModal
+                                brandData={brandData}
+                                p={p}
+                                isDisabling={isDisabling}
+                                setIsDisabling={setIsDisabling}
+                                handleDisableProduct={handleDisableProduct}
+                              />
+                            )}
                             {p.Status === "Approved" ? (
                               <Dialog>
                                 <DialogTrigger className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6">
