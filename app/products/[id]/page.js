@@ -180,7 +180,7 @@ function Page() {
               {getPublicProductByIdData ? (
                 <div className="flex flex-row items-center gap-4">
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
-                    <b>Үлдэгдэл: </b>
+                    <b>Хамтрах хүсэлт:: </b>
                     {getPublicProductByIdData?.ContentLeft} /{" "}
                     {getPublicProductByIdData?.ContentLimit}
                   </span>
@@ -341,10 +341,7 @@ function Page() {
                 <span className="font-bold">Бүтээгдэхүүний тоо</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
                   {getPublicProductByIdData ? (
-                    <>
-                      {getPublicProductByIdData.LeftStock} /{" "}
-                      {getPublicProductByIdData.Quantity}
-                    </>
+                    <>{getPublicProductByIdData.Quantity}</>
                   ) : (
                     <></>
                   )}
