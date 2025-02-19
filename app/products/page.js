@@ -187,11 +187,11 @@ function Page() {
                       </span>
                       <div className="text-[#6F6F6F] flex flex-col text-xs sm:text-base mt-2">
                         <span className="">
-                          Хамтрах хүсэлт:: {product.ContentLeft}/
+                          Хамтрах хүсэлт: {product.ContentLeft}/
                           {product.ContentLimit}
                         </span>
                         <span className="">
-                          Үнэ: ₮{Number(product.Price).toLocaleString()}
+                          Үнэ: ₮{Number(product.TotalPrice).toLocaleString()}
                         </span>
                       </div>
                     </div>

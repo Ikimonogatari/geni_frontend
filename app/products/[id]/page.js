@@ -181,7 +181,7 @@ function Page() {
                 <div className="flex flex-row items-center gap-4">
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
                     <b>Үлдэгдэл: </b>
-                    {getPublicProductByIdData?.ContentLeft}/
+                    {getPublicProductByIdData?.ContentLeft} /{" "}
                     {getPublicProductByIdData?.ContentLimit}
                   </span>
                   <span className="px-7 py-3 bg-[#F5F4F0] rounded-3xl">
@@ -211,32 +211,31 @@ function Page() {
                       <></>
                     )}
                   </span>
-                  <span className="text-lg">
-                    {getPublicProductByIdData ? (
-                      getPublicProductByIdData.ProductName
+                  <div className="flex flex-wrap gap-2">
+                    {getPublicProductByIdData &&
+                    getPublicProductByIdData.ProductTypes != null ? (
+                      getPublicProductByIdData?.ProductTypes?.map((t, i) => (
+                        <div
+                          key={i}
+                          className="bg-[#CA7FFE] text-xs text-white rounded-full px-4 py-2"
+                        >
+                          {t.TypeName}
+                        </div>
+                      ))
                     ) : (
                       <></>
                     )}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {getPublicProductByIdData &&
-                  getPublicProductByIdData.ProductTypes != null ? (
-                    getPublicProductByIdData?.ProductTypes?.map((t, i) => (
-                      <div
-                        key={i}
-                        className="bg-[#CA7FFE] text-xs text-white rounded-full px-4 py-2"
-                      >
-                        {t.TypeName}
-                      </div>
-                    ))
-                  ) : (
-                    <></>
-                  )}
+                  </div>
                 </div>
               </div>
-
-              <div className="flex flex-col gap-3 text-lg mt-10">
+              <span className="font-extrabold text-3xl sm:text-4xl my-0 sm:my-5">
+                {getPublicProductByIdData ? (
+                  getPublicProductByIdData.ProductName
+                ) : (
+                  <></>
+                )}
+              </span>
+              <div className="flex flex-col gap-3 text-lg">
                 <span className="font-bold">
                   Бүтээгдэхүүний дэлгэрэнгүй мэдээлэл
                 </span>
@@ -249,6 +248,18 @@ function Page() {
                 </span>
               </div>
               <div className="flex flex-col gap-3 text-lg md:max-w-sm">
+                <label className="font-bold" htmlFor="name">
+                  Нэмэлт мэдээлэл авах сурвалж
+                </label>
+                <p className="p-4 border border-[#CDCDCD] rounded-lg">
+                  {getPublicProductByIdData ? (
+                    getPublicProductByIdData.AddInfoSource
+                  ) : (
+                    <></>
+                  )}
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
                 <span className="font-bold">
                   Брэндийн хүсэж буй контентийн төрөл
                 </span>
@@ -258,12 +269,7 @@ function Page() {
                     getPublicProductByIdData?.ContentType.map((c, i) => (
                       <div
                         key={i}
-                        onClick={() => setContentTypeOption(c.Val)}
-                        className={`${
-                          contentTypeOption === c.Val
-                            ? "border-[#4D55F5] border-[2px]"
-                            : "border-[#CDCDCD] border-[2px]"
-                        } rounded-lg p-4 cursor-pointer transition-all duration-150`}
+                        className={`border-[#CDCDCD] border-[2px] rounded-lg p-4`}
                       >
                         {c.Name}
                       </div>
@@ -294,7 +300,7 @@ function Page() {
                   getPublicProductByIdData?.ContentResult.map((c, i) => (
                     <div
                       key={i}
-                      className={`border-[#CDCDCD] border-[2px] rounded-lg p-4 cursor-pointer transition-all duration-150`}
+                      className={`border-[#CDCDCD] border-[2px] rounded-lg p-4`}
                     >
                       {c.Name}
                     </div>
@@ -304,28 +310,77 @@ function Page() {
                 )}
               </div>
               <div className="flex flex-col gap-3 text-lg md:max-w-sm">
-                <span className="font-bold">Тоо ширхэг</span>
-                <span className="p-4 border border-[#CDCDCD] rounded-lg">
+                <label className="font-bold" htmlFor="name">
+                  Бүтээгдэхүүний хэмжээ
+                </label>
+                <p className="p-4 border border-[#CDCDCD] rounded-lg">
                   {getPublicProductByIdData ? (
-                    getPublicProductByIdData.ContentLimit
+                    getPublicProductByIdData.Amount
+                  ) : (
+                    <></>
+                  )}
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
+                <span className="font-bold">
+                  Бүтээгчид илгээх нэгж бүтээгдэхүүний үнийн дүн
+                </span>
+                <span className="p-4 border border-[#CDCDCD] rounded-lg">
+                  ₮
+                  {getPublicProductByIdData &&
+                  getPublicProductByIdData.Price != null ? (
+                    <>
+                      {Number(getPublicProductByIdData?.Price).toLocaleString()}
+                    </>
                   ) : (
                     <></>
                   )}
                 </span>
               </div>
               <div className="flex flex-col gap-3 text-lg md:max-w-sm">
-                <span className="font-bold">Үнэ</span>
+                <span className="font-bold">Бүтээгдэхүүний тоо</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
-                  ₮
-                  {getPublicProductByIdData &&
-                  getPublicProductByIdData.Price != null ? (
-                    getPublicProductByIdData.Price
+                  {getPublicProductByIdData ? (
+                    <>
+                      {getPublicProductByIdData.LeftStock} /{" "}
+                      {getPublicProductByIdData.Quantity}
+                    </>
                   ) : (
                     <></>
                   )}
                 </span>
               </div>
-
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
+                <span className="font-bold">
+                  Бүтээгчид илгээж буй нийт бүтээгдэхүүний үнийн дүн
+                </span>
+                <span className="p-4 border border-[#CDCDCD] rounded-lg">
+                  ₮
+                  {getPublicProductByIdData &&
+                  getPublicProductByIdData.TotalPrice != null ? (
+                    <>
+                      {Number(
+                        getPublicProductByIdData?.TotalPrice
+                      ).toLocaleString()}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </span>
+              </div>
+              <div className="flex flex-col gap-3 text-lg md:max-w-sm">
+                <span className="font-bold">Хамтрах хүсэлт</span>
+                <span className="p-4 border border-[#CDCDCD] rounded-lg">
+                  {getPublicProductByIdData ? (
+                    <>
+                      {getPublicProductByIdData.ContentLeft} /{" "}
+                      {getPublicProductByIdData.ContentLimit}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </span>
+              </div>
               {userType === "Creator" ? (
                 <Dialog>
                   <DialogTrigger
