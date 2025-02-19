@@ -179,13 +179,13 @@ function Page() {
                           </div>
                         ))}
                       </div>
-                      <span className="text-xs sm:text-lg">
+                      <span className="text-xs sm:text-xl">
                         {product.BrandName}
                       </span>
-                      <span className="font-bold text-sm sm:text-xl">
+                      <span className="font-bold text-sm sm:text-2xl">
                         {product.ProductName}
                       </span>
-                      <div className="text-[#6F6F6F] flex flex-col text-xs sm:text-base mt-2">
+                      <div className="text-[#6F6F6F] flex flex-col text-xs sm:text-base mt-0 sm:mt-2">
                         <span className="">
                           Хамтрах хүсэлт: {product.ContentLeft}/
                           {product.ContentLimit}
