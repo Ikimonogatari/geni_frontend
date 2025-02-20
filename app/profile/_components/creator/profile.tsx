@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
-  useGetUserInfoQuery,
   useListContentGalleryQuery,
   useListCreatorContentsQuery,
 } from "@/app/services/service";
@@ -14,6 +13,7 @@ import CreatorTier from "@/components/CreatorTier";
 import TierInfoModal from "@/components/TierInfoModal";
 import LogoutButton from "@/components/common/LogoutButton";
 import { Skeleton } from "@/components/ui/skeleton";
+import usePagination from "@/components/hooks/usePagination";
 
 function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const [profileState, setProfileState] = useState("content-progress");
@@ -104,46 +104,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
 
   const totalPages = getTotalPages();
 
-  const getPageNumbers = () => {
-    const totalNumbers = 3; // Number of page numbers to show
-    const totalBlocks = totalNumbers + 2; // Including first and last page
-
-    if (totalPages > totalBlocks) {
-      let pages = [];
-      const leftBound = Math.max(1, currentPage - 2);
-      const rightBound = Math.min(totalPages, currentPage + 2);
-      const beforeLastPage = totalPages - 1;
-
-      const startPage = leftBound > 2 ? leftBound : 1;
-      const endPage = rightBound < beforeLastPage ? rightBound : totalPages;
-
-      pages = Array.from(
-        { length: endPage - startPage + 1 },
-        (_, index) => startPage + index
-      );
-
-      const hasLeftSpill = startPage > 2;
-      const hasRightSpill = endPage < beforeLastPage;
-
-      if (hasLeftSpill) {
-        pages = ["...", ...pages];
-      }
-      if (hasRightSpill) {
-        pages = [...pages, "..."];
-      }
-
-      if (pages[0] !== 1) {
-        pages = [1, ...pages];
-      }
-      if (pages[pages.length - 1] !== totalPages) {
-        pages = [...pages, totalPages];
-      }
-
-      return pages;
-    }
-
-    return Array.from({ length: totalPages }, (_, index) => index + 1);
-  };
+  const pageNumbers = usePagination(totalPages, currentPage);
 
   const instagramLink = getUserInfoData?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Instagram"
@@ -364,7 +325,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             )}
 
             <div className="flex flex-row items-center gap-3">
-              {getPageNumbers().map((pageNumber, index) => (
+              {pageNumbers.map((pageNumber, index) => (
                 <button
                   key={index}
                   onClick={() => pageNumber !== "..." && paginate(pageNumber)}
