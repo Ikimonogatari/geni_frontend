@@ -15,6 +15,7 @@ import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
+import Pagination from "@/components/common/Pagination";
 
 function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -239,54 +240,16 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
         </div>
 
         {listCreatorContentsData && totalPages > 1 ? (
-          <div className="container px-7 mx-auto text-[#2D262D] flex flex-row gap-3 items-end justify-end mt-5">
-            {currentPage > 1 && (
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#4FB755] px-5 py-2 rounded-lg text-white font-bold"
-              >
-                <Image
-                  src={"/arrow-right-icon.png"}
-                  width={12}
-                  height={12}
-                  alt="arrow"
-                  className="rotate-180 w-[10px] h-[10px] sm:w-3 sm:h-3"
-                />
-              </button>
-            )}
-
-            <div className="flex flex-row items-center gap-3">
-              {pageNumbers.map((pageNumber, index) => (
-                <button
-                  key={index}
-                  onClick={() => pageNumber !== "..." && paginate(pageNumber)}
-                  className={`w-10 h-10 transition-all duration-150 flex justify-center items-center border-[1px] rounded-full bg-[#F5F4F0] ${
-                    pageNumber === currentPage
-                      ? "border-[#4FB755]"
-                      : "border-none"
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-            </div>
-            {currentPage != totalPages && (
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className="flex flex-row items-center gap-2 border-[1px] border-[#2D262D] bg-[#4FB755] px-5 py-2 rounded-lg text-white font-bold"
-              >
-                <Image
-                  src={"/arrow-right-icon.png"}
-                  width={12}
-                  height={12}
-                  alt="arrow"
-                  className="w-[10px] h-[10px] sm:w-3 sm:h-3"
-                />
-              </button>
-            )}
-          </div>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            pageNumbers={pageNumbers}
+            handlePrevPage={handlePrevPage}
+            handleNextPage={handleNextPage}
+            paginate={paginate}
+            bg={"bg-geni-green"}
+            border={"border-geni-green"}
+          />
         ) : (
           <></>
         )}

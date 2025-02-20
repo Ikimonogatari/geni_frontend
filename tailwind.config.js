@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       colors: {
         "geni-blue": "#4D55F5",
+        "geni-pink": "#CA7FFE",
         "geni-green": "#4FB755",
         primary: "#2D262D",
         "geni-gray": "#CDCDCD",
