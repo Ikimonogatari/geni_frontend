@@ -2,16 +2,17 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import BackButton from "@/components/common/BackButton";
 import Image from "next/image";
 import CreatorDetails from "./CreatorDetails";
 import Cookies from "js-cookie";
 import { useEditCreatorProfileMutation } from "@/app/services/service";
+import CreatorQuestions from "./CreatorQuestions";
+import UploadSampleContent from "./UploadSampleContent";
 
 function CreatorOnboarding() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -23,7 +24,7 @@ function CreatorOnboarding() {
   const formik = useFormik({
     initialValues: {
       FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
+      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
       Email: parsedUserInfo ? parsedUserInfo?.Email : "",
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       BirthDate: parsedUserInfo ? parsedUserInfo?.BirthDate : "",
@@ -45,9 +46,46 @@ function CreatorOnboarding() {
     },
   });
 
+  const questionsFormik = useFormik({
+    initialValues: {
+      Job: parsedUserInfo ? parsedUserInfo?.FirstName : "",
+      TechUses: parsedUserInfo ? parsedUserInfo?.LastName : "",
+      Motives: parsedUserInfo ? parsedUserInfo?.Email : "",
+    },
+    validationSchema: Yup.object({
+      Job: Yup.string().required("Заавал бөглөнө үү"),
+      TechUses: Yup.string().required("Заавал бөглөнө үү"),
+      Motives: Yup.string().required("Заавал бөглөнө үү"),
+    }),
+    onSubmit: async (values) => {
+      try {
+      } catch (error) {
+        toast.error("Алдаа гарлаа");
+        console.error("Error submitting the form", error);
+      }
+    },
+  });
+  const contentUploadFormik = useFormik({
+    initialValues: {
+      contentLink: "",
+      content: [],
+    },
+    validationSchema: Yup.object({
+      contentLink: Yup.string().required("Заавал бөглөнө үү"),
+      content: Yup.array().required("Заавал бөглөнө үү"),
+    }),
+    onSubmit: async (values) => {
+      try {
+      } catch (error) {
+        toast.error("Алдаа гарлаа");
+        console.error("Error submitting the form", error);
+      }
+    },
+  });
+
   const renderStepContent = () => {
     switch (step) {
-      case 1:
+      case 0:
         return (
           <CreatorDetails
             parsedUserInfo={parsedUserInfo}
@@ -55,18 +93,10 @@ function CreatorOnboarding() {
             setStep={setStep}
           />
         );
+      case 1:
+        return <CreatorQuestions formik={questionsFormik} />;
       case 2:
-        return (
-          <p className="text-lg sm:text-xl font-semibold">
-            Асуултын хэсгийн агуулга энд байна.
-          </p>
-        );
-      case 3:
-        return (
-          <p className="text-lg sm:text-xl font-semibold">
-            Контент нэмэх хэсгийн агуулга энд байна.
-          </p>
-        );
+        return <UploadSampleContent formik={contentUploadFormik} />;
       default:
         return null;
     }
@@ -74,21 +104,25 @@ function CreatorOnboarding() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-36 sm:mt-48 mb-12 px-5">
-        <div className="max-w-5xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container">
+      <div className="mt-24 sm:mt-36 mb-12">
+        <div className="max-w-5xl min-h-screen mx-auto sm:px-14 py-5 sm:py-11 container">
           <BackButton />
           <div className="flex flex-row justify-between items-center gap-5 my-7 w-full">
             <p className="text-xl sm:text-3xl xl:text-4xl font-bold">
               Geni Creator болох өргөдөл
             </p>
           </div>
-          <div className="flex flex-row items-start gap-10">
-            <div className="flex flex-col gap-5">
+          <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-10">
+            <div className="grid grid-cols-3 sm:grid-cols-1 gap-2 sm:gap-5 sm:max-w-[215px] w-full">
               {sidebarNavs.map((s, i) => (
                 <div
                   key={i}
-                  className="flex flex-row items-center gap-3"
-                  onClick={() => setStep(i + 1)}
+                  className={`${
+                    i === step
+                      ? "border border-primary text-primary"
+                      : "border border-white text-[#6F6F6F]"
+                  } transition-all duration-150 col-span-1 w-full rounded-lg p-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-3`}
+                  onClick={() => setStep(i)}
                 >
                   <Image
                     src={`/creator-onboarding-icon${i + 1}.png`}
@@ -97,11 +131,13 @@ function CreatorOnboarding() {
                     className="w-6 h-6 aspect-square"
                     alt=""
                   />
-                  <span className="text-base sm:text-lg">{s}</span>
+                  <span className="text-xs sm:text-lg text-center whitespace-normal sm:whitespace-nowrap">
+                    {s}
+                  </span>
                 </div>
               ))}
             </div>
-            <div className="bg-geni-gray h-[835px] w-[1px] py-1"></div>
+            <div className="bg-geni-gray h-[1px] sm:h-[835px] w-full sm:w-[1px] sm:py-1"></div>
             {renderStepContent()}
           </div>
         </div>
