@@ -48,13 +48,13 @@ function CreatorOnboarding() {
 
   const questionsFormik = useFormik({
     initialValues: {
-      Job: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      TechUses: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      Motives: parsedUserInfo ? parsedUserInfo?.Email : "",
+      Job: "",
+      TechUsage: "",
+      Motives: "",
     },
     validationSchema: Yup.object({
       Job: Yup.string().required("Заавал бөглөнө үү"),
-      TechUses: Yup.string().required("Заавал бөглөнө үү"),
+      TechUsage: Yup.string().required("Заавал бөглөнө үү"),
       Motives: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {

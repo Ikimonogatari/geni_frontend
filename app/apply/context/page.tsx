@@ -4,8 +4,8 @@ import BecomeGeniButton from "@/components/common/BecomeGeniButton";
 
 function page() {
   return (
-    <div className="mt-[96px] sm:mt-[136px] md:mt-[152px] container text-[#2D262D] max-w-7xl mx-auto pb-4 pt-14 sm:py-28 px-7 flex flex-col md:flex-row gap-8 lg:items-center">
-      <div className="flex flex-col gap-12 w-full md:w-1/2">
+    <div className="mt-[96px] sm:mt-[136px] md:mt-[152px] container text-[#2D262D] max-w-6xl mx-auto pb-4 pt-14 sm:py-28 px-7 flex flex-col md:flex-row gap-8 lg:items-center">
+      <div className="flex flex-col gap-5 sm:gap-12 w-full md:w-1/2">
         <span className="text-2xl sm:text-3xl xl:text-4xl font-bold mt-0 sm:mt-3">
           Чадвараа сориод шууд брэндүүдтэй хамтарч эхлэх үү?
         </span>
@@ -28,7 +28,7 @@ function page() {
           />
         </div>
         <BecomeGeniButton
-          width={"aspect-[371/84] max-w-[320px] lg:max-w-[371px]"}
+          width={"aspect-[371/84] w-full lg:max-w-[371px]"}
           link={"/apply"}
           text={"Өргөдөл илгээх"}
           bg={"bg-geni-pink"}

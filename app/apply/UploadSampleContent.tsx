@@ -1,4 +1,3 @@
-import MediaUploader from "@/components/common/MediaUploader";
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
@@ -10,6 +9,7 @@ import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import Image from "next/image";
+import Button from "@/components/ui/button";
 
 function UploadSampleContent({ formik }) {
   const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
@@ -104,7 +104,7 @@ function UploadSampleContent({ formik }) {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
       <div className="flex flex-col gap-3 text-lg">
         <span className="font-bold">Бүтээгчийн чадварын сорилт</span>
         <span>
@@ -169,7 +169,10 @@ function UploadSampleContent({ formik }) {
           </div>
         </div>
       )}
-    </div>
+      <Button type="button" className="w-full bg-secondary text-white">
+        Өргөдөл илгээх
+      </Button>
+    </form>
   );
 }
 

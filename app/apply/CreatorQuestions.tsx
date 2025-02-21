@@ -1,18 +1,25 @@
+import Button from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 
 function CreatorQuestions({ formik }) {
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
       <Textarea
         id="Job"
         name="Job"
-        placeholder="Контент агуулга болон хийцлэлтэй холбоотой бүтээгчээс хүсэх нэмэлт зүйлс"
-        label="Контент бүтээгчээс хүсэх хүсэлт"
-        hoverInfo="Контентийн агуулга болон хийцлэлтэй хамааралтай брэндийн чиглүүлэг болон бүтээгчээс хүсэх хүсэлтээ бичсэнээр таны хүсэж буй контент гарах магадлал ихсэнэ."
+        placeholder="Хариулт"
+        label={
+          <div className="flex flex-col">
+            <span className="font-bold">Одоо ажил эрхэлдэг үү?</span>
+            <span>
+              Тийм бол ямар ажил эрхэлдэг вэ? Үгүй бол шалтгаанаа хуваалцана уу.
+            </span>
+          </div>
+        }
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values.requestForCreators}
+        value={formik.values.Job}
         rows={5}
         maxLength={600}
         charCount={formik.values.Job.length}
@@ -20,26 +27,24 @@ function CreatorQuestions({ formik }) {
         errorVisible={formik.touched.Job && formik.errors.Job}
       />
       <Textarea
-        id="TechUses"
-        name="TechUses"
-        placeholder="Контент агуулга болон хийцлэлтэй холбоотой бүтээгчээс хүсэх нэмэлт зүйлс"
-        label="Контент бүтээгчээс хүсэх хүсэлт"
-        hoverInfo="Контентийн агуулга болон хийцлэлтэй хамааралтай брэндийн чиглүүлэг болон бүтээгчээс хүсэх хүсэлтээ бичсэнээр таны хүсэж буй контент гарах магадлал ихсэнэ."
+        id="TechUsage"
+        name="TechUsage"
+        placeholder="Хариулт"
+        label="Өөрийн өдөр тутамдаа хамгийн түгээмэл ашигладаг технологийн платформ, гар утасны апп зэргээ хуваалцаарай"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values.TechUses}
+        value={formik.values.TechUsage}
         rows={5}
         maxLength={600}
-        charCount={formik.values.TechUses.length}
-        errorText={formik.errors.TechUses}
-        errorVisible={formik.touched.TechUses && formik.errors.TechUses}
+        charCount={formik.values.TechUsage.length}
+        errorText={formik.errors.TechUsage}
+        errorVisible={formik.touched.TechUsage && formik.errors.TechUsage}
       />
       <Textarea
-        id=""
+        id="Motives"
         name="Motives"
-        placeholder="Контент агуулга болон хийцлэлтэй холбоотой бүтээгчээс хүсэх нэмэлт зүйлс"
-        label="Контент бүтээгчээс хүсэх хүсэлт"
-        hoverInfo="Контентийн агуулга болон хийцлэлтэй хамааралтай брэндийн чиглүүлэг болон бүтээгчээс хүсэх хүсэлтээ бичсэнээр таны хүсэж буй контент гарах магадлал ихсэнэ."
+        placeholder="Хариулт"
+        label='Та яагаад Geni creator болохыг зорьж байна вэ? Хувийн "яагаад"-аа бидэнд хуваалцаарай.'
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.Motives}
@@ -49,7 +54,10 @@ function CreatorQuestions({ formik }) {
         errorText={formik.errors.Motives}
         errorVisible={formik.touched.Motives && formik.errors.Motives}
       />
-    </div>
+      <Button type="button" className="w-full bg-secondary text-white">
+        Хадгалах
+      </Button>
+    </form>
   );
 }
 
