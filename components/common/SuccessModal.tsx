@@ -8,28 +8,34 @@ import {
 import Image from "next/image";
 
 interface SuccessModalProps {
+  isMainDialogOpen?: boolean;
   setIsMainDialogOpen: (open: boolean) => void;
   modalImage: string;
   modalTitle: string;
-  modalTriggerText: string;
+  modalTriggerText?: string;
+  context?: React.ReactNode;
   imageClassName: string;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
+  isMainDialogOpen,
   setIsMainDialogOpen,
   modalImage,
   modalTitle,
   modalTriggerText,
+  context,
   imageClassName,
 }) => {
   return (
-    <Dialog onOpenChange={setIsMainDialogOpen}>
-      <DialogTrigger
-        type="submit"
-        className={`w-full py-4 text-white text-lg sm:text-xl font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
-      >
-        {modalTriggerText}
-      </DialogTrigger>
+    <Dialog open={isMainDialogOpen} onOpenChange={setIsMainDialogOpen}>
+      {modalTriggerText && (
+        <DialogTrigger
+          type="submit"
+          className={`w-full py-4 text-white text-lg sm:text-xl font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
+        >
+          {modalTriggerText}
+        </DialogTrigger>
+      )}
       {/* @ts-ignore */}
       <DialogContent
         className={
@@ -48,6 +54,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           alt=""
           className={`${imageClassName}`}
         />
+        {context && context}
       </DialogContent>
     </Dialog>
   );

@@ -86,10 +86,10 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
           id="FirstName"
           name="FirstName"
           type="text"
-          className="text-sm sm:text-xl"
+          className="text-sm sm:text-xl bg-primary-bg"
           wrapperClassName="col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
-          layoutClassName="h-full p-4 sm:p-5 w-full"
+          layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Нэр"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -101,10 +101,10 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
           id="LastName"
           name="LastName"
           type="text"
-          className="text-sm sm:text-xl"
+          className="text-sm sm:text-xl bg-primary-bg"
           wrapperClassName="col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
-          layoutClassName="h-full p-4 sm:p-5 w-full"
+          layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Овог"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -116,10 +116,10 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
           id="Email"
           name="Email"
           type="mail"
-          className="text-sm sm:text-xl"
+          className="text-sm sm:text-xl bg-primary-bg"
           wrapperClassName="col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
-          layoutClassName="h-full p-4 sm:p-5 w-full"
+          layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Имэйл хаяг"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -131,10 +131,10 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
           id="PhoneNumber"
           name="PhoneNumber"
           type="number"
-          className="text-sm sm:text-xl no-spinner"
+          className="text-sm sm:text-xl no-spinner bg-primary-bg"
           wrapperClassName="col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
-          layoutClassName="h-full p-4 sm:p-5 w-full"
+          layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Утасны дугаар"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -147,8 +147,8 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
             <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
               Сошиал хаягууд
             </label>
-            <div className="flex flex-row gap-4 sm:gap-7 xl:gap-10 w-full items-start">
-              <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
+            <div className="flex flex-row gap-4 sm:gap-7 xl:gap-4 w-full items-start">
+              <div className="w-full p-4 sm:p-5 bg-primary-bg rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
                 <div className="flex flex-row items-center gap-3 w-full">
                   <Image
                     src={"/Instagram.png"}
@@ -184,7 +184,7 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
                   />
                 </div>
               </div>
-              <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
+              <div className="w-full p-4 sm:p-5 bg-primary-bg rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
                 <div className="flex flex-row items-center gap-3 w-full">
                   <Image
                     src={"/Facebook.png"}
@@ -227,10 +227,10 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
           id="Birthday"
           name="Birthday"
           type="date"
-          className="text-sm sm:text-xl w-full col-span-1 no-spinner"
+          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg"
           wrapperClassName="w-full col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
-          layoutClassName="h-full p-4 sm:p-5 w-full"
+          layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Төрсөн огноо"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -239,9 +239,6 @@ function CreatorDetails({ parsedUserInfo, formik, setStep }) {
           errorVisible={formik.touched.Birthday && formik.errors.Birthday}
         />
       </div>
-      <Button type="button" className="w-full bg-secondary text-white">
-        Хадгалах
-      </Button>
     </form>
   );
 }

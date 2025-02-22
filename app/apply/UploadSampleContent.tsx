@@ -10,8 +10,10 @@ import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import Image from "next/image";
 import Button from "@/components/ui/button";
+import SuccessModal from "@/components/common/SuccessModal";
 
 function UploadSampleContent({ formik }) {
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideo, setContentVideo] = useState(null);
   const [contentVideoId, setContentVideoId] = useState(null);
@@ -120,11 +122,11 @@ function UploadSampleContent({ formik }) {
         id="ContentLink"
         name="ContentLink"
         type="mail"
-        className="text-sm sm:text-xl"
+        className="text-sm sm:text-xl bg-primary-bg"
         wrapperClassName="col-span-1"
         labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
-        layoutClassName="h-full p-4 sm:p-5 w-full"
-        label="Имэйл хаяг"
+        layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
+        label="Контент линк оруулах"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.ContentLink}
@@ -156,7 +158,7 @@ function UploadSampleContent({ formik }) {
         >
           <input {...getInputPropsForVideo()} />
 
-          <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
+          <div className="bg-primary-bg cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
             <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
               <Image
                 src={"/add-icon.png"}
@@ -169,9 +171,26 @@ function UploadSampleContent({ formik }) {
           </div>
         </div>
       )}
-      <Button type="button" className="w-full bg-secondary text-white">
+      <Button
+        onClick={() => setIsSuccessModalOpen(true)}
+        type="button"
+        className="w-full bg-secondary text-white"
+      >
         Өргөдөл илгээх
       </Button>
+      <SuccessModal
+        isMainDialogOpen={isSuccessModalOpen}
+        setIsMainDialogOpen={setIsSuccessModalOpen}
+        modalImage="/creator-image.png"
+        modalTitle="ӨРГӨДӨЛ АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ"
+        context={
+          <span className="bg-primary-bg text-base sm:text-xl rounded-2xl p-3 sm:p-4">
+            Өргөдөлийн хариу 24-48 цагын хугацаанд таны бүртгүүлсэн имэйл
+            хаягаар очих тул түр хүлээгээрэй. Амжилт хүсье!
+          </span>
+        }
+        imageClassName="w-[207px] h-[216px]"
+      />
     </form>
   );
 }

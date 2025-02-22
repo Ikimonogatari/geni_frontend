@@ -54,9 +54,6 @@ function CreatorQuestions({ formik }) {
         errorText={formik.errors.Motives}
         errorVisible={formik.touched.Motives && formik.errors.Motives}
       />
-      <Button type="button" className="w-full bg-secondary text-white">
-        Хадгалах
-      </Button>
     </form>
   );
 }
