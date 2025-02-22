@@ -1,13 +1,12 @@
-import Button from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 
 function CreatorQuestions({ formik }) {
   return (
-    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full">
       <Textarea
-        id="Job"
-        name="Job"
+        id="WorkInfo"
+        name="WorkInfo"
         placeholder="Хариулт"
         label={
           <div className="flex flex-col">
@@ -19,42 +18,46 @@ function CreatorQuestions({ formik }) {
         }
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values.Job}
+        value={formik.values.WorkInfo}
         rows={5}
         maxLength={600}
-        charCount={formik.values.Job.length}
-        errorText={formik.errors.Job}
-        errorVisible={formik.touched.Job && formik.errors.Job}
+        charCount={formik.values.WorkInfo.length}
+        errorText={formik.errors.WorkInfo}
+        errorVisible={formik.touched.WorkInfo && formik.errors.WorkInfo}
       />
       <Textarea
-        id="TechUsage"
-        name="TechUsage"
+        id="EssentialToolInfo"
+        name="EssentialToolInfo"
         placeholder="Хариулт"
         label="Өөрийн өдөр тутамдаа хамгийн түгээмэл ашигладаг технологийн платформ, гар утасны апп зэргээ хуваалцаарай"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values.TechUsage}
+        value={formik.values.EssentialToolInfo}
         rows={5}
         maxLength={600}
-        charCount={formik.values.TechUsage.length}
-        errorText={formik.errors.TechUsage}
-        errorVisible={formik.touched.TechUsage && formik.errors.TechUsage}
+        charCount={formik.values.EssentialToolInfo.length}
+        errorText={formik.errors.EssentialToolInfo}
+        errorVisible={
+          formik.touched.EssentialToolInfo && formik.errors.EssentialToolInfo
+        }
       />
       <Textarea
-        id="Motives"
-        name="Motives"
+        id="ApplicationPurpose"
+        name="ApplicationPurpose"
         placeholder="Хариулт"
         label='Та яагаад Geni creator болохыг зорьж байна вэ? Хувийн "яагаад"-аа бидэнд хуваалцаарай.'
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values.Motives}
+        value={formik.values.ApplicationPurpose}
         rows={5}
         maxLength={600}
-        charCount={formik.values.Motives.length}
-        errorText={formik.errors.Motives}
-        errorVisible={formik.touched.Motives && formik.errors.Motives}
+        charCount={formik.values.ApplicationPurpose.length}
+        errorText={formik.errors.ApplicationPurpose}
+        errorVisible={
+          formik.touched.ApplicationPurpose && formik.errors.ApplicationPurpose
+        }
       />
-    </form>
+    </div>
   );
 }
 

@@ -394,6 +394,13 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    creatorApply: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/creator-application",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -453,4 +460,5 @@ export const {
   useUseFreeContentMutation,
   useBrandGuideCheckMutation,
   useGetBrandCreditInfoQuery,
+  useCreatorApplyMutation,
 } = geniApi;

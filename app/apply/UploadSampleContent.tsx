@@ -10,13 +10,10 @@ import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import Image from "next/image";
 import Button from "@/components/ui/button";
-import SuccessModal from "@/components/common/SuccessModal";
 
 function UploadSampleContent({ formik }) {
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideo, setContentVideo] = useState(null);
-  const [contentVideoId, setContentVideoId] = useState(null);
 
   const [
     uploadFile,
@@ -72,7 +69,7 @@ function UploadSampleContent({ formik }) {
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
-              setContentVideoId(fileId);
+              formik.setFieldValue("ContentFileId", fileId);
               uploadToS3(uploadURL, file).then(() => {
                 getVideoPresignedUrl({
                   FileId: fileId,
@@ -106,7 +103,7 @@ function UploadSampleContent({ formik }) {
   };
 
   return (
-    <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
+    <div onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
       <div className="flex flex-col gap-3 text-lg">
         <span className="font-bold">Бүтээгчийн чадварын сорилт</span>
         <span>
@@ -171,27 +168,10 @@ function UploadSampleContent({ formik }) {
           </div>
         </div>
       )}
-      <Button
-        onClick={() => setIsSuccessModalOpen(true)}
-        type="button"
-        className="w-full bg-secondary text-white"
-      >
+      <Button type="submit" className="w-full bg-secondary text-white">
         Өргөдөл илгээх
       </Button>
-      <SuccessModal
-        isMainDialogOpen={isSuccessModalOpen}
-        setIsMainDialogOpen={setIsSuccessModalOpen}
-        modalImage="/creator-image.png"
-        modalTitle="ӨРГӨДӨЛ АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ"
-        context={
-          <span className="bg-primary-bg text-base sm:text-xl rounded-2xl p-3 sm:p-4">
-            Өргөдөлийн хариу 24-48 цагын хугацаанд таны бүртгүүлсэн имэйл
-            хаягаар очих тул түр хүлээгээрэй. Амжилт хүсье!
-          </span>
-        }
-        imageClassName="w-[207px] h-[216px]"
-      />
-    </form>
+    </div>
   );
 }
 

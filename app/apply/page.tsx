@@ -6,97 +6,94 @@ import toast from "react-hot-toast";
 import BackButton from "@/components/common/BackButton";
 import Image from "next/image";
 import CreatorDetails from "./CreatorDetails";
-import Cookies from "js-cookie";
-import { useEditCreatorProfileMutation } from "@/app/services/service";
+import { useCreatorApplyMutation } from "@/app/services/service";
 import CreatorQuestions from "./CreatorQuestions";
 import UploadSampleContent from "./UploadSampleContent";
+import SuccessModal from "@/components/common/SuccessModal";
 
 function CreatorOnboarding() {
   const [step, setStep] = useState(0);
-
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const sidebarNavs = ["Ерөнхий мэдээлэл", "Асуулт", "Контент нэмэх"];
 
-  const [editCreatorProfile, { data, error, isLoading, isSuccess }] =
-    useEditCreatorProfileMutation();
+  const [creatorApply, { data, error, isLoading, isSuccess }] =
+    useCreatorApplyMutation();
+
+  useEffect(() => {
+    if (error) {
+      // @ts-ignore
+      toast.error(error?.data?.error);
+    }
+    if (isSuccess) {
+      toast.success("Мэдээлэл засагдлаа");
+      setIsSuccessModalOpen(true);
+    }
+  }, [isSuccess, error]);
 
   const formik = useFormik({
     initialValues: {
-      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      Email: parsedUserInfo ? parsedUserInfo?.Email : "",
-      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
-      BirthDate: parsedUserInfo ? parsedUserInfo?.BirthDate : "",
+      FirstName: "",
+      LastName: "",
+      Nickname: "",
+      Email: "",
+      PhoneNo: "",
+      Birthday: "",
+      FacebookAddress: "",
+      InstagramAddress: "",
+      WorkInfo: "",
+      EssentialToolInfo: "",
+      ApplicationPurpose: "",
+      ContentLink: "",
+      ContentFileId: null,
     },
     validationSchema: Yup.object({
       FirstName: Yup.string().required("Заавал бөглөнө үү"),
       LastName: Yup.string().required("Заавал бөглөнө үү"),
+      Nickname: Yup.string().required("Заавал бөглөнө үү"),
       Email: Yup.string().required("Заавал бөглөнө үү"),
-      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
-      BirthDate: Yup.string().required("Заавал бөглөнө үү"),
+      PhoneNo: Yup.string()
+        .required("Заавал бөглөнө үү")
+        .length(8, "Утасны дугаар 8 оронтой байх ёстой"),
+      Birthday: Yup.string().required("Заавал бөглөнө үү"),
+      FacebookAddress: Yup.string().required("Заавал бөглөнө үү"),
+      InstagramAddress: Yup.string().required("Заавал бөглөнө үү"),
+      WorkInfo: Yup.string().required("Заавал бөглөнө үү"),
+      EssentialToolInfo: Yup.string().required("Заавал бөглөнө үү"),
+      ApplicationPurpose: Yup.string().required("Заавал бөглөнө үү"),
+      ContentLink: Yup.string().required("Заавал бөглөнө үү"),
+      ContentFileId: Yup.number().required("Заавал оруулна уу"),
     }),
     onSubmit: async (values) => {
       try {
-        await editCreatorProfile(values).unwrap();
+        const CustSocials = [
+          {
+            PlatformId: 1,
+            SocialAddress: values.FacebookAddress,
+          },
+          {
+            PlatformId: 2,
+            SocialAddress: values.InstagramAddress,
+          },
+        ];
+        const { FacebookAddress, InstagramAddress, ...filteredValues } = values;
+        console.log(filteredValues, "VALUES");
+        await creatorApply({
+          ...filteredValues,
+        }).unwrap();
       } catch (error) {
         toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
       }
     },
   });
-
-  const questionsFormik = useFormik({
-    initialValues: {
-      Job: "",
-      TechUsage: "",
-      Motives: "",
-    },
-    validationSchema: Yup.object({
-      Job: Yup.string().required("Заавал бөглөнө үү"),
-      TechUsage: Yup.string().required("Заавал бөглөнө үү"),
-      Motives: Yup.string().required("Заавал бөглөнө үү"),
-    }),
-    onSubmit: async (values) => {
-      try {
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
-      }
-    },
-  });
-  const contentUploadFormik = useFormik({
-    initialValues: {
-      contentLink: "",
-      content: [],
-    },
-    validationSchema: Yup.object({
-      contentLink: Yup.string().required("Заавал бөглөнө үү"),
-      content: Yup.array().required("Заавал бөглөнө үү"),
-    }),
-    onSubmit: async (values) => {
-      try {
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
-      }
-    },
-  });
-
+  console.log(formik.errors, "ERRORS");
   const renderStepContent = () => {
     switch (step) {
       case 0:
-        return (
-          <CreatorDetails
-            parsedUserInfo={parsedUserInfo}
-            formik={formik}
-            setStep={setStep}
-          />
-        );
+        return <CreatorDetails formik={formik} />;
       case 1:
-        return <CreatorQuestions formik={questionsFormik} />;
+        return <CreatorQuestions formik={formik} />;
       case 2:
-        return <UploadSampleContent formik={contentUploadFormik} />;
+        return <UploadSampleContent formik={formik} />;
       default:
         return null;
     }
@@ -112,7 +109,10 @@ function CreatorOnboarding() {
               Geni Creator болох өргөдөл
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-10">
+          <form
+            onSubmit={formik.handleSubmit}
+            className="flex flex-col sm:flex-row items-start gap-5 sm:gap-10"
+          >
             <div className="grid grid-cols-3 sm:grid-cols-1 gap-2 sm:gap-5 sm:max-w-[215px] w-full">
               {sidebarNavs.map((s, i) => (
                 <div
@@ -139,9 +139,22 @@ function CreatorOnboarding() {
             </div>
             <div className="bg-geni-gray h-[1px] sm:h-[835px] w-full sm:w-[1px] sm:py-1"></div>
             {renderStepContent()}
-          </div>
+          </form>
         </div>
       </div>
+      <SuccessModal
+        isMainDialogOpen={isSuccessModalOpen}
+        setIsMainDialogOpen={setIsSuccessModalOpen}
+        modalImage="/creator-image.png"
+        modalTitle="ӨРГӨДӨЛ АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ"
+        context={
+          <span className="bg-primary-bg text-base sm:text-xl rounded-2xl p-3 sm:p-4">
+            Өргөдөлийн хариу 24-48 цагын хугацаанд таны бүртгүүлсэн имэйл
+            хаягаар очих тул түр хүлээгээрэй. Амжилт хүсье!
+          </span>
+        }
+        imageClassName="w-[207px] h-[216px]"
+      />
     </div>
   );
 }
