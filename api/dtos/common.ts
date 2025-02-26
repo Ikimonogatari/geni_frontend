@@ -49,7 +49,7 @@ export const PresignUrlDownloadRequestSchema = z.object({
 });
 export const OtpRequestSchema = z.object({
   To: z.string().email(),
-  UserType: z.enum(["Sys", "Brand", "Creator"]),
+  UserType: z.enum(["Student", "Brand", "Creator"]),
   Channel: z.enum(["smtp", "sms"]),
   Type: z.string(),
 });

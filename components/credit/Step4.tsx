@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { useListPaymentPlansQuery } from "@/app/services/service";
 import PriceFormatter from "@/components/common/FormatPrice";
+import { useListPaymentPlans } from "@/hooks/react-queries";
 
 function Step4({ selectedPackageIndex }) {
   const [selectedPayment, setSelectedPayment] = useState("qpay");
@@ -10,7 +10,7 @@ function Step4({ selectedPackageIndex }) {
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery({});
+  } = useListPaymentPlans();
 
   const selectedPackageData = listPaymentPlansData
     ? listPaymentPlansData[selectedPackageIndex]

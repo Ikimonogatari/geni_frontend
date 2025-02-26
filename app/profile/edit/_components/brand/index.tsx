@@ -1,19 +1,19 @@
 "use client";
-import { useUserInfo } from "@/app/context/UserInfoContext";
-import {
-  geniApi,
-  useChangeBrandTypeMutation,
-  useChangeEmailMutation,
-  useChangePasswordMutation,
-  useChangeProfilePictureMutation,
-  useCreateSocialChannelMutation,
-  useEditBrandProfileMutation,
-  useListBrandTypesQuery,
-  useSendOtpToEmailMutation,
-  useUpdateSocialChannelMutation,
-  useUploadFileMutation,
-} from "@/app/services/service";
+
+import { handleLogout } from "@/components/common/logout-function";
 import { ErrorText } from "@/components/ui/error-text";
+import {
+  useChangeBrandType,
+  useChangeEmail,
+  useChangePassword,
+  useChangeProfilePicture,
+  useCreateSocialChannel,
+  useEditBrandProfile,
+  useListBrandTypes,
+  useSendOtpToEmail,
+  useUpdateSocialChannel,
+  useUploadFile,
+} from "@/hooks/react-queries";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -25,7 +25,6 @@ import * as Yup from "yup";
 
 function EditProfileBrand() {
   const router = useRouter();
-  const { setShouldRefetchUserInfo } = useUserInfo();
 
   const userInfo = Cookies.get("user-info");
   const userType = Cookies.get("userType");
@@ -54,94 +53,83 @@ function EditProfileBrand() {
   const [brandTypes, setBrandTypes] = useState([]);
   const [dropdownOpen, setdropdownOpen] = useState(false);
 
-  const [editBrandProfile, { data, error, isLoading, isSuccess }] =
-    useEditBrandProfileMutation();
+  const {
+    mutateAsync: editBrandProfile,
+    data,
+    error,
+    isPending,
+    isSuccess,
+  } = useEditBrandProfile();
 
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-      isSuccess: uploadFileSuccess,
-    },
-  ] = useUploadFileMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+    isSuccess: uploadFileSuccess,
+  } = useUploadFile();
 
-  const [
-    changeProfilePicture,
-    {
-      data: changeProfilePictureData,
-      error: changeProfilePictureError,
-      isLoading: changeProfilePictureLoading,
-      isSuccess: changeProfilePictureSuccess,
-    },
-  ] = useChangeProfilePictureMutation();
+  const {
+    mutateAsync: changeProfilePicture,
+    data: changeProfilePictureData,
+    error: changeProfilePictureError,
+    isPending: changeProfilePictureLoading,
+    isSuccess: changeProfilePictureSuccess,
+  } = useChangeProfilePicture();
 
-  const [
-    changePassword,
-    {
-      data: changePasswordData,
-      error: changePasswordError,
-      isLoading: changePasswordLoading,
-      isSuccess: changePasswordSuccess,
-    },
-  ] = useChangePasswordMutation();
+  const {
+    mutateAsync: changePassword,
+    data: changePasswordData,
+    error: changePasswordError,
+    isPending: changePasswordLoading,
+    isSuccess: changePasswordSuccess,
+  } = useChangePassword();
 
-  const [
-    sendOtpToEmail,
-    {
-      data: sendOtpToEmailData,
-      error: sendOtpToEmailError,
-      isLoading: sendOtpToEmailLoading,
-      isSuccess: sendOtpToEmailSuccess,
-    },
-  ] = useSendOtpToEmailMutation();
+  const {
+    mutateAsync: sendOtpToEmail,
+    data: sendOtpToEmailData,
+    error: sendOtpToEmailError,
+    isPending: sendOtpToEmailLoading,
+    isSuccess: sendOtpToEmailSuccess,
+  } = useSendOtpToEmail();
 
-  const [
-    changeEmail,
-    {
-      data: changeEmailData,
-      error: changeEmailError,
-      isLoading: changeEmailLoading,
-      isSuccess: changeEmailSuccess,
-    },
-  ] = useChangeEmailMutation();
+  const {
+    mutateAsync: changeEmail,
+    data: changeEmailData,
+    error: changeEmailError,
+    isPending: changeEmailLoading,
+    isSuccess: changeEmailSuccess,
+  } = useChangeEmail();
 
-  const [
-    changeBrandType,
-    {
-      data: changeBrandTypeData,
-      error: changeBrandTypeError,
-      isLoading: changeBrandTypeLoading,
-      isSuccess: changeBrandTypeSuccess,
-    },
-  ] = useChangeBrandTypeMutation();
+  const {
+    mutateAsync: changeBrandType,
+    data: changeBrandTypeData,
+    error: changeBrandTypeError,
+    isPending: changeBrandTypeLoading,
+    isSuccess: changeBrandTypeSuccess,
+  } = useChangeBrandType();
 
   const {
     data: listBrandTypesData,
     error: listBrandTypesError,
     isLoading: listBrandTypesLoading,
-  } = useListBrandTypesQuery({});
+  } = useListBrandTypes({});
 
-  const [
-    updateSocialChannel,
-    {
-      data: updateSocialChannelData,
-      error: updateSocialChannelError,
-      isLoading: updateSocialChannelLoading,
-      isSuccess: updateSocialChannelSuccess,
-    },
-  ] = useUpdateSocialChannelMutation();
+  const {
+    mutateAsync: updateSocialChannel,
+    data: updateSocialChannelData,
+    error: updateSocialChannelError,
+    isPending: updateSocialChannelLoading,
+    isSuccess: updateSocialChannelSuccess,
+  } = useUpdateSocialChannel();
 
-  const [
-    createSocialChannel,
-    {
-      data: createSocialChannelData,
-      error: createSocialChannelError,
-      isLoading: createSocialChannelLoading,
-      isSuccess: createSocialChannelSuccess,
-    },
-  ] = useCreateSocialChannelMutation();
+  const {
+    mutateAsync: createSocialChannel,
+    data: createSocialChannelData,
+    error: createSocialChannelError,
+    isPending: createSocialChannelLoading,
+    isSuccess: createSocialChannelSuccess,
+  } = useCreateSocialChannel();
 
   const formik = useFormik({
     initialValues: {
@@ -161,7 +149,7 @@ function EditProfileBrand() {
       Address: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      editBrandProfile(values).unwrap();
+      editBrandProfile({ variables: values });
     },
   });
 
@@ -183,7 +171,7 @@ function EditProfileBrand() {
           const response = await uploadFile(formData); // Wait for file upload response
           if (response.data) {
             const id = response.data.FileId;
-            await changeProfilePicture({ FileId: id }); // Update the profile picture with the file ID
+            await changeProfilePicture({ variables: { FileId: id } }); // Update the profile picture with the file ID
           }
         } catch (error) {
           console.error("File upload or profile picture update failed:", error);
@@ -297,25 +285,31 @@ function EditProfileBrand() {
 
   const handleSendOtp = async () => {
     sendOtpToEmail({
-      To: newEmail,
-      UserType: userType, //Sys, Brand, Creator
-      Channel: "smtp", //smtp, sms
-      Type: "changeemail",
+      variables: {
+        To: newEmail,
+        UserType: userType, //Sys, Brand, Creator
+        Channel: "smtp", //smtp, sms
+        Type: "changeemail",
+      },
     });
   };
 
   const handleChangeEmail = () => {
     changeEmail({
-      OTP: otp,
-      NewEmail: newEmail,
+      variables: {
+        OTP: otp,
+        NewEmail: newEmail,
+      },
     });
   };
   const handleChangePassword = async () => {
     try {
       await changePassword({
-        OldPassword: oldPassword,
-        NewPassword: newPassword,
-      }).unwrap();
+        variables: {
+          OldPassword: oldPassword,
+          NewPassword: newPassword,
+        },
+      });
       toast.success("Нууц үг амжилттай солигдлоо");
     } catch (err) {
       toast.error("Нууц үг солиход алдаа гарлаа");
@@ -331,14 +325,18 @@ function EditProfileBrand() {
 
         if (hasExistingInstagram) {
           await updateSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+            variables: {
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            },
+          });
         } else {
           await createSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+            variables: {
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            },
+          });
         }
       }
 
@@ -349,14 +347,18 @@ function EditProfileBrand() {
 
         if (hasExistingFacebook) {
           await updateSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+            variables: {
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            },
+          });
         } else {
           await createSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+            variables: {
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            },
+          });
         }
       }
 
@@ -372,19 +374,10 @@ function EditProfileBrand() {
     );
 
     changeBrandType({
-      BrandTypeIds: brandTypeIds,
+      variables: {
+        BrandTypeIds: brandTypeIds,
+      },
     });
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("auth");
-    Cookies.remove("userType");
-    Cookies.remove("user-info");
-    geniApi.util.invalidateTags(["UserInfo"]);
-    setShouldRefetchUserInfo(true);
-
-    router.refresh();
-    router.replace("/");
   };
 
   return (

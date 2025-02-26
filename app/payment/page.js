@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useListPaymentPlansQuery } from "../services/service";
+import { useListPaymentPlans } from "@/hooks/react-queries";
 
 function page() {
   const router = useRouter();
@@ -11,7 +11,7 @@ function page() {
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery();
+  } = useListPaymentPlans();
 
   const [plans, setPlans] = useState([]);
   useEffect(() => {

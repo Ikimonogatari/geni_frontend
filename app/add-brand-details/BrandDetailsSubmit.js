@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import {
-  useUpdateSocialChannelMutation,
-  useCreateSocialChannelMutation,
-} from "@/app/services/service";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -14,31 +10,31 @@ import {
 } from "@/components/ui/select";
 
 import toast from "react-hot-toast";
+import {
+  useCreateSocialChannel,
+  useUpdateSocialChannel,
+} from "@/hooks/react-queries";
 
 function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   const [socials, setSocials] = useState({
     instagram: "",
     facebook: "",
   });
-  const [
-    createSocialChannel,
-    {
-      data: createSocialChannelData,
-      error: createSocialChannelError,
-      isLoading: createSocialChannelLoading,
-      isSuccess: createSocialChannelSuccess,
-    },
-  ] = useCreateSocialChannelMutation();
+  const {
+    mutateAsync: createSocialChannel,
+    data: createSocialChannelData,
+    error: createSocialChannelError,
+    isPending: createSocialChannelLoading,
+    isSuccess: createSocialChannelSuccess,
+  } = useCreateSocialChannel();
 
-  const [
-    updateSocialChannel,
-    {
-      data: updateSocialChannelData,
-      error: updateSocialChannelError,
-      isLoading: updateSocialChannelLoading,
-      isSuccess: updateSocialChannelSuccess,
-    },
-  ] = useUpdateSocialChannelMutation();
+  const {
+    mutateAsync: updateSocialChannel,
+    data: updateSocialChannelData,
+    error: updateSocialChannelError,
+    isPending: updateSocialChannelLoading,
+    isSuccess: updateSocialChannelSuccess,
+  } = useUpdateSocialChannel();
 
   const handleSaveOrUpdateSocialChannels = async () => {
     try {
@@ -49,14 +45,18 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
 
         if (hasExistingInstagram) {
           await updateSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+            variables: {
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            },
+          });
         } else {
           await createSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+            variables: {
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            },
+          });
         }
       }
 
@@ -67,14 +67,18 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
 
         if (hasExistingFacebook) {
           await updateSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+            variables: {
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            },
+          });
         } else {
           await createSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+            variables: {
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            },
+          });
         }
       }
 

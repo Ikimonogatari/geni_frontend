@@ -9,11 +9,8 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import {
-  useCheckPaymentQuery,
-  useSubscribePlanMutation,
-} from "@/app/services/service";
 import toast from "react-hot-toast";
+import { useCheckPayment, useSubscribePlan } from "@/hooks/react-queries";
 
 interface PaymentModalProps {
   selectedPackageId: number;
@@ -28,22 +25,20 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
-  const [
-    subscribePlan,
-    {
-      data: subscribePlanData,
-      error: subscribePlanError,
-      isLoading: subscribePlanLoading,
-      isSuccess: subscribePlanSuccess,
-    },
-  ] = useSubscribePlanMutation();
+  const {
+    mutate: subscribePlan,
+    data: subscribePlanData,
+    error: subscribePlanError,
+    isPending: subscribePlanLoading,
+    isSuccess: subscribePlanSuccess,
+  } = useSubscribePlan();
 
   const {
     data: checkPaymentData,
     error: checkPaymentError,
     isLoading: checkPaymentLoading,
     refetch: checkPayment,
-  } = useCheckPaymentQuery(txId, { skip: !txId });
+  } = useCheckPayment({ route: { txId } });
 
   useEffect(() => {
     if (subscribePlanSuccess) {
@@ -57,7 +52,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   }, [subscribePlanSuccess, subscribePlanError]);
 
   const handleSubscription = () => {
-    subscribePlan({ planId: selectedPackageId });
+    subscribePlan({ variables: { PlanId: selectedPackageId } });
   };
 
   const handleCheckPayment = async () => {

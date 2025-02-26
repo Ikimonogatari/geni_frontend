@@ -1,16 +1,7 @@
-import React from "react";
+import { handleLogout } from "@/components/common/logout-function";
 import Image from "next/image";
-import Cookies from "js-cookie";
-import { geniApi } from "../services/service";
 
-function BrandDetailsSuccess({ router }) {
-  const handleLogout = () => {
-    Cookies.remove("auth");
-    Cookies.remove("userType");
-    Cookies.remove("user-info");
-    geniApi.util.invalidateTags(["UserInfo"]);
-    router.replace("/login");
-  };
+function BrandDetailsSuccess() {
   return (
     <div className="flex flex-col gap-5">
       <Image

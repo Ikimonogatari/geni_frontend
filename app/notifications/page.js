@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Image from "next/image";
-import { useListNotificationQuery } from "../services/service";
+import { useListNotification } from "@/hooks/react-queries";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -15,7 +15,7 @@ function Page() {
     data: listNotificationData,
     error: listNotificationError,
     isLoading: listNotificationLoading,
-  } = useListNotificationQuery();
+  } = useListNotification();
 
   const totalPages = Math.ceil(listNotificationData?.length / ITEMS_PER_PAGE);
 

@@ -1,18 +1,7 @@
-import React from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { geniApi } from "@/app/services/service";
+import { handleLogout } from "./logout-function";
 
 function LogoutButton() {
-  const router = useRouter();
-  const handleLogout = () => {
-    Cookies.remove("auth");
-    Cookies.remove("userType");
-    Cookies.remove("user-info");
-    geniApi.util.invalidateTags(["UserInfo"]);
-    router.replace("/login");
-  };
   return (
     <button
       onClick={handleLogout}

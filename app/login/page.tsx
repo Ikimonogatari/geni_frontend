@@ -1,24 +1,28 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import {
-  geniApi,
-  useCreatorLoginMutation,
-  useForgotPasswordMutation,
-  useSendOtpToEmailMutation,
-} from "../services/service";
-import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import LoginButton from "./LoginButton";
+import { queryClient } from "@/api/query-client";
 import OtpTimeLeft from "@/components/OtpTimeLeft";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  useForgotPassword,
+  useLogin,
+  useSendOtpToEmail,
+} from "@/hooks/react-queries";
+import { useFormik } from "formik";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import * as Yup from "yup";
+import LoginButton from "./LoginButton";
+import { CarTaxiFront } from "lucide-react";
+import { client } from "@/api/axios";
 
 function Page() {
   const router = useRouter();
-  const [userType, setUserType] = useState("Creator");
+  const [userType, setUserType] = useState<"Creator" | "Brand" | "Student">(
+    "Creator"
+  );
   const [forgotPasswordState, setForgotPasswordState] = useState("1");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,26 +36,23 @@ function Page() {
   const handleMouseDownConfirmPassword = () => setShowConfirmPassword(true);
   const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
-  const [loginRequest, { data, error, isLoading }] = useCreatorLoginMutation();
-  const [
-    sendOtpToEmail,
-    {
-      data: sendOtpToEmailData,
-      error: sendOtpToEmailError,
-      isLoading: sendOtpToEmailLoading,
-      isSuccess: sendOtpToEmailSuccess,
-    },
-  ] = useSendOtpToEmailMutation();
+  const { mutateAsync: mutateLogin, data, isPending, error } = useLogin();
 
-  const [
-    forgotPassword,
-    {
-      data: forgotPasswordData,
-      error: forgotPasswordError,
-      isLoading: forgotPasswordLoading,
-      isSuccess: forgotPasswordSuccess,
-    },
-  ] = useForgotPasswordMutation();
+  const {
+    mutate: sendOtpToEmail,
+    data: sendOtpToEmailData,
+    error: sendOtpToEmailError,
+    isPending: sendOtpToEmailLoading,
+    isSuccess: sendOtpToEmailSuccess,
+  } = useSendOtpToEmail();
+
+  const {
+    mutate: forgotPassword,
+    data: forgotPasswordData,
+    error: forgotPasswordError,
+    isPending: forgotPasswordLoading,
+    isSuccess: forgotPasswordSuccess,
+  } = useForgotPassword();
 
   const emailForm = useFormik({
     initialValues: {
@@ -64,10 +65,12 @@ function Page() {
     }),
     onSubmit: (value) => {
       sendOtpToEmail({
-        To: value.forgotEmail,
-        UserType: userType, //Student, Brand, Creator
-        Channel: "smtp", //smtp, sms
-        Type: "forgotpassword",
+        variables: {
+          To: value.forgotEmail,
+          UserType: userType, //Student, Brand, Creator
+          Channel: "smtp", //smtp, sms
+          Type: "forgotpassword",
+        },
       });
     },
   });
@@ -97,11 +100,13 @@ function Page() {
     }),
     onSubmit: (values) => {
       forgotPassword({
-        UserType: userType, //Brand, Creator, Student
-        Channel: "smtp", //smtp, sms
-        OTP: otpForm.values.otp,
-        To: emailForm.values.forgotEmail,
-        NewPassword: values.newPassword,
+        variables: {
+          UserType: userType, //Brand, Creator, Student
+          Channel: "smtp", //smtp, sms
+          OTP: otpForm.values.otp,
+          To: emailForm.values.forgotEmail,
+          NewPassword: values.newPassword,
+        },
       });
     },
   });
@@ -117,11 +122,17 @@ function Page() {
       password: Yup.string().required("Required"),
     }),
 
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       Cookies.remove("auth");
       Cookies.remove("userType");
       Cookies.remove("user-info");
-      loginRequest(values);
+      await mutateLogin({
+        variables: {
+          UserType: values.UserType,
+          Email: values.email,
+          Password: values.password,
+        },
+      });
     },
   });
 
@@ -132,20 +143,18 @@ function Page() {
       Cookies.set("userType", userType, { expires: 1 / 24 });
 
       // Invalidate cache after cookies are set
-      geniApi.util.invalidateTags(["UserInfo"]);
-
+      queryClient.invalidateQueries({ queryKey: ["UserInfo"] });
       // Ensure navigation only after cookies are set
       router.push("/profile");
-    } else if (error) {
-      toast.error(error?.data?.error);
     }
-  }, [data, error]);
+  }, [data]);
 
   useEffect(() => {
     if (sendOtpToEmailSuccess) {
       toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
       setForgotPasswordState("2");
     } else if (sendOtpToEmailError) {
+      //@ts-ignore
       toast.error(sendOtpToEmailError?.data?.error);
     }
   }, [sendOtpToEmailSuccess, sendOtpToEmailError]);
@@ -155,7 +164,8 @@ function Page() {
       toast.success("Нууц үг шинэчлэгдлээ");
       setForgotPasswordState("1");
     } else if (forgotPasswordError) {
-      toast.error(forgotPassword?.data?.error);
+      //@ts-ignore
+      toast.error(forgotPasswordError.message);
     }
   }, [forgotPasswordSuccess, forgotPasswordError]);
 
@@ -272,6 +282,7 @@ function Page() {
                 <DialogTrigger className="text-black font-semibold underline">
                   Нууц үг сэргээх
                 </DialogTrigger>
+                {/* @ts-ignore **/}
                 <DialogContent className="rounded-3xl max-w-lg w-full flex flex-col items-center gap-2">
                   {forgotPasswordState === "1" ? (
                     <div className="flex flex-col gap-5">
@@ -366,7 +377,7 @@ function Page() {
                         )}
 
                         <button
-                          onClick={emailForm.handleSubmit}
+                          onClick={() => emailForm.handleSubmit()}
                           className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
                         >
                           Нууц код дахин авах

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useGetPublicCreatorListQuery } from "../services/service";
 import PublicCreatorCard from "@/components/PublicCreatorCard";
+import { useGetPublicCreatorList } from "@/hooks/react-queries";
 
 function AllCreators() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,7 +10,7 @@ function AllCreators() {
     data: getPublicCreatorListData,
     error: getPublicCreatorListError,
     isLoading: getPublicCreatorListLoading,
-  } = useGetPublicCreatorListQuery();
+  } = useGetPublicCreatorList();
 
   const filteredCreators = getPublicCreatorListData?.Data?.filter((creator) =>
     creator?.Nickname?.toLowerCase().includes(searchQuery.toLowerCase())

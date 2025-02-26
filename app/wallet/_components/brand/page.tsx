@@ -3,8 +3,8 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { useGetWalletInfoQuery } from "@/app/services/service";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
+import { useGetWalletInfo } from "@/hooks/react-queries";
 
 function BrandWallet() {
   const router = useRouter();
@@ -14,8 +14,7 @@ function BrandWallet() {
     data: getWalletInfoData,
     error: getWalletInfoError,
     isLoading: getWalletInfoLoading,
-    //@ts-ignore
-  } = useGetWalletInfoQuery();
+  } = useGetWalletInfo();
 
   return (
     <div className="min-h-screen w-full bg-white">

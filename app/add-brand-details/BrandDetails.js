@@ -1,57 +1,52 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { useDropzone } from "react-dropzone";
-import {
-  useChangeProfilePictureMutation,
-  useUploadFileMutation,
-  useListBrandTypesQuery,
-  useChangeBrandTypeMutation,
-} from "@/app/services/service";
-import toast from "react-hot-toast";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  useChangeBrandType,
+  useChangeProfilePicture,
+  useListBrandTypes,
+  useUploadFile,
+} from "@/hooks/react-queries";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
 
 function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [brandTypes, setBrandTypes] = useState([]);
   const [availableBrandTypes, setAvailableBrandTypes] = useState([]);
 
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-      isSuccess: uploadFileSuccess,
-    },
-  ] = useUploadFileMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+    isSuccess: uploadFileSuccess,
+  } = useUploadFile();
 
-  const [
-    changeProfilePicture,
-    {
-      data: changeProfilePictureData,
-      error: changeProfilePictureError,
-      isLoading: changeProfilePictureLoading,
-      isSuccess: changeProfilePictureSuccess,
-    },
-  ] = useChangeProfilePictureMutation();
+  const {
+    mutateAsync: changeProfilePicture,
+    data: changeProfilePictureData,
+    error: changeProfilePictureError,
+    isPending: changeProfilePictureLoading,
+    isSuccess: changeProfilePictureSuccess,
+  } = useChangeProfilePicture();
 
-  const [
-    changeBrandType,
-    {
-      data: changeBrandTypeData,
-      error: changeBrandTypeError,
-      isLoading: changeBrandTypeLoading,
-      isSuccess: changeBrandTypeSuccess,
-    },
-  ] = useChangeBrandTypeMutation();
+  const {
+    mutate: changeBrandType,
+    data: changeBrandTypeData,
+    error: changeBrandTypeError,
+    isPending: changeBrandTypeLoading,
+    isSuccess: changeBrandTypeSuccess,
+  } = useChangeBrandType();
 
   const {
     data: listBrandTypesData,
     error: listBrandTypesError,
     isLoading: listBrandTypesLoading,
-  } = useListBrandTypesQuery();
+  } = useListBrandTypes();
 
   useEffect(() => {
     if (uploadFileError) {
@@ -316,8 +311,8 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
         onClick={handleNextStep}
         type="button"
         className="mt-8 sm:mt-16 w-full flex flex-row items-center
-justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
-border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
+                    justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
+                  border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
       >
         Дараах
         <Image

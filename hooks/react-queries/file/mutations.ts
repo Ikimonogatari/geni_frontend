@@ -29,9 +29,10 @@ const postDataWithFormData = async (formDataFields: Record<string, any>) => {
   }
 };
 
-export const useUploadFile = useMutation({
-  mutationFn: postDataWithFormData,
-});
+export const useUploadFile = () =>
+  useMutation({
+    mutationFn: postDataWithFormData,
+  });
 
 // POST /api/admin/private/file/presign
 export const useUploadByPresignUrl = createPostMutationHook({
@@ -43,6 +44,14 @@ export const useUploadByPresignUrl = createPostMutationHook({
 
 // POST /api/admin/private/file/url
 export const useGetImagePresignedUrl = createPostMutationHook({
+  endpoint: "/api/admin/private/file/url",
+  bodySchema: PresignUrlDownloadRequestSchema,
+  responseSchema: UnknownResponseSchema,
+  rMutationParams: {},
+});
+
+// POST /api/admin/private/file/url
+export const useGetFilePresignedUrl = createPostMutationHook({
   endpoint: "/api/admin/private/file/url",
   bodySchema: PresignUrlDownloadRequestSchema,
   responseSchema: UnknownResponseSchema,

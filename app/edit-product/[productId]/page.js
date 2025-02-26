@@ -1,40 +1,38 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import Image from "next/image";
-import Cookies from "js-cookie";
-import { useFormik } from "formik";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { useFormik } from "formik";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-import {
-  useUploadFileMutation,
-  useListProductTypesQuery,
-  useListProductDictsQuery,
-  useEditProductMutation,
-  useGetPublicProductByIdQuery,
-} from "../../services/service";
 import toast from "react-hot-toast";
 
-import { ClipLoader } from "react-spinners";
+import BackButton from "@/components/common/BackButton";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
 import HandleButton from "@/components/common/HandleButton";
 import InfoHover from "@/components/common/InfoHover";
-import { editProductSchema } from "./schema";
-import BackButton from "@/components/common/BackButton";
 import MediaUploader from "@/components/common/MediaUploader";
-import { Input } from "@/components/ui/input";
-import { MinusIcon, PlusIcon } from "lucide-react";
-import { ErrorText } from "@/components/ui/error-text";
-import { Textarea } from "@/components/ui/textarea";
-import FadeInAnimation from "@/components/common/FadeInAnimation";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
+import { ErrorText } from "@/components/ui/error-text";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  useEditProduct,
+  useGetPublicProductById,
+  useListProductDicts,
+  useListProductTypes,
+} from "@/hooks/react-queries";
+import { MinusIcon, PlusIcon } from "lucide-react";
+import { editProductSchema } from "./schema";
 
 function Page() {
   const router = useRouter();
@@ -53,7 +51,7 @@ function Page() {
     data: getPublicProductByIdData,
     error: getPublicProductByIdError,
     isLoading: getPublicProductByIdLoading,
-  } = useGetPublicProductByIdQuery(productId);
+  } = useGetPublicProductById({ query: { productId } });
 
   const formik = useFormik({
     initialValues: {
@@ -76,39 +74,37 @@ function Page() {
         productId: productId,
         ...values,
       };
-      await editProduct(modifiedValues);
+      await editProduct({ variables: modifiedValues });
     },
     enableReinitialize: true,
     validateOnMount: true,
   });
 
-  const [
-    editProduct,
-    {
-      data: editProductData,
-      error: editProductError,
-      isLoading: editProductLoading,
-      isSuccess: editProductSuccess,
-    },
-  ] = useEditProductMutation();
+  const {
+    mutateAsync: editProduct,
+    data: editProductData,
+    error: editProductError,
+    isPending: editProductLoading,
+    isSuccess: editProductSuccess,
+  } = useEditProduct();
 
   const {
     data: listProductTypesData,
     error: listProductTypesError,
-    isLoading: listProductTypesLoading,
-  } = useListProductTypesQuery();
+    isPending: listProductTypesLoading,
+  } = useListProductTypes();
 
   const {
     data: listProductDictsTypeData,
     error: listProductDictsTypeError,
     isLoading: listProductDictsTypeLoading,
-  } = useListProductDictsQuery("Type");
+  } = useListProductDicts({ query: { dictType: "Type" } });
 
   const {
     data: listProductDictsResultData,
     error: listProductDictsResultError,
     isLoading: listProductDictsResultLoading,
-  } = useListProductDictsQuery("Result");
+  } = useListProductDicts({ query: { dictType: "Result" } });
 
   const [productTypes, setProductTypes] = useState([]);
   const [availableProductTypes, setAvailableProductTypes] = useState([]);

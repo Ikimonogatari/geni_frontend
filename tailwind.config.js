@@ -21,6 +21,7 @@ module.exports = {
         "geni-blue": "#4D55F5",
         primary: "#2D262D",
         "geni-gray": "#CDCDCD",
+        "geni-student": "#4FB755",
         secondary: "#CA7FFE",
         "primary-bg": "#F5F4F0",
         "geni-red": "#DD2B1F",

@@ -2,14 +2,14 @@
 import React from "react";
 import MonthlyCompetition from "./MonthlyCompetition";
 import Leaderboard from "./Leaderboard";
-import { useGetCompetitionInfoQuery } from "../services/service";
+import { useGetCompetitionInfo } from "@/hooks/react-queries";
 
 function MonthlyCompetitionLayout() {
   const {
     data: getCompetitionInfoData,
     error: getCompetitionInfoError,
     isLoading: getCompetitionInfoLoading,
-  } = useGetCompetitionInfoQuery();
+  } = useGetCompetitionInfo();
 
   return (
     <div className="flex flex-col">

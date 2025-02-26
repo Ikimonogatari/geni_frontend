@@ -5,11 +5,6 @@ import Cookies from "js-cookie";
 import { useFormik } from "formik";
 
 import toast from "react-hot-toast";
-import {
-  useCreateProductMutation,
-  useListProductDictsQuery,
-  useListProductTypesQuery,
-} from "../services/service";
 
 import {
   Select,
@@ -29,6 +24,11 @@ import { MinusIcon, PlusIcon } from "lucide-react";
 import { ErrorText } from "@/components/ui/error-text";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
+import {
+  useCreateProduct,
+  useListProductDicts,
+  useListProductTypes,
+} from "@/hooks/react-queries";
 
 function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
@@ -60,37 +60,35 @@ function Page() {
     validationSchema: addProductSchema,
     onSubmit: async (values) => {
       const { totalPrice, ...submitValues } = values;
-      await createProduct(submitValues);
+      await createProduct({ variables: submitValues });
     },
     validateOnMount: true,
   });
 
-  const [
-    createProduct,
-    {
-      data: createProductData,
-      error: createProductError,
-      isLoading: createProductLoading,
-    },
-  ] = useCreateProductMutation();
+  const {
+    mutateAsync: createProduct,
+    data: createProductData,
+    error: createProductError,
+    isPending: createProductLoading,
+  } = useCreateProduct();
 
   const {
     data: listProductTypesData,
     error: listProductTypesError,
     isLoading: listProductTypesLoading,
-  } = useListProductTypesQuery();
+  } = useListProductTypes();
 
   const {
     data: listProductDictsTypeData,
     error: listProductDictsTypeError,
     isLoading: listProductDictsTypeLoading,
-  } = useListProductDictsQuery("Type");
+  } = useListProductDicts({ query: { dictType: "Type" } });
 
   const {
     data: listProductDictsResultData,
     error: listProductDictsResultError,
     isLoading: listProductDictsResultLoading,
-  } = useListProductDictsQuery("Result");
+  } = useListProductDicts({ query: { dictType: "Result" } });
 
   useEffect(() => {
     if (createProductError) {

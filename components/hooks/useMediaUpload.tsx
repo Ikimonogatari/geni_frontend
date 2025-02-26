@@ -1,4 +1,4 @@
-import { useUploadFileMutation } from "@/app/services/service";
+import { useUploadFile } from "@/hooks/react-queries";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
@@ -10,14 +10,12 @@ function useMediaUpload({
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadFileMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+  } = useUploadFile();
 
   useEffect(() => {
     if (uploadFileError) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import PriceFormatter from "@/components/common/FormatPrice";
-import { useListPaymentPlansQuery } from "@/app/services/service";
+import { useListPaymentPlans } from "@/hooks/react-queries";
 
 function Step3({
   selectedPackageIndex,
@@ -16,7 +16,7 @@ function Step3({
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery(null);
+  } = useListPaymentPlans();
 
   const handleCircleClick = (index) => {
     const scopeSelectedPackageId = listPaymentPlansData

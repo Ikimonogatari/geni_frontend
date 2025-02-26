@@ -1,7 +1,10 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import FadeInAnimation from "@/components/common/FadeInAnimation";
+import CreditPurchase from "@/components/credit/CreditPurchaseModal";
+import NoProductList from "@/components/NoProductList";
 import {
   Dialog,
   DialogContent,
@@ -9,16 +12,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  useAddProductSupplyMutation,
-  useDeleteProductMutation,
-} from "@/app/services/service";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { ErrorText } from "@/components/ui/error-text";
-import CreditPurchase from "@/components/credit/CreditPurchaseModal";
-import NoProductList from "@/components/NoProductList";
+import { useAddProductSupply, useDeleteProduct } from "@/hooks/react-queries";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function BrandProducts({ brandProducts, brandData }) {
   const router = useRouter();
@@ -28,25 +25,21 @@ function BrandProducts({ brandProducts, brandData }) {
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count > 0 ? count - 1 : 0);
 
-  const [
-    deleteProduct,
-    {
-      data: deleteProductData,
-      error: deleteProductError,
-      isLoading: deleteProductLoading,
-      isSuccess: deleteProductSuccess,
-    },
-  ] = useDeleteProductMutation();
+  const {
+    mutateAsync: deleteProduct,
+    data: deleteProductData,
+    error: deleteProductError,
+    isPending: deleteProductLoading,
+    isSuccess: deleteProductSuccess,
+  } = useDeleteProduct();
 
-  const [
-    addProductSupply,
-    {
-      data: addProductSupplyData,
-      error: addProductSupplyError,
-      isLoading: addProductSupplyLoading,
-      isSuccess: addProductSupplySuccess,
-    },
-  ] = useAddProductSupplyMutation();
+  const {
+    mutateAsync: addProductSupply,
+    data: addProductSupplyData,
+    error: addProductSupplyError,
+    isPending: addProductSupplyLoading,
+    isSuccess: addProductSupplySuccess,
+  } = useAddProductSupply();
 
   useEffect(() => {
     if (addProductSupplySuccess) {
@@ -69,8 +62,10 @@ function BrandProducts({ brandProducts, brandData }) {
 
   const addSupply = (productId) => {
     addProductSupply({
-      ProductId: productId,
-      Credit: count,
+      variables: {
+        ProductId: productId,
+        Credit: count,
+      },
     });
   };
 
@@ -94,7 +89,7 @@ function BrandProducts({ brandProducts, brandData }) {
   };
 
   const handleDeleteProduct = async (productId) => {
-    await deleteProduct(productId);
+    await deleteProduct({ model: {}, route: { productId } });
     router.replace("/profile");
   };
 

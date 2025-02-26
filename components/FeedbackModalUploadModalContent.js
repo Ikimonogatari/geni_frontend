@@ -1,18 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { DialogContent } from "./ui/dialog";
-import Image from "next/image";
-import { ClipLoader } from "react-spinners";
-import { useDropzone } from "react-dropzone";
-import axios from "axios";
 import {
-  useGetImagePresignedUrlMutation,
-  useGetVideoPresignedUrlMutation,
-  useUploadByPresignUrlMutation,
-  useUploadHomeworkMutation,
-  useCreatorContentSubmitMutation,
-} from "../app/services/service";
+  useCreatorContentSubmit,
+  useGetFilePresignedUrl,
+  useUploadByPresignUrl,
+  useUploadHomework,
+} from "@/hooks/react-queries";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
+import { DialogContent } from "./ui/dialog";
 import UploadSuccessModal from "./UploadSuccessModal";
 
 function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
@@ -26,51 +25,42 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
 
-  const [
-    getImagePresignedUrl,
-    {
-      data: getImagePresignedUrlData,
-      error: getImagePresignedUrlError,
-      isLoading: getImagePresignedUrlLoading,
-    },
-  ] = useGetImagePresignedUrlMutation();
+  const {
+    mutateAsync: getImagePresignedUrl,
+    data: getImagePresignedUrlData,
+    error: getImagePresignedUrlError,
+    isPending: getImagePresignedUrlLoading,
+  } = useGetFilePresignedUrl();
 
-  const [
-    getVideoPresignedUrl,
-    {
-      data: getVideoPresignedUrlData,
-      error: getVideoPresignedUrlError,
-      isLoading: getVideoPresignedUrlLoading,
-    },
-  ] = useGetVideoPresignedUrlMutation();
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadByPresignUrlMutation();
+  const {
+    mutateAsync: getVideoPresignedUrl,
+    data: getVideoPresignedUrlData,
+    error: getVideoPresignedUrlError,
+    isPending: getVideoPresignedUrlLoading,
+  } = useGetFilePresignedUrl();
 
-  const [
-    uploadHomework,
-    {
-      data: uploadHomeworkData,
-      error: uploadHomeworkError,
-      isLoading: uploadHomeworkLoading,
-      isSuccess,
-    },
-  ] = useUploadHomeworkMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+  } = useUploadByPresignUrl();
 
-  const [
-    creatorContentSubmit,
-    {
-      data: creatorContentSubmitData,
-      error: creatorContentSubmitError,
-      isLoading: creatorContentSubmitLoading,
-      isSuccess: creatorContentSubmitSuccess,
-    },
-  ] = useCreatorContentSubmitMutation();
+  const {
+    mutateAsync: uploadHomework,
+    data: uploadHomeworkData,
+    error: uploadHomeworkError,
+    isPending: uploadHomeworkLoading,
+    isSuccess,
+  } = useUploadHomework();
+
+  const {
+    mutateAsync: creatorContentSubmit,
+    data: creatorContentSubmitData,
+    error: creatorContentSubmitError,
+    isPending: creatorContentSubmitLoading,
+    isSuccess: creatorContentSubmitSuccess,
+  } = useCreatorContentSubmit();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -140,7 +130,9 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               setContentThumbnailId(fileId);
               uploadToS3(uploadURL, file).then(() => {
                 getImagePresignedUrl({
-                  FileId: fileId,
+                  variables: {
+                    FileId: fileId,
+                  },
                 });
               });
             }
@@ -172,7 +164,9 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               setContentVideoId(fileId);
               uploadToS3(uploadURL, file).then(() => {
                 getVideoPresignedUrl({
-                  FileId: fileId,
+                  variables: {
+                    FileId: fileId,
+                  },
                 });
               });
             }
@@ -211,10 +205,12 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
     // }
     // if (parsedUserInfo?.UserType === "Creator") {
     creatorContentSubmit({
-      ContentId: contentId,
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
+      variables: {
+        ContentId: contentId,
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+      },
     });
     // }
   };

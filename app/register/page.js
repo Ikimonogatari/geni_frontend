@@ -3,13 +3,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  useBrandRegisterMutation,
-  useSendOtpToEmailMutation,
-} from "../services/service";
+
 import toast from "react-hot-toast";
 import Verification from "./Verification";
 import { Input } from "@/components/ui/input";
+import { useBrandRegister, useSendOtpToEmail } from "@/hooks/react-queries";
 
 function Page() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -23,25 +21,21 @@ function Page() {
   const handleMouseDownConfirmPassword = () => setShowConfirmPassword(true);
   const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
-  const [
-    brandRegister,
-    {
-      data: brandRegisterData,
-      error: brandRegisterError,
-      isLoading: brandRegisterLoading,
-      isSuccess: brandRegisterSuccess,
-    },
-  ] = useBrandRegisterMutation();
+  const {
+    mutateAsync: brandRegister,
+    data: brandRegisterData,
+    error: brandRegisterError,
+    isPending: brandRegisterLoading,
+    isSuccess: brandRegisterSuccess,
+  } = useBrandRegister();
 
-  const [
-    brandVerification,
-    {
-      data: brandVerificationData,
-      error: brandVerificationError,
-      isLoading: brandVerificationLoading,
-      isSuccess: brandVerificationSuccess,
-    },
-  ] = useSendOtpToEmailMutation();
+  const {
+    mutateAsync: brandVerification,
+    data: brandVerificationData,
+    error: brandVerificationError,
+    isPending: brandVerificationLoading,
+    isSuccess: brandVerificationSuccess,
+  } = useSendOtpToEmail();
 
   const registerForm = useFormik({
     initialValues: {
@@ -68,10 +62,12 @@ function Page() {
     onSubmit: (values) => {
       setBrandRegisterFinished(false);
       brandRegister({
-        Email: values.Email,
-        Password: values.Password,
-        OTP: values.OTP,
-        Channel: "smtp",
+        variables: {
+          Email: values.Email,
+          Password: values.Password,
+          OTP: values.OTP,
+          Channel: "smtp",
+        },
       });
     },
   });
@@ -95,10 +91,12 @@ function Page() {
       ) {
         const { Email } = registerForm.values;
         brandVerification({
-          To: Email,
-          UserType: "Brand",
-          Channel: "smtp",
-          Type: "register",
+          variables: {
+            To: Email,
+            UserType: "Brand",
+            Channel: "smtp",
+            Type: "register",
+          },
         });
       } else {
         toast.error("Та бүх талбарыг зөв бөглөнө үү");
@@ -122,7 +120,7 @@ function Page() {
       toast.success("Амжилттай бүртгэгдлээ");
       setBrandRegisterFinished(true);
     } else if (brandRegisterError) {
-      toast.error(brandRegister?.data?.error);
+      toast.error(brandRegisterError);
     }
   }, [brandRegisterSuccess, brandRegisterError]);
 

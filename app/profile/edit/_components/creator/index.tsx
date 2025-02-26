@@ -1,33 +1,28 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import * as Yup from "yup";
 
+import { handleLogout } from "@/components/common/logout-function";
+import TierInfoModal from "@/components/TierInfoModal";
+import { ErrorText } from "@/components/ui/error-text";
 import {
-  useChangeProfilePictureMutation,
-  useEditCreatorProfileMutation,
-  useUpdateSocialChannelMutation,
-  useCreateSocialChannelMutation,
-  useUploadFileMutation,
-  useChangePasswordMutation,
-  useSendOtpToEmailMutation,
-  useChangeEmailMutation,
-  geniApi,
-} from "@/app/services/service";
+  useChangeEmail,
+  useChangePassword,
+  useChangeProfilePicture,
+  useCreateSocialChannel,
+  useEditCreatorProfile,
+  useSendOtpToEmail,
+  useUpdateSocialChannel,
+  useUploadFile,
+} from "@/hooks/react-queries";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
-import { useUserInfo } from "@/app/context/UserInfoContext";
-import CreatorTier from "@/components/CreatorTier";
-import TierInfoModal from "@/components/TierInfoModal";
-import { Edit } from "lucide-react";
-import { ErrorText } from "@/components/ui/error-text";
 function EditProfileCreator() {
   const router = useRouter();
-  const { setShouldRefetchUserInfo } = useUserInfo();
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -54,73 +49,63 @@ function EditProfileCreator() {
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
 
-  const [editCreatorProfile, { data, error, isLoading }] =
-    useEditCreatorProfileMutation();
+  const {
+    mutateAsync: editCreatorProfile,
+    data,
+    error,
+    isPending: isLoading,
+  } = useEditCreatorProfile();
 
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadFileMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+  } = useUploadFile();
 
-  const [
-    changeProfilePicture,
-    {
-      data: changeProfilePictureData,
-      error: changeProfilePictureError,
-      isLoading: changeProfilePictureLoading,
-    },
-  ] = useChangeProfilePictureMutation();
+  const {
+    mutateAsync: changeProfilePicture,
+    data: changeProfilePictureData,
+    error: changeProfilePictureError,
+    isPending: changeProfilePictureLoading,
+  } = useChangeProfilePicture();
 
-  const [
-    changePassword,
-    {
-      data: changePasswordData,
-      error: changePasswordError,
-      isLoading: changePasswordLoading,
-    },
-  ] = useChangePasswordMutation();
+  const {
+    mutateAsync: changePassword,
+    data: changePasswordData,
+    error: changePasswordError,
+    isPending: changePasswordLoading,
+  } = useChangePassword();
 
-  const [
-    sendOtpToEmail,
-    {
-      data: sendOtpToEmailData,
-      error: sendOtpToEmailError,
-      isLoading: sendOtpToEmailLoading,
-      isSuccess: sendOtpToEmailSuccess,
-    },
-  ] = useSendOtpToEmailMutation();
+  const {
+    mutateAsync: sendOtpToEmail,
+    data: sendOtpToEmailData,
+    error: sendOtpToEmailError,
+    isPending: sendOtpToEmailLoading,
+    isSuccess: sendOtpToEmailSuccess,
+  } = useSendOtpToEmail();
 
-  const [
-    changeEmail,
-    {
-      data: changeEmailData,
-      error: changeEmailError,
-      isLoading: changeEmailLoading,
-      isSuccess: changeEmailSuccess,
-    },
-  ] = useChangeEmailMutation();
+  const {
+    mutateAsync: changeEmail,
+    data: changeEmailData,
+    error: changeEmailError,
+    isPending: changeEmailLoading,
+    isSuccess: changeEmailSuccess,
+  } = useChangeEmail();
 
-  const [
-    updateSocialChannel,
-    {
-      data: updateSocialChannelData,
-      error: updateSocialChannelError,
-      isLoading: updateSocialChannelLoading,
-    },
-  ] = useUpdateSocialChannelMutation();
+  const {
+    mutateAsync: updateSocialChannel,
+    data: updateSocialChannelData,
+    error: updateSocialChannelError,
+    isPending: updateSocialChannelLoading,
+  } = useUpdateSocialChannel();
 
-  const [
-    createSocialChannel,
-    {
-      data: createSocialChannelData,
-      error: createSocialChannelError,
-      isLoading: createSocialChannelLoading,
-    },
-  ] = useCreateSocialChannelMutation();
+  const {
+    mutateAsync: createSocialChannel,
+    data: createSocialChannelData,
+    error: createSocialChannelError,
+    isPending: createSocialChannelLoading,
+  } = useCreateSocialChannel();
 
   const formik = useFormik({
     initialValues: {
@@ -146,7 +131,7 @@ function EditProfileCreator() {
       RegNo: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      editCreatorProfile(values).unwrap();
+      editCreatorProfile({ variables: values });
     },
   });
 
@@ -167,7 +152,9 @@ function EditProfileCreator() {
           if (response.data) {
             const id = response.data.FileId;
             changeProfilePicture({
-              FileId: id,
+              variables: {
+                FileId: id,
+              },
             });
           }
         });
@@ -235,9 +222,11 @@ function EditProfileCreator() {
   const handleChangePassword = async () => {
     try {
       await changePassword({
-        OldPassword: oldPassword,
-        NewPassword: newPassword,
-      }).unwrap();
+        variables: {
+          OldPassword: oldPassword,
+          NewPassword: newPassword,
+        },
+      });
       toast.success("Нууц үг амжилттай солигдлоо");
     } catch (err) {
       toast.error("Нууц үг солиход алдаа гарлаа");
@@ -253,14 +242,18 @@ function EditProfileCreator() {
 
         if (hasExistingInstagram) {
           await updateSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+            variables: {
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            },
+          });
         } else {
           await createSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+            variables: {
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            },
+          });
         }
       }
 
@@ -271,14 +264,18 @@ function EditProfileCreator() {
 
         if (hasExistingFacebook) {
           await updateSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+            variables: {
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            },
+          });
         } else {
           await createSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+            variables: {
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            },
+          });
         }
       }
 
@@ -290,29 +287,22 @@ function EditProfileCreator() {
 
   const handleSendOtp = async () => {
     sendOtpToEmail({
-      To: newEmail,
-      UserType: userType, //Sys, Brand, Creator
-      Channel: "smtp", //smtp, sms
-      Type: "changeemail",
+      variables: {
+        To: newEmail,
+        UserType: userType, //Sys, Brand, Creator
+        Channel: "smtp", //smtp, sms
+        Type: "changeemail",
+      },
     });
   };
 
   const handleChangeEmail = () => {
     changeEmail({
-      OTP: otp,
-      NewEmail: newEmail,
+      variables: {
+        OTP: otp,
+        NewEmail: newEmail,
+      },
     });
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("auth");
-    Cookies.remove("userType");
-    Cookies.remove("user-info");
-    geniApi.util.invalidateTags(["UserInfo"]);
-    setShouldRefetchUserInfo(true);
-
-    router.refresh();
-    router.replace("/");
   };
 
   return (

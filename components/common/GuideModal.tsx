@@ -5,8 +5,8 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useBrandGuideCheckMutation } from "@/app/services/service";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useBrandGuideCheck } from "@/hooks/react-queries";
 
 function GuideModal({ hasSeenGuide }) {
   const [swiper, setSwiper] = useState(null);
@@ -37,15 +37,13 @@ function GuideModal({ hasSeenGuide }) {
     },
   ];
 
-  const [
-    brandGuideCheck,
-    {
-      data: brandGuideCheckData,
-      error: brandGuideCheckError,
-      isLoading: brandGuideCheckDataLoading,
-      isSuccess: brandGuideCheckDataSuccess,
-    },
-  ] = useBrandGuideCheckMutation();
+  const {
+    mutate: brandGuideCheck,
+    data: brandGuideCheckData,
+    error: brandGuideCheckError,
+    isPending: brandGuideCheckDataLoading,
+    isSuccess: brandGuideCheckDataSuccess,
+  } = useBrandGuideCheck();
 
   const handleFinish = () => {
     setDialogOpen(false);
@@ -56,7 +54,7 @@ function GuideModal({ hasSeenGuide }) {
     setIsChecked(isChecked);
 
     if (isChecked) {
-      brandGuideCheck(null);
+      brandGuideCheck({ variables: {} });
     }
   };
 

@@ -140,7 +140,7 @@ export const ProductTypePostRequestSchema = z.object({
 
 export const ProductAddPostRequestSchema = z.object({
   ProductId: z.string(),
-  SupplyCnt: z.number().int().min(1, "Supply count must be at least 1"),
+  Credit: z.number().int().min(1, "Credit count must be at least 1"),
 });
 
 export const ProductPutRequestSchema = z.object({

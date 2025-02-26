@@ -18,7 +18,8 @@ export const useListContentGallery = createPaginationQueryHook<
   typeof ContentGalleryResponseSchema
 >({
   endpoint: "/api/web/private/content/my",
-  rQueryParams: { queryKey: ["contentGallery"] },
+  dataSchema: ContentGalleryResponseSchema,
+  rQueryParams: { queryKey: ["contentGallery"], retry: false },
 });
 
 // GET /api/web/public/content/user/{id}?limit=&offset= (paginated)

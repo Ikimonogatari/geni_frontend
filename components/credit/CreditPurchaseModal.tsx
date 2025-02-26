@@ -5,14 +5,11 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
-import {
-  useBrandTermCheckMutation,
-  useUseFreeContentMutation,
-} from "@/app/services/service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import PaymentModal from "../PaymentModal";
+import { useBrandTermCheck, useUseFreeContent } from "@/hooks/react-queries";
 
 function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   const router = useRouter();
@@ -28,25 +25,21 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [isAgreed, setIsAgreed] = useState(userInfo?.IsCheckedTerm);
 
-  const [
-    brandTermCheck,
-    {
-      data: brandTermCheckData,
-      error: brandTermCheckError,
-      isLoading: brandTermCheckLoading,
-      isSuccess: brandTermCheckSuccess,
-    },
-  ] = useBrandTermCheckMutation();
+  const {
+    mutate: brandTermCheck,
+    data: brandTermCheckData,
+    error: brandTermCheckError,
+    isPending: brandTermCheckLoading,
+    isSuccess: brandTermCheckSuccess,
+  } = useBrandTermCheck();
 
-  const [
-    useFreeContent,
-    {
-      data: useFreeContentData,
-      error: useFreeContentError,
-      isLoading: useFreeContentLoading,
-      isSuccess: useFreeContentSuccess,
-    },
-  ] = useUseFreeContentMutation();
+  const {
+    mutate: useFreeContent,
+    data: useFreeContentData,
+    error: useFreeContentError,
+    isPending: useFreeContentLoading,
+    isSuccess: useFreeContentSuccess,
+  } = useUseFreeContent();
 
   useEffect(() => {
     if (useFreeContentSuccess) {
@@ -63,13 +56,13 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
     const isChecked = e.target.checked;
     setIsAgreed(isChecked);
     if (isChecked) {
-      brandTermCheck({});
+      brandTermCheck({ variables: {} });
     }
   };
 
   const nextStep = () => {
     if (selectedOption === "freecontent") {
-      useFreeContent({});
+      useFreeContent({ variables: {} });
     } else {
       setCurrentStep((prevStep) => {
         if (userInfo?.IsCheckedTerm && prevStep === 1) {

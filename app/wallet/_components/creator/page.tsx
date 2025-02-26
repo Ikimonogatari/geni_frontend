@@ -1,9 +1,8 @@
 "use client";
-import React from "react";
+import { useGetWalletInfo } from "@/hooks/react-queries";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { useGetWalletInfoQuery } from "@/app/services/service";
 
 function CreatorWallet() {
   const router = useRouter();
@@ -13,8 +12,7 @@ function CreatorWallet() {
     data: getWalletInfoData,
     error: getWalletInfoError,
     isLoading: getWalletInfoLoading,
-    //@ts-ignore
-  } = useGetWalletInfoQuery();
+  } = useGetWalletInfo();
 
   return (
     <div className="min-h-screen w-full bg-white">

@@ -9,7 +9,8 @@ import "/public/fonts/font/stylesheet.css";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { UserInfoProvider } from "./context/UserInfoContext";
+import ReactQueryProvider from "@/components/providers/react-query-provider";
+import UserInfoProvider from "@/components/providers/user-info-provider";
 
 const mabryPro = localFont({
   src: [
@@ -34,27 +35,31 @@ const mabryPro = localFont({
 export default function RootLayout({ children }) {
   return (
     <Provider store={store}>
-      <html lang="en" className={mabryPro.className}>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta property="og:image" content="/meta-logo.png" />
-        <Head>
-          <title>GENI</title>
-        </Head>
-        <body className="bg-white text-[#2D262D]">
-          <Toaster
-            toastOptions={{
-              className: "text-lg",
-            }}
-            position="top-right"
-            reverseOrder="false"
-          />
-          <UserInfoProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </UserInfoProvider>
-        </body>
-      </html>
+      <ReactQueryProvider>
+        <UserInfoProvider>
+          <html lang="en" className={mabryPro.className}>
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+            <meta property="og:image" content="/meta-logo.png" />
+            <Head>
+              <title>GENI</title>
+            </Head>
+
+            <body className="bg-white text-[#2D262D]">
+              <Toaster
+                toastOptions={{
+                  className: "text-lg",
+                }}
+                position="top-right"
+                reverseOrder="false"
+              />
+
+              <Navbar />
+              {children}
+              <Footer />
+            </body>
+          </html>
+        </UserInfoProvider>
+      </ReactQueryProvider>
     </Provider>
   );
 }

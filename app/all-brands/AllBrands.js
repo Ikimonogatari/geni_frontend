@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useGetPublicBrandListQuery } from "../services/service";
+import { useGetPublicBrandList } from "@/hooks/react-queries";
 
 function AllBrands() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -9,7 +9,7 @@ function AllBrands() {
     data: getPublicBrandListData,
     error: getPublicBrandListError,
     isLoading: getPublicBrandListLoading,
-  } = useGetPublicBrandListQuery();
+  } = useGetPublicBrandList();
 
   const filteredBrands = getPublicBrandListData?.Data?.filter((brand) =>
     brand?.Name?.toLowerCase().includes(searchQuery.toLowerCase())

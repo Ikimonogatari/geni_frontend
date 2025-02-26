@@ -1,45 +1,55 @@
 import { z } from "zod";
 
+export const UserType = z.enum(["Student", "Creator", "Brand"]);
+
 export const UserResponseSchema = z.object({
-  AdditionalPhoneNum: z.string().nullable(),
-  AverageRating: z.string().nullable(),
-  Bio: z.string().nullable(),
-  Birthday: z.string().nullable(),
-  ContentCount: z.number().int(),
+  AdditionalPhoneNum: z.string().nullable().optional(),
+  AverageRating: z.string().nullable().optional(),
+  Bio: z.string().nullable().optional(),
+  Birthday: z.string().nullable().optional(),
+  ContentCount: z.number().int().optional(),
   CreatedBy: z.number().int(),
-  EbarimtConsumerNo: z.string().nullable(),
-  EduId: z.number().int(),
-  Email: z.string().email(),
-  FirstName: z.string(),
-  Gender: z.enum(["M", "F"]).nullable(),
+  EbarimtConsumerNo: z.string().nullable().optional(),
+  EduId: z.number().int().optional(),
+  Email: z.string().email().optional(),
+  FirstName: z.string().optional(),
+  Gender: z.enum(["M", "F"]).nullable().optional(),
   HasSeenGuide: z.boolean(),
-  IconFileId: z.number().int(),
-  IsStudent: z.boolean(),
+  IconFileId: z.number().int().optional(),
+  IsStudent: z.boolean().optional(),
   IsVerified: z.boolean(),
-  LastName: z.string(),
-  LevelName: z.string(),
-  Location: z.string().nullable(),
-  LvlId: z.number().int(),
-  ModifiedBy: z.number().int(),
-  Nickname: z.string(),
-  PhoneNumber: z.string(),
-  Point: z.number().int(),
-  ProfileLink: z.string().nullable(),
-  ProfilePictureId: z.number().int(),
-  RegNo: z.string().nullable(),
-  SocialChannels: z.array(
-    z.object({
-      UserId: z.number().int(),
-      PlatformId: z.number().int(),
-      OrderNo: z.number().int(),
-      SocialAddress: z.string(),
-      CreatedBy: z.number().int(),
-      ModifiedBy: z.number().int(),
-      PlatformName: z.string(),
-    })
-  ),
+  Name: z.string().optional(),
+  LastName: z.string().optional(),
+  LevelName: z.string().optional(),
+  Location: z.string().nullable().optional(),
+  LvlId: z.number().int().optional(),
+  ModifiedBy: z.number().int().optional(),
+  Nickname: z.string().optional(),
+  PhoneNumber: z.string().optional(),
+  Point: z.number().int().optional(),
+  ProfileLink: z.string().nullable().optional(),
+  ProfilePictureId: z.number().int().optional(),
+  RegNo: z.string().nullable().optional(),
+  SocialChannels: z
+    .array(
+      z.object({
+        UserId: z.number().int(),
+        PlatformId: z.number().int(),
+        OrderNo: z.number().int(),
+        SocialAddress: z.string(),
+        CreatedBy: z.number().int(),
+        ModifiedBy: z.number().int(),
+        PlatformName: z.string(),
+      })
+    )
+    .optional()
+    .nullable(),
   UserId: z.number().int(),
-  UserType: z.enum(["Student", "Creator"]).nullable(),
+  UserType: z.enum(["Student", "Creator", "Brand"]).nullable().optional(),
+  OnBoardingStatus: z.string().optional(),
+  BrandTypes: z.array(z.any()).optional().nullable(),
+  Credit: z.any(),
+  HasGivenHomework: z.boolean().optional(),
 });
 
 export const UserListBrandTypeResponseSchema = z.array(
@@ -52,19 +62,20 @@ export const UserListBrandTypeResponseSchema = z.array(
 );
 
 export const UserCreatorPutRequestSchema = z.object({
-  FirstName: z.string(),
-  LastName: z.string(),
-  Nickname: z.string(),
+  FirstName: z.string().optional(),
+  LastName: z.string().optional(),
+  Nickname: z.string().optional(),
   Email: z.string().email(),
-  Bio: z.string().nullable(),
-  RegNo: z.string().nullable(),
-  PhoneNumber: z.string().nullable(),
-  AdditionalPhoneNum: z.string().nullable(),
-  Location: z.string().nullable(),
-  EbarimtConsumerNo: z.string().nullable(),
-  Birthday: z.date().nullable(),
-  EduId: z.number().int().nullable(),
-  Gender: z.enum(["M", "F"]).nullable(),
+  Bio: z.string().nullable().optional(),
+  RegNo: z.string().nullable().optional(),
+  PhoneNumber: z.string().nullable().optional(),
+  AdditionalPhoneNum: z.string().nullable().optional(),
+  Location: z.string().nullable().optional(),
+  EbarimtConsumerNo: z.string().nullable().optional(),
+  Birthday: z.string().nullable().optional(),
+  EduId: z.number().int().nullable().optional(),
+  // Gender: z.enum(["M", "F"]).nullable().optional(),
+  Gender: z.string().nullable().optional(),
 });
 
 export const UserBrandPutRequestSchema = z.object({

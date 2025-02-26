@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 import Image from "next/image";
-import { useListNotificationQuery } from "@/app/services/service";
+import { useListNotification } from "@/hooks/react-queries";
 
 function page() {
   const router = useRouter();
@@ -14,7 +14,7 @@ function page() {
     data: listNotificationData,
     error: listNotificationError,
     isLoading: listNotificationLoading,
-  } = useListNotificationQuery();
+  } = useListNotification();
 
   useEffect(() => {
     if (listNotificationData) {

@@ -5,14 +5,14 @@ import Image from "next/image";
 import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import {
-  useGetImagePresignedUrlMutation,
-  useGetVideoPresignedUrlMutation,
-  useUploadByPresignUrlMutation,
-  useCreatorContentSubmitMutation,
-} from "../app/services/service";
+
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
+import {
+  useCreatorContentSubmit,
+  useGetFilePresignedUrl,
+  useUploadByPresignUrl,
+} from "@/hooks/react-queries";
 
 function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
@@ -23,41 +23,34 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
-  const [
-    getImagePresignedUrl,
-    {
-      data: getImagePresignedUrlData,
-      error: getImagePresignedUrlError,
-      isLoading: getImagePresignedUrlLoading,
-    },
-  ] = useGetImagePresignedUrlMutation();
+  const {
+    mutateAsync: getImagePresignedUrl,
+    data: getImagePresignedUrlData,
+    error: getImagePresignedUrlError,
+    isPending: getImagePresignedUrlLoading,
+  } = useGetFilePresignedUrl();
 
-  const [
-    getVideoPresignedUrl,
-    {
-      data: getVideoPresignedUrlData,
-      error: getVideoPresignedUrlError,
-      isLoading: getVideoPresignedUrlLoading,
-    },
-  ] = useGetVideoPresignedUrlMutation();
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadByPresignUrlMutation();
+  const {
+    mutateAsync: getVideoPresignedUrl,
+    data: getVideoPresignedUrlData,
+    error: getVideoPresignedUrlError,
+    isPending: getVideoPresignedUrlLoading,
+  } = useGetFilePresignedUrl();
 
-  const [
-    creatorContentSubmit,
-    {
-      data: creatorContentSubmitData,
-      error: creatorContentSubmitError,
-      isLoading: creatorContentSubmitLoading,
-      isSuccess: creatorContentSubmitSuccess,
-    },
-  ] = useCreatorContentSubmitMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+  } = useUploadByPresignUrl();
+
+  const {
+    mutateAsync: creatorContentSubmit,
+    data: creatorContentSubmitData,
+    error: creatorContentSubmitError,
+    isPending: creatorContentSubmitLoading,
+    isSuccess: creatorContentSubmitSuccess,
+  } = useCreatorContentSubmit();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -118,7 +111,9 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               setContentThumbnailId(fileId);
               uploadToS3(uploadURL, file).then(() => {
                 getImagePresignedUrl({
-                  FileId: fileId,
+                  variables: {
+                    FileId: fileId,
+                  },
                 });
               });
             }
@@ -150,7 +145,9 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               setContentVideoId(fileId);
               uploadToS3(uploadURL, file).then(() => {
                 getVideoPresignedUrl({
-                  FileId: fileId,
+                  variables: {
+                    FileId: fileId,
+                  },
                 });
               });
             }
@@ -181,10 +178,12 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   };
   const handleContentSubmit = () => {
     creatorContentSubmit({
-      ContentId: contentId,
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
+      variables: {
+        ContentId: contentId,
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+      },
     });
   };
 

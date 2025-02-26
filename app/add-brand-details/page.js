@@ -1,14 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useRouter } from "next/navigation";
 import {
-  useEditBrandProfileMutation,
-  useBrandRequestReviewMutation,
-} from "@/app/services/service";
+  useBrandRequestReview,
+  useEditBrandProfile,
+} from "@/hooks/react-queries";
+import { useFormik } from "formik";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import * as Yup from "yup";
 import BrandDetails from "./BrandDetails";
 import BrandDetailsSubmit from "./BrandDetailsSubmit";
 import BrandDetailsSuccess from "./BrandDetailsSuccess";
@@ -36,18 +36,21 @@ function Page() {
     if (step > 1) setStep((prevStep) => prevStep - 1);
   };
 
-  const [editBrandProfile, { data, error, isLoading, isSuccess }] =
-    useEditBrandProfileMutation();
+  const {
+    mutateAsync: editBrandProfile,
+    data,
+    error,
+    isPending,
+    isSuccess,
+  } = useEditBrandProfile();
 
-  const [
-    requestReview,
-    {
-      data: requestReviewData,
-      error: requestReviewError,
-      isLoading: requestReviewLoading,
-      isSuccess: requestReviewSuccess,
-    },
-  ] = useBrandRequestReviewMutation();
+  const {
+    mutateAsync: requestReview,
+    data: requestReviewData,
+    error: requestReviewError,
+    isPending: requestReviewLoading,
+    isSuccess: requestReviewSuccess,
+  } = useBrandRequestReview();
 
   const formik = useFormik({
     initialValues: {
@@ -76,7 +79,7 @@ function Page() {
     }),
     onSubmit: async (values) => {
       try {
-        await editBrandProfile(values).unwrap();
+        await editBrandProfile({ variables: values });
         await requestReview();
         setStep(3);
       } catch (error) {

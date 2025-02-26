@@ -7,8 +7,8 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
-import { useGetPublicCreatorListQuery } from "../services/service";
 import PublicCreatorCard from "@/components/PublicCreatorCard";
+import { useGetPublicCreatorList } from "@/hooks/react-queries";
 
 function Creators() {
   const [isBeginning, setIsBeginning] = useState(true);
@@ -25,7 +25,7 @@ function Creators() {
     data: getPublicCreatorListData,
     error: getPublicCreatorListError,
     isLoading: getPublicCreatorListLoading,
-  } = useGetPublicCreatorListQuery();
+  } = useGetPublicCreatorList();
 
   const checkViewportSize = () => {
     const width = window.innerWidth;

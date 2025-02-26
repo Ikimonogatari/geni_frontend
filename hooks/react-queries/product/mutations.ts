@@ -10,6 +10,7 @@ import {
   createPostMutationHook,
   createPutMutationHook,
 } from "@/api/helpers";
+import { z } from "zod";
 
 //
 // -- POST --
@@ -52,10 +53,7 @@ export const useEditProduct = createPutMutationHook({
 //
 
 // DELETE /api/web/private/product/{productId}
-export const useDeleteProduct = createDeleteMutationHook<
-  undefined,
-  { productId: string }
->({
+export const useDeleteProduct = createDeleteMutationHook({
   endpoint: "/api/web/private/product/:productId",
   rMutationParams: {},
 });

@@ -10,12 +10,12 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import {
-  useCheckPaymentQuery,
-  useListPaymentPlansQuery,
-  useSubscribePlanMutation,
-} from "@/app/services/service";
 import toast from "react-hot-toast";
+import {
+  useCheckPayment,
+  useListPaymentPlans,
+  useSubscribePlan,
+} from "@/hooks/react-queries";
 
 function page() {
   const router = useRouter();
@@ -36,25 +36,23 @@ function page() {
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery();
+  } = useListPaymentPlans();
 
-  const [
-    subscribePlan,
-    {
-      data: subscribePlanData,
-      error: subscribePlanError,
-      isLoading: subscribePlanLoading,
-    },
-  ] = useSubscribePlanMutation();
+  const {
+    mutateAsync: subscribePlan,
+    data: subscribePlanData,
+    error: subscribePlanError,
+    isPending: subscribePlanLoading,
+  } = useSubscribePlan();
 
   const [selectedType, setSelectedType] = useState();
 
   const {
     data: checkPaymentData,
     error: checkPaymentError,
-    isLoading: checkPaymentLoading,
+    isPending: checkPaymentLoading,
     refetch: checkPayment,
-  } = useCheckPaymentQuery(txId);
+  } = useCheckPayment({ route: { txId } });
 
   useEffect(() => {
     if (listPaymentPlansData) {
@@ -96,7 +94,7 @@ function page() {
   };
 
   const handlePayment = () => {
-    subscribePlan({ planId: selectedPlan });
+    subscribePlan({ variables: { planId: selectedPlan } });
   };
 
   const handleCheckOayment = (txId) => {

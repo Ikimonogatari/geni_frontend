@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import {
   QueryClient,
@@ -6,13 +7,13 @@ import {
   useMutation,
   UseMutationOptions,
   useQuery,
-  useQueryClient,
   UseQueryResult,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z, ZodError } from "zod";
 import { client } from "./axios";
+import { queryClient } from "./query-client";
 
 interface EnhancedMutationParams<
   TData = unknown,
@@ -193,7 +194,7 @@ interface CreatePostMutationHookArgs<
   /** The mutation parameters for the react-query hook */
   rMutationParams?: EnhancedMutationParams<
     z.infer<ResponseSchema>,
-    Error,
+    Error & { error: string },
     z.infer<BodySchema>
   >;
   options?: { isMultipart?: boolean };
@@ -223,7 +224,6 @@ export function createPostMutationHook<
   options,
 }: CreatePostMutationHookArgs<BodySchema, ResponseSchema>) {
   return (params?: { query?: QueryParams; route?: RouteParams }) => {
-    const queryClient = useQueryClient();
     const baseUrl = createUrl(endpoint, params?.query, params?.route);
 
     const mutationFn = async ({
@@ -311,7 +311,6 @@ export function createPutMutationHook<
   options,
 }: CreatePutMutationHookArgs<BodySchema, ResponseSchema>) {
   return (params?: { query?: QueryParams; route?: RouteParams }) => {
-    const queryClient = useQueryClient();
     const baseUrl = createUrl(endpoint, params?.query, params?.route);
     const mutationFn = async ({
       variables,
@@ -389,7 +388,6 @@ export function createDeleteMutationHook<
   z.infer<ModelSchema>
 >) {
   return (params?: { query?: QueryParams; route?: RouteParams }) => {
-    const queryClient = useQueryClient();
     const baseUrl = createUrl(endpoint, params?.query, params?.route);
 
     const mutationFn = async ({
@@ -522,7 +520,7 @@ export function createPaginationQueryHook<
     } as unknown as QueryParams;
     const route = params?.route ?? ({} as RouteParams);
 
-    return useSuspenseQuery({
+    return useQuery({
       ...rQueryParams,
       queryKey: getQueryKey(rQueryParams.queryKey, route, query),
       queryFn: () => queryFn({ query, route }),

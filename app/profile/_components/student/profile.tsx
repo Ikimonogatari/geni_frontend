@@ -1,19 +1,19 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
 import Cookies from "js-cookie";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import {
-  useGetUserInfoQuery,
-  useListCreatorContentsQuery,
-  useBecomeCreatorMutation,
-} from "@/app/services/service";
-import ContentProgress from "./ContentProgress";
 import LogoutButton from "@/components/common/LogoutButton";
-import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
+import HomeworkUploadModal from "@/components/HomeworkUploadModal";
+import {
+  useBecomeCreator,
+  useGetUserInfo,
+  useListContents,
+} from "@/hooks/react-queries";
+import ContentProgress from "./ContentProgress";
 
 function StudentProfile() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,26 +26,21 @@ function StudentProfile() {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery({});
+  } = useGetUserInfo({});
 
   const {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
-  } = useListCreatorContentsQuery(
-    { limit: contentsPerPage, offset },
-    { refetchOnMountOrArgChange: true }
-  );
+  } = useListContents({ query: { limit: contentsPerPage, offset } });
 
-  const [
-    becomeCreator,
-    {
-      data: becomeCreatorData,
-      error: becomeCreatorError,
-      isLoading: becomeCreatorLoading,
-      isSuccess: becomeCreatorSuccess,
-    },
-  ] = useBecomeCreatorMutation();
+  const {
+    mutateAsync: becomeCreator,
+    data: becomeCreatorData,
+    error: becomeCreatorError,
+    isPending: becomeCreatorLoading,
+    isSuccess: becomeCreatorSuccess,
+  } = useBecomeCreator();
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -134,7 +129,7 @@ function StudentProfile() {
   const isCreator = getUserInfoData?.HasGivenHomework;
 
   const handleBecomeCreator = async () => {
-    await becomeCreator({});
+    await becomeCreator({ variables: {} });
   };
 
   useEffect(() => {

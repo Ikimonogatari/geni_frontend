@@ -1,18 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  useGetUserInfoQuery,
-  useListContentGalleryQuery,
-  useListCreatorContentsQuery,
-} from "@/app/services/service";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import ContentProgress from "./ContentProgress";
 import ContentGallery from "@/components/ContentGallery";
 import CreatorTier from "@/components/CreatorTier";
 import TierInfoModal from "@/components/TierInfoModal";
 import LogoutButton from "@/components/common/LogoutButton";
+import {
+  useGetUserInfo,
+  useListContentGallery,
+  useListContents,
+} from "@/hooks/react-queries";
+import ContentProgress from "./ContentProgress";
 
 function CreatorProfile() {
   const [profileState, setProfileState] = useState("content-progress");
@@ -25,22 +25,19 @@ function CreatorProfile() {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-  } = useListContentGalleryQuery({});
+  } = useListContentGallery({});
 
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery({});
+  } = useGetUserInfo({});
 
   const {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
-  } = useListCreatorContentsQuery(
-    { limit: contentsPerPage, offset },
-    { refetchOnMountOrArgChange: true }
-  );
+  } = useListContents({ query: { limit: contentsPerPage, offset } });
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

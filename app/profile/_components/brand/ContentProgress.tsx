@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  useBrandReceiveContentMutation,
-  useGetImagePresignedUrlMutation,
-  useGetVideoPresignedUrlMutation,
-} from "@/app/services/service";
+
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
 import NoContentStatusList from "@/components/NoContentStatusList";
+import {
+  useBrandReceiveContent,
+  useGetFilePresignedUrl,
+  useGetImagePresignedUrl,
+} from "@/hooks/react-queries";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -39,23 +40,19 @@ function ContentProgress({ currentContents }) {
   const [comment, setComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
 
-  const [
-    getImagePresignedUrl,
-    {
-      data: getImagePresignedUrlData,
-      error: getImagePresignedUrlError,
-      isLoading: getImagePresignedUrlLoading,
-    },
-  ] = useGetImagePresignedUrlMutation();
+  const {
+    mutateAsync: getImagePresignedUrl,
+    data: getImagePresignedUrlData,
+    error: getImagePresignedUrlError,
+    isPending: getImagePresignedUrlLoading,
+  } = useGetImagePresignedUrl();
 
-  const [
-    getVideoPresignedUrl,
-    {
-      data: getVideoPresignedUrlData,
-      error: getVideoPresignedUrlError,
-      isLoading: getVideoPresignedUrlLoading,
-    },
-  ] = useGetVideoPresignedUrlMutation();
+  const {
+    mutateAsync: getVideoPresignedUrl,
+    data: getVideoPresignedUrlData,
+    error: getVideoPresignedUrlError,
+    isPending: getVideoPresignedUrlLoading,
+  } = useGetFilePresignedUrl();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -73,15 +70,13 @@ function ContentProgress({ currentContents }) {
     }
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
-  const [
-    brandReceiveContent,
-    {
-      data: brandReceiveContentData,
-      error: brandReceiveContentError,
-      isLoading: brandReceiveContentLoading,
-      isSuccess: brandReceiveContentSuccess,
-    },
-  ] = useBrandReceiveContentMutation();
+  const {
+    mutateAsync: brandReceiveContent,
+    data: brandReceiveContentData,
+    error: brandReceiveContentError,
+    isPending: brandReceiveContentLoading,
+    isSuccess: brandReceiveContentSuccess,
+  } = useBrandReceiveContent();
 
   useEffect(() => {
     if (brandReceiveContentError) {
@@ -94,17 +89,19 @@ function ContentProgress({ currentContents }) {
   }, [brandReceiveContentSuccess, brandReceiveContentError]);
 
   const handleDialogTrigger = (thumbnailId, contentId) => {
-    getImagePresignedUrl({ FileId: thumbnailId });
-    getVideoPresignedUrl({ FileId: contentId });
+    getImagePresignedUrl({ variables: { FileId: thumbnailId } });
+    getVideoPresignedUrl({ variables: { FileId: contentId } });
   };
 
   const handleContentReceive = (contentId) => {
     brandReceiveContent({
-      ContentId: contentId,
-      Comment: comment,
-      InstructionStar: guidelineScore,
-      ContextStar: conceptScore,
-      CreationStar: qualityScore,
+      variables: {
+        ContentId: contentId,
+        Comment: comment,
+        InstructionStar: guidelineScore,
+        ContextStar: conceptScore,
+        CreationStar: qualityScore,
+      },
     });
   };
 

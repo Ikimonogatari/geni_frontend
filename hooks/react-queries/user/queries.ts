@@ -9,7 +9,9 @@ import { createGetQueryHook } from "@/api/helpers";
 export const useGetUserInfo = createGetQueryHook({
   endpoint: "/api/web/private/user",
   responseSchema: UserResponseSchema,
-  rQueryParams: { queryKey: ["userInfo"] },
+  rQueryParams: {
+    queryKey: ["userInfo"],
+  },
 });
 
 // GET /api/web/private/user/brand/type

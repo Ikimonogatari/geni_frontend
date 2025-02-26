@@ -1,62 +1,51 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
 import Image from "next/image";
-import ContentProgress from "./ContentProgress";
+import { useEffect, useState } from "react";
 import BrandProducts from "./BrandProducts";
-import {
-  useGetUserInfoQuery,
-  useListBrandContentsQuery,
-  useListBrandProductsQuery,
-  useListContentGalleryQuery,
-} from "@/app/services/service";
-import Link from "next/link";
+import ContentProgress from "./ContentProgress";
 import BrandContentGallery from "./BrandContentGallery";
+
+import { useUserInfo } from "@/app/context/UserInfoContext";
 import LogoutButton from "@/components/common/LogoutButton";
-import CreditPurchase from "@/components/credit/CreditPurchaseModal";
-import GuideModal from "@/components/common/GuideModal";
-import { useRouter } from "next/navigation";
 import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
+import {
+  useListBrandContents,
+  useListBrandProducts,
+  useListContentGallery,
+} from "@/hooks/react-queries";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function BrandProfile() {
   const router = useRouter();
-  const {
-    data: getUserInfoData,
-    error: getUserInfoError,
-    isLoading: getUserInfoLoading,
-  } = useGetUserInfoQuery({});
 
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 16;
   const [currentContents, setCurrentContents] = useState([]);
+
+  const contentsPerPage = 16;
   const offset = (currentPage - 1) * contentsPerPage;
 
   const {
     data: listBrandContentsData,
     error: listBrandContentsError,
     isLoading: listBrandContentsLoading,
-  } = useListBrandContentsQuery(
-    { limit: contentsPerPage, offset },
-    { refetchOnMountOrArgChange: true }
-  );
+  } = useListBrandContents({ query: { limit: contentsPerPage, offset } });
 
   const {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-  } = useListContentGalleryQuery(
-    { limit: contentsPerPage, offset },
-    { refetchOnMountOrArgChange: true }
-  );
+  } = useListContentGallery({
+    query: { limit: contentsPerPage, offset },
+  });
 
   const {
     data: listBrandProductsData,
     error: listBrandProductsError,
     isLoading: listBrandProductsLoading,
-  } = useListBrandProductsQuery(
-    { limit: contentsPerPage, offset },
-    { refetchOnMountOrArgChange: true }
-  );
+  } = useListBrandProducts({ query: { limit: contentsPerPage, offset } });
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -67,16 +56,16 @@ function BrandProfile() {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-  console.log(getUserInfoData?.IsVerified);
+  const user = useUserInfo();
   useEffect(() => {
     if (
-      getUserInfoData?.IsVerified &&
-      getUserInfoData?.OnBoardingStatus != "Approved" &&
-      getUserInfoData?.OnBoardingStatus != "Request"
+      user.userInfo?.IsVerified &&
+      user.userInfo?.OnBoardingStatus != "Approved" &&
+      user.userInfo?.OnBoardingStatus != "Request"
     ) {
       router.push("/add-brand-details");
     }
-  }, [getUserInfoData, router]);
+  }, [user, router]);
 
   useEffect(() => {
     const contents = getCurrentContents();
@@ -136,7 +125,7 @@ function BrandProfile() {
         return (
           <BrandProducts
             brandProducts={currentContents}
-            brandData={getUserInfoData ? getUserInfoData : null}
+            brandData={user.userInfo}
           />
         );
       default:
@@ -187,11 +176,11 @@ function BrandProfile() {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   };
 
-  const instagramLink = getUserInfoData?.SocialChannels?.find(
+  const instagramLink = user.userInfo?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Instagram"
   );
 
-  const facebookLink = getUserInfoData?.SocialChannels?.find(
+  const facebookLink = user.userInfo?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Facebook"
   );
   return (
@@ -200,11 +189,11 @@ function BrandProfile() {
         <div className=" text-[#2D262D] max-w-7xl min-h-screen mx-auto py-10 sm:py-20">
           <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-4 sm:gap-7">
-              {getUserInfoData ? (
+              {user.userInfo ? (
                 <Image
                   src={
-                    getUserInfoData?.ProfileLink
-                      ? getUserInfoData?.ProfileLink
+                    user.userInfo?.ProfileLink
+                      ? user.userInfo?.ProfileLink
                       : "/dummy-brand.png"
                   }
                   alt=""
@@ -217,7 +206,7 @@ function BrandProfile() {
               )}
               <div className="flex flex-col gap-1 sm:gap-2">
                 <span className="font-bold text-base sm:text-xl xl:text-2xl">
-                  {getUserInfoData?.Name ? getUserInfoData?.Name : "Geni брэнд"}
+                  {user.userInfo?.Name ? user.userInfo?.Name : "Geni брэнд"}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink ? (
@@ -255,7 +244,7 @@ function BrandProfile() {
                 </div>
                 <div className="overflow-x-auto w-full">
                   <div className="flex w-[220px] sm:w-full flex-row sm:flex-wrap items-center gap-1 sm:gap-2 lg:w-5/6">
-                    {getUserInfoData?.BrandTypes?.map((b, i) => (
+                    {user.userInfo?.BrandTypes?.map((b, i) => (
                       <button
                         key={i}
                         className="bg-[#4D55F5] whitespace-nowrap text-white rounded-full px-3 text-sm py-1 sm:py-[6px]"
@@ -305,7 +294,7 @@ function BrandProfile() {
                     className="w-4 h-4 sm:w-6 sm:h-6"
                   />
                   <span className="text-white text-xs sm:text-base font-bold">
-                    Geni Кредит: {getUserInfoData?.Credit}
+                    Geni Кредит: {user.userInfo?.Credit}
                   </span>
                 </Link>
                 <div className="flex flex-row items-center gap-2 sm:gap-4">
@@ -382,7 +371,7 @@ function BrandProfile() {
               )} */}
             </div>
           </div>
-          {currentContents ? renderBrandProfile() : <>Loading</>}
+          {currentContents ? renderBrandProfile() : "Loading"}
         </div>
 
         {listBrandContentsData && totalPages > 1 ? (
@@ -441,11 +430,11 @@ function BrandProfile() {
       {/* {getUserInfoData && (
         <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
       )} */}
-      {getUserInfoData && (
+      {user.userInfo ? (
         <OnBoardRequestStateModal
-          isRequested={getUserInfoData?.OnBoardingStatus === "Request"}
+          isRequested={user.userInfo?.OnBoardingStatus === "Request"}
         />
-      )}
+      ) : null}
     </div>
   );
 }

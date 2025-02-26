@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import {
-  useListProductTypesQuery,
-  useListPublicProductsQuery,
-} from "../services/service";
+  useListProductTypes,
+  useListPublicProducts,
+} from "@/hooks/react-queries";
 
 function Page() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,13 +17,13 @@ function Page() {
     data: listProductsData,
     error: listProductsError,
     isLoading: listProductsLoading,
-  } = useListPublicProductsQuery();
+  } = useListPublicProducts();
 
   const {
     data: listProductTypesData,
     error: listProductTypesError,
     isLoading: listProductTypesLoading,
-  } = useListProductTypesQuery();
+  } = useListProductTypes();
 
   const getStockStatus = (leftStock, quantity, createdAt) => {
     const ratio = leftStock / quantity;

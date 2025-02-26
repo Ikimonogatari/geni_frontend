@@ -5,14 +5,15 @@ import Image from "next/image";
 import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import {
-  useGetImagePresignedUrlMutation,
-  useGetVideoPresignedUrlMutation,
-  useUploadByPresignUrlMutation,
-  useUploadHomeworkMutation,
-} from "../app/services/service";
+
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
+import {
+  useGetFilePresignedUrl,
+  useGetImagePresignedUrl,
+  useUploadByPresignUrl,
+  useUploadHomework,
+} from "@/hooks/react-queries";
 
 function HomeworkUploadModal({ parsedUserInfo }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
@@ -24,41 +25,34 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
 
-  const [
-    getImagePresignedUrl,
-    {
-      data: getImagePresignedUrlData,
-      error: getImagePresignedUrlError,
-      isLoading: getImagePresignedUrlLoading,
-    },
-  ] = useGetImagePresignedUrlMutation();
+  const {
+    mutate: getImagePresignedUrl,
+    data: getImagePresignedUrlData,
+    error: getImagePresignedUrlError,
+    isPending: getImagePresignedUrlLoading,
+  } = useGetImagePresignedUrl();
 
-  const [
-    getVideoPresignedUrl,
-    {
-      data: getVideoPresignedUrlData,
-      error: getVideoPresignedUrlError,
-      isLoading: getVideoPresignedUrlLoading,
-    },
-  ] = useGetVideoPresignedUrlMutation();
-  const [
-    uploadFile,
-    {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-    },
-  ] = useUploadByPresignUrlMutation();
+  const {
+    mutateAsync: getVideoPresignedUrl,
+    data: getVideoPresignedUrlData,
+    error: getVideoPresignedUrlError,
+    isPending: getVideoPresignedUrlLoading,
+  } = useGetFilePresignedUrl();
 
-  const [
-    uploadHomework,
-    {
-      data: uploadHomeworkData,
-      error: uploadHomeworkError,
-      isLoading: uploadHomeworkLoading,
-      isSuccess,
-    },
-  ] = useUploadHomeworkMutation();
+  const {
+    mutateAsync: uploadFile,
+    data: uploadFileData,
+    error: uploadFileError,
+    isPending: uploadFileLoading,
+  } = useUploadByPresignUrl();
+
+  const {
+    mutate: uploadHomework,
+    data: uploadHomeworkData,
+    error: uploadHomeworkError,
+    isPending: uploadHomeworkLoading,
+    isSuccess,
+  } = useUploadHomework();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -112,7 +106,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
         setIsImageUploadLoading(true);
-        uploadFile({ FolderName: "content-thumbnail" })
+        uploadFile({ variables: { FolderName: "content-thumbnail" } })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
@@ -144,7 +138,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
         setIsVideoUploadLoading(true);
-        uploadFile({ FolderName: "content-video" })
+        uploadFile({ variables: { FolderName: "content-video" } })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
@@ -182,9 +176,11 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   };
   const handleContentSubmit = () => {
     uploadHomework({
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
+      variables: {
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+      },
     });
   };
 

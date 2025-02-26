@@ -7,7 +7,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
-import { useGetPublicBrandListQuery } from "../services/service";
+import { useGetPublicBrandList } from "@/hooks/react-queries";
 
 function Brands() {
   const [isBeginning, setIsBeginning] = useState(true);
@@ -24,7 +24,7 @@ function Brands() {
     data: getPublicBrandListData,
     error: getPublicBrandListError,
     isLoading: getPublicBrandListLoading,
-  } = useGetPublicBrandListQuery();
+  } = useGetPublicBrandList();
 
   const checkViewportSize = () => {
     // TODO use breakpoints of Swiper

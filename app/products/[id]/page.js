@@ -1,30 +1,28 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useRouter, useParams } from "next/navigation";
+import { Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import * as Yup from "yup";
 
+import HandleButton from "@/components/common/HandleButton";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  useGetPublicProductByIdQuery,
-  useRequestProductContentMutation,
-} from "@/app/services/service";
+  useGetPublicProductById,
+  useRequestProductContent,
+} from "@/hooks/react-queries";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import HandleButton from "@/components/common/HandleButton";
 
 function Page() {
   const router = useRouter();
@@ -41,17 +39,15 @@ function Page() {
     data: getPublicProductByIdData,
     error: getPublicProductByIdError,
     isLoading: getPublicProductByIdLoading,
-  } = useGetPublicProductByIdQuery(id);
+  } = useGetPublicProductById({ route: { productId: id } });
   if (getPublicProductByIdData) {
   }
-  const [
-    requestProductContent,
-    {
-      data: requestProductContentData,
-      error: requestProductContentError,
-      isLoading: requestProductContentLoading,
-    },
-  ] = useRequestProductContentMutation();
+  const {
+    mutateAsync: requestProductContent,
+    data: requestProductContentData,
+    error: requestProductContentError,
+    isPending: requestProductContentLoading,
+  } = useRequestProductContent();
 
   const formik = useFormik({
     initialValues: {
@@ -78,9 +74,11 @@ function Page() {
     const address = useOtherAddress ? otherAddress : parsedUserInfo?.Location;
 
     requestProductContent({
-      ProductId: id,
-      RequestReason: productContentRequestMsg,
-      AdditionalAddress: address,
+      variables: {
+        ProductId: id,
+        RequestReason: productContentRequestMsg,
+        AdditionalAddress: address,
+      },
     });
   };
 

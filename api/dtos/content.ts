@@ -80,7 +80,7 @@ export const ContentGalleryResponseSchema = z.object({
   CreatedBy: z.number().int(),
   CreationPnt: z.number().int(),
   CreatorId: z.number().int(),
-  CreatorProfileLink: z.string(),
+  CreatorProfileLink: z.string().optional(),
   CreatorProfilePicId: z.number().int(),
   Deadline: z.nullable(z.string()),
   FirstName: z.string(),
@@ -115,6 +115,8 @@ export const ProductRequestStatusPutRequestSchema = z.object({
   ContentId: z.string(),
   Status: z.string(),
 });
+
+export const BrandRequestReviewPutRequestSchema = z.object({});
 
 export const ContentSubmitPostRequestSchema = z.object({
   ContentId: z.string(),

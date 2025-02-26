@@ -4,6 +4,7 @@ import {
   ContentSubmitPostRequestSchema,
   UnknownResponseSchema,
   ContentReceivePostRequestSchema,
+  BrandRequestReviewPutRequestSchema,
 } from "@/api/dtos";
 import {
   createDeleteMutationHook,
@@ -39,6 +40,12 @@ export const useRequestProductContent = createPostMutationHook({
 export const useUpdateContentStatus = createPutMutationHook({
   endpoint: "/api/web/private/content/prod-request/status",
   bodySchema: ProductRequestStatusPutRequestSchema,
+  responseSchema: UnknownResponseSchema,
+});
+
+export const useBrandRequestReview = createPutMutationHook({
+  endpoint: "/api/web/private/user/brand/review",
+  bodySchema: BrandRequestReviewPutRequestSchema,
   responseSchema: UnknownResponseSchema,
 });
 

@@ -7,18 +7,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
-import { useUndoContentRequestMutation } from "@/app/services/service";
+import { useUndoContentRequest } from "@/hooks/react-queries";
 
 function ContentReturnModal({ requestId }) {
-  const [
-    undoContentRequest,
-    {
-      data: undoContentRequestData,
-      error: undoContentRequestError,
-      isLoading: undoContentRequestLoading,
-      isSuccess: undoContentRequestSuccess,
-    },
-  ] = useUndoContentRequestMutation();
+  const {
+    mutateAsync: undoContentRequest,
+    data: undoContentRequestData,
+    error: undoContentRequestError,
+    isPending: undoContentRequestLoading,
+    isSuccess: undoContentRequestSuccess,
+  } = useUndoContentRequest();
 
   useEffect(() => {
     if (undoContentRequestError) {

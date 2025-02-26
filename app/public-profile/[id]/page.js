@@ -1,14 +1,13 @@
 "use client";
-import React from "react";
 import Image from "next/image";
-import {
-  useListPublicCreatorContentGalleryQuery,
-  useGetPublicCreatorByIdQuery,
-} from "@/app/services/service";
-import Link from "next/link";
+
 import ContentGallery from "@/components/ContentGallery";
-import { useParams } from "next/navigation";
 import CreatorTier from "@/components/CreatorTier";
+import {
+  useGetPublicCreatorById,
+  useListPublicCreatorContentGallery,
+} from "@/hooks/react-queries";
+import { useParams } from "next/navigation";
 
 function page() {
   const params = useParams();
@@ -17,12 +16,12 @@ function page() {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
-  } = useListPublicCreatorContentGalleryQuery(id);
+  } = useListPublicCreatorContentGallery({ route: { userId: id } });
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
-  } = useGetPublicCreatorByIdQuery(id);
+  } = useGetPublicCreatorById({ route: { id } });
 
   const instagramLink = getUserInfoData?.Socials?.find(
     (channel) => channel.Name === "Instagram"
