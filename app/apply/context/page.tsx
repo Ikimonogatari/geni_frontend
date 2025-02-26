@@ -24,7 +24,7 @@ function page() {
             width={428}
             height={402}
             alt=""
-            className="aspect-[428/402] w-full"
+            className="w-full"
           />
         </div>
         <BecomeGeniButton

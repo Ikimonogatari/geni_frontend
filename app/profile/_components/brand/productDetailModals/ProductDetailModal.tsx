@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import DisableProductModal from "./DisableProductModal";
@@ -30,9 +29,6 @@ function ProductDetailModal({
 }) {
   return (
     <Dialog open={productDetailModal} onOpenChange={setProductDetailModal}>
-      <DialogTrigger className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold">
-        Харах
-      </DialogTrigger>
       {/*@ts-ignore*/}
       <DialogContent className="overflow-y-auto h-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 py-12 w-full lg:w-full max-w-[1000px] rounded-3xl">
         {/*@ts-ignore*/}

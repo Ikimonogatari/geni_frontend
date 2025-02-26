@@ -15,6 +15,8 @@ function BrandProducts({ brandProducts, brandData }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDisabling, setIsDisabling] = useState(false);
   const [productDetailModal, setProductDetailModal] = useState(false);
+  const [p, setP] = useState({});
+  const [requestStatus, setRequestStatus] = useState("");
 
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count > 0 ? count - 1 : 0);
@@ -109,6 +111,11 @@ function BrandProducts({ brandProducts, brandData }) {
     } else return;
   };
 
+  const openProductModal = (product) => {
+    setP(product);
+    setProductDetailModal(true);
+  };
+
   const handleDeleteProduct = async (productId) => {
     await deleteProduct(productId);
   };
@@ -187,30 +194,34 @@ function BrandProducts({ brandProducts, brandData }) {
                     {requestStatus?.text}
                   </span>
                 )}
-                <div className="col-span-1">
-                  <ProductDetailModal
-                    brandData={brandData}
-                    p={p}
-                    requestStatus={requestStatus}
-                    productDetailModal={productDetailModal}
-                    setProductDetailModal={setProductDetailModal}
-                    isDisabling={isDisabling}
-                    setIsDisabling={setIsDisabling}
-                    handleDisableProduct={handleDisableProduct}
-                    isDeleting={isDeleting}
-                    setIsDeleting={setIsDeleting}
-                    handleDeleteProduct={handleDeleteProduct}
-                    increment={increment}
-                    decrement={decrement}
-                    addSupply={addSupply}
-                    count={count}
-                  />
-                </div>
+                <button
+                  onClick={() => openProductModal(p)}
+                  className="col-span-1 bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+                >
+                  Харах
+                </button>
               </div>
             );
           })}
         </div>
       )}
+      <ProductDetailModal
+        brandData={brandData}
+        p={p}
+        requestStatus={requestStatus}
+        productDetailModal={productDetailModal}
+        setProductDetailModal={setProductDetailModal}
+        isDisabling={isDisabling}
+        setIsDisabling={setIsDisabling}
+        handleDisableProduct={handleDisableProduct}
+        isDeleting={isDeleting}
+        setIsDeleting={setIsDeleting}
+        handleDeleteProduct={handleDeleteProduct}
+        increment={increment}
+        decrement={decrement}
+        addSupply={addSupply}
+        count={count}
+      />
     </div>
   );
 }
