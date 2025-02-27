@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { ErrorText } from "./error-text";
 import InfoHover from "../common/InfoHover";
+import FadeInAnimation from "../common/FadeInAnimation";
 
 interface TextareaProps extends React.ComponentProps<"textarea"> {
   errorText?: string | React.ReactNode;
@@ -59,7 +60,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             </div>
           </div>
           {errorVisible && (
-            <ErrorText text={errorText} visible={errorVisible} />
+            <FadeInAnimation visible={errorVisible}>
+              <ErrorText text={errorText} visible={errorVisible} />
+            </FadeInAnimation>
           )}
         </div>
       </div>

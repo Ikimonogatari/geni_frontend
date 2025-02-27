@@ -128,7 +128,7 @@ function UploadSampleContent({ formik }) {
         onBlur={formik.handleBlur}
         value={formik.values.ContentLink}
         errorText={formik.errors.ContentLink}
-        errorVisible={formik.touched.v && formik.errors.ContentLink}
+        errorVisible={formik.touched.ContentLink && formik.errors.ContentLink}
       />
       {contentVideo ? (
         <video

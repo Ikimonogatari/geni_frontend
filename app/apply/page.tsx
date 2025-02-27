@@ -10,6 +10,7 @@ import { useCreatorApplyMutation } from "@/app/services/service";
 import CreatorQuestions from "./CreatorQuestions";
 import UploadSampleContent from "./UploadSampleContent";
 import SuccessModal from "@/components/common/SuccessModal";
+import { addCreatorDetailsSchema } from "./schema";
 
 function CreatorOnboarding() {
   const [step, setStep] = useState(0);
@@ -38,47 +39,19 @@ function CreatorOnboarding() {
       Email: "",
       PhoneNo: "",
       Birthday: "",
-      FacebookAddress: "",
-      InstagramAddress: "",
+      FacebookLink: "",
+      InstagramLink: "",
       WorkInfo: "",
       EssentialToolInfo: "",
       ApplicationPurpose: "",
       ContentLink: "",
       ContentFileId: null,
     },
-    validationSchema: Yup.object({
-      FirstName: Yup.string().required("Заавал бөглөнө үү"),
-      LastName: Yup.string().required("Заавал бөглөнө үү"),
-      Nickname: Yup.string().required("Заавал бөглөнө үү"),
-      Email: Yup.string().required("Заавал бөглөнө үү"),
-      PhoneNo: Yup.string()
-        .required("Заавал бөглөнө үү")
-        .length(8, "Утасны дугаар 8 оронтой байх ёстой"),
-      Birthday: Yup.string().required("Заавал бөглөнө үү"),
-      FacebookAddress: Yup.string().required("Заавал бөглөнө үү"),
-      InstagramAddress: Yup.string().required("Заавал бөглөнө үү"),
-      WorkInfo: Yup.string().required("Заавал бөглөнө үү"),
-      EssentialToolInfo: Yup.string().required("Заавал бөглөнө үү"),
-      ApplicationPurpose: Yup.string().required("Заавал бөглөнө үү"),
-      ContentLink: Yup.string().required("Заавал бөглөнө үү"),
-      ContentFileId: Yup.number().required("Заавал оруулна уу"),
-    }),
+    validationSchema: addCreatorDetailsSchema,
     onSubmit: async (values) => {
       try {
-        const CustSocials = [
-          {
-            PlatformId: 1,
-            SocialAddress: values.FacebookAddress,
-          },
-          {
-            PlatformId: 2,
-            SocialAddress: values.InstagramAddress,
-          },
-        ];
-        const { FacebookAddress, InstagramAddress, ...filteredValues } = values;
-        console.log(filteredValues, "VALUES");
         await creatorApply({
-          ...filteredValues,
+          ...values,
         }).unwrap();
       } catch (error) {
         toast.error("Алдаа гарлаа");
@@ -113,7 +86,7 @@ function CreatorOnboarding() {
             onSubmit={formik.handleSubmit}
             className="flex flex-col sm:flex-row items-start gap-5 sm:gap-10"
           >
-            <div className="grid grid-cols-3 sm:grid-cols-1 gap-2 sm:gap-5 sm:max-w-[215px] w-full">
+            <div className="grid grid-cols-3 sm:grid-cols-1 gap-2 sm:max-w-[215px] w-full">
               {sidebarNavs.map((s, i) => (
                 <div
                   key={i}
