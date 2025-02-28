@@ -226,9 +226,9 @@ const Pro100: React.FC = () => {
           </div>
 
           <p className="text-lg mb-4">
-            Geni Platform дээр PRO 100 контент бүтээгчийн нэг болох Geni
-            сурагчын хөтөлбөр эхлэх өмнө Pre-order хийсэн 1000 хүнд 80%
-            хөнгөлөлтэй.
+            Geni Platform дээр ПРО 100 контент бүтээгчийн нэг болох Geni
+            сурагчын хөтөлбөр зөвхөн эхний Pre-order хийсэн 1000 хүнд 80%
+            хөнгөлөлттэй.
           </p>
 
           <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8 mb-6">
