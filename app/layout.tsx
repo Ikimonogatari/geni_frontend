@@ -1,6 +1,5 @@
 "use client";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Head from "next/head";
 import localFont from "next/font/local";
@@ -12,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import { UserInfoProvider } from "./context/UserInfoContext";
 import { Suspense } from "react";
 import Loader from "@/components/common/Loader";
+import { Navbar } from "@/components/layout/navbar";
 
 const mabryPro = localFont({
   src: [
@@ -48,13 +48,13 @@ export default function RootLayout({ children }) {
               className: "text-lg",
             }}
             position="top-right"
-            reverseOrder="false"
+            reverseOrder={false}
           />
           <UserInfoProvider>
             <Suspense fallback={<Loader />}>
-              <div className="flex flex-col min-h-screen h-full">
+              <div className="flex flex-col min-h-screen">
                 <Navbar />
-                <main className="flex-grow">{children}</main>
+                <main className="flex-1">{children}</main>
                 <Footer />
               </div>
             </Suspense>
