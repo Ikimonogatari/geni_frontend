@@ -1,4 +1,3 @@
-import Image from "next/image";
 import HomeHero from "@/components/home/HomeHero";
 import HomeCycle from "@/components/home/HomeCycle";
 import HomeBecomeCreator from "@/components/home/HomeBecomeCreator";

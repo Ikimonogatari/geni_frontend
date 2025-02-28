@@ -76,7 +76,7 @@ const Step = ({
 }) => {
   return (
     <div className="flex md:flex-col gap-6 md:gap-0 items-center text-center relative">
-      <div className="size-6 rounded-full bg-geni-pink my-3 md:hidden">
+      <div className="size-6 rounded-full bg-geni-pink mt-[7px] mb-3 md:hidden">
         <div
           className={clsx(
             "bg-geni-pink absolute w-0.5 top-1/2 left-2.5 right-0",
@@ -85,21 +85,21 @@ const Step = ({
         />
       </div>
       <div className="flex-1 flex flex-col items-center relative">
-        <div className="flex-1 flex justify-center md:mb-4">
+        <div className="flex-1 flex justify-center mb-4 md:mb-0">
           <Image
             src={`/pro100/${src}`}
             alt="Feature"
             height={0}
             width={0}
             sizes="100vw"
-            className="h-full w-full min-w-32 min-h-36 max-w-32 max-h-36 object-contain"
+            className="h-full w-full min-w-32 min-h-36 max-w-52 max-h-36 object-contain lg:object-cover"
           />
         </div>
-        <div className="size-6 rounded-full bg-geni-pink my-3 hidden md:block relative">
+        <div className="size-6 rounded-full bg-geni-pink mt-[7px] mb-3 hidden md:block relative">
           <div
             className={clsx(
               "bg-geni-pink absolute h-0.5 top-1/2 left-0 right-0",
-              isLast ? "w-0" : "md:w-48 lg:w-[216px]"
+              isLast ? "w-0" : "md:w-48 lg:w-[260px]"
             )}
           />
         </div>
@@ -112,14 +112,14 @@ const Step = ({
 const Feature = ({ src, title }: { src: string; title: string }) => {
   return (
     <div className="flex flex-col text-center items-center">
-      <div className="flex-1 flex justify-center md:mb-4">
+      <div className="flex-1 flex justify-center mb-4">
         <Image
           src={`/pro100/${src}`}
           alt="Feature"
           height={0}
           width={0}
           sizes="100vw"
-          className="h-full w-full min-w-32 min-h-36 max-w-32 max-h-36 object-contain"
+          className="h-full w-full min-w-32 min-h-36 max-w-52 max-h-36 object-contain lg:object-cover"
         />
       </div>
       <p className="flex-1 text-lg md:text-sm w-4/5 md:w-full">{title}</p>
@@ -155,7 +155,7 @@ const Pro100: React.FC = () => {
   }, [days, hours, minutes]);
 
   return (
-    <div className="max-w-5xl mx-auto pt-14 px-4">
+    <div className="max-w-6xl mx-auto pt-14 px-4">
       <div className="flex flex-col items-center">
         {/* Left Side - Logo */}
         <div className="flex flex-col md:flex-row items-center justify-between md:px-10 py-4">
