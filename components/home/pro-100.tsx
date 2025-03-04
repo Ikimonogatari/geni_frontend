@@ -5,8 +5,24 @@ import React, { useEffect, useState } from "react";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
+import { Check, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialogc";
 
 import clsx from "clsx";
+import { AspectRatio } from "../ui/aspect-ratio";
+import Link from "next/link";
+import toast from "react-hot-toast";
+
+type ModalStep = "order" | "payment" | "success";
 
 const ElevatedButton = ({
   children,
@@ -14,9 +30,8 @@ const ElevatedButton = ({
   ...props
 }: {
   children: React.ReactNode;
-  props?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   className?: string;
-}) => {
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       className={cn(
@@ -127,10 +142,366 @@ const Feature = ({ src, title }: { src: string; title: string }) => {
   );
 };
 
+interface OrderModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+function OrderModal({ open, onOpenChange }: OrderModalProps) {
+  const [currentStep, setCurrentStep] = useState<ModalStep>("order");
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    phoneNumber: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [qpayImage, setQpayImage] = useState("");
+  const [callBackUrl, setCallBackUrl] = useState("");
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) newErrors.name = "Нэр оруулна уу";
+    if (!formData.surname.trim()) newErrors.surname = "Овог оруулна уу";
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Имэйл хаяг оруулна уу";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Имэйл хаяг буруу байна";
+    }
+
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = "Утасны дугаараа оруулна уу";
+    } else if (!/^\+?[0-9\s-()]{8,}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Утасны дугаар буруу байна";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/student/apply`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            Email: formData.email,
+            FirstName: formData.name,
+            LastName: formData.surname,
+            PhoneNumber: formData.phoneNumber,
+          }),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          toast.error(data.error);
+          throw new Error('Failed to submit application');
+        }
+
+        // If successful, move to payment step
+        const data = await response.json();
+        setQpayImage(data.QrImage ?? '');
+        setCallBackUrl(data.CallBackUrl ?? '');
+        setCurrentStep("payment");
+      } catch (error) {
+        console.error('Failed to submit application:', error);
+        
+        // setErrors(prev => ({
+        //   ...prev,
+        //   submit: 'Уучлаарай, алдаа гарлаа. Дахин оролдоно уу.'
+        // }));
+      }
+    }
+  };
+
+  const checkPaymentStatus = async () => {
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch(callBackUrl);
+      const data = await response.json(); 
+      setIsLoading(false);
+      if (data.IsPaid) {
+        setCurrentStep("success");
+      } else {
+        toast.error("Төлбөр төлөгдөөгүй байна.");
+      }
+    } catch (error) {
+      console.error('Payment status check failed:', error);
+      toast.error("Төлбөр шалгахад алдаа гарлаа. Дахин оролдоно уу.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      surname: "",
+      email: "",
+      phoneNumber: "",
+    });
+    setErrors({});
+    setCurrentStep("order");
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      // Reset form when dialog is closed
+      setTimeout(() => {
+        resetForm();
+      }, 300); // Wait for dialog close animation
+    }
+    onOpenChange(open);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        className={clsx(
+          "sm:max-w-3xl bg-white !rounded-[30px] pt-10 px-16",
+          currentStep === "payment" && "px-14 sm:max-w-md",
+          currentStep === "success" && "px-10 sm:max-w-md"
+        )}
+      >
+        {currentStep === "order" && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="text-4xl font-bold">
+                PRE-ORDER ХИЙХ
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Please provide your details to proceed with the order.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-0.5">
+                  <Label htmlFor="surname" className="text-lg">
+                    Овог
+                  </Label>
+                  <Input
+                    id="surname"
+                    name="surname"
+                    value={formData.surname}
+                    onChange={handleInputChange}
+                    className={errors.surname ? "border-destructive" : ""}
+                  />
+                  {errors.surname && (
+                    <p className="text-destructive text-sm">{errors.surname}</p>
+                  )}
+                </div>
+                <div className="space-y-0.5">
+                  <Label htmlFor="name" className="text-lg">
+                    Нэр
+                  </Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className={errors.name ? "border-destructive" : ""}
+                  />
+                  {errors.name && (
+                    <p className="text-destructive text-sm">{errors.name}</p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-0.5">
+                  <Label htmlFor="email" className="text-lg">
+                    Имэйл хаяг
+                  </Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={errors.email ? "border-destructive" : ""}
+                  />
+                  {errors.email && (
+                    <p className="text-destructive text-sm">{errors.email}</p>
+                  )}
+                </div>
+                <div className="space-y-0.5">
+                  <Label htmlFor="phoneNumber" className="text-lg">
+                    Утасны дугаар
+                  </Label>
+                  <Input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    className={errors.phoneNumber ? "border-destructive" : ""}
+                  />
+                  {errors.phoneNumber && (
+                    <p className="text-destructive text-sm">
+                      {errors.phoneNumber}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <DialogFooter className="!mt-12">
+                <ElevatedButton
+                  type="submit"
+                  className="flex-1 flex justify-center py-5"
+                >
+                  <p className="text-xl font-bold">Төлбөр төлөх ✨</p>
+                </ElevatedButton>
+              </DialogFooter>
+            </form>
+          </>
+        )}
+
+        {currentStep === "payment" && (
+          <>
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-3xl font-bold">
+                QPay Payment
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Please provide your details to proceed with the order.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="max-w-sm">
+              <AspectRatio ratio={1}>
+                <Image
+                  src={`data:image/png;base64,${qpayImage}`}
+                  alt="QPay"
+                  height={0}
+                  width={0}
+                  sizes="100vw"
+                  className="w-full h-full object-contain"
+                />
+              </AspectRatio>
+            </div>
+
+            <DialogFooter className="flex-1 justify-center sm:justify-center my-6">
+              <ElevatedButton
+                onClick={checkPaymentStatus}
+                disabled={isLoading}
+                className="flex-1 py-5 justify-center"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Төлбөр шалгаж байна...
+                  </>
+                ) : (
+                  <p className="text-xl font-bold">Төлбөр шалгах ✨</p>
+                )}
+              </ElevatedButton>
+            </DialogFooter>
+          </>
+        )}
+
+        {currentStep === "success" && (
+          <>
+            <DialogHeader>
+              <DialogTitle className="text-5xl font-black text-geni-green text-center">
+                АМЖИЛТТАЙ ТӨЛӨГДЛӨӨ
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Your order has been processed successfully.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="text-center py-8">
+              <div className="mx-auto size-48 flex items-center justify-center mb-4">
+                <Image
+                  src="/pro100/check.png"
+                  alt="Check"
+                  height={0}
+                  width={0}
+                  sizes="100vw"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-base text-center">
+                Та Geni сурагчын хөтөлбөрыг 80% хөнгөлөлттэй авах эхний 1000
+                хүний нэг боллоо.
+                <br />
+                <br />
+                4 сарын 5-ны өдөр Geni Platform-н beta v2.0 ашиглалтанд орсноор
+                таны сурагчын хаяг нээгдэж бүртгүүлсэн <br />
+                <Link
+                  href="mailto:daimaawork@gmail.com"
+                  className="text-geni-blue underline"
+                >
+                  daimaawork@gmail.com
+                </Link>
+                <br />
+                имэйл хаягт мэдэгдэл очих болно.
+                <br />
+                <br />
+                Таньд амжилт хүсье!
+              </p>
+            </div>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 const Pro100: React.FC = () => {
-  const [days, setDays] = useState(13);
-  const [hours, setHours] = useState(2);
-  const [minutes, setMinutes] = useState(48);
+  const [preOrderStatus, setPreOrderStatus] = useState(false);
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchPreOrderStatus = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/pre-order/active`);
+        const data = await response.json();
+        
+        if (data.ExpiresAt) {
+          const expiresAt = new Date(data.ExpiresAt);
+          const now = new Date();
+          const diffMs = expiresAt.getTime() - now.getTime();
+          
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          
+          setDays(diffDays);
+          setHours(diffHours);
+          setMinutes(diffMinutes);
+        }
+        
+        setPreOrderStatus(data.isActive || false);
+      } catch (error) {
+        console.error('Failed to fetch pre-order status:', error);
+      }
+    };
+
+    fetchPreOrderStatus();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -155,158 +526,166 @@ const Pro100: React.FC = () => {
   }, [days, hours, minutes]);
 
   return (
-    <div className="max-w-6xl mx-auto pt-14 px-4">
-      <div className="flex flex-col items-center">
-        {/* Left Side - Logo */}
-        <div className="flex flex-col md:flex-row items-center justify-between md:px-10 py-4">
-          {/* Logo Section */}
-          <div className="relative md:flex-1 h-[266px] w-screen md:h-full md:w-full">
-            {/* w-[366px] h-[266px] */}
-            <Image
-              src="/pro100/1.png"
-              alt="pro-100"
-              height={0}
-              width={0}
-              sizes="100vw"
-              style={{ width: "100%", height: "auto" }}
-              className="px-6 md:px-11 object-contain max-h-full"
+    <>
+      <div className="max-w-6xl mx-auto pt-14 px-4">
+        <div className="flex flex-col items-center">
+          {/* Left Side - Logo */}
+          <div className="flex flex-col md:flex-row items-center justify-between md:px-10 py-4">
+            {/* Logo Section */}
+            <div className="relative md:flex-1 h-[266px] w-screen md:h-full md:w-full">
+              {/* w-[366px] h-[266px] */}
+              <Image
+                src="/pro100/1.png"
+                alt="pro-100"
+                height={0}
+                width={0}
+                sizes="100vw"
+                style={{ width: "100%", height: "auto" }}
+                className="px-6 md:px-11 object-contain max-h-full"
+              />
+            </div>
+
+            {/* Separator Line */}
+            <Separator
+              orientation="vertical"
+              className="hidden md:block h-40 bg-gray-200 mx-8"
             />
-          </div>
-
-          {/* Separator Line */}
-          <Separator
-            orientation="vertical"
-            className="hidden md:block h-40 bg-gray-200 mx-8"
-          />
-          {/* Countdown Section */}
-          <div className="flex-1 hidden md:flex">
-            <div className="flex flex-col items-center md:ml-8">
-              <h2 className="text-xl font-bold mb-6">Pre-order дууссахад</h2>
-              <div className="flex justify-between gap-4">
-                <div className="flex flex-col items-center">
-                  <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
-                    <span className="text-5xl font-bold text-geni-blue">
-                      {days.toString().padStart(2, "0")}
-                    </span>
+            {/* Countdown Section */}
+            <div className="flex-1 hidden md:flex">
+              <div className="flex flex-col items-center md:ml-8">
+                <h2 className="text-xl font-bold mb-6">Pre-order дууссахад</h2>
+                <div className="flex justify-between gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
+                      <span className="text-5xl font-bold text-geni-blue">
+                        {days.toString().padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-gray-500">Өдөр</span>
                   </div>
-                  <span className="text-gray-500">Өдөр</span>
-                </div>
 
-                <div className="flex flex-col items-center">
-                  <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
-                    <span className="text-5xl font-bold text-geni-blue">
-                      {hours.toString().padStart(2, "0")}
-                    </span>
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
+                      <span className="text-5xl font-bold text-geni-blue">
+                        {hours.toString().padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-gray-500">Цаг</span>
                   </div>
-                  <span className="text-gray-500">Цаг</span>
-                </div>
 
-                <div className="flex flex-col items-center">
-                  <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
-                    <span className="text-5xl font-bold text-geni-blue">
-                      {minutes.toString().padStart(2, "0")}
-                    </span>
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
+                      <span className="text-5xl font-bold text-geni-blue">
+                        {minutes.toString().padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-gray-500">Минут</span>
                   </div>
-                  <span className="text-gray-500">Минут</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Pre-order Info */}
-        <div className="flex-1 max-w-2xl text-center flex flex-col items-center px-2 md:px-0">
-          <div className="w-full mb-4">
-            <div className="flex justify-center mb-2">
-              <span className="text-base font-bold md:text-2xl md:font-medium">
-                102/1000
+          {/* Pre-order Info */}
+          <div className="flex-1 max-w-2xl text-center flex flex-col items-center px-2 md:px-0">
+            <div className="w-full mb-4">
+              <div className="flex justify-center mb-2">
+                <span className="text-base font-bold md:text-2xl md:font-medium">
+                  102/1000
+                </span>
+              </div>
+              <Progress value={10.2} className="h-6 border border-primary" />
+            </div>
+
+            <p className="text-lg mb-4">
+              Geni Platform дээр ПРО 100 контент бүтээгчийн нэг болох Geni
+              сурагчын хөтөлбөр зөвхөн эхний Pre-order хийсэн 1000 хүнд 80%
+              хөнгөлөлттэй.
+            </p>
+
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8 mb-6">
+              <span className="text-3xl font-medium line-through">
+                ₮480'000
+              </span>
+              <span className="text-3xl font-medium text-geni-green">
+                ₮96'000
               </span>
             </div>
-            <Progress value={10.2} className="h-6 border border-primary" />
-          </div>
 
-          <p className="text-lg mb-4">
-            Geni Platform дээр ПРО 100 контент бүтээгчийн нэг болох Geni
-            сурагчын хөтөлбөр зөвхөн эхний Pre-order хийсэн 1000 хүнд 80%
-            хөнгөлөлттэй.
-          </p>
-
-          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8 mb-6">
-            <span className="text-3xl font-medium line-through">₮480'000</span>
-            <span className="text-3xl font-medium text-geni-green">
-              ₮96'000
-            </span>
-          </div>
-
-          {/* Mobile countdown section */}
-          <div className="flex-1 flex md:hidden">
-            <div className="flex flex-col items-center md:ml-8">
-              <h2 className="text-xl font-bold mb-6">Pre-order дууссахад</h2>
-              <div className="flex justify-between gap-4">
-                <div className="flex flex-col items-center">
-                  <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
-                    <span className="text-5xl font-bold text-geni-blue">
-                      {days.toString().padStart(2, "0")}
-                    </span>
+            {/* Mobile countdown section */}
+            <div className="flex-1 flex md:hidden">
+              <div className="flex flex-col items-center md:ml-8">
+                <h2 className="text-xl font-bold mb-6">Pre-order дууссахад</h2>
+                <div className="flex justify-between gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
+                      <span className="text-5xl font-bold text-geni-blue">
+                        {days.toString().padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-gray-500">Өдөр</span>
                   </div>
-                  <span className="text-gray-500">Өдөр</span>
-                </div>
 
-                <div className="flex flex-col items-center">
-                  <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
-                    <span className="text-5xl font-bold text-geni-blue">
-                      {hours.toString().padStart(2, "0")}
-                    </span>
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
+                      <span className="text-5xl font-bold text-geni-blue">
+                        {hours.toString().padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-gray-500">Цаг</span>
                   </div>
-                  <span className="text-gray-500">Цаг</span>
-                </div>
 
-                <div className="flex flex-col items-center">
-                  <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
-                    <span className="text-5xl font-bold text-geni-blue">
-                      {minutes.toString().padStart(2, "0")}
-                    </span>
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
+                      <span className="text-5xl font-bold text-geni-blue">
+                        {minutes.toString().padStart(2, "0")}
+                      </span>
+                    </div>
+                    <span className="text-gray-500">Минут</span>
                   </div>
-                  <span className="text-gray-500">Минут</span>
                 </div>
               </div>
             </div>
+            <ElevatedButton
+              className="mt-6 md:mt-0"
+              onClick={() => setShowModal(true)}
+            >
+              <p className="text-xl font-bold">Pre-order хийх ✨</p>
+            </ElevatedButton>
           </div>
-          <ElevatedButton className="mt-6 md:mt-0">
-            <p className="text-xl font-bold">Pre-order хийх ✨</p>
-          </ElevatedButton>
         </div>
+
+        {/* Features Section */}
+        <section className="mt-16 mb-6 border border-primary rounded-xl p-6 px-5 mx-3 sm:mx-10 md:mx-16 pb-8 bg-primary-bg">
+          <h2 className="text-xl font-semibold mb-8 w-2/3">
+            Geni ПРО Бүтээгч гэж хэн бэ?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {features.map((feature) => (
+              <Feature key={feature.title} {...feature} />
+            ))}
+          </div>
+        </section>
+
+        {/* Benefits Section */}
+        <section className="mb-16 border border-primary rounded-xl p-6 px-5 mx-3 sm:mx-10 md:mx-16 pb-8 bg-primary-bg">
+          <h2 className="text-xl font-semibold mb-8 w-2/3">
+            Хэрхэн Geni ПРО Бүтээгч болох вэ?
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-24 md:gap-6 px-5 md:px-0 relative z-10">
+            {steps.map((step, index) => (
+              <Step
+                key={step.title}
+                {...step}
+                isLast={steps.length - 1 === index}
+              />
+            ))}
+          </div>
+        </section>
       </div>
-
-      {/* Features Section */}
-      <section className="mt-16 mb-6 border border-primary rounded-xl p-6 px-5 mx-3 sm:mx-10 md:mx-16 pb-8 bg-primary-bg">
-        <h2 className="text-xl font-semibold mb-8 w-2/3">
-          Geni ПРО Бүтээгч гэж хэн бэ?
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {features.map((feature) => (
-            <Feature key={feature.title} {...feature} />
-          ))}
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="mb-16 border border-primary rounded-xl p-6 px-5 mx-3 sm:mx-10 md:mx-16 pb-8 bg-primary-bg">
-        <h2 className="text-xl font-semibold mb-8 w-2/3">
-          Хэрхэн Geni ПРО Бүтээгч болох вэ?
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-24 md:gap-6 px-5 md:px-0 relative z-10">
-          {steps.map((step, index) => (
-            <Step
-              key={step.title}
-              {...step}
-              isLast={steps.length - 1 === index}
-            />
-          ))}
-        </div>
-      </section>
-    </div>
+      <OrderModal open={showModal} onOpenChange={setShowModal} />
+    </>
   );
 };
 

@@ -13,7 +13,7 @@ export default function Home() {
     <main className="min-h-screen w-full bg-white">
       <div className="mt-32">
         <Pro100 />
-        <HomeHero />
+        {/* <HomeHero />
         <HomeCycle />
         <HomeBecomeGeniSectionLayout>
           <HomeBecomeCreator />
@@ -26,7 +26,7 @@ export default function Home() {
         </HomeBecomeGeniSectionLayout>
         <HomeAlumniLayout>
           <HomeAlumniBrand />
-        </HomeAlumniLayout>
+        </HomeAlumniLayout> */}
       </div>
     </main>
   );
