@@ -1,4 +1,3 @@
-import Image from "next/image";
 import HomeHero from "@/components/home/HomeHero";
 import HomeCycle from "@/components/home/HomeCycle";
 import HomeBecomeCreator from "@/components/home/HomeBecomeCreator";
@@ -7,11 +6,13 @@ import HomeBecomeGeniSectionLayout from "@/components/home/layout/HomeBecomeGeni
 import HomeAlumniLayout from "@/components/home/layout/HomeAlumniLayout";
 import HomeAlumniCreator from "@/components/home/HomeAlumniCreator";
 import HomeAlumniBrand from "@/components/home/HomeAlumniBrand";
+import Pro100 from "@/components/home/pro-100";
 
 export default function Home() {
   return (
     <main className="min-h-screen w-full bg-white">
       <div className="mt-32">
+        <Pro100 />
         <HomeHero />
         <HomeCycle />
         <HomeBecomeGeniSectionLayout>
