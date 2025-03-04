@@ -2,9 +2,8 @@ import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import {
-  useGetVideoPresignedUrlMutation,
+  useGetPublicVideoPresignedUrlMutation,
   usePublicUploadByPresignUrlMutation,
-  useUploadByPresignUrlMutation,
 } from "../services/service";
 import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
@@ -32,7 +31,7 @@ function UploadSampleContent({ formik }) {
       error: getVideoPresignedUrlError,
       isLoading: getVideoPresignedUrlLoading,
     },
-  ] = useGetVideoPresignedUrlMutation();
+  ] = useGetPublicVideoPresignedUrlMutation();
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
@@ -71,11 +70,7 @@ function UploadSampleContent({ formik }) {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               formik.setFieldValue("ContentFileId", fileId);
-              uploadToS3(uploadURL, file).then(() => {
-                getVideoPresignedUrl({
-                  FileId: fileId,
-                });
-              });
+              uploadToS3(uploadURL, file);
             }
           })
           .catch(() => {

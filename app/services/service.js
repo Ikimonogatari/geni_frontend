@@ -220,6 +220,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getPublicVideoPresignedUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/file/url",
+        method: "POST",
+        body,
+      }),
+    }),
     brandReceiveContent: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/receive",
@@ -442,6 +449,7 @@ export const {
   useSubscribePlanMutation,
   useCreatorContentSubmitMutation,
   useGetVideoPresignedUrlMutation,
+  useGetPublicVideoPresignedUrlMutation,
   useGetImagePresignedUrlMutation,
   useBrandReceiveContentMutation,
   useCheckPaymentQuery,
