@@ -7,13 +7,13 @@ import {
 } from "../services/service";
 import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
-import axios from "axios";
 import Image from "next/image";
 import Button from "@/components/ui/button";
+import useS3Upload from "@/components/hooks/useUploadToS3";
 
 function UploadSampleContent({ formik }) {
-  const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideo, setContentVideo] = useState(null);
+  const { uploadToS3, progress, isUploading } = useS3Upload();
 
   const [
     uploadFile,
@@ -37,10 +37,8 @@ function UploadSampleContent({ formik }) {
     if (getVideoPresignedUrlError) {
       // @ts-ignore
       toast.error(getVideoPresignedUrlError?.data?.error);
-      setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
-      setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
@@ -48,7 +46,6 @@ function UploadSampleContent({ formik }) {
     if (uploadFileError) {
       // @ts-ignore
       toast.error(uploadFileError?.data?.error);
-      setIsVideoUploadLoading(false);
     }
   }, [uploadFileData, uploadFileError]);
 
@@ -64,13 +61,12 @@ function UploadSampleContent({ formik }) {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        setIsVideoUploadLoading(true);
         uploadFile({ FolderName: "content-video" })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               formik.setFieldValue("ContentFileId", fileId);
-              uploadToS3(uploadURL, file).then(() => {
+              uploadToS3(uploadURL, file, "video").then(() => {
                 getVideoPresignedUrl({
                   FileId: fileId,
                 });
@@ -83,24 +79,6 @@ function UploadSampleContent({ formik }) {
       }
     },
   });
-
-  const uploadToS3 = async (url, file) => {
-    try {
-      const response = await axios.put(url, file, {
-        headers: {
-          "Content-Type": "application/octet-stream",
-        },
-      });
-
-      if (response.status == 200) {
-      } else {
-        throw new Error(`HTTP error! status: ${response}`);
-      }
-    } catch (error) {
-      console.error("Error uploading to S3:", error);
-      throw error;
-    }
-  };
 
   return (
     <div onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
@@ -138,15 +116,21 @@ function UploadSampleContent({ formik }) {
           <source src={contentVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-      ) : isVideoUploadLoading ? (
-        <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
+      ) : isUploading.video ? (
+        <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex flex-col gap-6 justify-center items-center">
           <ClipLoader
-            loading={isVideoUploadLoading}
+            loading={isUploading.video}
             aria-label="Loading Spinner"
             data-testid="loader"
             className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
             size={50}
           />
+          <div className="w-2/3 h-8 border border-primary rounded-md">
+            <div
+              className="bg-geni-pink h-full p-[1px] rounded-md transition-all duration-150"
+              style={{ width: `${progress.video}%` }}
+            ></div>
+          </div>
         </div>
       ) : (
         <div
