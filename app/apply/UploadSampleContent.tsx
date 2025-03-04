@@ -70,7 +70,11 @@ function UploadSampleContent({ formik }) {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               formik.setFieldValue("ContentFileId", fileId);
-              uploadToS3(uploadURL, file);
+              uploadToS3(uploadURL, file).then(() => {
+                getVideoPresignedUrl({
+                  FileId: fileId,
+                });
+              });
             }
           })
           .catch(() => {
