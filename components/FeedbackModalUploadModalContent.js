@@ -199,21 +199,10 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               Your browser does not support the video tag.
             </video>
           ) : isUploading.video ? (
-            <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex flex-col gap-6 justify-center items-center">
-              <ClipLoader
-                loading={isUploading.video}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-                className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                size={50}
-              />
-              <div className="w-2/3 h-8 border border-primary rounded-md">
-                <div
-                  className="bg-geni-pink h-full p-[1px] rounded-md transition-all duration-150"
-                  style={{ width: `${progress.video}%` }}
-                ></div>
-              </div>
-            </div>
+            <ContentUploadProgress
+              isLoading={isUploading.video}
+              progress={progress.video}
+            />
           ) : (
             <div
               {...getRootPropsForVideo()}
@@ -244,21 +233,10 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
             />
           ) : isUploading.image ? (
-            <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex flex-col gap-6 justify-center items-center">
-              <ClipLoader
-                loading={isUploading.image}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-                className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                size={50}
-              />
-              <div className="w-2/3 h-8 border border-primary rounded-md">
-                <div
-                  className="bg-geni-pink h-full p-[1px] rounded-md transition-all duration-150"
-                  style={{ width: `${progress.image}%` }}
-                ></div>
-              </div>
-            </div>
+            <ContentUploadProgress
+              isLoading={isUploading.image}
+              progress={progress.image}
+            />
           ) : (
             <div
               {...getRootPropsForImage()}
