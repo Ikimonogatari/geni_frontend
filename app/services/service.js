@@ -70,6 +70,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    publicUploadByPresignUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/file/presign",
+        method: "POST",
+        body,
+      }),
+    }),
     listProductTypes: builder.query({
       query: (body) => ({
         url: "/api/web/public/producttype",
@@ -430,6 +437,7 @@ export const {
   useUpdateContentStatusMutation,
   useListBrandContentsQuery,
   useUploadByPresignUrlMutation,
+  usePublicUploadByPresignUrlMutation,
   useListPaymentPlansQuery,
   useSubscribePlanMutation,
   useCreatorContentSubmitMutation,

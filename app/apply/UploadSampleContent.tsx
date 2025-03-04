@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import {
   useGetVideoPresignedUrlMutation,
+  usePublicUploadByPresignUrlMutation,
   useUploadByPresignUrlMutation,
 } from "../services/service";
 import toast from "react-hot-toast";
@@ -22,7 +23,7 @@ function UploadSampleContent({ formik }) {
       error: uploadFileError,
       isLoading: uploadFileLoading,
     },
-  ] = useUploadByPresignUrlMutation();
+  ] = usePublicUploadByPresignUrlMutation();
 
   const [
     getVideoPresignedUrl,
