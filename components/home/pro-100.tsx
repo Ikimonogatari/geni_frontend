@@ -495,10 +495,10 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                 4 сарын 5-ны өдөр Geni Platform-н beta v2.0 ашиглалтанд орсноор
                 таны сурагчийн хаяг нээгдэж бүртгүүлсэн <br />
                 <Link
-                  href="mailto:daimaawork@gmail.com"
+                  href={`mailto:${formData.email}`}
                   className="text-geni-blue underline"
                 >
-                  daimaawork@gmail.com
+                  {formData.email}
                 </Link>
                 <br />
                 имэйл хаягт мэдэгдэл очих болно.
