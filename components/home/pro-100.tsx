@@ -1,13 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { Progress } from "../ui/progress";
-import { Separator } from "../ui/separator";
-import { cn } from "@/lib/utils";
-import { Check, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +8,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialogc";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import clsx from "clsx";
-import { AspectRatio } from "../ui/aspect-ratio";
+import { Loader2 } from "lucide-react";
+import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { SlidingNumber } from "../motion-primitives/sliding-number";
+import { AspectRatio } from "../ui/aspect-ratio";
+import { Progress } from "../ui/progress";
+import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+
+import Step1Pic from "../../public/pro100/step-1.png";
+import Step2Pic from "../../public/pro100/step-2.png";
+import Step3Pic from "../../public/pro100/step-3.png";
+import Step4Pic from "../../public/pro100/step-4.png";
+
+import Feature1Pic from "../../public/pro100/feature-1.png";
+import Feature2Pic from "../../public/pro100/feature-2.png";
+import Feature3Pic from "../../public/pro100/feature-3.png";
+import Feature4Pic from "../../public/pro100/feature-4.png";
 
 type ModalStep = "order" | "payment" | "success";
 
@@ -48,37 +58,37 @@ const ElevatedButton = ({
 
 const features = [
   {
-    src: "feature-1.png",
+    src: Feature1Pic,
     title: "Geni Платформоор дамжуулан 100% онлайнаар гэрээсээ ажилладаг",
   },
   {
-    src: "feature-2.png",
+    src: Feature2Pic,
     title: "Хүссэн үедээ Брэндүүдтэй контент бүтээж хамтардаг",
   },
   {
-    src: "feature-3.png",
+    src: Feature3Pic,
     title: "Үнэгүй бүтээгдэхүүн хүргүүлэн авдаг",
   },
   {
-    src: "feature-4.png",
+    src: Feature4Pic,
     title: "Хамтрал бүрээсээ мөнгөн урамшуулал авдаг",
   },
 ];
 
 const steps = [
   {
-    src: "step-1.png",
+    src: Step1Pic,
     title: "Geni Сурагч болж контент бүтээгчийн чадварт суралцаад",
   },
   {
-    src: "step-2.png",
+    src: Step2Pic,
     title: "Даалгавар илгээн тэнцэж албан ёсны контент бүтээгч болоод",
   },
   {
-    src: "step-3.png",
+    src: Step3Pic,
     title: "Брэндүүдтэй хамтран ажиллаж 1000 XP оноо цуглуулаад",
   },
-  { src: "step-4.png", title: "Энхий 100 ПРО контент бүтээгчийн нэг болоорой" },
+  { src: Step4Pic, title: "Энхий 100 ПРО контент бүтээгчийн нэг болоорой" },
 ];
 
 const Step = ({
@@ -87,7 +97,7 @@ const Step = ({
   title,
 }: {
   isLast: boolean;
-  src: string;
+  src: StaticImageData;
   title: string;
 }) => {
   return (
@@ -103,8 +113,9 @@ const Step = ({
       <div className="flex-1 flex flex-col items-center relative">
         <div className="flex-1 flex justify-center mb-4 md:mb-0">
           <Image
-            src={`/pro100/${src}`}
+            src={src}
             alt="Feature"
+            priority
             height={0}
             width={0}
             sizes="100vw"
@@ -125,13 +136,14 @@ const Step = ({
   );
 };
 
-const Feature = ({ src, title }: { src: string; title: string }) => {
+const Feature = ({ src, title }: { src: StaticImageData; title: string }) => {
   return (
     <div className="flex flex-col text-center items-center">
       <div className="flex-1 flex justify-center mb-4">
         <Image
-          src={`/pro100/${src}`}
+          src={src}
           alt="Feature"
+          priority
           height={0}
           width={0}
           sizes="100vw"
@@ -291,6 +303,9 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
           currentStep === "payment" && "px-14 sm:max-w-lg",
           currentStep === "success" && "px-10 sm:max-w-md"
         )}
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
       >
         {currentStep === "order" && (
           <>
@@ -426,7 +441,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 
                     return (
                       <Link
-                        className="col-span-1 flex flex-col items-center justify-center gap-1 text-center text-xs"
+                        className="col-span-1 flex flex-col items-center justify-start gap-1 text-center text-xs"
                         href={url.link}
                       >
                         <div className="size-10">
@@ -468,8 +483,8 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 
         {currentStep === "success" && (
           <>
-            <DialogHeader>
-              <DialogTitle className="text-5xl font-black text-geni-green text-center">
+            <DialogHeader className="mt-8">
+              <DialogTitle className="text-4xl md:text-5xl font-black text-geni-green text-center">
                 АМЖИЛТТАЙ ТӨЛӨГДЛӨӨ
               </DialogTitle>
               <DialogDescription className="sr-only">
@@ -481,6 +496,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                 <Image
                   src="/pro100/check.png"
                   alt="Check"
+                  priority
                   height={0}
                   width={0}
                   sizes="100vw"
@@ -488,12 +504,12 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                 />
               </div>
               <p className="text-base text-center">
-                Та Geni сурагчийн хөтөлбөрыг 80% хөнгөлөлттэй авах эхний 1000
+                Та Geni сурагчийн хөтөлбөрийг 80% хөнгөлөлттэй авах эхний 1000
                 хүний нэг боллоо.
                 <br />
+                <br />4 сарын 5-ны өдөр Geni platform-н шинэчлэгдсэн хувилбар
+                ашиглалтад орсноор таны сурагчийн хаяг нээгдэж бүртгүүлсэн{""}
                 <br />
-                4 сарын 5-ны өдөр Geni Platform-н beta v2.0 ашиглалтанд орсноор
-                таны сурагчийн хаяг нээгдэж бүртгүүлсэн <br />
                 <Link
                   href={`mailto:${formData.email}`}
                   className="text-geni-blue underline"
@@ -501,7 +517,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                   {formData.email}
                 </Link>
                 <br />
-                имэйл хаягт мэдэгдэл очих болно.
+                мэйл хаягт мэдэгдэл очих болно.
                 <br />
                 <br />
                 Таньд амжилт хүсье!
@@ -599,6 +615,7 @@ const Pro100: React.FC = () => {
               <Image
                 src="/pro100/1.png"
                 alt="pro-100"
+                priority
                 height={0}
                 width={0}
                 sizes="100vw"
@@ -714,10 +731,10 @@ const Pro100: React.FC = () => {
               </div>
             </div>
             <ElevatedButton
-              className="mt-6 md:mt-0"
+              className="mt-6 md:mt-0 px-12 sm:px-14"
               onClick={() => setShowModal(true)}
             >
-              <p className="text-xl font-bold">Урьдчилсан захиалга хийх ✨</p>
+              <p className="text-xl font-bold">Урьдчилсан захиалга хийх</p>
             </ElevatedButton>
           </div>
         </div>
