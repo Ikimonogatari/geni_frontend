@@ -16,11 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialogc";
-
 import clsx from "clsx";
 import { AspectRatio } from "../ui/aspect-ratio";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { SlidingNumber } from "../motion-primitives/sliding-number";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 type ModalStep = "order" | "payment" | "success";
 
@@ -158,6 +159,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [qpayImage, setQpayImage] = useState("");
+  const [qpayUrls, setQpayUrls] = useState([]);
   const [callBackUrl, setCallBackUrl] = useState("");
 
   const validateForm = () => {
@@ -201,33 +203,37 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 
     if (validateForm()) {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/student/apply`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            Email: formData.email,
-            FirstName: formData.name,
-            LastName: formData.surname,
-            PhoneNumber: formData.phoneNumber,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/student/apply`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              Email: formData.email,
+              FirstName: formData.name,
+              LastName: formData.surname,
+              PhoneNumber: formData.phoneNumber,
+            }),
+          }
+        );
 
         if (!response.ok) {
           const data = await response.json();
           toast.error(data.error);
-          throw new Error('Failed to submit application');
+          throw new Error("Failed to submit application");
         }
 
         // If successful, move to payment step
         const data = await response.json();
-        setQpayImage(data.QrImage ?? '');
-        setCallBackUrl(data.CallBackUrl ?? '');
+        setQpayImage(data.QrImage ?? "");
+        setCallBackUrl(data.CallBackUrl ?? "");
+        setQpayUrls(data.Urls ?? "");
         setCurrentStep("payment");
       } catch (error) {
-        console.error('Failed to submit application:', error);
-        
+        console.error("Failed to submit application:", error);
+
         // setErrors(prev => ({
         //   ...prev,
         //   submit: 'Уучлаарай, алдаа гарлаа. Дахин оролдоно уу.'
@@ -238,10 +244,10 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 
   const checkPaymentStatus = async () => {
     setIsLoading(true);
-    
+
     try {
       const response = await fetch(callBackUrl);
-      const data = await response.json(); 
+      const data = await response.json();
       setIsLoading(false);
       if (data.IsPaid) {
         setCurrentStep("success");
@@ -249,7 +255,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
         toast.error("Төлбөр төлөгдөөгүй байна.");
       }
     } catch (error) {
-      console.error('Payment status check failed:', error);
+      console.error("Payment status check failed:", error);
       toast.error("Төлбөр шалгахад алдаа гарлаа. Дахин оролдоно уу.");
     } finally {
       setIsLoading(false);
@@ -281,8 +287,8 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={clsx(
-          "sm:max-w-3xl bg-white !rounded-[30px] pt-10 px-16",
-          currentStep === "payment" && "px-14 sm:max-w-md",
+          "sm:max-w-3xl bg-white !rounded-[30px] md:pt-10 md:px-16",
+          currentStep === "payment" && "px-14 sm:max-w-lg",
           currentStep === "success" && "px-10 sm:max-w-md"
         )}
       >
@@ -290,7 +296,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
           <>
             <DialogHeader>
               <DialogTitle className="text-4xl font-bold">
-                PRE-ORDER ХИЙХ
+                УРЬДЧИЛСАН ЗАХИАЛГА ХИЙХ
               </DialogTitle>
               <DialogDescription className="sr-only">
                 Please provide your details to proceed with the order.
@@ -387,18 +393,59 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="max-w-sm">
-              <AspectRatio ratio={1}>
-                <Image
-                  src={`data:image/png;base64,${qpayImage}`}
-                  alt="QPay"
-                  height={0}
-                  width={0}
-                  sizes="100vw"
-                  className="w-full h-full object-contain"
-                />
-              </AspectRatio>
-            </div>
+            <Tabs defaultValue="apps">
+              <TabsList className="w-full mb-3">
+                <TabsTrigger value="qr">QR</TabsTrigger>
+                <TabsTrigger value="apps">Аппликейшн</TabsTrigger>
+              </TabsList>
+              <TabsContent value="qr">
+                <div className="max-w-sm">
+                  <AspectRatio ratio={1}>
+                    <Image
+                      src={`data:image/png;base64,${qpayImage}`}
+                      alt="QPay"
+                      height={0}
+                      width={0}
+                      sizes="100vw"
+                      className="w-full h-full object-contain select-none"
+                    />
+                  </AspectRatio>
+                </div>
+              </TabsContent>
+              <TabsContent value="apps">
+                <div className="grid grid-cols-4 gap-2 gap-y-4">
+                  {qpayUrls.map((url) => {
+                    const bankName =
+                      url.name === "Trade and Development bank"
+                        ? "TDB"
+                        : url.name === "National investment bank"
+                        ? "NIBank"
+                        : url.name === "Chinggis khaan bank"
+                        ? "Chinggis khaan"
+                        : url.name;
+
+                    return (
+                      <Link
+                        className="col-span-1 flex flex-col items-center justify-center gap-1 text-center text-xs"
+                        href={url.link}
+                      >
+                        <div className="size-10">
+                          <Image
+                            src={url.logo}
+                            alt={url.description}
+                            height={0}
+                            width={0}
+                            sizes="100vw"
+                            className="w-full h-full object-contain select-none"
+                          />
+                        </div>
+                        {bankName}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </TabsContent>
+            </Tabs>
 
             <DialogFooter className="flex-1 justify-center sm:justify-center my-6">
               <ElevatedButton
@@ -441,17 +488,17 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                 />
               </div>
               <p className="text-base text-center">
-                Та Geni сурагчын хөтөлбөрыг 80% хөнгөлөлттэй авах эхний 1000
+                Та Geni сурагчийн хөтөлбөрыг 80% хөнгөлөлттэй авах эхний 1000
                 хүний нэг боллоо.
                 <br />
                 <br />
                 4 сарын 5-ны өдөр Geni Platform-н beta v2.0 ашиглалтанд орсноор
-                таны сурагчын хаяг нээгдэж бүртгүүлсэн <br />
+                таны сурагчийн хаяг нээгдэж бүртгүүлсэн <br />
                 <Link
-                  href="mailto:daimaawork@gmail.com"
+                  href={`mailto:${formData.email}`}
                   className="text-geni-blue underline"
                 >
-                  daimaawork@gmail.com
+                  {formData.email}
                 </Link>
                 <br />
                 имэйл хаягт мэдэгдэл очих болно.
@@ -468,7 +515,16 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 }
 
 const Pro100: React.FC = () => {
-  const [preOrderStatus, setPreOrderStatus] = useState(false);
+  const [preOrderData, setPreOrderData] = useState<{
+    Applied: number;
+    BasePrice: string;
+    CalculatedPrice: string;
+    DiscountPerc: string;
+    ExpiresAt: string;
+    Limit: number;
+    PicFileUrl: string;
+  }>(null);
+
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -477,26 +533,32 @@ const Pro100: React.FC = () => {
   useEffect(() => {
     const fetchPreOrderStatus = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/pre-order/active`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/pre-order/active`
+        );
         const data = await response.json();
-        
+
         if (data.ExpiresAt) {
           const expiresAt = new Date(data.ExpiresAt);
           const now = new Date();
           const diffMs = expiresAt.getTime() - now.getTime();
-          
+
           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-          const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-          
+          const diffHours = Math.floor(
+            (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const diffMinutes = Math.floor(
+            (diffMs % (1000 * 60 * 60)) / (1000 * 60)
+          );
+
           setDays(diffDays);
           setHours(diffHours);
           setMinutes(diffMinutes);
         }
-        
-        setPreOrderStatus(data.isActive || false);
+
+        setPreOrderData(data);
       } catch (error) {
-        console.error('Failed to fetch pre-order status:', error);
+        console.error("Failed to fetch pre-order status:", error);
       }
     };
 
@@ -553,12 +615,12 @@ const Pro100: React.FC = () => {
             {/* Countdown Section */}
             <div className="flex-1 hidden md:flex">
               <div className="flex flex-col items-center md:ml-8">
-                <h2 className="text-xl font-bold mb-6">Pre-order дууссахад</h2>
+                <h2 className="text-xl font-bold mb-6">Pre-order дуусахад</h2>
                 <div className="flex justify-between gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
                       <span className="text-5xl font-bold text-geni-blue">
-                        {days.toString().padStart(2, "0")}
+                        <SlidingNumber value={days} padStart={true} />
                       </span>
                     </div>
                     <span className="text-gray-500">Өдөр</span>
@@ -567,7 +629,7 @@ const Pro100: React.FC = () => {
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
                       <span className="text-5xl font-bold text-geni-blue">
-                        {hours.toString().padStart(2, "0")}
+                        <SlidingNumber value={hours} padStart={true} />
                       </span>
                     </div>
                     <span className="text-gray-500">Цаг</span>
@@ -576,7 +638,7 @@ const Pro100: React.FC = () => {
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
                       <span className="text-5xl font-bold text-geni-blue">
-                        {minutes.toString().padStart(2, "0")}
+                        <SlidingNumber value={minutes} padStart={true} />
                       </span>
                     </div>
                     <span className="text-gray-500">Минут</span>
@@ -590,16 +652,21 @@ const Pro100: React.FC = () => {
           <div className="flex-1 max-w-2xl text-center flex flex-col items-center px-2 md:px-0">
             <div className="w-full mb-4">
               <div className="flex justify-center mb-2">
-                <span className="text-base font-bold md:text-2xl md:font-medium">
-                  102/1000
-                </span>
+                <div className="text-base font-bold md:text-2xl md:font-medium flex">
+                  <SlidingNumber value={preOrderData?.Applied ?? 0} />
+                  /
+                  <SlidingNumber value={preOrderData?.Limit ?? 0} />
+                </div>
               </div>
-              <Progress value={10.2} className="h-6 border border-primary" />
+              <Progress
+                value={(preOrderData?.Applied * 100) / preOrderData?.Limit}
+                className="h-6 border border-primary"
+              />
             </div>
 
             <p className="text-lg mb-4">
               Geni Platform дээр ПРО 100 контент бүтээгчийн нэг болох Geni
-              сурагчын хөтөлбөр зөвхөн эхний Pre-order хийсэн 1000 хүнд 80%
+              сурагчийн хөтөлбөр зөвхөн эхний Pre-order хийсэн 1000 хүнд 80%
               хөнгөлөлттэй.
             </p>
 
@@ -615,12 +682,12 @@ const Pro100: React.FC = () => {
             {/* Mobile countdown section */}
             <div className="flex-1 flex md:hidden">
               <div className="flex flex-col items-center md:ml-8">
-                <h2 className="text-xl font-bold mb-6">Pre-order дууссахад</h2>
+                <h2 className="text-xl font-bold mb-6">Pre-order дуусахад</h2>
                 <div className="flex justify-between gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
                       <span className="text-5xl font-bold text-geni-blue">
-                        {days.toString().padStart(2, "0")}
+                        <SlidingNumber value={days} padStart={true} />
                       </span>
                     </div>
                     <span className="text-gray-500">Өдөр</span>
@@ -629,7 +696,7 @@ const Pro100: React.FC = () => {
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
                       <span className="text-5xl font-bold text-geni-blue">
-                        {hours.toString().padStart(2, "0")}
+                        <SlidingNumber value={hours} padStart={true} />
                       </span>
                     </div>
                     <span className="text-gray-500">Цаг</span>
@@ -638,7 +705,7 @@ const Pro100: React.FC = () => {
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
                       <span className="text-5xl font-bold text-geni-blue">
-                        {minutes.toString().padStart(2, "0")}
+                        <SlidingNumber value={minutes} padStart={true} />
                       </span>
                     </div>
                     <span className="text-gray-500">Минут</span>
@@ -650,7 +717,7 @@ const Pro100: React.FC = () => {
               className="mt-6 md:mt-0"
               onClick={() => setShowModal(true)}
             >
-              <p className="text-xl font-bold">Pre-order хийх ✨</p>
+              <p className="text-xl font-bold">Урьдчилсан захиалга хийх ✨</p>
             </ElevatedButton>
           </div>
         </div>
