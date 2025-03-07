@@ -136,7 +136,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
                 <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
                   {getUserInfoLoading
                     ? ""
-                    : getUserInfoData?.Nickname || "Geni бүтээгч"}
+                    : getUserInfoData?.Nickname || "Geni сурагч"}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink ? (

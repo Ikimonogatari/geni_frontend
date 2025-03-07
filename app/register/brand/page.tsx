@@ -6,16 +6,17 @@ import * as Yup from "yup";
 import {
   useBrandRegisterMutation,
   useSendOtpToEmailMutation,
-} from "../services/service";
+} from "../../services/service";
 import toast from "react-hot-toast";
-import Verification from "./Verification";
+import Verification from "../Verification";
 import { Input } from "@/components/ui/input";
+import SuccessModal from "@/components/common/SuccessModal";
 
-function Page() {
+function BrandRegister() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [brandRegisterFinished, setBrandRegisterFinished] = useState(false);
 
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
@@ -66,7 +67,6 @@ function Page() {
       OTP: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
-      setBrandRegisterFinished(false);
       brandRegister({
         Email: values.Email,
         Password: values.Password,
@@ -78,6 +78,7 @@ function Page() {
 
   const handleSendOtp = async () => {
     try {
+      // @ts-ignore
       await registerForm.validateForm({
         Email: registerForm.values.Email,
         Password: registerForm.values.Password,
@@ -113,6 +114,7 @@ function Page() {
       toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
       setDialogOpen(true);
     } else if (brandVerificationError) {
+      // @ts-ignore
       toast.error(brandVerificationError?.data?.error);
     }
   }, [brandVerificationSuccess, brandVerificationError]);
@@ -120,8 +122,10 @@ function Page() {
   useEffect(() => {
     if (brandRegisterSuccess) {
       toast.success("Амжилттай бүртгэгдлээ");
-      setBrandRegisterFinished(true);
+      setDialogOpen(false);
+      setIsSuccessDialogOpen(true);
     } else if (brandRegisterError) {
+      // @ts-ignore
       toast.error(brandRegister?.data?.error);
     }
   }, [brandRegisterSuccess, brandRegisterError]);
@@ -156,6 +160,7 @@ function Page() {
                 onChange={registerForm.handleChange}
                 value={registerForm.values.Email}
                 errorText={registerForm.errors.Email}
+                // @ts-ignore
                 errorVisible={
                   registerForm.touched.Email && registerForm.errors.Email
                 }
@@ -172,6 +177,7 @@ function Page() {
                 onChange={registerForm.handleChange}
                 value={registerForm.values.Password}
                 errorText={registerForm.errors.Password}
+                // @ts-ignore
                 errorVisible={
                   registerForm.touched.Password && registerForm.errors.Password
                 }
@@ -209,6 +215,7 @@ function Page() {
                 onChange={registerForm.handleChange}
                 value={registerForm.values.ConfirmPassword}
                 errorText={registerForm.errors.ConfirmPassword}
+                // @ts-ignore
                 errorVisible={
                   registerForm.touched.ConfirmPassword &&
                   registerForm.errors.ConfirmPassword
@@ -251,9 +258,9 @@ function Page() {
               <Verification
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
+                // @ts-ignore
                 handleSendOtp={handleSendOtp}
                 registerForm={registerForm}
-                brandRegisterFinished={brandRegisterFinished}
                 brandVerificationData={brandVerificationData}
                 brandVerificationSuccess={brandVerificationSuccess}
               />
@@ -261,8 +268,23 @@ function Page() {
           </form>
         </div>
       </div>
+      <SuccessModal
+        isSuccessDialogOpen={isSuccessDialogOpen}
+        setIsSuccessDialogOpen={setIsSuccessDialogOpen}
+        modalImage="/brand-register-success.png"
+        modalTitle="амжилттай Бүртгэгдлээ"
+        imageClassName="aspect-[200/153] max-w-[300px] w-full"
+        context={
+          <a
+            href="/login"
+            className="mt-8 w-full py-4 text-center text-white font-semibold bg-geni-blue text-2xl border border-[#2D262D] rounded-2xl"
+          >
+            Нэвтрэх
+          </a>
+        }
+      />
     </div>
   );
 }
 
-export default Page;
+export default BrandRegister;
