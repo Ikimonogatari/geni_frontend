@@ -45,19 +45,19 @@ function BrandWallet() {
             />
             <div className="flex flex-col gap-4 w-full">
               <div className="rounded-3xl p-4 sm:p-8 border border-geni-gray flex flex-col gap-4">
-                <div className="grid grid-cols-3 gap-5 text-base sm:text-xl">
+                <div className="grid grid-cols-3 gap-1 sm:gap-5 text-base sm:text-xl">
                   <span className="font-bold col-span-2">Үлдэгдэл:</span>
                   <span className="col-span-1">
                     {getBrandCreditInfoData?.CreditExist}
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-5 text-base sm:text-xl">
+                <div className="grid grid-cols-3 gap-1 sm:gap-5 text-base sm:text-xl">
                   <span className="font-bold col-span-2">Ашигласан:</span>
                   <span className="col-span-1">
                     {getBrandCreditInfoData?.CreditUsed}
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-5 text-base sm:text-xl">
+                <div className="grid grid-cols-3 gap-1 sm:gap-5 text-base sm:text-xl">
                   <span className="font-bold col-span-2">
                     Сүүлд цэнэглэсэн:
                   </span>
