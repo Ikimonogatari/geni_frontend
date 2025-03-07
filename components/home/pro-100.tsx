@@ -177,8 +177,19 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) newErrors.name = "Нэр оруулна уу";
-    if (!formData.surname.trim()) newErrors.surname = "Овог оруулна уу";
+    if (!formData.name.trim()) {
+      newErrors.name = "Та зөвхөн кирилл үсгээр бичнэ үү";
+    } else if (!/^[\u0400-\u04FF]+$/.test(formData.name)) {
+      newErrors.name = "Та зөвхөн кирилл үсгээр бичнэ үү";
+    }
+
+    if (!formData.surname.trim()) {
+      newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
+    } else if (!/^[\u0400-\u04FF]+$/.test(formData.surname)) {
+      newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
+    }
+    if (!formData.surname.trim())
+      newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
 
     if (!formData.email.trim()) {
       newErrors.email = "Имэйл хаяг оруулна уу";
@@ -189,7 +200,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = "Утасны дугаараа оруулна уу";
     } else if (!/^\+?[0-9\s-()]{8,}$/.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "Утасны дугаар буруу байна";
+      newErrors.phoneNumber = "8 оронтой тоо оруулна уу";
     }
 
     setErrors(newErrors);
@@ -328,10 +339,10 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                     name="surname"
                     value={formData.surname}
                     onChange={handleInputChange}
-                    className={errors.surname ? "border-destructive" : ""}
+                    className={errors.surname ? "border-red-700" : ""}
                   />
                   {errors.surname && (
-                    <p className="text-destructive text-sm">{errors.surname}</p>
+                    <p className="text-red-700 text-sm">{errors.surname}</p>
                   )}
                 </div>
                 <div className="space-y-0.5">
@@ -343,10 +354,10 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className={errors.name ? "border-destructive" : ""}
+                    className={errors.name ? "border-red-700" : ""}
                   />
                   {errors.name && (
-                    <p className="text-destructive text-sm">{errors.name}</p>
+                    <p className="text-red-700 text-sm">{errors.name}</p>
                   )}
                 </div>
               </div>
@@ -361,10 +372,10 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                     type="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={errors.email ? "border-destructive" : ""}
+                    className={errors.email ? "border-red-700" : ""}
                   />
                   {errors.email && (
-                    <p className="text-destructive text-sm">{errors.email}</p>
+                    <p className="text-red-700 text-sm">{errors.email}</p>
                   )}
                 </div>
                 <div className="space-y-0.5">
@@ -376,12 +387,10 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    className={errors.phoneNumber ? "border-destructive" : ""}
+                    className={errors.phoneNumber ? "border-red-700" : ""}
                   />
                   {errors.phoneNumber && (
-                    <p className="text-destructive text-sm">
-                      {errors.phoneNumber}
-                    </p>
+                    <p className="text-red-700 text-sm">{errors.phoneNumber}</p>
                   )}
                 </div>
               </div>
@@ -408,10 +417,20 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
               </DialogDescription>
             </DialogHeader>
 
-            <Tabs defaultValue="apps">
-              <TabsList className="w-full mb-3">
-                <TabsTrigger value="qr">QR</TabsTrigger>
-                <TabsTrigger value="apps">Аппликейшн</TabsTrigger>
+            <Tabs defaultValue="apps" className="items-center">
+              <TabsList className="w-full mb-3 gap-1 bg-transparent">
+                <TabsTrigger
+                  value="qr"
+                  className="data-[state=active]:bg-geni-blue data-[state=active]:text-white rounded-full data-[state=active]:shadow-none"
+                >
+                  QR
+                </TabsTrigger>
+                <TabsTrigger
+                  value="apps"
+                  className="data-[state=active]:bg-geni-blue data-[state=active]:text-white rounded-full data-[state=active]:shadow-none"
+                >
+                  Аппликейшн
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="qr">
                 <div className="max-w-sm">
