@@ -3,9 +3,7 @@ import Image from "next/image";
 import { useListPaymentPlansQuery } from "@/app/services/service";
 import PriceFormatter from "@/components/common/FormatPrice";
 
-function Step4({ selectedPackageIndex }) {
-  const [selectedPayment, setSelectedPayment] = useState("qpay");
-
+function Step4({ selectedPackageIndex, selectedPayment, setSelectedPayment }) {
   const {
     data: listPaymentPlansData,
     error: listPaymentPlansError,
@@ -51,24 +49,43 @@ function Step4({ selectedPackageIndex }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-[#6F6F6F] text-xl font-bold">
-          Та төлбөр төлөх нөхцөлөө сонгоно уу
-        </span>
-        <button
-          onClick={() => setSelectedPayment("qpay")}
-          className={`border-[2px] transition-all duration-150 ${
-            selectedPayment === "qpay" ? "border-[#4D55F5]" : "border-[#F5F4F0]"
-          }  py-3 sm:py-4 w-[130px] sm:w-[189px] flex justify-center rounded-3xl bg-[#F5F4F0]`}
-        >
-          <Image
-            src={"/qpay.png"}
-            width={96}
-            height={36}
-            alt="payment"
-            className="w-[64px] h-[24px] sm:w-[96px] sm:h-[36px]"
-          />
-        </button>
+      <div className="flex flex-col sm:flex-row justify-between w-full sm:items-center">
+        <div className="flex flex-col gap-2">
+          <span className="text-[#6F6F6F] text-base sm:text-xl font-bold">
+            Та төлбөр төлөх нөхцөлөө сонгоно уу
+          </span>
+          <button
+            onClick={() => setSelectedPayment("qpay")}
+            className={`w-[172px] h-[72px] border-[2px] transition-all duration-150 ${
+              selectedPayment === "qpay"
+                ? "border-[#4D55F5]"
+                : "border-[#F5F4F0]"
+            } flex justify-center items-center rounded-3xl bg-[#F5F4F0]`}
+          >
+            <Image
+              src={"/qpay.png"}
+              width={96}
+              height={36}
+              alt="payment"
+              className="w-[64px] h-[24px] sm:w-[96px] sm:h-[36px]"
+            />
+          </button>
+        </div>
+        <div className="flex flex-col gap-2 border-l-0 sm:border-l-[1px] border-geni-gray sm:pl-10">
+          <span className="text-[#6F6F6F] text-base sm:text-xl font-bold">
+            Нэхэмжлэх авах
+          </span>
+          <button
+            onClick={() => setSelectedPayment("invoice")}
+            className={`w-[172px] h-[72px] border-[2px] transition-all duration-150 ${
+              selectedPayment === "invoice"
+                ? "border-[#4D55F5]"
+                : "border-[#F5F4F0]"
+            } text-primary text-2xl sm:text-4xl font-extrabold flex justify-center items-center rounded-3xl bg-[#F5F4F0]`}
+          >
+            PDF
+          </button>
+        </div>
       </div>
     </div>
   );
