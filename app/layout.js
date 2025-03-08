@@ -4,7 +4,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Head from "next/head";
 import localFont from "next/font/local";
-
 import "/public/fonts/font/stylesheet.css";
 import { store } from "./store";
 import { Provider } from "react-redux";
@@ -32,6 +31,12 @@ const mabryPro = localFont({
   display: "swap",
   variable: "--font-mabry-pro",
 });
+
+export const metadata = {
+  title: "Geni Platform",
+  description: "Geni Platform",
+  metadataBase: new URL("https://www.geni.mn/"),
+};
 
 export default function RootLayout({ children }) {
   return (

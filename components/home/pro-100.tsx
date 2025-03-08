@@ -227,7 +227,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
     if (validateForm()) {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/student/apply`,
+          `${process.env.NEXT_PUBLIC_AWS_URL}api/web/public/student/apply`,
           {
             method: "POST",
             headers: {
@@ -569,7 +569,7 @@ const Pro100: React.FC = () => {
     const fetchPreOrderStatus = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/pre-order/active`
+          `${process.env.NEXT_PUBLIC_AWS_URL}api/web/public/pre-order/active`
         );
         const data = await response.json();
 
