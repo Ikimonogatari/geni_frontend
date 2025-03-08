@@ -30,7 +30,7 @@ function page() {
         />
         <BecomeGeniButton
           width={"aspect-[371/84] w-full lg:max-w-[371px]"}
-          link={"/apply"}
+          link={"/register/student"}
           text={"Бүртгэл үүсгэх"}
           bg={"bg-geni-green"}
           shadowbg={"shadow-[0.25rem_0.25rem_#3B7A3C]"}

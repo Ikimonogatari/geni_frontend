@@ -12,6 +12,8 @@ interface TextareaProps extends React.ComponentProps<"textarea"> {
   labelClassName?: string;
   layoutClassName?: string;
   hoverInfo?: string;
+  maxLength?: number;
+  wrapperClassName?: string;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -25,6 +27,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       charCount,
       errorText,
       errorVisible,
+      maxLength,
+      wrapperClassName,
       ...props
     },
     ref
@@ -38,7 +42,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         label
       );
     return (
-      <div className="flex flex-col gap-3">
+      <div className={cn("flex flex-col gap-3", wrapperClassName)}>
         <div className="flex flex-1 justify-between">
           {labelComponent}
           {hoverInfo && <InfoHover contentText={hoverInfo} />}
@@ -56,7 +60,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               {...props}
             />
             <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
-              {charCount !== undefined && `Тэмдэгтийн тоо: ${charCount}/600`}
+              {charCount !== undefined &&
+                `Тэмдэгтийн тоо: ${charCount}/${maxLength}`}
             </div>
           </div>
           {errorVisible && (

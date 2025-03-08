@@ -84,8 +84,8 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
     }
   };
   return (
-    <div className="flex flex-col items-start justify-between w-full gap-6 sm:gap-9">
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+    <div className="flex flex-col items-start justify-between w-full gap-4">
+      <div className="flex flex-col items-start sm:flex-row gap-4 w-full">
         <Input
           id="RegNo"
           name="RegNo"
@@ -117,7 +117,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           errorVisible={formik.touched.PhoneNumber && formik.errors.PhoneNumber}
         />
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+      <div className="flex flex-col items-start sm:flex-row gap-4 w-full">
         <Input
           id="AvgProductSalesMonthly"
           name="AvgProductSalesMonthly"
@@ -136,7 +136,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
             formik.errors.AvgProductSalesMonthly
           }
         />
-        <div className="flex flex-col gap-1  w-full">
+        <div className="flex flex-col gap-1 w-full">
           <label className="text-[#6F6F6F] text-lg mb-2 block">
             Маркетинг хариуцсан баг эсвэл хүнтэй эсэх
           </label>
@@ -166,7 +166,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           </Select>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+      <div className="flex flex-col items-start sm:flex-row gap-4 w-full">
         <Input
           id="AvgPrice"
           name="AvgPrice"
@@ -174,7 +174,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           type="number"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
-          layoutClassName="h-full p-4 sm:p-5 w-full"
+          layoutClassName="h-full max-h-[62px] p-4 sm:p-5 w-full"
           label="Бүтээгдэхүүний дундаж үнэ"
           leftSection={<span className="text-base sm:text-xl">₮</span>}
           onChange={formik.handleChange}
@@ -199,7 +199,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           errorVisible={formik.touched.Website && formik.errors.Website}
         />
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
+      <div className="flex flex-col items-start sm:flex-row gap-4 w-full">
         <Input
           id="Address"
           name="Address"
@@ -217,12 +217,12 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         />
         <div className="w-full"></div>
       </div>
-      <div className="flex flex-row gap-4 w-full">
+      <div className="flex flex-row items-start gap-4 w-full">
         <div className="flex flex-col gap-3 w-full">
           <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
             Сошиал хаягууд
           </label>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full items-start">
+          <div className="flex flex-col sm:flex-row gap-4 w-full items-start">
             <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
               <div className="flex flex-row items-center gap-3 w-full">
                 <Image
@@ -298,7 +298,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-row items-center gap-4 sm:gap-7 xl:gap-10 w-full">
+      <div className="flex flex-row items-center gap-4 w-full mt-10">
         <button
           type="button"
           onClick={handlePreviousStep}

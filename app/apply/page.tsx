@@ -119,8 +119,8 @@ function CreatorOnboarding() {
         </div>
       </div>
       <SuccessModal
-        isMainDialogOpen={isSuccessModalOpen}
-        setIsMainDialogOpen={setIsSuccessModalOpen}
+        isSuccessDialogOpen={isSuccessModalOpen}
+        setIsSuccessDialogOpen={setIsSuccessModalOpen}
         modalImage="/creator-image.png"
         modalTitle="ӨРГӨДӨЛ АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ"
         context={

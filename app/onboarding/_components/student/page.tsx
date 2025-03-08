@@ -3,16 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import {
-  useEditBrandProfileMutation,
-  useBrandRequestReviewMutation,
-} from "@/app/services/service";
+import { useEditCreatorProfileMutation } from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import StudentDetails from "./StudentDetails";
 import StudentDetailsSubmit from "./StudentDetailsSubmit";
-import StudentDetailsSuccess from "./StudentDetailsSuccess";
-import { addBrandDetailsSchema } from "./schema";
+import { addStudentDetailsSchema } from "./schema";
 
 function StudentOnboarding() {
   const router = useRouter();
@@ -23,9 +19,16 @@ function StudentOnboarding() {
 
   const handleNextStep = async () => {
     if (step === 1) {
-      await formik.validateField("Name");
+      await formik.validateField("LastName");
+      await formik.validateField("FirstName");
+      await formik.validateField("Nickname");
       await formik.validateField("Bio");
-      if (!formik.errors.Name && !formik.errors.Bio) {
+      if (
+        !formik.errors.LastName &&
+        !formik.errors.FirstName &&
+        !formik.errors.Nickname &&
+        !formik.errors.Bio
+      ) {
         setStep(2);
       }
     } else if (step === 2) {
@@ -37,41 +40,25 @@ function StudentOnboarding() {
     if (step > 1) setStep((prevStep) => prevStep - 1);
   };
 
-  const [editBrandProfile, { data, error, isLoading, isSuccess }] =
-    useEditBrandProfileMutation();
-
-  const [
-    requestReview,
-    {
-      data: requestReviewData,
-      error: requestReviewError,
-      isLoading: requestReviewLoading,
-      isSuccess: requestReviewSuccess,
-    },
-  ] = useBrandRequestReviewMutation();
+  const [editCreatorProfile, { data, error, isLoading, isSuccess }] =
+    useEditCreatorProfileMutation();
 
   const formik = useFormik({
     initialValues: {
-      Name: parsedUserInfo ? parsedUserInfo?.Name : "",
+      FirstName: parsedUserInfo ? parsedUserInfo?.Name : "",
+      LastName: parsedUserInfo ? parsedUserInfo?.Name : "",
+      Nickname: parsedUserInfo ? parsedUserInfo?.Name : "",
       Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      Website: parsedUserInfo ? parsedUserInfo?.Website : "",
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
-      Address: parsedUserInfo ? parsedUserInfo?.Address : "",
-      BrandAoADescription: "temp-desc",
-      HasMarketingPersonel: false,
-      AvgProductSalesMonthly: parsedUserInfo
-        ? parsedUserInfo?.AvgProductSalesMonthly
-        : 0,
-      AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : 0,
+      Birthday: parsedUserInfo ? parsedUserInfo?.RegNo : "",
+      Gender: parsedUserInfo ? parsedUserInfo?.Gender : "",
     },
-    validationSchema: addBrandDetailsSchema,
+    validationSchema: addStudentDetailsSchema,
     onSubmit: async (values) => {
       try {
-        await editBrandProfile(values).unwrap();
+        await editCreatorProfile(values).unwrap();
         // @ts-ignore
-        await requestReview();
-        setStep(3);
       } catch (error) {
         toast.error("Алдаа гарлаа");
         console.error("Error submitting the form", error);
@@ -80,14 +67,15 @@ function StudentOnboarding() {
   });
 
   useEffect(() => {
-    if (isSuccess && requestReviewSuccess) {
+    if (isSuccess) {
       toast.success("Амжилттай");
+      router.push("/profile");
     }
-    if (error || requestReviewError) {
+    if (error) {
       // @ts-ignore
-      toast.error(error?.data?.error || requestReviewError?.data?.error);
+      toast.error(error?.data?.error);
     }
-  }, [data, error, requestReviewSuccess, requestReviewError]);
+  }, [isSuccess, error]);
 
   const renderStepContent = () => {
     switch (step) {
@@ -107,8 +95,6 @@ function StudentOnboarding() {
             parsedUserInfo={parsedUserInfo}
           />
         );
-      case 3:
-        return <StudentDetailsSuccess router={router} />;
     }
   };
 
@@ -121,10 +107,10 @@ function StudentOnboarding() {
         >
           <div className="flex flex-row justify-between items-center gap-5 my-7 w-full">
             <p className="text-xl sm:text-3xl xl:text-4xl font-bold">
-              Мэдээлэл оруулах
+              Хэрэглэгчийн мэдээлэл оруулах
             </p>
             <span className="text-[#6F6F6F] text-base sm:text-lg xl:text-xl">
-              Алхам {step}/3
+              Алхам {step}/2
             </span>
           </div>
           {renderStepContent()}
