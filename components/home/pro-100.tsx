@@ -179,13 +179,13 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 
     if (!formData.name.trim()) {
       newErrors.name = "Та зөвхөн кирилл үсгээр бичнэ үү";
-    } else if (!/^[\u0400-\u04FF]+$/.test(formData.name)) {
+    } else if (!/^[\u0400-\u04FF-]+$/.test(formData.name)) {
       newErrors.name = "Та зөвхөн кирилл үсгээр бичнэ үү";
     }
 
     if (!formData.surname.trim()) {
       newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
-    } else if (!/^[\u0400-\u04FF]+$/.test(formData.surname)) {
+    } else if (!/^[\u0400-\u04FF-]+$/.test(formData.surname)) {
       newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
     }
     if (!formData.surname.trim())
