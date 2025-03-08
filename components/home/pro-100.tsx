@@ -179,13 +179,13 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
 
     if (!formData.name.trim()) {
       newErrors.name = "Та зөвхөн кирилл үсгээр бичнэ үү";
-    } else if (!/^[\u0400-\u04FF]+$/.test(formData.name)) {
+    } else if (!/^[\u0400-\u04FF-]+$/.test(formData.name)) {
       newErrors.name = "Та зөвхөн кирилл үсгээр бичнэ үү";
     }
 
     if (!formData.surname.trim()) {
       newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
-    } else if (!/^[\u0400-\u04FF]+$/.test(formData.surname)) {
+    } else if (!/^[\u0400-\u04FF-]+$/.test(formData.surname)) {
       newErrors.surname = "Та зөвхөн кирилл үсгээр бичнэ үү";
     }
     if (!formData.surname.trim())
@@ -227,7 +227,7 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
     if (validateForm()) {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/student/apply`,
+          `${process.env.NEXT_PUBLIC_AWS_URL}api/web/public/student/apply`,
           {
             method: "POST",
             headers: {
@@ -569,7 +569,7 @@ const Pro100: React.FC = () => {
     const fetchPreOrderStatus = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/pre-order/active`
+          `${process.env.NEXT_PUBLIC_AWS_URL}api/web/public/pre-order/active`
         );
         const data = await response.json();
 
@@ -651,7 +651,9 @@ const Pro100: React.FC = () => {
             {/* Countdown Section */}
             <div className="flex-1 hidden md:flex">
               <div className="flex flex-col items-center md:ml-8">
-                <h2 className="text-xl font-bold mb-6">Pre-order дуусахад</h2>
+                <h2 className="text-xl font-bold mb-6">
+                  Урьдчилсан захиалга дуусахад
+                </h2>
                 <div className="flex justify-between gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
@@ -702,8 +704,8 @@ const Pro100: React.FC = () => {
 
             <p className="text-lg mb-4">
               Geni Platform дээр ПРО 100 контент бүтээгчийн нэг болох Geni
-              сурагчийн хөтөлбөр зөвхөн эхний Pre-order хийсэн 1000 хүнд 80%
-              хөнгөлөлттэй.
+              сурагчийн хөтөлбөр зөвхөн эхний Урьдчилсан захиалга хийсэн 1000
+              хүнд 80% хөнгөлөлттэй.
             </p>
 
             <div className="flex flex-col md:flex-row items-center gap-2 md:gap-8 mb-6">
@@ -718,7 +720,9 @@ const Pro100: React.FC = () => {
             {/* Mobile countdown section */}
             <div className="flex-1 flex md:hidden">
               <div className="flex flex-col items-center md:ml-8">
-                <h2 className="text-xl font-bold mb-6">Pre-order дуусахад</h2>
+                <h2 className="text-xl font-bold mb-6">
+                  Урьдчилсан захиалга дуусахад
+                </h2>
                 <div className="flex justify-between gap-4">
                   <div className="flex flex-col items-center">
                     <div className="w-20 h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2">
