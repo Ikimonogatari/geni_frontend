@@ -18,13 +18,13 @@ import { ClipLoader } from "react-spinners";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
-interface PaymentModalProps {
+interface SubscriptionModalProps {
   selectedPackageId: number;
   setIsMainDialogOpen: (open: boolean) => void;
   selectedPayment: string;
 }
 
-const PaymentModal: React.FC<PaymentModalProps> = ({
+const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   selectedPackageId,
   setIsMainDialogOpen,
   selectedPayment,
@@ -163,7 +163,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       <button
         onClick={handleSubscription}
         disabled={subscribePlanLoading}
-        className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+        className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-geni-green border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
       >
         Үргэлжлүүлэх
         <Image
@@ -256,4 +256,4 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   );
 };
 
-export default PaymentModal;
+export default SubscriptionModal;

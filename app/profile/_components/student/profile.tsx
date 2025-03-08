@@ -16,6 +16,7 @@ import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
+import CoursePurchaseModal from "@/components/course/CoursePurchaseModal";
 
 function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -223,7 +224,15 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
               ))}
             </div>
 
-            <HomeworkUploadModal parsedUserInfo={parsedUserInfo} />
+            {/* <HomeworkUploadModal parsedUserInfo={parsedUserInfo} /> */}
+            <CoursePurchaseModal
+              buttonIconSize={""}
+              className={
+                "flex flex-row items-center bg-geni-green text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+              }
+              buttonText={"Хөтөлбөр идэвхжүүлэх"}
+              userInfo={getUserInfoData}
+            />
           </div>
           {currentContents && !isLoading ? (
             renderStudentProfile()

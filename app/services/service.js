@@ -1,6 +1,7 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import StudentRegister from "../register/student/page";
 
 // Define a service using a base URL and expected endpoints
 
@@ -273,6 +274,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    studentRegister: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/student-register",
+        method: "POST",
+        body,
+      }),
+    }),
     addProductSupply: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/product/supply",
@@ -477,4 +485,5 @@ export const {
   useBrandGuideCheckMutation,
   useGetBrandCreditInfoQuery,
   useCreatorApplyMutation,
+  useStudentRegisterMutation,
 } = geniApi;

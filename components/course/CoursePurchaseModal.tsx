@@ -4,7 +4,6 @@ import Image from "next/image";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
-import Step4 from "./Step4";
 import {
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
@@ -13,12 +12,19 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SubscriptionModal from "../SubscriptionModal";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
+function CoursePurchaseModal({
+  className,
+  buttonIconSize,
+  buttonText,
+  userInfo,
+}) {
   const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("qpay");
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("creatorcourse");
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const [selectedPackageId, setSelectedPackageId] = useState(1);
   const initialStep = userInfo?.IsUsedFreeContent
@@ -49,6 +55,23 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
     },
   ] = useUseFreeContentMutation();
 
+  const couponCodeformik = useFormik({
+    initialValues: {
+      couponCode: "",
+    },
+    validationSchema: Yup.object({
+      couponCode: Yup.string().required("Заавал бөглөнө үү"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        // @ts-ignore
+      } catch (error) {
+        toast.error("Алдаа гарлаа");
+        console.error("Error submitting the form", error);
+      }
+    },
+  });
+
   useEffect(() => {
     if (useFreeContentSuccess) {
       toast.success("Танд 1ш үнэгүй контэнт хийлгэх эрх үүслээ");
@@ -74,21 +97,19 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
     } else {
       setCurrentStep((prevStep) => {
         if (userInfo?.IsCheckedTerm && prevStep === 1) {
-          return 3;
+          return 3; // Skip Step 2
         }
-        return Math.min(prevStep + 1, 4);
+        return Math.min(prevStep + 1, 3);
       });
     }
   };
 
   const previousStep = () => {
     setCurrentStep((prevStep) => {
-      if (userInfo?.IsUsedFreeContent && prevStep === 3) {
-        return 3;
-      }
       if (userInfo?.IsCheckedTerm && prevStep === 3) {
-        return 1;
+        return 1; // Skip Step 2 when going back
       }
+
       return Math.max(prevStep - 1, 1);
     });
   };
@@ -108,23 +129,18 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
       case 3:
         return (
           <Step3
-            setSelectedPackageIndex={setSelectedPackageIndex}
             selectedPackageIndex={selectedPackageIndex}
-            setSelectedPackageId={setSelectedPackageId}
-          />
-        );
-      case 4:
-        return (
-          <Step4
-            selectedPackageIndex={selectedPackageIndex}
-            selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
+            selectedPayment={selectedPayment}
+            formik={couponCodeformik}
           />
         );
+
       default:
         return null;
     }
   };
+
   return (
     <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
       <DialogTrigger
@@ -140,7 +156,11 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
         />
       </DialogTrigger>
       {/* @ts-ignore */}
-      <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-4xl rounded-3xl">
+      <DialogContent
+        className={`overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full ${
+          currentStep === 1 ? "max-w-3xl" : "max-w-5xl"
+        } rounded-3xl`}
+      >
         {renderStepContent()}
         <div className="flex flex-row items-center justify-between w-full">
           {currentStep == 2 ? (
@@ -156,7 +176,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
                 />
                 <label
                   htmlFor="checkbox"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-[#4D55F5] peer-checked:border-[#4D55F5]"
+                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-geni-green peer-checked:border-geni-green"
                 >
                   <span className="text-sm sm:text-base text-white text-center select-none peer-checked:inline-block w-3 h-5 border-white">
                     ✓
@@ -186,7 +206,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
           ) : (
             <></>
           )}
-          {currentStep < 4 ? (
+          {currentStep < 3 ? (
             <button
               onClick={nextStep}
               disabled={
@@ -200,7 +220,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
                    ? "opacity-70 cursor-not-allowed"
                    : "opacity-100"
                } 
-                bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+                bg-geni-green border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
             >
               Үргэлжлүүлэх
               <Image
@@ -224,4 +244,4 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   );
 }
 
-export default CreditPurchase;
+export default CoursePurchaseModal;
