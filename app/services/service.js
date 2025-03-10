@@ -423,6 +423,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    purchaseCourse: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student/qpay",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -486,4 +493,5 @@ export const {
   useGetBrandCreditInfoQuery,
   useCreatorApplyMutation,
   useStudentRegisterMutation,
+  usePurchaseCourseMutation,
 } = geniApi;

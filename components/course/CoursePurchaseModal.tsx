@@ -11,9 +11,9 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import SubscriptionModal from "../SubscriptionModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import CoursePaymentModal from "../CoursePaymentModal";
 
 function CoursePurchaseModal({
   className,
@@ -59,9 +59,7 @@ function CoursePurchaseModal({
     initialValues: {
       couponCode: "",
     },
-    validationSchema: Yup.object({
-      couponCode: Yup.string().required("Заавал бөглөнө үү"),
-    }),
+    validationSchema: Yup.object({}),
     onSubmit: async (values) => {
       try {
         // @ts-ignore
@@ -232,10 +230,11 @@ function CoursePurchaseModal({
               />
             </button>
           ) : (
-            <SubscriptionModal
+            <CoursePaymentModal
               selectedPackageId={selectedPackageId}
               setIsMainDialogOpen={setMainDialogOpen}
               selectedPayment={selectedPayment}
+              couponCode={couponCodeformik.values.couponCode}
             />
           )}
         </div>
