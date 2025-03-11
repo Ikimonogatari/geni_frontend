@@ -121,10 +121,11 @@ function Page() {
         requestForCreators: getPublicProductByIdData?.RequestForCreators || "",
         amount: getPublicProductByIdData?.Amount || "",
         addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
-        totalPrice:
-          getPublicProductByIdData?.Quantity *
-            getPublicProductByIdData?.Price || "",
-        creditUsage: getPublicProductByIdData?.Quantity || "",
+        totalPrice: getPublicProductByIdData?.TotalPrice || "",
+        creditUsage: getPublicProductByIdData
+          ? getPublicProductByIdData?.Quantity /
+            getPublicProductByIdData?.ContentLimit
+          : "",
         price: getPublicProductByIdData?.Price || "",
         contentInfo: [
           ...initialContentTypes.map((type) => ({ Type: "Type", Name: type })),
@@ -289,6 +290,7 @@ function Page() {
     const price = parseFloat(e.target.value);
     const quantity = parseInt(formik.values.creditUsage, 10);
 
+    // Only calculate total if both values are valid numbers
     if (!isNaN(quantity) && !isNaN(price)) {
       formik.setFieldValue("price", e.target.value);
       formik.setFieldValue("totalPrice", price * quantity);
@@ -302,11 +304,12 @@ function Page() {
     const quantity = parseInt(e.target.value, 10);
     const price = parseFloat(formik.values.price);
 
+    // Only calculate total if both values are valid numbers
     if (!isNaN(quantity) && !isNaN(price)) {
-      formik.setFieldValue("creditUsage", quantity); // Set as number
+      formik.setFieldValue("creditUsage", quantity);
       formik.setFieldValue("totalPrice", price * quantity);
     } else {
-      formik.setFieldValue("creditUsage", quantity); // Set as number
+      formik.setFieldValue("creditUsage", quantity);
       formik.setFieldValue("totalPrice", 0);
     }
   };
