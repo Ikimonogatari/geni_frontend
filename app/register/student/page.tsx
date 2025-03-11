@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
-  useBrandRegisterMutation,
   useSendOtpToEmailMutation,
+  useStudentRegisterMutation,
 } from "../../services/service";
 import toast from "react-hot-toast";
 import Verification from "../Verification";
@@ -25,22 +25,22 @@ function StudentRegister() {
   const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
   const [
-    brandRegister,
+    studentRegister,
     {
-      data: brandRegisterData,
-      error: brandRegisterError,
-      isLoading: brandRegisterLoading,
-      isSuccess: brandRegisterSuccess,
+      data: studentRegisterData,
+      error: studentRegisterError,
+      isLoading: studentRegisterLoading,
+      isSuccess: studentRegisterSuccess,
     },
-  ] = useBrandRegisterMutation();
+  ] = useStudentRegisterMutation();
 
   const [
-    brandVerification,
+    studentVerification,
     {
-      data: brandVerificationData,
-      error: brandVerificationError,
-      isLoading: brandVerificationLoading,
-      isSuccess: brandVerificationSuccess,
+      data: studentVerificationData,
+      error: studentVerificationError,
+      isLoading: studentVerificationLoading,
+      isSuccess: studentVerificationSuccess,
     },
   ] = useSendOtpToEmailMutation();
 
@@ -67,7 +67,7 @@ function StudentRegister() {
       OTP: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
-      brandRegister({
+      studentRegister({
         Email: values.Email,
         Password: values.Password,
         OTP: values.OTP,
@@ -95,11 +95,11 @@ function StudentRegister() {
         !registerForm.errors.ConfirmPassword
       ) {
         const { Email } = registerForm.values;
-        brandVerification({
+        studentVerification({
           To: Email,
-          UserType: "Brand",
+          UserType: "Creator",
           Channel: "smtp",
-          Type: "register",
+          Type: "creatorregister",
         });
       } else {
         toast.error("Та бүх талбарыг зөв бөглөнө үү");
@@ -110,25 +110,25 @@ function StudentRegister() {
   };
 
   useEffect(() => {
-    if (brandVerificationSuccess) {
+    if (studentVerificationSuccess) {
       toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
       setDialogOpen(true);
-    } else if (brandVerificationError) {
+    } else if (studentVerificationError) {
       // @ts-ignore
-      toast.error(brandVerificationError?.data?.error);
+      toast.error(studentVerificationError?.data?.error);
     }
-  }, [brandVerificationSuccess, brandVerificationError]);
+  }, [studentVerificationSuccess, studentVerificationError]);
 
   useEffect(() => {
-    if (brandRegisterSuccess) {
+    if (studentRegisterSuccess) {
       toast.success("Амжилттай бүртгэгдлээ");
       setDialogOpen(false);
       setIsSuccessDialogOpen(true);
-    } else if (brandRegisterError) {
+    } else if (studentRegisterError) {
       // @ts-ignore
-      toast.error(brandRegister?.data?.error);
+      toast.error(studentRegister?.data?.error);
     }
-  }, [brandRegisterSuccess, brandRegisterError]);
+  }, [studentRegisterSuccess, studentRegisterError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -262,8 +262,8 @@ function StudentRegister() {
                 // @ts-ignore
                 handleSendOtp={handleSendOtp}
                 registerForm={registerForm}
-                brandVerificationData={brandVerificationData}
-                brandVerificationSuccess={brandVerificationSuccess}
+                verificationData={studentVerificationData}
+                verificationSuccess={studentVerificationSuccess}
               />
             </div>
           </form>

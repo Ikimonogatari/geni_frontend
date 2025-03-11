@@ -5,8 +5,8 @@ import OtpTimeLeft from "@/components/OtpTimeLeft";
 function Verification({
   dialogOpen,
   setDialogOpen,
-  brandVerificationData,
-  brandVerificationSuccess,
+  verificationData,
+  verificationSuccess,
   registerForm,
   colorTheme,
 }) {
@@ -44,8 +44,8 @@ function Verification({
                   </div>
                 ) : null}
               </div>
-              {brandVerificationSuccess && (
-                <OtpTimeLeft otpDuration={brandVerificationData?.otpDuration} />
+              {verificationSuccess && (
+                <OtpTimeLeft otpDuration={verificationData?.otpDuration} />
               )}
               <button
                 type="submit"
