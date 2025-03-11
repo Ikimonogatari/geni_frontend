@@ -56,7 +56,7 @@ const CoursePaymentModal: React.FC<SubscriptionModalProps> = ({
   useEffect(() => {
     if (subscribePlanSuccess) {
       if (selectedPayment === "qpay") {
-        setTxId(subscribePlanData?.UserTxnId || null);
+        setTxId(subscribePlanData?.invoice_id || null);
         setPaymentDialogOpen(true);
       } else if (
         selectedPayment === "invoice" &&
@@ -73,6 +73,7 @@ const CoursePaymentModal: React.FC<SubscriptionModalProps> = ({
   }, [subscribePlanSuccess, subscribePlanError]);
 
   const handleSubscription = () => {
+    console.log(couponCode, "COUPON HERE", { PromoCode: couponCode });
     subscribePlan({ PromoCode: couponCode });
   };
 
@@ -192,10 +193,10 @@ const CoursePaymentModal: React.FC<SubscriptionModalProps> = ({
                 <div className="flex flex-col gap-6 w-full">
                   {!subscribePlanLoading && subscribePlanData ? (
                     <Image
-                      src={`data:image/png;base64,${subscribePlanData?.QrImage}`}
+                      src={`data:image/png;base64,${subscribePlanData?.qr_image}`}
                       width={394}
                       height={394}
-                      alt="dummy-qr"
+                      alt=""
                       className="aspect-square w-full rounded-2xl"
                     />
                   ) : (
