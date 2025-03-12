@@ -7,59 +7,76 @@ import HomeBecomeGeniSectionLayout from "@/components/home/layout/HomeBecomeGeni
 import HomeAlumniLayout from "@/components/home/layout/HomeAlumniLayout";
 import HomeAlumniCreator from "@/components/home/HomeAlumniCreator";
 import HomeAlumniBrand from "@/components/home/HomeAlumniBrand";
-import GridContainer from "@/components/layout/grid-container";
 import BecomeGeniButton from "@/components/common/BecomeGeniButton";
 import { ArrowRight, ChevronRight, ChevronRightSquare } from "lucide-react";
-import { ElevatedButton } from "@/components/common/elevated-button";
-import { StatsCard } from "@/components/landing/stats-card";
+import ContainerLayout from "@/components/ui/container-layout";
+import { StatsCard } from "@/components/home/stats-card";
+import { ElevatedButton } from "@/components/common/ElevatedButton";
+import ConcaveCard from "@/components/common/ConcaveCard";
 
 export default function Home() {
   return (
-    <div className="mt-16 grid grid-cols-[repeat(16,_1fr)] gap-4">
-      <GridContainer className="mb-4">
-        <div className="col-span-8 flex flex-col space-y-6 mt-6">
-          <h1 className="text-[2.5rem] font-black tracking-tight leading-none">
-            <div>КОНТЕНТ БҮТЭЭГЧИД БОЛОН</div>
-            <div>БРЭНДҮҮДИЙН ХАМТРАН</div>
-            <div>ХАМТДАА ӨСӨХ ШИЙДЭЛ</div>
-          </h1>
-          <p className="text-lg leading-5">
-            Хэрэглэгчдийн бодит туршлага дээр суурилсан бүтээлч контент
-            Хэрэглэгчдийн бодит туршлага дээр суурилсан бүтээлч контент
-          </p>
-        </div>
-        <div className="col-span-6 -col-end-1 bg-background rounded-[30px] p-8 pt-0">
+    <div className="container mt-10">
+      <ContainerLayout>
+        <div className="w-full flex flex-row items-center justify-between">
+          <div className="col-span-8 flex flex-col space-y-6 mt-6 max-w-2xl">
+            <h1 className="text-[2.5rem] font-black tracking-tight leading-none">
+              КОНТЕНТ БҮТЭЭГЧИД БОЛОН БРЭНДҮҮДИЙН ХАМТРАН ХАМТДАА ӨСӨХ ШИЙДЭЛ
+            </h1>
+            <p className="text-lg leading-5">
+              Хэрэглэгчдийн бодит туршлага дээр суурилсан бүтээлч контент
+              Хэрэглэгчдийн бодит туршлага дээр суурилсан бүтээлч контент
+            </p>
+          </div>
           <Image
             src="/landing/image-1.png"
-            alt="hero-image"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }} // optional
+            alt=""
+            width={421}
+            height={229}
+            // sizes="100vw"
+            // style={{ width: "100%", height: "auto" }}
           />
         </div>
-      </GridContainer>
-      <GridContainer>
-        <div className="col-span-4  rounded-[30px]">
-          <ElevatedButton className="py-5 px-9 bg-geni-pink text-base leading-5 rounded-[30px]">
-            <div className="flex gap-3 items-center justify-center">
-              Платформд нэгдэх
-              <ArrowRight size={24} />
+      </ContainerLayout>
+
+      <ContainerLayout className="flex flex-row gap-5">
+        <div className="flex flex-col w-full h-full max-w-xl">
+          <div className="w-full flex flex-row items-stretch">
+            <div className="h-full bg-primary-bg">
+              <div className="bg-white rounded-br-[30px] p-6 w-full h-full">
+                <ElevatedButton
+                  className="rounded-[30px] whitespace-nowrap"
+                  theme="pink"
+                >
+                  <div className="flex gap-2 items-center justify-center">
+                    Платформд нэгдэх
+                    <ArrowRight size={20} />
+                  </div>
+                </ElevatedButton>
+              </div>
+            </div>
+            <div className="rounded-t-[30px] h-auto w-full bg-primary-bg"></div>
+          </div>
+          <div className="bg-primary-bg h-[200px] rounded-b-[30px] rounded-tl-[30px]"></div>
+        </div>
+        <ConcaveCard layoutHorizontally="left" layoutVertically="top">
+          <ElevatedButton className="rounded-[30px] w-full" theme="pink">
+            <div className="flex gap-2 items-center justify-center whitespace-nowrap">
+              <span className="whitespace-nowrap">Платформд нэгдэх</span>
+              <ArrowRight size={20} />
             </div>
           </ElevatedButton>
-        </div>
-        <div className="col-span-10 -col-end-1 bg-background rounded-[30px] p-8 pt-0">
-          <Image
-            src="/landing/image-1.png"
-            alt="hero-image"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }} // optional
-          />
-        </div>
-      </GridContainer>
-      <GridContainer className="mb-5">
+        </ConcaveCard>
+        <ConcaveCard layoutHorizontally="left" layoutVertically="bottom">
+          <ElevatedButton className="rounded-[30px] w-full" theme="pink">
+            <div className="flex gap-2 items-center justify-center whitespace-nowrap">
+              <span className="whitespace-nowrap">Платформд нэгдэх</span>
+              <ArrowRight size={20} />
+            </div>
+          </ElevatedButton>
+        </ConcaveCard>
+      </ContainerLayout>
+      <ContainerLayout className="mt-20">
         <div className="col-span-4">
           <StatsCard
             count={120}
@@ -84,7 +101,7 @@ export default function Home() {
             imgSrc="/landing/brand-stats.png"
           />
         </div>
-      </GridContainer>
+      </ContainerLayout>
     </div>
   );
 }

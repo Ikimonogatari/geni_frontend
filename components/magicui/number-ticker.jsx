@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import { useInView, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 
@@ -27,23 +27,27 @@ export function NumberTicker({
       }, delay * 1000);
   }, [motionValue, isInView, delay, value, direction]);
 
-  useEffect(() =>
-    springValue.on("change", (latest) => {
-      if (ref.current) {
-        ref.current.textContent = Intl.NumberFormat("en-US", {
-          minimumFractionDigits: decimalPlaces,
-          maximumFractionDigits: decimalPlaces,
-        }).format(Number(latest.toFixed(decimalPlaces)));
-      }
-    }), [springValue, decimalPlaces]);
+  useEffect(
+    () =>
+      springValue.on("change", (latest) => {
+        if (ref.current) {
+          ref.current.textContent = Intl.NumberFormat("en-US", {
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces,
+          }).format(Number(latest.toFixed(decimalPlaces)));
+        }
+      }),
+    [springValue, decimalPlaces]
+  );
 
   return (
-    (<span
+    <span
       ref={ref}
       className={cn(
         "inline-block tabular-nums tracking-wider text-black dark:text-white",
         className
       )}
-      {...props} />)
+      {...props}
+    />
   );
 }

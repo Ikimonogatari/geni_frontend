@@ -1,6 +1,5 @@
 "use client";
 import "./globals.css";
-import Footer from "@/components/layout/Footer";
 import Head from "next/head";
 import localFont from "next/font/local";
 
@@ -12,6 +11,7 @@ import { UserInfoProvider } from "./context/UserInfoContext";
 import { Suspense } from "react";
 import Loader from "@/components/common/Loader";
 import { Navbar } from "@/components/layout/navbar";
+import Footer from "@/components/layout/footer";
 
 const mabryPro = localFont({
   src: [

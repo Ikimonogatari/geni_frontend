@@ -23,15 +23,15 @@ export function Navbar() {
     {
       name: "Geni Student",
       info: "New",
-      href: "/geni-student",
+      href: "/student",
       infoColor: "#4FB755",
     },
-    { name: "Geni Creator", href: "/geni-creator" },
-    { name: "Geni Brand", href: "/geni-brand" },
+    { name: "Geni Creator", href: "/creator" },
+    { name: "Geni Brand", href: "/brand" },
     {
       name: "Geni Mentor",
       info: "Coming soon",
-      href: "/geni-mentor",
+      href: "/mentor",
       infoColor: "#F49D19",
     },
   ];
