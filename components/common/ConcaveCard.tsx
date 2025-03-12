@@ -11,38 +11,40 @@ const ConcaveCard: React.FC<ConcaveCardProps> = ({
   layoutHorizontally,
   layoutVertically,
 }) => {
+  const horizontalClass =
+    layoutHorizontally === "right" ? "flex flex-row-reverse" : "flex flex-row";
+  const verticalClass =
+    layoutVertically === "top"
+      ? "flex flex-col"
+      : layoutVertically === "bottom"
+      ? "flex flex-col-reverse"
+      : "";
+
+  const roundedClasses = {
+    leftTop: "rounded-br-[30px]",
+    leftBottom: "rounded-tr-[30px]",
+    rightTop: "rounded-bl-[30px]",
+    rightBottom: "rounded-tl-[30px]",
+    top: "rounded-t-[30px]",
+    bottom: "rounded-b-[30px]",
+  };
+
   return (
-    <div
-      className={`${
-        layoutVertically === "top"
-          ? "flex flex-col"
-          : layoutVertically === "bottom"
-          ? "flex flex-col-reverse"
-          : ""
-      } w-full h-full max-w-xl`}
-    >
-      <div
-        className={`${
-          layoutHorizontally === "right"
-            ? "flex flex-row-reverse"
-            : layoutHorizontally === "left"
-            ? "flex flex-row"
-            : ""
-        } w-full items-stretch`}
-      >
+    <div className={`${verticalClass} w-full h-full max-w-xl`}>
+      <div className={`${horizontalClass} w-full items-stretch`}>
         <div className="h-full bg-primary-bg">
           <div
             className={`bg-white p-6 w-full h-full ${
               layoutHorizontally === "left"
                 ? layoutVertically === "top"
-                  ? "rounded-br-[30px]"
+                  ? roundedClasses.leftTop
                   : layoutVertically === "bottom"
-                  ? "rounded-tr-[30px]"
+                  ? roundedClasses.leftBottom
                   : ""
                 : layoutVertically === "top"
-                ? "rounded-bl-[30px]"
+                ? roundedClasses.rightTop
                 : layoutVertically === "bottom"
-                ? "rounded-tl-[30px]"
+                ? roundedClasses.rightBottom
                 : ""
             }`}
           >
@@ -51,12 +53,14 @@ const ConcaveCard: React.FC<ConcaveCardProps> = ({
         </div>
         <div
           className={`${
-            layoutVertically === "top" ? "rounded-t-[30px]" : "rounded-b-[30px]"
-          }  h-auto w-full bg-primary-bg`}
+            layoutVertically === "top"
+              ? roundedClasses.top
+              : roundedClasses.bottom
+          } h-auto w-full bg-primary-bg`}
         ></div>
       </div>
       <div
-        className={`bg-primary-bg h-[200px] ${
+        className={`${
           layoutHorizontally === "left"
             ? layoutVertically === "top"
               ? "rounded-b-[30px] rounded-tl-[30px]"
@@ -68,9 +72,7 @@ const ConcaveCard: React.FC<ConcaveCardProps> = ({
             : layoutVertically === "bottom"
             ? "rounded-t-[30px] rounded-br-[30px]"
             : ""
-        }
-         
-        }`}
+        } bg-primary-bg h-[200px]`}
       ></div>
     </div>
   );
