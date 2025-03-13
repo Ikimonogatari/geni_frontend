@@ -1,0 +1,54 @@
+import React from "react";
+import ContainerLayout from "../ui/container-layout";
+import ConcaveCard from "../common/ConcaveCard";
+import { ElevatedButton } from "../common/ElevatedButton";
+import { ArrowRight } from "lucide-react";
+import SingleConcavedCard from "../common/SingleConcavedCard";
+
+function ShowCase() {
+  return (
+    <ContainerLayout className="flex flex-grow items-stretch gap-5">
+      <SingleConcavedCard
+        layoutHorizontally="left"
+        layoutVertically="top"
+        context={
+          <div className="flex flex-col gap-6 w-full">
+            <span className="text-xl font-extrabold uppercase">
+              Хэрэглэгчдийн бодит туршлага дээр суурилсан бүтээлч контент
+            </span>
+            <span>
+              Брэндийн бүтээгдэхүүнээ илгээгээд маркетингаа хэрэглэгчийн
+              сэтгэгдэл бүхий бүтээлч контентоор цэнэглэж хэрэглэгчидтэйгээ
+              итгэлтэй харилцаа үүсгээрэй.W
+            </span>
+          </div>
+        }
+      >
+        <ElevatedButton className="rounded-[30px] w-full" theme={"pink"}>
+          <div className="flex gap-2 items-center justify-center whitespace-nowrap">
+            <span className="whitespace-nowrap">Платформд нэгдэх</span>
+            <ArrowRight size={20} />
+          </div>
+        </ElevatedButton>
+      </SingleConcavedCard>
+      <div className="flex flex-grow items-stretch gap-5">
+        <video
+          preload="metadata"
+          className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
+          muted
+          loop
+          // onMouseEnter={handleMouseEnter}
+          // onMouseLeave={handleMouseLeave}
+          // poster={""}
+        >
+          <source
+            type="video/mp4"
+            src={"/https://www.youtube.com/watch?v=BlHv3BbBv6A"}
+          />
+        </video>
+      </div>
+    </ContainerLayout>
+  );
+}
+
+export default ShowCase;

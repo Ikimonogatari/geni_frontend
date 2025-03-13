@@ -7,14 +7,23 @@ export const StatsCard = ({
   subtitle,
   className,
   imgSrc,
+  wrapperClassName,
+  addImgSrc,
 }: {
   count: number;
   subtitle: string;
   className?: string;
   imgSrc: string;
+  wrapperClassName?: string;
+  addImgSrc?: string;
 }) => {
   return (
-    <div className="flex flex-col items-start justify-center px-8 py-5 bg-primary-bg rounded-[30px] relative">
+    <div
+      className={cn(
+        "flex flex-col items-start justify-center px-8 py-5 bg-primary-bg border border-primary rounded-[30px] relative",
+        wrapperClassName
+      )}
+    >
       <div className={cn("text-8xl font-black", className)}>
         <NumberTicker
           value={count}
@@ -26,15 +35,23 @@ export const StatsCard = ({
         <span>+</span>
       </div>
       <div className="text-2xl text-black font-bold">{subtitle}</div>
-      <div className="size-6 absolute top-6 right-6">
+      <div className="size-6 absolute top-6 right-6 flex items-center justify-center">
         <Image
           src={imgSrc}
-          alt="hero-image"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
+          alt=""
+          width={42}
+          height={42}
+          className="absolute z-0 min-h-11 min-w-11 aspect-square"
         />
+        {addImgSrc && (
+          <Image
+            src={addImgSrc}
+            alt=""
+            width={24}
+            height={24}
+            className="relative z-10 w-6 h-6 aspect-square"
+          />
+        )}
       </div>
     </div>
   );
