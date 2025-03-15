@@ -98,7 +98,7 @@ function WithdrawCredit({ walletInfo }) {
             </FadeInAnimation>
           </div>
           <SuccessModal
-            setIsMainDialogOpen={setDialogOpen}
+            setIsSuccessDialogOpen={setDialogOpen}
             modalImage="/geni-pink-image1.png"
             modalTitle="ШИЛЖҮҮЛЭГ АМЖИЛТТАЙ ХИЙГДЛЭЭ"
             modalTriggerText="Шилжүүлэх"

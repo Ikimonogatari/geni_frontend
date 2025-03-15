@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import CoursePaymentModal from "../CoursePaymentModal";
+import CoursePaymentModal from "./CoursePaymentModal";
 
 function CoursePurchaseModal({
   className,

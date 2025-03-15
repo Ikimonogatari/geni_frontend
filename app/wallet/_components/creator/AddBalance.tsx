@@ -150,7 +150,7 @@ function AddBalance({ walletInfo }) {
             />
           </FadeInAnimation>
           <SuccessModal
-            setIsMainDialogOpen={setDialogOpen}
+            setIsSuccessDialogOpen={setDialogOpen}
             modalImage="/payment-success.png"
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
