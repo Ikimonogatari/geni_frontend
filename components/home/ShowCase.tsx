@@ -5,7 +5,7 @@ import SingleConcavedCard from "../common/SingleConcavedCard";
 import { ElevatedButton } from "../common/ElevatedButton";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 
 function ShowCase() {
   return (
@@ -37,36 +37,32 @@ function ShowCase() {
 
       {/* Auto-Scrolling Section */}
       <div className="relative w-full overflow-hidden">
-        <motion.div
-          className="flex items-stretch gap-5"
-          animate={{ x: ["0%", "-100%"], opacity: 1 }}
-          transition={{
-            repeat: Infinity,
-            ease: "linear",
-            duration: 15, // Smooth out the scroll speed
+        <Carousel
+          opts={{
+            loop: true,
+            align: "start",
           }}
+          autoplay={true}
+          autoplayInterval={3000}
+          className="w-full"
         >
-          {[...Array(3)].map((_, index) => (
-            <Image
-              key={index}
-              className="border-[1px] border-black/15 aspect-[9/16] w-[250px] min-h-[444px] h-full rounded-2xl object-cover"
-              alt=""
-              width={64}
-              height={150}
-              src={"/landing/showcase1.png"}
-            />
-          ))}
-          {[...Array(3)].map((_, index) => (
-            <Image
-              key={index}
-              className="border-[1px] border-black/15 aspect-[9/16] w-[250px] min-h-[444px] h-full rounded-2xl object-cover"
-              alt=""
-              width={64}
-              height={150}
-              src={"/landing/showcase1.png"}
-            />
-          ))}
-        </motion.div>
+          <CarouselContent>
+            {[...Array(6)].map((_, index) => (
+              <CarouselItem
+                key={index}
+                className="p-4 basis-1/3 min-w-[250px] h-[444px]"
+              >
+                <Image
+                  className="border-[1px] border-black/15 aspect-[9/16] h-full rounded-2xl object-cover"
+                  alt=""
+                  width={250}
+                  height={444}
+                  src={"/landing/showcase1.png"}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </ContainerLayout>
   );
