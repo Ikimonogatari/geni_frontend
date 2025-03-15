@@ -48,8 +48,11 @@ export default Banners;
 
 const banners = [
   {
-    image: { src: `/banner-creator-image.png`, size: "w-[241px] h-[165px]" },
-    addImage: { src: `/banner-image1.png`, size: "w-[50px] h-[30px]" },
+    image: {
+      src: `/landing/banner-creator-image.png`,
+      size: "w-[241px] h-[165px]",
+    },
+    addImage: { src: `/landing/banner-image1.png`, size: "w-[50px] h-[30px]" },
     logo: "/genicreator-logo.svg",
     title: "Чадвараа сорь",
     content:
@@ -57,8 +60,11 @@ const banners = [
     theme: "pink",
   },
   {
-    image: { src: `/banner-brand-image.png`, size: "w-[281px] h-[229px]" },
-    addImage: { src: `/banner-image2.png`, size: "w-[50px] h-[58px]" },
+    image: {
+      src: `/landing/banner-brand-image.png`,
+      size: "w-[281px] h-[229px]",
+    },
+    addImage: { src: `/landing/banner-image2.png`, size: "w-[50px] h-[58px]" },
     logo: "/genibrand-logo.svg",
     title: "Бүтээгдэхүүнээ илгээ",
     content:
@@ -66,7 +72,10 @@ const banners = [
     theme: "blue",
   },
   {
-    image: { src: `/banner-student-image.png`, size: "w-[190px] h-[194px]" },
+    image: {
+      src: `/landing/banner-student-image.png`,
+      size: "w-[302px] h-[194px]",
+    },
     logo: "/genistudent-logo.svg",
     title: "Контент бүтээх чадварт суралц ",
     content:
@@ -74,8 +83,11 @@ const banners = [
     theme: "green",
   },
   {
-    image: { src: `/banner-mentor-image.png`, size: "w-[191px] h-[196px]" },
-    addImage: { src: `/banner-image4.png`, size: "w-[34px] h-[143px]" },
+    image: {
+      src: `/landing/banner-mentor-image.png`,
+      size: "w-[191px] h-[196px]",
+    },
+    addImage: { src: `/landing/banner-image4.png`, size: "w-[34px] h-[143px]" },
     logo: "/genimentor-logo.svg",
     title: "Чадварлаг бүтээгчдээс суралц",
     content:

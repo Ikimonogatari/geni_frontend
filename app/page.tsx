@@ -16,6 +16,7 @@ import ConcaveCard from "@/components/common/ConcaveCard";
 import Banners from "@/components/home/Banners";
 import Statistics from "@/components/home/Statistics";
 import ShowCase from "@/components/home/ShowCase";
+import Events from "@/components/home/Events";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
       <HomeHero />
       <ShowCase />
       <Statistics />
+      <Events />
       <Banners />
     </div>
   );

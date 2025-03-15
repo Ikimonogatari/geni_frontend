@@ -5,6 +5,7 @@ interface SingleConcavedCardProps {
   layoutHorizontally: "left" | "right";
   layoutVertically: "top" | "bottom";
   context: React.ReactNode;
+  contextClassName?: string;
 }
 
 const SingleConcavedCard: React.FC<SingleConcavedCardProps> = ({
@@ -12,11 +13,12 @@ const SingleConcavedCard: React.FC<SingleConcavedCardProps> = ({
   layoutHorizontally,
   layoutVertically,
   context,
+  contextClassName,
 }) => {
   const isLeft = layoutHorizontally === "left";
   const isTop = layoutVertically === "top";
 
-  const containerClasses = `flex w-full h-full max-w-xl ${
+  const containerClasses = `flex w-full h-auto max-w-xl ${
     isTop ? "flex-col" : "flex-col-reverse"
   }`;
   const rowClasses = `flex w-full items-stretch ${
@@ -42,7 +44,7 @@ const SingleConcavedCard: React.FC<SingleConcavedCardProps> = ({
       : isTop
       ? "rounded-b-[30px] rounded-tr-[30px]"
       : "rounded-t-[30px] rounded-br-[30px]"
-  } bg-primary-bg h-full w-full py-10 px-16`;
+  } bg-primary-bg h-full w-full py-10 px-16 ${contextClassName}`;
 
   return (
     <div className={containerClasses}>
