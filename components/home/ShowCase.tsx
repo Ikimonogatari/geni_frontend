@@ -1,10 +1,11 @@
+"use client";
 import React from "react";
 import ContainerLayout from "../ui/container-layout";
-import ConcaveCard from "../common/ConcaveCard";
+import SingleConcavedCard from "../common/SingleConcavedCard";
 import { ElevatedButton } from "../common/ElevatedButton";
 import { ArrowRight } from "lucide-react";
-import SingleConcavedCard from "../common/SingleConcavedCard";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 function ShowCase() {
   return (
@@ -21,7 +22,7 @@ function ShowCase() {
             <span>
               Брэндийн бүтээгдэхүүнээ илгээгээд маркетингаа хэрэглэгчийн
               сэтгэгдэл бүхий бүтээлч контентоор цэнэглэж хэрэглэгчидтэйгээ
-              итгэлтэй харилцаа үүсгээрэй.W
+              итгэлтэй харилцаа үүсгээрэй.
             </span>
           </div>
         }
@@ -33,28 +34,39 @@ function ShowCase() {
           </div>
         </ElevatedButton>
       </SingleConcavedCard>
-      <div className="flex flex-grow items-stretch w-full overflow-x-auto gap-5 [scrollbar-width:none] [-ms-overflow-style:none]">
-        <Image
-          className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover min-w-[250px]"
-          alt=""
-          width={64}
-          height={150}
-          src={"/landing/showcase1.png"}
-        />
-        <Image
-          className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-          alt=""
-          width={64}
-          height={150}
-          src={"/landing/showcase1.png"}
-        />
-        <Image
-          className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-          alt=""
-          width={64}
-          height={150}
-          src={"/landing/showcase1.png"}
-        />
+
+      {/* Auto-Scrolling Section */}
+      <div className="relative w-full overflow-hidden">
+        <motion.div
+          className="flex items-stretch gap-5"
+          animate={{ x: ["0%", "-100%"], opacity: 1 }}
+          transition={{
+            repeat: Infinity,
+            ease: "linear",
+            duration: 15, // Smooth out the scroll speed
+          }}
+        >
+          {[...Array(3)].map((_, index) => (
+            <Image
+              key={index}
+              className="border-[1px] border-black/15 aspect-[9/16] w-[250px] min-h-[444px] h-full rounded-2xl object-cover"
+              alt=""
+              width={64}
+              height={150}
+              src={"/landing/showcase1.png"}
+            />
+          ))}
+          {[...Array(3)].map((_, index) => (
+            <Image
+              key={index}
+              className="border-[1px] border-black/15 aspect-[9/16] w-[250px] min-h-[444px] h-full rounded-2xl object-cover"
+              alt=""
+              width={64}
+              height={150}
+              src={"/landing/showcase1.png"}
+            />
+          ))}
+        </motion.div>
       </div>
     </ContainerLayout>
   );
