@@ -104,7 +104,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         <Input
           id="PhoneNumber"
           name="PhoneNumber"
-          type="number"
+          type="text"
           className="text-base sm:text-xl w-full no-spinner"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
