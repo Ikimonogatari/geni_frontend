@@ -31,6 +31,7 @@ import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+
 function EditProfileCreator() {
   const router = useRouter();
   const { setShouldRefetchUserInfo } = useUserInfo();
@@ -127,6 +128,8 @@ function EditProfileCreator() {
       isLoading: createSocialChannelLoading,
     },
   ] = useCreateSocialChannelMutation();
+
+  const [activeSection, setActiveSection] = useState("general");
 
   const formik = useFormik({
     initialValues: {
@@ -324,68 +327,46 @@ function EditProfileCreator() {
   const sidebarItems = [
     {
       title: "Ерөнхий мэдээлэл",
-      href: "/profile/settings",
+      href: "#general",
       icon: <User className="h-4 w-4" />,
+      onClick: () => setActiveSection("general"),
     },
     {
       title: "Имэйл",
-      href: "/profile/settings/email",
+      href: "#email",
       icon: <Mail className="h-4 w-4" />,
+      onClick: () => setActiveSection("email"),
     },
     {
       title: "Нууц үг",
-      href: "/profile/settings/password",
+      href: "#password",
       icon: <Lock className="h-4 w-4" />,
+      onClick: () => setActiveSection("password"),
     },
     {
       title: "Сошиал холбоосууд",
-      href: "/profile/settings/socials",
+      href: "#socials",
       icon: <Share2 className="h-4 w-4" />,
+      onClick: () => setActiveSection("socials"),
     },
     {
       title: "Гарах",
       href: "#",
-      icon: <LogOut onClick={handleLogout} className="h-4 w-4" />,
+      icon: <LogOut className="h-4 w-4" />,
+      onClick: handleLogout,
     },
   ];
 
-  return (
-    <div className="min-h-screen w-full bg-white">
-      <div className="mt-32 mb-12 flex min-h-screen bg-white container mx-auto  py-11">
-        <Sidebar
-          items={sidebarItems.map((item) =>
-            item.title === "Гарах" ? { ...item, onClick: handleLogout } : item
-          )}
-        />
-        <div className="max-w-4xl">
-          <button
-            onClick={() => router.back()}
-            className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
-          >
-            <Image
-              src={"/arrow-left.png"}
-              width={24}
-              height={24}
-              alt="arrow-left"
-            />
-          </button>
-          <p className="text-4xl sm:text-5xl xl:text-6xl font-bold my-7">
-            Профайл засах
-          </p>
-
-          <form
-            onSubmit={formik.handleSubmit}
-            className="mt-11 flex flex-col gap-4"
-          >
+  const renderSection = () => {
+    switch (activeSection) {
+      case "general":
+        return (
+          <>
             <div className="flex flex-row items-start justify-between w-full">
               <div className="flex flex-row items-center gap-7">
                 {parsedUserInfo ? (
                   <Image
-                    src={
-                      parsedUserInfo?.ProfileLink
-                        ? parsedUserInfo?.ProfileLink
-                        : "/dummy-creator.png"
-                    }
+                    src={parsedUserInfo?.ProfileLink || "/dummy-creator.png"}
                     width={194}
                     height={194}
                     loading="lazy"
@@ -393,7 +374,7 @@ function EditProfileCreator() {
                     alt=""
                   />
                 ) : (
-                  <div className="w-[100px] h-[100px] sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]"></div>
+                  <div className="w-[100px] h-[100px] sm:w-[194px] sm:h-[194px] xl:w-[258px] xl:h-[258px]" />
                 )}
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-row items-center gap-3">
@@ -403,13 +384,12 @@ function EditProfileCreator() {
                     </span>
                     <TierInfoModal />
                   </div>
-
                   <div
                     {...getRootProps()}
                     className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                   >
                     <input {...getInputProps()} />
-                    {parsedUserInfo && parsedUserInfo.ProfileLink
+                    {parsedUserInfo?.ProfileLink
                       ? "Зургаа солих"
                       : "Зураг оруулах"}
                   </div>
@@ -453,7 +433,6 @@ function EditProfileCreator() {
                   layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
                 />
               </div>
-
               <Input
                 id="Nickname"
                 name="Nickname"
@@ -470,7 +449,6 @@ function EditProfileCreator() {
                 className="bg-[#F5F4F0] text-base sm:text-xl"
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
               />
-
               <Input
                 id="RegNo"
                 name="RegNo"
@@ -485,7 +463,6 @@ function EditProfileCreator() {
                 className="bg-[#F5F4F0] text-base sm:text-xl"
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
               />
-
               <Input
                 id="PhoneNumber"
                 name="PhoneNumber"
@@ -502,7 +479,6 @@ function EditProfileCreator() {
                 className="bg-[#F5F4F0] text-base sm:text-xl"
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
               />
-
               <Textarea
                 id="Bio"
                 name="Bio"
@@ -520,7 +496,6 @@ function EditProfileCreator() {
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
                 className="bg-[#F5F4F0] text-base sm:text-xl"
               />
-
               <Textarea
                 id="Location"
                 name="Location"
@@ -538,47 +513,83 @@ function EditProfileCreator() {
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
                 className="bg-[#F5F4F0] text-base sm:text-xl"
               />
+              <button
+                type="submit"
+                className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+              >
+                Хадгалах
+              </button>
             </div>
-            <SocialsSettings
-              parsedUserInfo={parsedUserInfo}
-              socials={socials}
-              setSocials={setSocials}
-              handleSaveOrUpdateSocialChannels={
-                handleSaveOrUpdateSocialChannels
-              }
-            />
+          </>
+        );
+      case "email":
+        return (
+          <EmailSettings
+            newEmail={newEmail}
+            setNewEmail={setNewEmail}
+            handleSendOtp={handleSendOtp}
+            isOtpSent={isOtpSent}
+            otp={otp}
+            setOtp={setOtp}
+            handleChangeEmail={handleChangeEmail}
+          />
+        );
+      case "password":
+        return (
+          <PasswordSettings
+            showNewPassword={showNewPassword}
+            setNewPassword={setNewPassword}
+            newPassword={newPassword}
+            handleMouseDownNewPassword={handleMouseDownNewPassword}
+            handleMouseUpNewPassword={handleMouseUpNewPassword}
+            handleChangePassword={handleChangePassword}
+            showOldPassword={showOldPassword}
+            setOldPassword={setOldPassword}
+            oldPassword={oldPassword}
+            handleMouseDownOldPasswrod={handleMouseDownOldPasswrod}
+            handleMouseUpOldPassword={handleMouseUpOldPassword}
+          />
+        );
+      case "socials":
+        return (
+          <SocialsSettings
+            parsedUserInfo={parsedUserInfo}
+            socials={socials}
+            setSocials={setSocials}
+            handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
+          />
+        );
+    }
+  };
 
-            <EmailSettings
-              newEmail={newEmail}
-              setNewEmail={setNewEmail}
-              handleSendOtp={handleSendOtp}
-              isOtpSent={isOtpSent}
-              otp={otp}
-              setOtp={setOtp}
-              handleChangeEmail={handleChangeEmail}
-            />
-
-            <PasswordSettings
-              showNewPassword={showNewPassword}
-              setNewPassword={setNewPassword}
-              newPassword={newPassword}
-              handleMouseDownNewPassword={handleMouseDownNewPassword}
-              handleMouseUpNewPassword={handleMouseUpNewPassword}
-              handleChangePassword={handleChangePassword}
-              showOldPassword={showOldPassword}
-              setOldPassword={setOldPassword}
-              oldPassword={oldPassword}
-              handleMouseDownOldPasswrod={handleMouseDownOldPasswrod}
-              handleMouseUpOldPassword={handleMouseUpOldPassword}
-            />
-
-            <button
-              type="submit"
-              className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+  return (
+    <div className="min-h-screen w-full bg-white mt-20 sm:mt-32 mb-12 ">
+      <div className="mt-20 sm:mt-32 mb-12 py-11 container mx-auto">
+        <div className="flex flex-row items-start gap-4 sm:gap-7 my-7">
+          <button
+            onClick={() => router.back()}
+            className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
+          >
+            <Image src={"/arrow-left.png"} width={24} height={24} alt="" />
+          </button>
+          <p className="text-4xl sm:text-5xl xl:text-6xl font-bold">
+            Хуудас тохиргоо
+          </p>
+        </div>
+        <div className="flex flex-col md:flex-row min-h-screen bg-white">
+          <Sidebar
+            className="!text-lg"
+            items={sidebarItems}
+            activeSection={activeSection}
+          />
+          <div className="w-full md:pl-10 md:border-l mt-5 sm:mt-0">
+            <form
+              onSubmit={formik.handleSubmit}
+              className="flex flex-col gap-4"
             >
-              Хадгалах
-            </button>
-          </form>
+              {renderSection()}
+            </form>
+          </div>
         </div>
       </div>
     </div>

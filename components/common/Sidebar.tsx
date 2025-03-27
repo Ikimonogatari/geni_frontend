@@ -15,10 +15,24 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
     icon?: React.ReactNode;
     onClick?: () => void;
   }[];
+  activeSection?: string;
 }
 
-export function Sidebar({ className, items, ...props }: SidebarProps) {
+export function Sidebar({
+  className,
+  items,
+  activeSection,
+  ...props
+}: SidebarProps) {
   const pathname = usePathname();
+
+  const linkStyles = (isActive: boolean) =>
+    cn(
+      "flex items-center gap-2 px-4 py-2 text-sm sm:text-lg font-medium transition-colors rounded-lg",
+      isActive
+        ? "text-black sm:border-[1px] sm:border-primary font-medium"
+        : "text-[#6F6F6F] hover:text-black sm:hover:bg-[#F5F4F0]"
+    );
 
   return (
     <div className="flex h-full">
@@ -27,12 +41,13 @@ export function Sidebar({ className, items, ...props }: SidebarProps) {
         <SheetTrigger asChild>
           <Button
             themeType="ghost"
-            className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden"
+            className="px-2 py-2 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
           >
             <Menu className="h-6 w-6" />
             <span className="sr-only">Toggle Menu</span>
           </Button>
         </SheetTrigger>
+        {/* @ts-ignore */}
         <SheetContent side="left" className="w-[240px] pr-0">
           <nav className="flex flex-col gap-4">
             {items.map((item, index) =>
@@ -40,9 +55,8 @@ export function Sidebar({ className, items, ...props }: SidebarProps) {
                 <button
                   key={index}
                   onClick={item.onClick}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover:text-primary text-left",
-                    "hover:bg-muted"
+                  className={linkStyles(
+                    activeSection === item.href.replace("#", "")
                   )}
                 >
                   {item.icon}
@@ -52,10 +66,7 @@ export function Sidebar({ className, items, ...props }: SidebarProps) {
                 <Link
                   key={index}
                   href={item.href}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                    pathname === item.href ? "bg-muted" : "hover:bg-muted"
-                  )}
+                  className={linkStyles(false)}
                 >
                   {item.icon}
                   {item.title}
@@ -69,7 +80,7 @@ export function Sidebar({ className, items, ...props }: SidebarProps) {
       {/* Desktop Sidebar */}
       <nav
         className={cn(
-          "hidden lg:flex flex-col gap-4 w-[240px] border-r px-4 py-8",
+          "hidden md:flex flex-col gap-4 min-w-max pr-10 py-3",
           className
         )}
         {...props}
@@ -79,23 +90,15 @@ export function Sidebar({ className, items, ...props }: SidebarProps) {
             <button
               key={index}
               onClick={item.onClick}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover:text-primary text-left",
-                "hover:bg-muted"
+              className={linkStyles(
+                activeSection === item.href.replace("#", "")
               )}
             >
               {item.icon}
               {item.title}
             </button>
           ) : (
-            <Link
-              key={index}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                pathname === item.href ? "bg-muted" : "hover:bg-muted"
-              )}
-            >
+            <Link key={index} href={item.href} className={linkStyles(false)}>
               {item.icon}
               {item.title}
             </Link>
