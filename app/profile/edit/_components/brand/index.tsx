@@ -27,6 +27,8 @@ import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 function EditProfileBrand() {
   const router = useRouter();
@@ -478,24 +480,20 @@ function EditProfileBrand() {
               onSubmit={formik.handleSubmit}
               className="mt-11 flex flex-col gap-4"
             >
-              <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="Name">
-                  Брэндийн нэр
-                </label>
-                <input
-                  id="Name"
-                  name="Name"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.Name}
-                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl w-full"
-                />
-                <ErrorText
-                  text={formik.errors.Name}
-                  visible={!!formik.touched.Name && !!formik.errors.Name}
-                />
-              </div>
+              <Input
+                id="Name"
+                name="Name"
+                type="text"
+                label="Брэндийн нэр"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.Name}
+                errorText={formik.errors.Name?.toString()}
+                errorVisible={!!formik.touched.Name && !!formik.errors.Name}
+                labelClassName="text-[#6F6F6F] text-lg font-normal"
+                className="bg-[#F5F4F0] text-base sm:text-xl"
+                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
+              />
               <div className="flex flex-col gap-4 w-full">
                 <div className="flex flex-col gap-3 w-full">
                   <label className="text-[#6F6F6F] text-lg" htmlFor="type">
@@ -589,80 +587,68 @@ function EditProfileBrand() {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="RegNo">
-                  Регистрийн дугаар
-                </label>
-                <input
-                  id="RegNo"
-                  name="RegNo"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.RegNo}
-                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
-                <ErrorText
-                  text={formik.errors.RegNo}
-                  visible={!!formik.touched.RegNo && !!formik.errors.RegNo}
-                />
-              </div>
-              <div className="flex flex-col gap-3">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="phoneNumber">
-                  Утасны дугаар
-                </label>
-                <input
-                  id="PhoneNumber"
-                  name="PhoneNumber"
-                  type="text"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.PhoneNumber}
-                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
-                <ErrorText
-                  text={formik.errors.PhoneNumber}
-                  visible={
-                    !!formik.touched.PhoneNumber && !!formik.errors.PhoneNumber
-                  }
-                />
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="bio">
-                  Брэндийн тухай
-                </label>
-                <textarea
-                  id="Bio"
-                  name="Bio"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.Bio}
-                  rows={4}
-                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
-                <ErrorText
-                  text={formik.errors.Bio}
-                  visible={!!formik.touched.Bio && !!formik.errors.Bio}
-                />
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <label className="text-[#6F6F6F] text-lg" htmlFor="address">
-                  Хаяг
-                </label>
-                <textarea
-                  id="Address"
-                  name="Address"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.Address}
-                  rows={4}
-                  className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
-                />
-                <ErrorText
-                  text={formik.errors.Address}
-                  visible={!!formik.touched.Address && !!formik.errors.Address}
-                />
-              </div>
+              <Input
+                id="RegNo"
+                name="RegNo"
+                type="text"
+                label="Регистрийн дугаар"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.RegNo}
+                errorText={formik.errors.RegNo?.toString()}
+                errorVisible={!!formik.touched.RegNo && !!formik.errors.RegNo}
+                labelClassName="text-[#6F6F6F] text-lg font-normal"
+                className="bg-[#F5F4F0] text-base sm:text-xl"
+                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
+              />
+              <Input
+                id="PhoneNumber"
+                name="PhoneNumber"
+                type="text"
+                label="Утасны дугаар"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.PhoneNumber}
+                errorText={formik.errors.PhoneNumber?.toString()}
+                errorVisible={
+                  !!formik.touched.PhoneNumber && !!formik.errors.PhoneNumber
+                }
+                labelClassName="text-[#6F6F6F] text-lg font-normal"
+                className="bg-[#F5F4F0] text-base sm:text-xl"
+                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
+              />
+              <Textarea
+                id="Bio"
+                name="Bio"
+                placeholder="Брэндийн тухай"
+                label="Брэндийн тухай"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.Bio}
+                rows={4}
+                errorText={formik.errors.Bio?.toString()}
+                errorVisible={!!formik.touched.Bio && !!formik.errors.Bio}
+                labelClassName="text-[#6F6F6F] text-lg font-normal"
+                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
+                className="bg-[#F5F4F0] text-base sm:text-xl"
+              />
+              <Textarea
+                id="Address"
+                name="Address"
+                placeholder="Хаяг"
+                label="Хаяг"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.Address}
+                rows={4}
+                errorText={formik.errors.Address?.toString()}
+                errorVisible={
+                  !!formik.touched.Address && !!formik.errors.Address
+                }
+                labelClassName="text-[#6F6F6F] text-lg font-normal"
+                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
+                className="bg-[#F5F4F0] text-base sm:text-xl"
+              />
               <button
                 type="submit"
                 className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"

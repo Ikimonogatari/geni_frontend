@@ -397,7 +397,7 @@ function EditProfileCreator() {
               </div>
             </div>
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
+              <div className="flex flex-col sm:flex-row items-start gap-4 w-full">
                 <Input
                   id="FirstName"
                   name="FirstName"
