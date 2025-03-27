@@ -19,6 +19,7 @@ import ShowCase from "@/components/home/ShowCase";
 import Events from "@/components/home/Events";
 import Bentobox from "@/components/home/Bentobox";
 import Testimonials from "@/components/home/Testimonials";
+import Faq from "@/components/home/Faq";
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
         <Events />
         <Banners />
         <Bentobox sections={bentoboxes} />
+        <Faq />
       </div>
       <Testimonials />
     </>
