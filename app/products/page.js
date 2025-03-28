@@ -5,13 +5,22 @@ import Link from "next/link";
 import {
   useListProductTypesQuery,
   useListPublicProductsQuery,
+  useGetPublicBrandListQuery,
 } from "../services/service";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function Page() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredBrands, setFilteredBrands] = useState([]);
 
   const {
     data: listProductsData,
@@ -24,6 +33,12 @@ function Page() {
     error: listProductTypesError,
     isLoading: listProductTypesLoading,
   } = useListProductTypesQuery();
+
+  const {
+    data: listBrandsData,
+    error: listBrandsError,
+    isLoading: listBrandsLoading,
+  } = useGetPublicBrandListQuery();
 
   const getStockStatus = (contentLeft, contentLimit, createdAt) => {
     const ratio = contentLeft / contentLimit;
@@ -58,6 +73,13 @@ function Page() {
         );
       }
 
+      // Filter by selected brand
+      if (selectedBrand) {
+        filtered = filtered.filter(
+          (product) => product.BrandName === selectedBrand
+        );
+      }
+
       // Search query filter
       if (searchQuery) {
         filtered = filtered.filter(
@@ -82,11 +104,39 @@ function Page() {
     } else {
       setFilteredProducts([]);
     }
-  }, [searchQuery, selectedCategory, listProductsData]);
+  }, [searchQuery, selectedCategory, selectedBrand, listProductsData]);
+
+  useEffect(() => {
+    if (listProductsData && listBrandsData?.Data) {
+      // Get all brands that have products matching the selected category
+      const brandsWithMatchingProducts = listBrandsData.Data.filter((brand) => {
+        // If no category is selected, show all brands
+        if (!selectedCategory) return true;
+
+        // Check if this brand has any products matching the selected category
+        return listProductsData.Data.some(
+          (product) =>
+            product.BrandName === brand.Name &&
+            product.ProductTypes?.some(
+              (type) => type.TypeName === selectedCategory
+            )
+        );
+      });
+
+      // If no brands found for the selected category, show all brands
+      if (brandsWithMatchingProducts.length === 0) {
+        setFilteredBrands(listBrandsData.Data);
+      } else {
+        setFilteredBrands(brandsWithMatchingProducts);
+      }
+    } else {
+      setFilteredBrands([]);
+    }
+  }, [selectedCategory, listProductsData, listBrandsData]);
 
   return (
     <div className="min-h-screen w-full bg-white text-[#2D262D]">
-      <div className="mt-32">
+      <div className="mt-20 sm:mt-32">
         <div className="container max-w-8xl mx-auto px-7 py-12">
           <div className="w-full whitespace-nowrap pb-3 overflow-x-auto flex flex-row sm:flex-wrap items-center gap-3 font-bold text-[10px] sm:text-xs">
             <div
@@ -112,6 +162,60 @@ function Page() {
                 {t?.TypeName}
               </div>
             ))}
+          </div>
+          <div className="w-full bg-primary-bg rounded-2xl whitespace-nowrap  overflow-x-auto flex flex-row sm:flex-wrap p-4 items-center gap-4 font-bold text-[10px] sm:text-xs">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    onClick={() => setSelectedBrand("")}
+                    className={`cursor-pointer rounded-full border border-primary p-[2px] ${
+                      selectedBrand === "" ? "bg-[#4D55F5]" : "bg-[#F5F4F0]"
+                    }`}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-[#F5F4F0] flex items-center justify-center">
+                      <span className="text-[8px] sm:text-xs">БҮГД</span>
+                    </div>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Бүх брэнд</p>
+                </TooltipContent>
+              </Tooltip>
+              {filteredBrands?.map((brand, i) => (
+                <Tooltip key={i}>
+                  <TooltipTrigger asChild>
+                    <div
+                      onClick={() => setSelectedBrand(brand?.Name)}
+                      className={`cursor-pointer rounded-full p-[2px] ${
+                        selectedBrand === brand?.Name
+                          ? "bg-[#4D55F5]"
+                          : "bg-[#F5F4F0]"
+                      }`}
+                    >
+                      <div
+                        className={`w-16 h-16 rounded-full overflow-hidden border ${
+                          selectedBrand === brand?.Name
+                            ? "border-[#4D55F5] ring-[#4D55F5]/20"
+                            : "border-[#2D262D]"
+                        }`}
+                      >
+                        <Image
+                          src={brand?.ProfileLink || "/dummy-brand.png"}
+                          width={74}
+                          height={74}
+                          alt={brand?.Name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{brand?.Name}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </div>
           <div className="mt-4 bg-[#F2F2F2] rounded-xl w-full flex flex-row items-center justify-between gap-2 px-4 py-3 sm:pl-10 sm:pr-6 sm:py-6">
             <input
