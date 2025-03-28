@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
 import EmptyList from "@/components/common/EmptyList";
+import { AlignJustify } from "lucide-react";
+import ContentProgressModalContent from "@/components/ContentProgressModalContent";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -29,8 +31,28 @@ function renderStars(score, setScore, playSound) {
     </span>
   ));
 }
-
+const mainStates = {
+  Request: "Хүсэлт илгээгдсэн",
+  ProdDelivering: "Бүтээгдэхүүн хүргэж байна",
+  ContentSent: "Контент илгээсэн",
+  ContentOnHold: "Контент хоцорсон",
+  ContentInProgress: "Контент хүлээгдэж байна",
+  ContentRejected: "Контент буцаагдсан",
+  ContentInReview: "Geni шалгаж байна",
+  ProdApproved: "Geni-гээс зөвшөөрсөн",
+  ProdRejected: "Geni-гээс зөвшөөрөгдөөгүй",
+  ContentApproved: "Контент зөвшөөрөгдсөн",
+  ContentReceived: "Контент хүлээн авсан",
+};
 function ContentProgress({ currentContents }) {
+  const tempContent = currentContents[0];
+  currentContents = [
+    ...Object.keys(mainStates).map((state) => ({
+      ...tempContent,
+      Status: state,
+    })),
+    ...currentContents,
+  ];
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [qualityScore, setQualityScore] = useState(null);
@@ -38,6 +60,7 @@ function ContentProgress({ currentContents }) {
   const [conceptScore, setConceptScore] = useState(null);
   const [comment, setComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
+  const [content, setContent] = useState(null);
 
   const [
     getImagePresignedUrl,
@@ -135,7 +158,7 @@ function ContentProgress({ currentContents }) {
         />
       ) : (
         <div className="min-w-[900px] sm:min-w-[1200px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
-          <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
+          <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,2fr,3fr,2fr] gap-6 w-full items-center text-[#6F6F6F]">
             <div className="col-span-1 flex flex-row items-center justify-between">
               <span className="">Бүтээгдэхүүн</span>
 
@@ -147,9 +170,9 @@ function ContentProgress({ currentContents }) {
               />
             </div>
             <span className="col-span-1">Бүтээгч</span>
-            <span className="col-span-1">Үе шат</span>
+            {/* <span className="col-span-1">Үе шат</span> */}
             <div className="col-span-1 flex flex-row items-center justify-between">
-              <span>Статус</span>
+              <span>Төлөв</span>
               <Image
                 src={"/brand-profile-arrow-icon.png"}
                 width={24}
@@ -162,7 +185,7 @@ function ContentProgress({ currentContents }) {
           {currentContents.map((p, i) => (
             <div
               key={i}
-              className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,2fr,4fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
+              className="text-[10px] sm:text-base w-full grid grid-cols-[3fr,2fr,3fr,2fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
             >
               <span className="col-span-1">{p.ProductName}</span>
               <div className="col-span-1 flex flex-row items-center gap-3">
@@ -173,10 +196,26 @@ function ContentProgress({ currentContents }) {
                   {p.Nickname ? p.Nickname : "Geni бүтээгч"}
                 </a>
               </div>
-              <span className="col-span-1">{p.ContentPhase}</span>
+              {/* <span className="col-span-1">{p.ContentPhase}</span> */}
               <StatusIndicator status={p.Status} />
-              <div className="col-span-1">
+              <div className="col-span-1 flex justify-end">
+                
+                <Dialog>
+                  <DialogTrigger>
+                    <AlignJustify className="w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2" onClick={() => setContent(p)} />
+                    {/* <button className="bg-[#4D55F5] border-[1px] border-[#2D262D] whitespace-nowrap px-5 py-2 rounded-lg text-white font-bold">
+                      icon
+                    </button> */}
+                  </DialogTrigger>
+                  {/* @ts-ignore */}
+                  <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl" hideCloseButton={true}>
+                    <ContentProgressModalContent
+                      content={content}
+                    />
+                  </DialogContent>
+                </Dialog>
                 {p.Status === "ContentApproved" ? (
+                  // <></>
                   <Dialog>
                     <DialogTrigger
                       onClick={() =>

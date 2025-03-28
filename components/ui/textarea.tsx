@@ -14,6 +14,7 @@ interface TextareaProps extends React.ComponentProps<"textarea"> {
   hoverInfo?: string;
   maxLength?: number;
   wrapperClassName?: string;
+  max?: boolean;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -29,6 +30,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       errorVisible,
       maxLength,
       wrapperClassName,
+      max = false,
       ...props
     },
     ref
@@ -57,6 +59,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             <textarea
               ref={ref}
               className={cn("overflow-y-auto outline-none", className)}
+              {...(max && { maxLength })}
               {...props}
             />
             <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">

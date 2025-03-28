@@ -4,25 +4,25 @@ import Image from "next/image";
 const getColorClass = (status) => {
   switch (status) {
     case "Request":
-      return "text-[#4D55F5]";
+      return "bg-[#4D55F5] text-white";
     case "ProdApproved":
-      return "text-[#4FB755]";
+      return "bg-[#4FB755] text-white";
     case "ProdRejected":
-      return "text-[#F41919]";
+      return "bg-[#F41919] text-white";
     case "ProdDelivering":
-      return "text-[#F49D19]";
+      return "bg-[#F49D19] text-white";
     case "ContentInProgress":
-      return "text-[#F49D19]";
+      return "bg-[#F49D19] text-white";
     case "ContentInReview":
-      return "text-[#4D55F5]";
+      return "bg-[#4D55F5] text-white";
     case "ContentSent":
-      return "text-[#4FB755]";
+      return "bg-[#4FB755] text-white";
     case "ContentRejected":
-      return "text-[#F41919]";
+      return "bg-[#F41919] text-white";
     case "ContentReceived":
-      return "text-[#4FB755]";
+      return "bg-[#4FB755] text-white";
     default:
-      return "text-[#4D55F5]";
+      return "bg-[#4D55F5] text-white";
   }
 };
 
@@ -70,19 +70,19 @@ const getStatusName = (status) => {
 
 const StatusIndicator = ({ status }) => {
   return (
-    <div
-      className={`${getColorClass(
-        status
-      )} col-span-1 flex flex-row items-center gap-3`}
-    >
-      <Image
-        src={getStatusImage(status)}
-        width={24}
-        height={24}
-        alt=""
-        className="w-4 h-4 sm:w-6 sm:h-6"
-      />
-      <span>{getStatusName(status)}</span>
+    <div className="col-span-1 flex flex-row items-center gap-3">
+      <div className={`${getColorClass(status)} inline-flex items-center gap-3 px-3 py-1 rounded-full`}>
+        <Image
+          src={getStatusImage(status)}
+          width={24}
+          height={24}
+          alt=""
+          className="w-4 h-4 sm:w-5 sm:h-5 brightness-0 invert"
+        />
+        <span className="text-xs sm:text-sm whitespace-nowrap">
+          {getStatusName(status)}
+        </span>
+      </div>
     </div>
   );
 };
