@@ -15,6 +15,12 @@ import LogoutButton from "@/components/common/LogoutButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const [profileState, setProfileState] = useState("content-progress");
@@ -154,7 +160,25 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     <span className="text-sm sm:text-lg">
                       {getUserInfoData && <>{getUserInfoData.Point} xp</>}
                     </span>
-                    <TierInfoModal />
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link href="/profile/point-board">
+                            <Image
+                              src={"/info-icon.png"}
+                              width={24}
+                              height={24}
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
+                              alt=""
+                            />
+                          </Link>
+                        </TooltipTrigger>
+                        {/* @ts-ignore */}
+                        <TooltipContent>
+                          <span>Таны онооны самбар</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 </div>
                 {getUserInfoData?.AverageRating &&

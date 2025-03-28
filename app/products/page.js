@@ -14,6 +14,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Pagination from "@/components/common/Pagination";
+import usePagination from "@/components/hooks/usePagination";
 
 function Page() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,12 +23,18 @@ function Page() {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filteredBrands, setFilteredBrands] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 16;
+  const offset = (currentPage - 1) * productsPerPage;
 
   const {
     data: listProductsData,
     error: listProductsError,
     isLoading: listProductsLoading,
-  } = useListPublicProductsQuery();
+  } = useListPublicProductsQuery(
+    { searchKey: searchQuery, limit: productsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const {
     data: listProductTypesData,
@@ -80,19 +88,6 @@ function Page() {
         );
       }
 
-      // Search query filter
-      if (searchQuery) {
-        filtered = filtered.filter(
-          (product) =>
-            product.ProductName.toLowerCase().includes(
-              searchQuery.toLowerCase()
-            ) ||
-            product.Information.toLowerCase().includes(
-              searchQuery.toLowerCase()
-            )
-        );
-      }
-
       // Sort by the ratio
       filtered.sort((a, b) => {
         const ratioA = a.ContentLeft / a.ContentLimit;
@@ -133,6 +128,27 @@ function Page() {
       setFilteredBrands([]);
     }
   }, [selectedCategory, listProductsData, listBrandsData]);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, getTotalPages()));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const getTotalPages = () => {
+    let totalCount;
+    totalCount = listProductsData?.RowCount ?? null;
+
+    return Math.ceil(totalCount / productsPerPage);
+  };
+
+  const totalPages = getTotalPages();
+
+  const pageNumbers = usePagination(totalPages, currentPage);
 
   return (
     <div className="min-h-screen w-full bg-white text-[#2D262D]">
@@ -303,13 +319,27 @@ function Page() {
                     </Link>
                   );
                 })
-              : [...Array(12)].map((_, index) => (
+              : [...Array(productsPerPage)].map((_, index) => (
                   <Skeleton
                     key={index}
                     className="rounded-2xl shadow-md h-full min-h-[280px] sm:min-h-[400px] lg:min-h-[552px] xl:min-h-[480px]"
                   />
                 ))}
           </div>
+          {listProductsData && totalPages > 1 ? (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              pageNumbers={pageNumbers}
+              handlePrevPage={handlePrevPage}
+              handleNextPage={handleNextPage}
+              paginate={paginate}
+              bg={"bg-[#4D55F5]"}
+              border={"border-[#4D55F5]"}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
