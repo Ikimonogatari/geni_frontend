@@ -42,7 +42,9 @@ function AddBalance({ walletInfo }) {
       <DialogTrigger className="aspect-[200/50] text-sm sm:text-base w-[200px] rounded-lg border-[1px] border-[#2D262D] flex justify-center items-center">
         Данс холбох
       </DialogTrigger>
+      {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-4 sm:gap-2 max-h-[739px] w-full lg:w-full max-w-3xl rounded-3xl">
+        {/* @ts-ignore */}
         <DialogTitle className="text-2xl sm:text-3xl xl:text-4xl font-bold">
           Данс холбох
         </DialogTitle>
