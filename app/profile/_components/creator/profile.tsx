@@ -10,7 +10,6 @@ import Link from "next/link";
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "@/components/ContentGallery";
 import CreatorTier from "@/components/CreatorTier";
-import TierInfoModal from "@/components/TierInfoModal";
 import LogoutButton from "@/components/common/LogoutButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";

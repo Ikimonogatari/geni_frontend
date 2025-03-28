@@ -22,15 +22,18 @@ import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { useUserInfo } from "@/app/context/UserInfoContext";
-import CreatorTier from "@/components/CreatorTier";
-import TierInfoModal from "@/components/TierInfoModal";
-import { ErrorText } from "@/components/ui/error-text";
 import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function EditProfileCreator() {
   const router = useRouter();
@@ -382,7 +385,25 @@ function EditProfileCreator() {
                       Бүтээгчийн оноо: &nbsp;
                       {parsedUserInfo ? parsedUserInfo.Point : 0} xp
                     </span>
-                    <TierInfoModal />
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link href="/profile/point-board">
+                            <Image
+                              src={"/info-icon.png"}
+                              width={24}
+                              height={24}
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
+                              alt=""
+                            />
+                          </Link>
+                        </TooltipTrigger>
+                        {/* @ts-ignore */}
+                        <TooltipContent>
+                          <span>Таны онооны самбар</span>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                   <div
                     {...getRootProps()}
