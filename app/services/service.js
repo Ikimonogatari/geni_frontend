@@ -160,11 +160,10 @@ export const geniApi = createApi({
       }),
     }),
     listPublicProducts: builder.query({
-      query: ({ searchKey, limit, offset }) => ({
-        url: `/api/web/public/product?searchKey=${
-          searchKey || ""
-        }&limit=${limit}&offset=${offset}`,
+      query: (body) => ({
+        url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
         method: "GET",
+        body,
       }),
     }),
     getPublicProductById: builder.query({
@@ -417,6 +416,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getBankList: builder.query({
+      query: () => ({
+        url: "/api/web/private/banks",
+        method: "GET",
+      }),
+    }),
     creatorApply: builder.mutation({
       query: (body) => ({
         url: "/api/web/public/creator-application",
@@ -495,4 +500,5 @@ export const {
   useCreatorApplyMutation,
   useStudentRegisterMutation,
   usePurchaseCourseMutation,
+  useGetBankListQuery,
 } = geniApi;
