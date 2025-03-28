@@ -5,15 +5,17 @@ import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
   const [resubmitting, setIsResubmitting] = useState(false);
   return (
-    <Dialog>
-      <DialogTrigger
-        type="submit"
-        className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
-      >
-        Дэлгэрэнгүй
-      </DialogTrigger>
+    <>
+      {/* <Dialog>
+        <DialogTrigger
+          type="submit"
+          className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+        >
+          Дэлгэрэнгүй
+        </DialogTrigger> */}
       {!resubmitting ? (
-        <DialogContent className="overflow-y-auto flex flex-col p-6 w-full max-h-[739px] max-w-[577px] rounded-3xl">
+        <>
+          {/* <DialogContent className="overflow-y-auto flex flex-col p-6 w-full max-h-[739px] max-w-[577px] rounded-3xl"> */}
           <span className="text-3xl font-bold">Зөвлөгөө</span>
           <div className="mt-4 flex flex-col gap-3">
             {feedbacks?.map((f, i) => (
@@ -32,14 +34,16 @@ function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
           >
             Дахин илгээх
           </button>
-        </DialogContent>
+          {/* </DialogContent> */}
+        </>
       ) : (
         <FeedbackModalUploadModalContent
           parsedUserInfo={parsedUserInfo}
           contentId={contentId}
         />
       )}
-    </Dialog>
+      {/* </Dialog> */}
+    </>
   );
 }
 

@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
 import EmptyList from "@/components/common/EmptyList";
 import { AlignJustify } from "lucide-react";
-import ContentProgressModalContent from "@/components/ContentProgressModalContent";
+import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -60,7 +60,6 @@ function ContentProgress({ currentContents }) {
   const [conceptScore, setConceptScore] = useState(null);
   const [comment, setComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
-  const [content, setContent] = useState(null);
 
   const [
     getImagePresignedUrl,
@@ -199,21 +198,7 @@ function ContentProgress({ currentContents }) {
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
               <StatusIndicator status={p.Status} />
               <div className="col-span-1 flex justify-end">
-                
-                <Dialog>
-                  <DialogTrigger>
-                    <AlignJustify className="w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2" onClick={() => setContent(p)} />
-                    {/* <button className="bg-[#4D55F5] border-[1px] border-[#2D262D] whitespace-nowrap px-5 py-2 rounded-lg text-white font-bold">
-                      icon
-                    </button> */}
-                  </DialogTrigger>
-                  {/* @ts-ignore */}
-                  <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl" hideCloseButton={true}>
-                    <ContentProgressModalContent
-                      content={content}
-                    />
-                  </DialogContent>
-                </Dialog>
+                <ContentProgressModalContent content={p} />
                 {p.Status === "ContentApproved" ? (
                   // <></>
                   <Dialog>

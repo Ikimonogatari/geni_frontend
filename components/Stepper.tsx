@@ -21,22 +21,22 @@ type StepperProps = {
 };
 
 const Stepper: React.FC<StepperProps> = (props) => {
-  const { 
-    steps, 
-    labels, 
-    activeStep, 
-    setActiveStep, 
-    hasNavigation = false, 
-    currentStepStatus = "yellow", 
-    horizontal = true, 
-    hasBg = true 
+  const {
+    steps,
+    labels,
+    activeStep,
+    setActiveStep,
+    hasNavigation = false,
+    currentStepStatus = "yellow",
+    horizontal = true,
+    hasBg = true,
   } = props;
 
   const getStepColor = (index: number) => {
     if (index < activeStep) {
       return "bg-green-500";
     }
-    
+
     if (index === activeStep) {
       switch (currentStepStatus) {
         case "yellow":
@@ -67,7 +67,9 @@ const Stepper: React.FC<StepperProps> = (props) => {
           <div key={index} className="flex items-start gap-6">
             <div className="flex flex-col items-center">
               <div
-                className={`relative flex items-center justify-center w-4 h-4 rounded-full ${getStepColor(index)}`}
+                className={`relative flex items-center justify-center w-4 h-4 rounded-full ${getStepColor(
+                  index
+                )}`}
               >
                 {step}
               </div>
@@ -75,7 +77,7 @@ const Stepper: React.FC<StepperProps> = (props) => {
                 <div className={`w-[2px] h-10 ${getLineColor(index)}`} />
               )}
             </div>
-            
+
             {labels && (
               <div className="flex flex-col gap-1 -mt-1">
                 <span className="text-[#F49D19] font-medium text-base">
@@ -83,7 +85,9 @@ const Stepper: React.FC<StepperProps> = (props) => {
                 </span>
                 {(labels[index].subtitle || labels[index].date) && (
                   <div className="flex flex-col text-sm text-gray-600">
-                    {labels[index].subtitle && <span>{labels[index].subtitle}</span>}
+                    {labels[index].subtitle && (
+                      <span>{labels[index].subtitle}</span>
+                    )}
                     {labels[index].date && <span>{labels[index].date}</span>}
                   </div>
                 )}
@@ -99,10 +103,15 @@ const Stepper: React.FC<StepperProps> = (props) => {
     <div className="flex flex-col items-center w-full p-6">
       <div className="flex items-center w-full max-w-2xl">
         {steps.map((step, index) => (
-          <div key={index} className={`flex items-center ${index !== steps.length - 1 ? 'flex-1' : ''}`}>
+          <div
+            key={index}
+            className={`flex items-center ${
+              index !== steps.length - 1 ? "flex-1" : ""
+            }`}
+          >
             <div
               className={`relative flex items-center justify-center ${
-                hasBg ? 'w-10 h-10 rounded-lg' : 'w-6 h-6'
+                hasBg ? "w-10 h-10 rounded-lg" : "w-6 h-6"
               } ${getStepColor(index)} [&>svg]:text-white`}
             >
               {step}
