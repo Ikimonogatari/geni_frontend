@@ -18,6 +18,7 @@ import ViewContent from "./ViewContent";
 import EditRequest from "./EditRequest";
 import AcceptRequest from "./AcceptRequest";
 import { DialogTitle } from "../ui/dialogc";
+import Payment from "./Payment";
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -101,7 +102,7 @@ const ContentProgressModalContent: React.FC<
   const getStepIndex = (status: string): number => {
     const arr = [
       ["Request"],
-      ["ProdDelivering"],
+      ["ProdDelivering", "Payment"],
       ["ContentInProgress", "ContentOnHold"],
       [
         "ContentInReview",
@@ -113,13 +114,19 @@ const ContentProgressModalContent: React.FC<
       ["ContentReceived", "ContentApproved"],
     ];
 
-    return arr.findIndex((item) => item.includes(status)) || 0;
+    const index = arr.findIndex((item) => item.includes(status));
+    return index == -1 ? 0 : index;
   };
 
   const getCurrentStepColor = (status: string): CurrentStepStatus => {
     const arr = {
       green: ["Request", "ProdApproved", "ContentApproved", "ContentReceived"],
-      yellow: ["ProdDelivering", "ContentInProgress", "ContentInReview", ""],
+      yellow: [
+        "ProdDelivering",
+        "ContentInProgress",
+        "ContentInReview",
+        "Payment",
+      ],
       red: ["ContentOnHold", "ProdRejected", "ContentRejected"],
     };
 
@@ -175,6 +182,8 @@ const ContentProgressModalContent: React.FC<
         {dialogType == DialogType.CONTENT_RECEIVED ? (
           <ContentReviewModal p={content} />
         ) : null}
+
+        {dialogType == DialogType.PAYMENT && <Payment content={content} />}
       </>
     );
   };
@@ -200,39 +209,65 @@ const ContentProgressModalContent: React.FC<
   const creatorModalTriggersAndMessage = () => {
     return (
       <>
-        {content.Status === "Request" ? (
+        {content.Status == "ContentOnHold" && (
+          <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5 mt-2">
+            <h3 className="text-lg font-semibold">Сануулга !</h3>
+            <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
+              Та контент илгээх хугацаанаасаа 3 хоног хоцорсон байна. <br />
+              Таны дараагийн бүтээгдэхүүн хүсэх эрх 3 хоног хаагдах болно
+            </p>
+          </div>
+        )}
+        {content.Status === "Payment" && (
+          <button
+            onClick={() => setDialogType(DialogType.PAYMENT)}
+            className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
+
+            // className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
+          >
+            Төлбөр төлөх
+          </button>
+        )}
+        {content.Status === "Request" && (
           <button
             onClick={() => setDialogType(DialogType.REQUEST)}
-            className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+            // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+            className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
           >
             Хүсэлт буцаах
           </button>
-        ) : (
-          <></>
         )}
-        {content.Status === "ContentRejected" ? (
+        {/* {content.Status === "Delivered" && (
+          <button
+            onClick={() => setDialogType(DialogType.REQUEST)}
+            // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+            className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
+          >
+            Бүтээгдэхүүн буцаах
+          </button>
+        )} */}
+        {content.Status === "ContentRejected" && (
           <button
             onClick={() => setDialogType(DialogType.CONTENT_REJECTED)}
-            className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
+            className="w-full text-center text-xs sm:text-base bg-[#F49D19] mt-2 px-5 py-2 rounded-lg text-white font-bold"
           >
             Дэлгэрэнгүй
           </button>
-        ) : (
-          <></>
         )}
-        {content.Status === "ContentInProgress" ? (
-          <button
-            onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-            className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
-          >
-            Контент илгээх
-          </button>
-        ) : // <ContentUploadModal
-        //   parsedUserInfo={parsedUserInfo}
-        //   contentId={content?.ContentId}
-        // />
-        null}
-        {content.Status === "ContentReceived" ? (
+        {
+          ["ContentInProgress", "ContentOnHold"].includes(content.Status) && (
+            <button
+              onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
+              className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+            >
+              Контент илгээх
+            </button>
+          ) // <ContentUploadModal
+          //   parsedUserInfo={parsedUserInfo}
+          //   contentId={content?.ContentId}
+          // />
+        }
+        {content.Status === "ContentReceived" && (
           // <ContentReviewModal p={content} />
           <button
             onClick={() => setDialogType(DialogType.CONTENT_RECEIVED)}
@@ -240,7 +275,7 @@ const ContentProgressModalContent: React.FC<
           >
             Сэтгэгдэл харах
           </button>
-        ) : null}
+        )}
       </>
     );
   };
@@ -308,7 +343,6 @@ const ContentProgressModalContent: React.FC<
       </>
     );
   };
-  console.log("usertype", userType);
 
   return (
     <>
@@ -322,7 +356,10 @@ const ContentProgressModalContent: React.FC<
           hideCloseButton={true}
         >
           <DialogTitle></DialogTitle>
-          <form onSubmit={formik.handleSubmit} className="h-full w-full">
+          <form
+            onSubmit={formik.handleSubmit}
+            className="h-full w-full flex flex-col gap-2"
+          >
             {dialogType == DialogType.PROGRESS && (
               <div className="flex flex-col gap-6 h-full w-full">
                 <div className="flex flex-row items-center gap-4 w-full h-full sm:min-w-[272px] bg-[#F5F4F0] rounded-2xl p-4">
@@ -390,10 +427,10 @@ const ContentProgressModalContent: React.FC<
                 </div>
               </div>
             )}
-            {userType == "Creator" && creatorModalTriggersAndMessage()}
-            {userType == "Brand" && brandModalTriggersAndMessage()}
             {userType == "Creator" && createrModalContents()}
             {userType == "Brand" && brandModalContents()}
+            {userType == "Creator" && creatorModalTriggersAndMessage()}
+            {userType == "Brand" && brandModalTriggersAndMessage()}
           </form>
 
           {/* custom close button */}

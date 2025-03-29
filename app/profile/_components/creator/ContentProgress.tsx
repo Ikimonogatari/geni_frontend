@@ -13,6 +13,10 @@ import { mainStates } from "@/components/content-progress/content.services";
 function ContentProgress({ currentContents }) {
   const tempContent = currentContents[0];
   currentContents = [
+    {
+      ...tempContent,
+      Status: "Payment",
+    },
     ...Object.keys(mainStates).map((state) => ({
       ...tempContent,
       Status: state,

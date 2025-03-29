@@ -46,7 +46,7 @@ export const mainStates = {
   ProdRejected: "Geni-гээс зөвшөөрөгдөөгүй",
   ContentSent2: "Контент илгээсэн",
   ProdApproved: "Geni-гээс зөвшөөрсөн",
-  // ContentRejected: "Контент буцаагдсан",
+  ContentRejected: "Контент буцаагдсан",
   ContentReceived: "Контент хүлээн авсан",
   ContentApproved: "Контент зөвшөөрөгдсөн",
 };
