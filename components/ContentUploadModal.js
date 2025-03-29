@@ -254,7 +254,9 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
 
             <div className="w-full flex flex-col h-full justify-between">
               <div className="flex flex-col gap-4">
-                <span className="text-lg">Тайлбар</span>
+                <span className="text-lg">
+                  Бүтээгдэхүүн хэрэглэсэн өөрийн сэтгэгдэлээ хуваалцаарай.
+                </span>
                 <textarea
                   type="text"
                   value={caption}
