@@ -371,7 +371,11 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
         )}
       </div>
       {getUserInfoData && (
-        <GuideModal hasSeenGuide={getUserInfoData?.HasSeenGuide} />
+        <GuideModal
+          hasSeenGuide={getUserInfoData?.HasSeenGuide}
+          slides={guideSlides}
+          theme="brand"
+        />
       )}
       {getUserInfoData && (
         <OnBoardRequestStateModal
@@ -396,5 +400,28 @@ const brandProfileButtons = [
   {
     title: "Бүтээгдэхүүн",
     value: "brand-products",
+  },
+];
+
+const guideSlides = [
+  {
+    image: "/brand-guide-image1.png",
+    text: "Та “Контент статус” хэсгээс Geni Бүтээгчидтэй хамтран ажиллаж буй бүх процессыг хянах боломжтой. Энэхүү процесс нь 5 үе шаттай бөгөөд дээрх зураг шиг бүтээгдэхүүн хүргэж байгаа үеээс эхлэн та контентоо хүлээж авах үйлдэл хүртэлх процесс хамаарагдана.",
+  },
+  {
+    image: "/brand-guide-image2.png",
+    text: "Та “Контент авах” товчин дээр дарсанаар таньд Reel видео контент, Thumbnail зураг болон Geni Бүтээгчийн сэтгэгдэл бүхий тайлбар харагдах юм. Та контентоо хүлээж авахдаа заавал контент бүтээгчийг 3 төрлөөр дүгнэж үнэлгээ өгөх бөгөөд нэмэлтээр та сэтгэгдэлээ илгээх боложмтой.",
+  },
+  {
+    image: "/brand-guide-image3.png",
+    text: "Таны “Контент” хэсэгт Geni Бүтээгчидээс хүлээн авсан бүх контентууд харагдах бөгөөд эндээс та хүссэн үедээ хэрэгтэй контентоо үзэн татаж авах боломжтой.",
+  },
+  {
+    image: "/brand-guide-image4.png",
+    text: "Та “Бүтээгдэхүүн” хэсгээс өөрийн оруулсан бүтээгдэхүүний тоо ширхэгээ хянах юм. Мөн дууссан бүтээгдэхүүний тоо ширхэгээ нэмэх болон бүтээгдэхүүнийхээ мэдээллийг өөрчлөх гэх мэд үйлдэлүүдийг хийх боломжтой.",
+  },
+  {
+    image: "/brand-guide-image5.png",
+    text: "Та “Geni Credit”-н тоогоор контент авах эрхтэй болох бөгөөд та хүссэн үедээ өөрийн хүссэн багцаараа цэнэглэх боломжтой.",
   },
 ];

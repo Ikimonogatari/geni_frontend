@@ -389,7 +389,7 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
-    brandGuideCheck: builder.mutation({
+    guideCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/no-guide",
         method: "POST",
@@ -495,7 +495,7 @@ export const {
   useGetWalletInfoQuery,
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
-  useBrandGuideCheckMutation,
+  useGuideCheckMutation,
   useGetBrandCreditInfoQuery,
   useCreatorApplyMutation,
   useStudentRegisterMutation,
