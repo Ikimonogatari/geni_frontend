@@ -213,7 +213,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   )}
                 </div>
                 <div className="overflow-x-auto w-full">
-                  <div className="flex w-[220px] sm:w-full flex-row sm:flex-wrap items-center gap-1 sm:gap-2 lg:w-5/6">
+                  <div className="flex w-[220px] sm:w-full sm:max-w-lg flex-row sm:flex-wrap items-center gap-1 sm:gap-2 lg:w-5/6">
                     {getUserInfoData?.BrandTypes?.map((b, i) => (
                       <button
                         key={i}
@@ -233,7 +233,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   href={"/add-product"}
                   className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
                 >
-                  Бүтээгдэхүүн нэмэх
+                  Шинэ бүтээгдэхүүн нэмэх
                   <Image
                     src={"/add-icon.png"}
                     width={14}
@@ -247,7 +247,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   className={
                     "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                   }
-                  buttonText={"Бүтээгдэхүүн нэмэх "}
+                  buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
               )}
@@ -321,7 +321,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   href={"/add-product"}
                   className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
                 >
-                  Бүтээгдэхүүн нэмэх
+                  Шинэ бүтээгдэхүүн нэмэх
                   <Image
                     src={"/add-icon.png"}
                     width={14}
@@ -335,7 +335,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   className={
                     "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                   }
-                  buttonText={"Бүтээгдэхүүн нэмэх "}
+                  buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
                   userInfo={getUserInfoData}
                 />
               )}

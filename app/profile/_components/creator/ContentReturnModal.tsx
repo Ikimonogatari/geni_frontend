@@ -38,9 +38,9 @@ function ContentReturnModal({ requestId }) {
     <Dialog>
       <DialogTrigger
         type="submit"
-        className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+        className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
       >
-        Хүсэлт буцаах
+        <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
       </DialogTrigger>
       {/* @ts-ignore */}
       <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
