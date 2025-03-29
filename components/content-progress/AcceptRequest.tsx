@@ -2,6 +2,7 @@ import React from "react";
 import { FormikProps } from "formik";
 import { FormikTypes } from "./content.services";
 import { Textarea } from "../ui/textarea";
+import Image from "next/image";
 
 type AcceptRequestProps = {
   formik: FormikProps<FormikTypes>;
@@ -28,7 +29,17 @@ const AcceptRequest: React.FC<AcceptRequestProps> = ({ formik }) => {
                         : "text-gray-300"
                     }`}
                   >
-                    ★
+                    <Image
+                      src={
+                        formik.values.brandStar >= star
+                          ? "/star.png"
+                          : "/empty-star.png"
+                      }
+                      alt="Star"
+                      width={28}
+                      height={28}
+                    />
+                    {/* ★ */}
                   </button>
                 ))}
               </div>
@@ -48,7 +59,17 @@ const AcceptRequest: React.FC<AcceptRequestProps> = ({ formik }) => {
                         : "text-gray-300"
                     }`}
                   >
-                    ★
+                    <Image
+                      src={
+                        formik.values.contentStar >= star
+                          ? "/star.png"
+                          : "/empty-star.png"
+                      }
+                      alt="Star"
+                      width={28}
+                      height={28}
+                    />
+                    {/* ★ */}
                   </button>
                 ))}
               </div>
@@ -70,7 +91,17 @@ const AcceptRequest: React.FC<AcceptRequestProps> = ({ formik }) => {
                         : "text-gray-300"
                     }`}
                   >
-                    ★
+                    <Image
+                      src={
+                        formik.values.contentDesignStar >= star
+                          ? "/star.png"
+                          : "/empty-star.png"
+                      }
+                      alt="Star"
+                      width={28}
+                      height={28}
+                    />
+                    {/* ★ */}
                   </button>
                 ))}
               </div>
@@ -103,23 +134,53 @@ const AcceptRequest: React.FC<AcceptRequestProps> = ({ formik }) => {
                   Контент бүтээгч өөрийн сувaг дээр пост хийх /Instagram,
                   Facebook/
                 </span>
-                <input
-                  type="checkbox"
-                  name="sharePost"
-                  checked={formik.values.sharePost}
-                  onChange={formik.handleChange}
-                  className="w-5 h-5"
-                />
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    name="sharePost"
+                    id={`sharePost`}
+                    className="peer hidden"
+                    checked={formik.values.sharePost}
+                    onChange={formik.handleChange}
+                  />
+                  <label
+                    htmlFor={`sharePost`}
+                    className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
+                  >
+                    <span
+                      className={`text-sm sm:text-base ${
+                        formik.values.sharePost ? "text-green-500" : "hidden"
+                      } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                    >
+                      ✓
+                    </span>
+                  </label>
+                </div>
               </label>
               <label className="flex items-center justify-between p-2 border rounded-xl">
                 <span>"Collab" пост хийх /Instagram, Facebook/</span>
-                <input
-                  type="checkbox"
-                  name="collabPost"
-                  checked={formik.values.collabPost}
-                  onChange={formik.handleChange}
-                  className="w-5 h-5"
-                />
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    name="collabPost"
+                    id={`collabPost`}
+                    className="peer hidden"
+                    checked={formik.values.collabPost}
+                    onChange={formik.handleChange}
+                  />
+                  <label
+                    htmlFor={`collabPost`}
+                    className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
+                  >
+                    <span
+                      className={`text-sm sm:text-base ${
+                        formik.values.collabPost ? "text-green-500" : "hidden"
+                      } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                    >
+                      ✓
+                    </span>
+                  </label>
+                </div>
               </label>
             </div>
           </div>

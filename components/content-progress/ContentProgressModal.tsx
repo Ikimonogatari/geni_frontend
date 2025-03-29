@@ -4,7 +4,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { AlignJustify, CirclePlay, Truck, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import { Formik, FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
 import { Textarea } from "@/components/ui/textarea";
 import Cookies from "js-cookie";
@@ -19,6 +19,7 @@ import EditRequest from "./EditRequest";
 import AcceptRequest from "./AcceptRequest";
 import { DialogTitle } from "../ui/dialogc";
 import Payment from "./Payment";
+import ReturnSection from "./ReturnSection";
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -49,6 +50,7 @@ const ContentProgressModalContent: React.FC<
       comment: "",
       sharePost: false,
       collabPost: false,
+      returnReason: "",
     },
     // validationSchema: addCreatorDetailsSchema,
     onSubmit: async (values) => {
@@ -57,6 +59,8 @@ const ContentProgressModalContent: React.FC<
           console.log(pick(values, ["reasons"]));
         } else if (dialogType == DialogType.ACCEPT_REQUEST) {
           console.log(pick(values, ["reasons"]));
+        } else if (values.returnReason) {
+          console.log(pick(values, ["returnReason"]));
         }
         // await creatorApply({
         //   ...values,
@@ -218,7 +222,7 @@ const ContentProgressModalContent: React.FC<
             </p>
           </div>
         )}
-        {content.Status === "Payment" && (
+        {content.Status === "Payment" && dialogType != DialogType.PAYMENT && (
           <button
             onClick={() => setDialogType(DialogType.PAYMENT)}
             className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
@@ -228,7 +232,7 @@ const ContentProgressModalContent: React.FC<
             Төлбөр төлөх
           </button>
         )}
-        {content.Status === "Request" && (
+        {content.Status === "Request" && dialogType != DialogType.REQUEST && (
           <button
             onClick={() => setDialogType(DialogType.REQUEST)}
             // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
@@ -237,45 +241,40 @@ const ContentProgressModalContent: React.FC<
             Хүсэлт буцаах
           </button>
         )}
-        {/* {content.Status === "Delivered" && (
-          <button
-            onClick={() => setDialogType(DialogType.REQUEST)}
-            // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
-            className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
-          >
-            Бүтээгдэхүүн буцаах
-          </button>
-        )} */}
-        {content.Status === "ContentRejected" && (
-          <button
-            onClick={() => setDialogType(DialogType.CONTENT_REJECTED)}
-            className="w-full text-center text-xs sm:text-base bg-[#F49D19] mt-2 px-5 py-2 rounded-lg text-white font-bold"
-          >
-            Дэлгэрэнгүй
-          </button>
-        )}
-        {
-          ["ContentInProgress", "ContentOnHold"].includes(content.Status) && (
+        {content.Status === "ProdDelivering" && <ReturnSection />}
+        {content.Status === "ContentRejected" &&
+          dialogType != DialogType.CONTENT_REJECTED && (
             <button
-              onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-              className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+              onClick={() => setDialogType(DialogType.CONTENT_REJECTED)}
+              className="w-full text-center text-xs sm:text-base bg-[#F49D19] mt-2 px-5 py-2 rounded-lg text-white font-bold"
             >
-              Контент илгээх
+              Дэлгэрэнгүй
             </button>
-          ) // <ContentUploadModal
+          )}
+        {
+          ["ContentInProgress", "ContentOnHold"].includes(content.Status) &&
+            dialogType != DialogType.CONTENT_IN_PROGRESS && (
+              <button
+                onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
+                className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+              >
+                Контент илгээх
+              </button>
+            ) // <ContentUploadModal
           //   parsedUserInfo={parsedUserInfo}
           //   contentId={content?.ContentId}
           // />
         }
-        {content.Status === "ContentReceived" && (
-          // <ContentReviewModal p={content} />
-          <button
-            onClick={() => setDialogType(DialogType.CONTENT_RECEIVED)}
-            className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
-          >
-            Сэтгэгдэл харах
-          </button>
-        )}
+        {content.Status === "ContentReceived" &&
+          dialogType != DialogType.CONTENT_RECEIVED && (
+            // <ContentReviewModal p={content} />
+            <button
+              onClick={() => setDialogType(DialogType.CONTENT_RECEIVED)}
+              className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
+            >
+              Сэтгэгдэл харах
+            </button>
+          )}
       </>
     );
   };
@@ -330,16 +329,18 @@ const ContentProgressModalContent: React.FC<
         )}
 
         {/* Контент үзэх */}
-        {getStepIndex(content.Status) >= 3 && (
-          <>
-            <button
-              onClick={() => setDialogType(DialogType.CONTENT)}
-              className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
-            >
-              Контент үзэх
-            </button>
-          </>
-        )}
+        {getStepIndex(content.Status) >= 3 &&
+          dialogType != DialogType.CONTENT &&
+          dialogType != DialogType.EDIT_REQUEST && (
+            <>
+              <button
+                onClick={() => setDialogType(DialogType.CONTENT)}
+                className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
+              >
+                Контент үзэх
+              </button>
+            </>
+          )}
       </>
     );
   };
@@ -356,82 +357,86 @@ const ContentProgressModalContent: React.FC<
           hideCloseButton={true}
         >
           <DialogTitle></DialogTitle>
-          <form
-            onSubmit={formik.handleSubmit}
-            className="h-full w-full flex flex-col gap-2"
-          >
-            {dialogType == DialogType.PROGRESS && (
-              <div className="flex flex-col gap-6 h-full w-full">
-                <div className="flex flex-row items-center gap-4 w-full h-full sm:min-w-[272px] bg-[#F5F4F0] rounded-2xl p-4">
-                  <div className="basis-1/3 lg:flex-none">
-                    <Image
-                      src={content.ContentThumbnail || "/no-content-image.png"}
-                      alt=""
-                      width={200}
-                      height={200}
-                      className="rounded-2xl aspect-square object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2 basis-2/3 lg:grow">
-                    <div className="flex flex-row gap-2 items-center justify-start">
+          <FormikProvider value={formik}>
+            <form
+              onSubmit={formik.handleSubmit}
+              className="h-full w-full flex flex-col gap-2"
+            >
+              {dialogType == DialogType.PROGRESS && (
+                <div className="flex flex-col gap-6 h-full w-full">
+                  <div className="flex flex-row items-center gap-4 w-full h-full sm:min-w-[272px] bg-[#F5F4F0] rounded-2xl p-4">
+                    <div className="basis-1/3 lg:flex-none">
                       <Image
-                        src={"/no-content-image.png"}
-                        alt=""
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
-                      <p className="text-xl font-bold">{content.Nickname}</p>
-                    </div>
-                    <p className="text-lg">{content.ProductName}</p>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-4 w-full border-[1px] border-[#E6E6E6] rounded-xl p-5 lg:p-10">
-                  <Stepper
-                    steps={steps}
-                    activeStep={activeStep}
-                    setActiveStep={setActiveStep}
-                    currentStepStatus={
-                      getCurrentStepColor(content.Status) as CurrentStepStatus
-                    }
-                    horizontal={true}
-                  />
-                  <div className="flex flex-row gap-8 w-full">
-                    <div className="flex-none mx-5 lg:mx-24">
-                      <Stepper
-                        steps={Object.entries(myStates[activeStep]).map(
-                          (_, index) => (
-                            <div key={index} />
-                          )
-                        )}
-                        labels={Object.entries(myStates[activeStep]).map(
-                          ([key, value]) => ({
-                            title: value,
-                            // subtitle: "Контент илгээх сүүлийн хугацаа: 12.04.2025",
-                            date: "12.04.2025",
-                          })
-                        )}
-                        activeStep={activeStep}
-                        setActiveStep={setActiveStep}
-                        currentStepStatus={
-                          getCurrentStepColor(
-                            content.Status
-                          ) as CurrentStepStatus
+                        src={
+                          content.ContentThumbnail || "/no-content-image.png"
                         }
-                        horizontal={false}
-                        hasBg={false}
+                        alt=""
+                        width={200}
+                        height={200}
+                        className="rounded-2xl aspect-square object-cover"
                       />
+                    </div>
+                    <div className="flex flex-col gap-2 basis-2/3 lg:grow">
+                      <div className="flex flex-row gap-2 items-center justify-start">
+                        <Image
+                          src={"/no-content-image.png"}
+                          alt=""
+                          width={40}
+                          height={40}
+                          className="rounded-full"
+                        />
+                        <p className="text-xl font-bold">{content.Nickname}</p>
+                      </div>
+                      <p className="text-lg">{content.ProductName}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-4 w-full border-[1px] border-[#E6E6E6] rounded-xl p-5 lg:p-10">
+                    <Stepper
+                      steps={steps}
+                      activeStep={activeStep}
+                      setActiveStep={setActiveStep}
+                      currentStepStatus={
+                        getCurrentStepColor(content.Status) as CurrentStepStatus
+                      }
+                      horizontal={true}
+                    />
+                    <div className="flex flex-row gap-8 w-full">
+                      <div className="flex-none mx-5 lg:mx-24">
+                        <Stepper
+                          steps={Object.entries(myStates[activeStep]).map(
+                            (_, index) => (
+                              <div key={index} />
+                            )
+                          )}
+                          labels={Object.entries(myStates[activeStep]).map(
+                            ([key, value]) => ({
+                              title: value,
+                              // subtitle: "Контент илгээх сүүлийн хугацаа: 12.04.2025",
+                              date: "12.04.2025",
+                            })
+                          )}
+                          activeStep={activeStep}
+                          setActiveStep={setActiveStep}
+                          currentStepStatus={
+                            getCurrentStepColor(
+                              content.Status
+                            ) as CurrentStepStatus
+                          }
+                          horizontal={false}
+                          hasBg={false}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {userType == "Creator" && createrModalContents()}
-            {userType == "Brand" && brandModalContents()}
-            {userType == "Creator" && creatorModalTriggersAndMessage()}
-            {userType == "Brand" && brandModalTriggersAndMessage()}
-          </form>
+              )}
+              {userType == "Creator" && createrModalContents()}
+              {userType == "Brand" && brandModalContents()}
+              {userType == "Creator" && creatorModalTriggersAndMessage()}
+              {userType == "Brand" && brandModalTriggersAndMessage()}
+            </form>
+          </FormikProvider>
 
           {/* custom close button */}
           {dialogType == DialogType.PROGRESS && (

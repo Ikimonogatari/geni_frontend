@@ -112,4 +112,5 @@ export type FormikTypes = {
   comment: string;
   sharePost: boolean;
   collabPost: boolean;
+  returnReason: string;
 };

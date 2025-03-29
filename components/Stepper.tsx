@@ -32,25 +32,25 @@ const Stepper: React.FC<StepperProps> = (props) => {
     hasBg = true,
   } = props;
 
-  const getStepColor = (index: number) => {
+  const getStepColor = (index: number, isTextColor = false) => {
     if (index < activeStep) {
-      return "bg-green-500";
+      return isTextColor ? "text-green-500" : "bg-green-500";
     }
 
     if (index === activeStep) {
       switch (currentStepStatus) {
         case "yellow":
-          return "bg-[#F49D19]";
+          return isTextColor ? "text-[#F49D19]" : "bg-[#F49D19]";
         case "green":
-          return "bg-green-500";
+          return isTextColor ? "text-green-500" : "bg-green-500";
         case "red":
-          return "bg-red-500";
+          return isTextColor ? "text-red-500" : "bg-red-500";
         default:
-          return "bg-yellow-500";
+          return isTextColor ? "text-yellow-500" : "bg-yellow-500";
       }
     }
 
-    return "bg-gray-300";
+    return isTextColor ? "text-gray-300" : "bg-gray-300";
   };
 
   const getLineColor = (index: number) => {
@@ -80,7 +80,9 @@ const Stepper: React.FC<StepperProps> = (props) => {
 
             {labels && (
               <div className="flex flex-col gap-1 -mt-1">
-                <span className="text-[#F49D19] font-medium text-base">
+                <span
+                  className={`${getStepColor(index, true)} font-medium text-base`}
+                >
                   {labels[index].title}
                 </span>
                 {(labels[index].subtitle || labels[index].date) && (
