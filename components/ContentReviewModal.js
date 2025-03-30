@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 
 function ContentReviewModal({ p }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   function renderStars(score) {
     return [1, 2, 3, 4, 5].map((star, index) => (
       <span key={index}>
@@ -28,69 +30,86 @@ function ContentReviewModal({ p }) {
   };
 
   return (
-    <>
-      <div className="mt-4 flex flex-row items-center gap-2">
-        <span className="text-[#6F6F6F]">Танд өгсөн дундаж оноо:</span>
-        <Image
-          src={"/star.png"}
-          width={28}
-          height={28}
-          alt=""
-          className="w-7 h-7"
-        />
-        <span>
-          {p && (
-            <span className="text-lg font-bold">
-              {renderAvgStar(
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger
+        type="submit"
+        className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
+      >
+        <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
+      </DialogTrigger>
+      <DialogContent className="max-w-lg w-full flex flex-col rounded-3xl">
+        <span className="text-3xl font-bold">Брэндийн сэтгэгдэл</span>
+        <div className="flex flex-row items-center gap-4 mt-4">
+          <Image
+            src={p?.BrandProfileLink ? p?.BrandProfileLink : "/dummy-brand.png"}
+            width={84}
+            height={84}
+            className="w-[84px] h-[84px] aspect-square rounded-full border border-[#2D262D]"
+          />
+          <div className="flex flex-col gap-2">
+            <span className="text-lg font-bold">{p?.BrandName}</span>
+            {p?.BrandTypes?.[0]?.TypeName ? (
+              <div className="bg-[#4D55F5] text-white text-center text-xs rounded-3xl px-4 py-2">
+                {p?.BrandTypes?.[0]?.TypeName}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        <div className="mt-4 flex flex-row items-center gap-2">
+          <span>Таньд өгсөн дундаж оноо:</span>
+          <Image
+            src={"/star.png"}
+            width={28}
+            height={28}
+            alt=""
+            className="w-7 h-7"
+          />
+          <span>
+            {p &&
+              renderAvgStar(
                 p?.BrandInstructionPnt || 0,
                 p?.ContextPnt || 0,
                 p?.CreationPnt || 0
               )}
+          </span>
+        </div>
+
+        <div className="border-[1px] border-[#000000] rounded-2xl bg-[#F5F4F0] p-5">
+          <div className="flex flex-col gap-2">
+            <span className="text-sm">
+              Брэндийн өгсөн чиглүүлэгийн дагуу хийсэн эсэх
             </span>
-          )}
-        </span>
-      </div>
-
-      <div className="border-[1px] border-[#E6E6E6] rounded-2xl p-5">
-        <div className="flex flex-col gap-2">
-          <span className="text-sm">
-            Брэндийн өгсөн чиглүүлэгийн дагуу хийсэн эсэх
-          </span>
-          <div className="flex flex-row gap-[6px] items-center">
-            {renderStars(p?.BrandInstructionPnt)}
-          </div>
-          <span className="text-sm">Контентын агуулга</span>
-          <div className="flex flex-row gap-[6px] items-center">
-            {renderStars(p?.ContextPnt)}
-          </div>
-          <span className="text-sm">Контентын хийцлэл</span>
-          <div className="flex flex-row gap-[6px] items-center">
-            {renderStars(p?.CreationPnt)}
+            <div className="flex flex-row gap-[6px] items-center">
+              {renderStars(p?.BrandInstructionPnt)}
+            </div>
+            <span className="text-sm">Контентын агуулга</span>
+            <div className="flex flex-row gap-[6px] items-center">
+              {renderStars(p?.ContextPnt)}
+            </div>
+            <span className="text-sm">Контентын хийцлэл</span>
+            <div className="flex flex-row gap-[6px] items-center">
+              {renderStars(p?.CreationPnt)}
+            </div>
           </div>
         </div>
-      </div>
-      {p?.BrandComment !== "" && (
-        <div className="flex flex-col gap-4">
-          <span className="text-[#6F6F6F]">Танд өгсөн сэтгэгдэл</span>
-          <span className="bg-[#F5F4F0] border-[1px] border-[#000000] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
-            {p?.BrandComment}
-          </span>
-        </div>
-      )}
-      {p?.BrandComment !== "" && (
-        <div className="flex flex-col gap-4">
-          <span className="text-[#6F6F6F]">Контент пост хийх хүсэлт</span>
-          <span className="bg-[#F5F4F0] border-[1px] border-[#000000] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
-            {p?.BrandComment}
-          </span>
-        </div>
-      )}
-
-      <span className="text-[#6F6F6F]">Таны цуглуулсан оноо</span>
-      <div className="w-full py-4 text-white font-semibold bg-geni-green text-xl text-center rounded-2xl">
-        30 XP
-      </div>
-    </>
+        {p?.BrandComment !== "" && (
+          <div className="flex flex-col gap-4">
+            <span>Танд өгсөн сэтгэгдэл</span>
+            <span className="bg-[#F5F4F0] border-[1px] border-[#000000] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
+              {p?.BrandComment}
+            </span>
+          </div>
+        )}
+        <button
+          onClick={() => setIsDialogOpen(false)}
+          className="mt-2 w-full py-4 text-white font-semibold bg-[#CA7FFE] text-xl border border-[#2D262D] rounded-2xl"
+        >
+          Баярлалаа
+        </button>
+      </DialogContent>
+    </Dialog>
   );
 }
 
