@@ -389,7 +389,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.information}
                 rows={5}
-                maxLength={1000}
+                maxLength={600}
                 charCount={formik.values.information.length}
                 errorText={formik.errors.information}
                 errorVisible={
@@ -486,7 +486,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.requestForCreators}
                 rows={5}
-                maxLength={1000}
+                maxLength={600}
                 charCount={formik.values.requestForCreators.length}
                 errorText={formik.errors.requestForCreators}
                 errorVisible={

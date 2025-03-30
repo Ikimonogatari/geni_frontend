@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,41 +12,19 @@ import SuccessModal from "@/components/common/SuccessModal";
 import Image from "next/image";
 import { ErrorText } from "@/components/ui/error-text";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
-import { useCreatorWithdrawMutation } from "@/app/services/service";
-import { toast } from "react-hot-toast";
 
-interface WithdrawCreditProps {
-  walletInfo: any;
-  bankList: any;
-  connectedAccount: any;
-}
-
-function WithdrawCredit({
-  walletInfo,
-  bankList,
-  connectedAccount,
-}: WithdrawCreditProps) {
-  console.log(walletInfo?.CurrBal, "WALLET INFO");
+function WithdrawCredit({ walletInfo }) {
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [creatorWithdraw, { isSuccess }] = useCreatorWithdrawMutation();
-
   const formik = useFormik({
     initialValues: {
-      amount: "0",
+      Amount: "",
     },
     validationSchema: withdrawCreditSchema,
     onSubmit: async (values) => {
-      try {
-        await creatorWithdraw(values);
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-      }
+      // @ts-ignore
+      await withdrawCredit(values);
     },
   });
-
-  const bankName = bankList?.find(
-    (bank) => bank.BankCode === connectedAccount?.BankCode
-  );
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -74,47 +52,39 @@ function WithdrawCredit({
                   className="aspect-square max-w-10 max-h-10"
                 />
                 <span className="text-base sm:text-lg whitespace-nowrap">
-                  {bankName?.Name}
+                  Хаан банк
                 </span>
               </div>
-              <span className="">{connectedAccount?.AcntNo}</span>
+              <span className="">0000 0000 0000</span>
             </div>
 
             <Input
-              id="amount"
-              name="amount"
-              type="string"
+              id="Amount"
+              name="Amount"
+              type="number"
               className="no-spinner bg-primary-bg text-lg sm:text-xl"
               label="Шилжүүлэг хийх мөнгөн дүн"
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3 gap-2"
-              placeholder="50'000"
+              placeholder="50’000"
               leftSection="₮"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.amount}
-              errorText={formik.errors.amount}
-              errorVisible={!!formik.touched.amount && !!formik.errors.amount}
+              value={formik.values.Amount}
+              errorText={formik.errors.Amount}
+              errorVisible={!!formik.touched.Amount && !!formik.errors.Amount}
             />
             <div className="ml-auto text-geni-blue text-sm sm:text-base">
-              Шилжүүлэг хийх доод дүн ₮50'000
+              Шилжүүлэг хийх доод дүн ₮50’000
             </div>
             <FadeInAnimation
               className="w-full flex justify-center"
-              visible={
-                parseFloat(walletInfo?.CurrBal || "0") <
-                parseFloat(formik.values.amount.replace(/[^0-9.]/g, "") || "0")
-              }
+              visible={walletInfo?.CurrBal < formik.values.Amount}
             >
               <ErrorText
                 className="text-white bg-geni-red text-sm inline-flex items-center justify-center gap-3 rounded-lg p-2"
                 text={"Таны шилжүүлэг хийх доод дүн хүрэлцэхгүй байна"}
-                visible={
-                  parseFloat(walletInfo?.CurrBal || "0") <
-                  parseFloat(
-                    formik.values.amount.replace(/[^0-9.]/g, "") || "0"
-                  )
-                }
+                visible={walletInfo?.CurrBal < formik.values.Amount}
                 leftSection={
                   <Image
                     src={"/warning-icon.png"}
@@ -128,12 +98,11 @@ function WithdrawCredit({
             </FadeInAnimation>
           </div>
           <SuccessModal
-            setIsSuccessDialogOpen={setDialogOpen}
+            setIsMainDialogOpen={setDialogOpen}
             modalImage="/geni-pink-image1.png"
             modalTitle="ШИЛЖҮҮЛЭГ АМЖИЛТТАЙ ХИЙГДЛЭЭ"
             modalTriggerText="Шилжүүлэх"
             imageClassName="w-[180px] h-[264px]"
-            isSuccessDialogOpen={isSuccess}
           />
         </form>
       </DialogContent>

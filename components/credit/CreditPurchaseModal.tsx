@@ -12,12 +12,11 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import SubscriptionModal from "../SubscriptionModal";
+import PaymentModal from "../PaymentModal";
 
 function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState("qpay");
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const [selectedPackageId, setSelectedPackageId] = useState(1);
@@ -114,13 +113,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
           />
         );
       case 4:
-        return (
-          <Step4
-            selectedPackageIndex={selectedPackageIndex}
-            selectedPayment={selectedPayment}
-            setSelectedPayment={setSelectedPayment}
-          />
-        );
+        return <Step4 selectedPackageIndex={selectedPackageIndex} />;
       default:
         return null;
     }
@@ -212,10 +205,9 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
               />
             </button>
           ) : (
-            <SubscriptionModal
+            <PaymentModal
               selectedPackageId={selectedPackageId}
               setIsMainDialogOpen={setMainDialogOpen}
-              selectedPayment={selectedPayment}
             />
           )}
         </div>

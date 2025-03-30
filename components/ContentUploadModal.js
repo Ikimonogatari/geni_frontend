@@ -4,6 +4,7 @@ import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import Image from "next/image";
 import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
 import {
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
@@ -12,17 +13,16 @@ import {
 } from "../app/services/service";
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
-import useS3Upload from "./hooks/useUploadToS3";
-import ContentUploadProgress from "./common/ContentUploadProgress";
 
 function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isContentSuccess, setIsContentSuccess] = useState(false);
+  const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
+  const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
-  const { uploadToS3, progress, isUploading } = useS3Upload();
   const [
     getImagePresignedUrl,
     {
@@ -62,8 +62,11 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   useEffect(() => {
     if (getImagePresignedUrlError) {
       toast.error(getImagePresignedUrlError?.data?.error);
+      setIsImageUploadLoading(false);
     }
     if (getImagePresignedUrlData) {
+      setIsImageUploadLoading(false);
+
       setContentThumbnail(getImagePresignedUrlData.url);
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
@@ -71,8 +74,10 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   useEffect(() => {
     if (getVideoPresignedUrlError) {
       toast.error(getVideoPresignedUrlError?.data?.error);
+      setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
+      setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
@@ -89,6 +94,8 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   useEffect(() => {
     if (uploadFileError) {
       toast.error(uploadFileError?.data?.error);
+      setIsVideoUploadLoading(false);
+      setIsImageUploadLoading(false);
     }
   }, [uploadFileData, uploadFileError]);
   const {
@@ -103,12 +110,13 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
+        setIsImageUploadLoading(true);
         uploadFile({ FolderName: "content-thumbnail" })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               setContentThumbnailId(fileId);
-              uploadToS3(uploadURL, file, "image").then(() => {
+              uploadToS3(uploadURL, file).then(() => {
                 getImagePresignedUrl({
                   FileId: fileId,
                 });
@@ -134,12 +142,13 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
+        setIsVideoUploadLoading(true);
         uploadFile({ FolderName: "content-video" })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               setContentVideoId(fileId);
-              uploadToS3(uploadURL, file, "video").then(() => {
+              uploadToS3(uploadURL, file).then(() => {
                 getVideoPresignedUrl({
                   FileId: fileId,
                 });
@@ -153,6 +162,23 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
     },
   });
 
+  const uploadToS3 = async (url, file) => {
+    try {
+      const response = await axios.put(url, file, {
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+      });
+
+      if (response.status == 200) {
+      } else {
+        throw new Error(`HTTP error! status: ${response}`);
+      }
+    } catch (error) {
+      console.error("Error uploading to S3:", error);
+      throw error;
+    }
+  };
   const handleContentSubmit = () => {
     creatorContentSubmit({
       ContentId: contentId,
@@ -167,14 +193,9 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
       <Dialog>
         <DialogTrigger
           type="submit"
-          className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
+          className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
         >
-          <Image
-            src={"/hamburger-menu-icon.png"}
-            alt=""
-            width={24}
-            height={24}
-          />
+          Контент илгээх
         </DialogTrigger>
 
         <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
@@ -191,11 +212,16 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
                   <source src={contentVideo} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-              ) : isUploading.video ? (
-                <ContentUploadProgress
-                  isLoading={isUploading.video}
-                  progress={progress.video}
-                />
+              ) : isVideoUploadLoading ? (
+                <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
+                  <ClipLoader
+                    loading={isVideoUploadLoading}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                    className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                    size={50}
+                  />
+                </div>
               ) : (
                 <div
                   {...getRootPropsForVideo()}
@@ -226,11 +252,16 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
                   alt=""
                   className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                 />
-              ) : isUploading.image ? (
-                <ContentUploadProgress
-                  isLoading={isUploading.image}
-                  progress={progress.image}
-                />
+              ) : isImageUploadLoading ? (
+                <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
+                  <ClipLoader
+                    loading={isImageUploadLoading}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                    className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                    size={50}
+                  />
+                </div>
               ) : (
                 <div
                   {...getRootPropsForImage()}
@@ -254,9 +285,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
 
             <div className="w-full flex flex-col h-full justify-between">
               <div className="flex flex-col gap-4">
-                <span className="text-lg">
-                  Бүтээгдэхүүн хэрэглэсэн өөрийн сэтгэгдэлээ хуваалцаарай.
-                </span>
+                <span className="text-lg">Тайлбар</span>
                 <textarea
                   type="text"
                   value={caption}

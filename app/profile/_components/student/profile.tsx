@@ -16,8 +16,6 @@ import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
-import CoursePurchaseModal from "@/components/course/CoursePurchaseModal";
-import GuideModal from "@/components/common/GuideModal";
 
 function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -138,7 +136,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
                 <span className="text-[#2D262D] text-base sm:text-2xl font-bold">
                   {getUserInfoLoading
                     ? ""
-                    : getUserInfoData?.Nickname || "Geni сурагч"}
+                    : getUserInfoData?.Nickname || "Geni бүтээгч"}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink ? (
@@ -225,15 +223,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
               ))}
             </div>
 
-            {/* <HomeworkUploadModal parsedUserInfo={parsedUserInfo} /> */}
-            <CoursePurchaseModal
-              buttonIconSize={""}
-              className={
-                "flex flex-row items-center bg-geni-green text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
-              }
-              buttonText={"Хөтөлбөр идэвхжүүлэх"}
-              userInfo={getUserInfoData}
-            />
+            <HomeworkUploadModal parsedUserInfo={parsedUserInfo} />
           </div>
           {currentContents && !isLoading ? (
             renderStudentProfile()
@@ -268,13 +258,6 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
         isCreator={isCreator}
         handleBecomeCreator={handleBecomeCreator}
       />
-      {getUserInfoData && (
-        <GuideModal
-          hasSeenGuide={!getUserInfoData?.HasSeenGuide}
-          slides={guideSlides}
-          theme="student"
-        />
-      )}
     </div>
   );
 }
@@ -286,28 +269,5 @@ const brandProfileButtons = [
     title: "Хичээл үзэх",
     value: "content-progress",
     link: "https://meirapage.gumroad.com/l/hxwkma/hic5m2k",
-  },
-];
-
-const guideSlides = [
-  {
-    image: "/student-guide-image1.png",
-    title: "Хөтөлбөрөө идэвхжүүлэх",
-    text: "Та “Хөтөлбөр идэвхжүүлэх” товчин дээр даран төлбөрөө төлж хөтөлбөрөө идэвхжүүлээрэй.",
-  },
-  {
-    image: "/student-guide-image2.png",
-    title: "Хичээлээ үзэх",
-    text: "Ta Geni creator online course хэсгийн “Үзэх” товч дээр дараарай. Та хичээлээ Gumroad платформ дээрээс үзэх бөгөөд та утсаараа үзэх бол Gumroad app-г татахыг зөвлөж байна. Энэхүү хичээлийн линк нь зөвхөн танд зориулсан бөгөөд та линкээр хандсаны дараа хичээлийн нүүр хэсгээс “I want this” товч дээр даран tip гэсэн хэсэгт 0 гэж оруулаад 100% үнэгүй хичээлээ нээж үзээрэй.",
-  },
-  {
-    image: "/student-guide-image3.png",
-    title: "Даалгавар биелүүлэх",
-    text: "Та хичээлээ үзэж дуусгаад Даалгавар хэсэгт буй зааврын дагуу өөрийн хэрэглэх дуртай, гэртээ байгаа 1 бүтээгдэхүүнээ сонгон контент бүтээж илгээгээрэй. Контентоо илгээхдээ Reel бичлэг болон Thumbnail зураг, Description тайлбар гэсэн хэсгүүдийг бүрдүүлж илгээнэ. Таны илгээсэн контент дээр бидний зүгээс нэмэлт зөвлөгөө өгөх бөгөөд та контент UGC контентийн шаарлагт тэнцсэнээр Geni Creator хаягтай болно",
-  },
-  {
-    image: "/student-guide-image4.png",
-    title: "Брэндтэй хамтрах",
-    text: "Даалгавраа амжилттай биелүүлсний дараа брэндтэй хамтрах эрх шууд нээгдэх бөгөөд хамтралаа амжилттай хийн брэндээс 100 хүртэлх xp оноо цуглуулснаар Certified тэмдэглэгээтэй болно.",
   },
 ];

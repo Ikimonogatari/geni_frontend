@@ -1,80 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import {
-  useGetBankListQuery,
-  useGetCreatorWalletHistoryQuery,
-  useGetWalletInfoQuery,
-  useCheckBankAccountNameMutation,
-  useGetConnectedBankAccountQuery,
-} from "@/app/services/service";
+import { useGetWalletInfoQuery } from "@/app/services/service";
 import AddBalance from "./AddBalance";
 import WithdrawCredit from "./WithdrawCredit";
 import ListRowLayout from "@/components/common/ListRowLayout";
-import { useDateFormatter } from "@/app/hooks/useDateFormatter";
-
 function CreatorWallet() {
   const router = useRouter();
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  const contentsPerPage = 16;
-  const offset = 0;
-  const { formatDate } = useDateFormatter();
-  const [accountName, setAccountName] = useState("");
-  const [isCheckingName, setIsCheckingName] = useState(false);
-
   const {
     data: getWalletInfoData,
     error: getWalletInfoError,
     isLoading: getWalletInfoLoading,
-    refetch: refetchWalletInfo,
     //@ts-ignore
   } = useGetWalletInfoQuery();
-  // @ts-ignore
-  const { data: bankList } = useGetBankListQuery();
-  // @ts-ignore
-  const { data: walletHistory, refetch: refetchWalletHistory } =
-    useGetCreatorWalletHistoryQuery(
-      { limit: contentsPerPage, offset },
-      { refetchOnMountOrArgChange: true }
-    );
-  // @ts-ignore
-  const { data: connectedAccount } = useGetConnectedBankAccountQuery();
-  const [checkBankAccountName] = useCheckBankAccountNameMutation();
 
-  const handleTransactionComplete = async () => {
-    await Promise.all([refetchWalletInfo(), refetchWalletHistory()]);
-  };
-
-  useEffect(() => {
-    const checkAccountName = async () => {
-      if (connectedAccount?.BankCode && connectedAccount?.AcntNo) {
-        setIsCheckingName(true);
-        try {
-          const response = await checkBankAccountName({
-            BankCode: connectedAccount.BankCode,
-            AcntNo: connectedAccount.AcntNo,
-          }).unwrap();
-          setAccountName(response.Name);
-        } catch (error) {
-          console.error("Failed to check account name:", error);
-        } finally {
-          setIsCheckingName(false);
-        }
-      }
-    };
-
-    checkAccountName();
-  }, [connectedAccount]);
-
-  console.log(walletHistory && walletHistory, "WALLET HISTORY");
-  console.log(bankList && bankList, "BANK LIST");
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32 mb-12">
-        <div className="max-w-5xl min-h-screen mx-auto px-7 py-11 container">
+        <div className="max-w-4xl min-h-screen mx-auto px-7 py-11 container">
           <button
             onClick={() => router.back()}
             className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
@@ -107,46 +54,30 @@ function CreatorWallet() {
                 </span>
               </div>
             </div>
-            <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
-              <AddBalance
-                walletInfo={getWalletInfoData}
-                bankList={bankList}
-                onTransactionComplete={handleTransactionComplete}
-                accountName={accountName}
-                isCheckingName={isCheckingName}
-              />
-              <WithdrawCredit
-                walletInfo={getWalletInfoData}
-                bankList={bankList}
-                connectedAccount={connectedAccount}
-              />
-            </div>
+            {/* <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
+              <AddBalance walletInfo={getWalletInfoData} />
+              <WithdrawCredit walletInfo={getWalletInfoData} />
+            </div> */}
           </div>
-          <div className="w-full overflow-x-auto pt-3 mt-7 border-t-[1px] border-[#F5F4F0] flex flex-col gap-3">
+          {/* <div className="min-w-[540px] w-full pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
             <span className="text-2xl font-bold">Дансны түүх</span>
-            <div className="flex flex-col gap-3 min-w-[540px]">
-              {walletHistory &&
-                walletHistory?.Data?.map((walletHistoryItem, i) => (
-                  <ListRowLayout
-                    key={i}
-                    layout="grid grid-cols-[3fr,2fr,2fr,1fr] sm:grid-cols-[3fr,2fr,2fr,1fr]"
-                  >
-                    <span>{walletHistoryItem.TxnDesc}</span>
-                    <span
-                      className={`max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-lg ${
-                        walletHistoryItem.IsAdd
-                          ? "bg-geni-green"
-                          : "bg-geni-red"
-                      }`}
-                    >
-                      {walletHistoryItem.IsAdd ? "Орлого" : "Зарлага"}
-                    </span>
-                    <span>{formatDate(walletHistoryItem.CreatedAt)}</span>
-                    <span>{walletHistoryItem.TxnAmt.split(".")[0]}₮</span>
-                  </ListRowLayout>
-                ))}
-            </div>
-          </div>
+            <ListRowLayout layout="grid grid-cols-[3fr,2fr,2fr,2fr] sm:grid-cols-[3fr,2fr,2fr,2fr]">
+              <span>Geni Point reward</span>
+              <span className="bg-geni-green rounded-xl text-white py-1 px-4 text-center text-base sm:text-lg">
+                Орлого
+              </span>
+              <span>2024.09.11 18:32</span>
+              <span>32’000₮</span>
+            </ListRowLayout>
+            <ListRowLayout layout="grid grid-cols-[3fr,2fr,2fr,2fr] sm:grid-cols-[3fr,2fr,2fr,2fr]">
+              <span>Банкны дансруу шилжүүлэг</span>
+              <span className="bg-geni-red rounded-xl text-white py-1 px-4 text-center text-base sm:text-lg">
+                Зарлага
+              </span>
+              <span>2024.09.11 18:32</span>
+              <span>32’000₮</span>
+            </ListRowLayout>
+          </div> */}
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
-import StudentRegister from "../register/student/page";
 
 // Define a service using a base URL and expected endpoints
 
@@ -67,13 +66,6 @@ export const geniApi = createApi({
     uploadByPresignUrl: builder.mutation({
       query: (body) => ({
         url: "/api/admin/private/file/presign",
-        method: "POST",
-        body,
-      }),
-    }),
-    publicUploadByPresignUrl: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/public/file/presign",
         method: "POST",
         body,
       }),
@@ -160,9 +152,10 @@ export const geniApi = createApi({
       }),
     }),
     listPublicProducts: builder.query({
-      query: () => ({
+      query: (body) => ({
         url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
         method: "GET",
+        body,
       }),
     }),
     getPublicProductById: builder.query({
@@ -220,13 +213,6 @@ export const geniApi = createApi({
         body,
       }),
     }),
-    getPublicVideoPresignedUrl: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/public/file/url",
-        method: "POST",
-        body,
-      }),
-    }),
     brandReceiveContent: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/receive",
@@ -269,13 +255,6 @@ export const geniApi = createApi({
     becomeCreator: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/student/becomecreator",
-        method: "POST",
-        body,
-      }),
-    }),
-    studentRegister: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/public/student-register",
         method: "POST",
         body,
       }),
@@ -376,19 +355,6 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
-    creatorWithdraw: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/wallet",
-        method: "POST",
-        body,
-      }),
-    }),
-    getCreatorWalletHistory: builder.query({
-      query: ({ limit, offset }) => ({
-        url: `/api/web/private/wallet/txn-hist?&limit=${limit}&offset=${offset}`,
-        method: "GET",
-      }),
-    }),
     brandTermCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/term-check",
@@ -401,7 +367,7 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
-    guideCheck: builder.mutation({
+    brandGuideCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/no-guide",
         method: "POST",
@@ -428,63 +394,10 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
-    getBrandCreditHistory: builder.query({
-      query: ({ limit, offset }) => ({
-        url: `/api/web/private/user/brand/credit/hist?limit=${limit}&offset=${offset}`,
-        method: "GET",
-      }),
-    }),
-    getBankList: builder.query({
-      query: () => ({
-        url: "/api/web/private/banks",
-        method: "GET",
-      }),
-    }),
     creatorApply: builder.mutation({
       query: (body) => ({
         url: "/api/web/public/creator-application",
         method: "POST",
-        body,
-      }),
-    }),
-    purchaseCourse: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/student/qpay",
-        method: "POST",
-        body,
-      }),
-    }),
-    getContentProcess: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/content/process",
-        method: "POST",
-        body,
-      }),
-    }),
-    checkBankAccountName: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/cgw/check-name",
-        method: "POST",
-        body,
-      }),
-    }),
-    getConnectedBankAccount: builder.query({
-      query: () => ({
-        url: "/api/web/private/cust-bank",
-        method: "GET",
-      }),
-    }),
-    connectBankAccount: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/cust-bank",
-        method: "POST",
-        body,
-      }),
-    }),
-    updateBankAccount: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/cust-bank",
-        method: "PUT",
         body,
       }),
     }),
@@ -517,12 +430,10 @@ export const {
   useUpdateContentStatusMutation,
   useListBrandContentsQuery,
   useUploadByPresignUrlMutation,
-  usePublicUploadByPresignUrlMutation,
   useListPaymentPlansQuery,
   useSubscribePlanMutation,
   useCreatorContentSubmitMutation,
   useGetVideoPresignedUrlMutation,
-  useGetPublicVideoPresignedUrlMutation,
   useGetImagePresignedUrlMutation,
   useBrandReceiveContentMutation,
   useCheckPaymentQuery,
@@ -547,18 +458,7 @@ export const {
   useGetWalletInfoQuery,
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
-  useGuideCheckMutation,
+  useBrandGuideCheckMutation,
   useGetBrandCreditInfoQuery,
   useCreatorApplyMutation,
-  useStudentRegisterMutation,
-  usePurchaseCourseMutation,
-  useGetBankListQuery,
-  useGetContentProcessMutation,
-  useCheckBankAccountNameMutation,
-  useGetConnectedBankAccountQuery,
-  useConnectBankAccountMutation,
-  useUpdateBankAccountMutation,
-  useCreatorWithdrawMutation,
-  useGetCreatorWalletHistoryQuery,
-  useGetBrandCreditHistoryQuery,
 } = geniApi;
