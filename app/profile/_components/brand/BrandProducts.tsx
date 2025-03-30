@@ -194,17 +194,11 @@ function BrandProducts({ brandProducts, brandData }) {
                     {requestStatus?.text}
                   </span>
                 )}
-
                 <button
                   onClick={() => openProductModal(p)}
-                  className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
+                  className="col-span-1 bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
                 >
-                  <Image
-                    src={"/hamburger-menu-icon.png"}
-                    alt=""
-                    width={24}
-                    height={24}
-                  />
+                  Харах
                 </button>
               </div>
             );

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
-import Image from "next/image";
 
 function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
   const [resubmitting, setIsResubmitting] = useState(false);
@@ -9,9 +8,9 @@ function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
     <Dialog>
       <DialogTrigger
         type="submit"
-        className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
+        className="bg-[#F49D19] border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold"
       >
-        <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
+        Дэлгэрэнгүй
       </DialogTrigger>
       {!resubmitting ? (
         <DialogContent className="overflow-y-auto flex flex-col p-6 w-full max-h-[739px] max-w-[577px] rounded-3xl">

@@ -7,12 +7,7 @@ const addBankAccountSchema = Yup.object({
 });
 
 const withdrawCreditSchema = Yup.object({
-  amount: Yup.string().required("Заавал бөглөнө үү"),
-  // .test("min-amount", "Шилжүүлэг хийх доод дүн ₮50'000", (value) => {
-  //   if (!value) return false;
-  //   const numericValue = parseInt(value.replace(/[^0-9]/g, ""));
-  //   return numericValue >= 50000;
-  // }),
+  Amount: Yup.number().required("Заавал бөглөнө үү"),
 });
 
 export { addBankAccountSchema, withdrawCreditSchema };

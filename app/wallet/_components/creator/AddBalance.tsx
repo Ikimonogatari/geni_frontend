@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,36 +19,16 @@ import { ErrorText } from "@/components/ui/error-text";
 import SuccessModal from "@/components/common/SuccessModal";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import Image from "next/image";
-import {
-  useGetConnectedBankAccountQuery,
-  useConnectBankAccountMutation,
-  useUpdateBankAccountMutation,
-} from "@/app/services/service";
-import toast from "react-hot-toast";
-import debounce from "lodash/debounce";
 
-interface AddBalanceProps {
-  walletInfo: any;
-  bankList: any;
-  onTransactionComplete: () => Promise<void>;
-  accountName: string;
-  isCheckingName: boolean;
-}
+const bankOptions = [
+  { label: "Bank of Mongolia", value: "bank_of_mongolia" },
+  { label: "Golomt Bank", value: "golomt_bank" },
+  { label: "Khan Bank", value: "khan_bank" },
+  { label: "Trade and Development Bank", value: "trade_dev_bank" },
+];
 
-function AddBalance({
-  bankList,
-  onTransactionComplete,
-  accountName,
-  isCheckingName,
-}: AddBalanceProps) {
+function AddBalance({ walletInfo }) {
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [hasConnectedAccount, setHasConnectedAccount] = useState(false);
-  // @ts-ignore
-  const { data: connectedAccount } = useGetConnectedBankAccountQuery();
-  const [connectBankAccount] = useConnectBankAccountMutation();
-  const [updateBankAccount] = useUpdateBankAccountMutation();
-
   const formik = useFormik({
     initialValues: {
       bankName: "",
@@ -57,45 +37,10 @@ function AddBalance({
     },
     validationSchema: addBankAccountSchema,
     onSubmit: async (values) => {
-      try {
-        const accountData = {
-          BankCode: values.bankName,
-          AcntNo: values.bankAccountNumber,
-        };
-
-        if (hasConnectedAccount) {
-          await updateBankAccount(accountData).unwrap();
-        } else {
-          await connectBankAccount(accountData).unwrap();
-        }
-
-        setIsSuccess(true);
-        setDialogOpen(false);
-        toast.success("Данс амжилттай холбогдлоо");
-        await onTransactionComplete();
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-      }
+      // @ts-ignore
+      await addBankAccount(values);
     },
   });
-
-  useEffect(() => {
-    if (connectedAccount) {
-      setHasConnectedAccount(true);
-      formik.setValues({
-        bankName: connectedAccount.BankCode,
-        bankAccountNumber: connectedAccount.AcntNo,
-        bankAccountOwner: accountName,
-      });
-    }
-  }, [connectedAccount, accountName]);
-
-  const handleAccountNumberChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-    formik.setFieldValue("bankAccountNumber", value);
-  };
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -104,7 +49,7 @@ function AddBalance({
       </DialogTrigger>
       {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-4 sm:gap-2 max-h-[739px] w-full lg:w-full max-w-3xl rounded-3xl">
-        {/* @ts-ignore */}
+        {/* @ts-ignore */}{" "}
         <DialogTitle className="text-2xl sm:text-3xl xl:text-4xl font-bold">
           Данс холбох
         </DialogTitle>
@@ -129,23 +74,14 @@ function AddBalance({
                 </SelectTrigger>
                 {/* @ts-ignore */}
                 <SelectContent>
-                  {bankList?.map((bank) => (
+                  {bankOptions.map((bank) => (
                     // @ts-ignore
                     <SelectItem
                       className="text-base sm:text-lg"
-                      key={bank.BankCode}
-                      value={bank.BankCode}
+                      key={bank.value}
+                      value={bank.value}
                     >
-                      <div className="flex flex-row gap-2 items-center">
-                        <Image
-                          src={bank.Image}
-                          width={36}
-                          height={36}
-                          alt={bank.Name}
-                          className="w-9 h-9 rounded-lg object-contain"
-                        />
-                        {bank.Name}
-                      </div>
+                      {bank.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -165,7 +101,7 @@ function AddBalance({
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
               placeholder="0000 0000 0000"
-              onChange={handleAccountNumberChange}
+              onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.bankAccountNumber}
               errorText={formik.errors.bankAccountNumber}
@@ -179,13 +115,19 @@ function AddBalance({
               name="bankAccountOwner"
               type="text"
               min={0}
-              className="no-spinner bg-primary-bg text-lg sm:text-xl cursor-not-allowed"
+              className="no-spinner bg-primary-bg text-lg sm:text-xl"
               label="Данс эзэмшигчийн нэр"
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
+              placeholder="Дамдиндорж"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.bankAccountOwner}
-              readOnly
-              disabled={isCheckingName}
+              errorText={formik.errors.bankAccountOwner}
+              errorVisible={
+                !!formik.touched.bankAccountOwner &&
+                !!formik.errors.bankAccountOwner
+              }
             />
           </div>
           <FadeInAnimation
@@ -208,12 +150,11 @@ function AddBalance({
             />
           </FadeInAnimation>
           <SuccessModal
-            setIsSuccessDialogOpen={setDialogOpen}
+            setIsMainDialogOpen={setDialogOpen}
             modalImage="/payment-success.png"
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
-            isSuccessDialogOpen={isSuccess}
           />
         </form>
       </DialogContent>
