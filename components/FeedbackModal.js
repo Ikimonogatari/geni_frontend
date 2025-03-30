@@ -1,20 +1,20 @@
 import React, { useState } from "react";
+import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
-import { DialogType } from "./content-progress/content.services";
+import Image from "next/image";
 
-function FeedbackModal({
-  parsedUserInfo,
-  contentId,
-  feedbacks,
-  setDialogType,
-}) {
+function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
   const [resubmitting, setIsResubmitting] = useState(false);
   return (
-    <>
-      {/* {!resubmitting ? ( */}
-      <div>
-        <div className="border-[1px] border-[#E6E6E6] p-4 rounded-xl">
-          {/* <DialogContent className="overflow-y-auto flex flex-col p-6 w-full max-h-[739px] max-w-[577px] rounded-3xl"> */}
+    <Dialog>
+      <DialogTrigger
+        type="submit"
+        className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
+      >
+        <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
+      </DialogTrigger>
+      {!resubmitting ? (
+        <DialogContent className="overflow-y-auto flex flex-col p-6 w-full max-h-[739px] max-w-[577px] rounded-3xl">
           <span className="text-3xl font-bold">Зөвлөгөө</span>
           <div className="mt-4 flex flex-col gap-3">
             {feedbacks?.map((f, i) => (
@@ -27,22 +27,20 @@ function FeedbackModal({
               </div>
             ))}
           </div>
-          {/* </DialogContent> */}
-        </div>
-        <button
-          onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-          className="mt-5 sm:mt-10 w-full py-2 text-white font-semibold bg-[#CA7FFE] rounded-xl"
-        >
-          Дахин илгээх
-        </button>
-      </div>
-      {/* // ) : (
-      //   <FeedbackModalUploadModalContent
-      //     parsedUserInfo={parsedUserInfo}
-      //     contentId={contentId}
-      //   />
-      // )} */}
-    </>
+          <button
+            onClick={() => setIsResubmitting(true)}
+            className="mt-5 sm:mt-10 w-full py-4 text-white font-semibold bg-[#CA7FFE] text-base sm:text-2xl border border-[#2D262D] rounded-2xl"
+          >
+            Дахин илгээх
+          </button>
+        </DialogContent>
+      ) : (
+        <FeedbackModalUploadModalContent
+          parsedUserInfo={parsedUserInfo}
+          contentId={contentId}
+        />
+      )}
+    </Dialog>
   );
 }
 

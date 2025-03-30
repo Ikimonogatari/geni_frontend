@@ -10,7 +10,6 @@ import Cookies from "js-cookie";
 import ContentReturnModal from "@/app/profile/_components/creator/ContentReturnModal";
 import ContentUploadModal from "../ContentUploadModal";
 import ContentReviewModal from "../ContentReviewModal";
-import FeedbackModal from "../FeedbackModal";
 import {
   DialogType,
   FormikTypes,
@@ -27,6 +26,7 @@ import ReturnSection from "./ReturnSection";
 import ProgressStepper from "./ProgressStepper";
 import { useGetContentProcessMutation } from "@/app/services/service";
 import moment from "moment";
+import FeedbackModalContent from "./FeedbackModalContent";
 
 // export const getStepIndex = (status: string): number => {
 //   const arr = [
@@ -280,9 +280,7 @@ const ContentProgressModalContent: React.FC<
         )}
         {content.CurrentStepName === STATUS_LIST.ContentRejected &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
-            <FeedbackModal
-              parsedUserInfo={parsedUserInfo}
-              contentId={content?.ContentId}
+            <FeedbackModalContent
               feedbacks={content?.FeedBacks}
               setDialogType={setDialogType}
             />
