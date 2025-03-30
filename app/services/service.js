@@ -376,6 +376,19 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    creatorWithdraw: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/wallet",
+        method: "POST",
+        body,
+      }),
+    }),
+    getCreatorWalletHistory: builder.query({
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/wallet/txn-hist?&limit=${limit}&offset=${offset}`,
+        method: "GET",
+      }),
+    }),
     brandTermCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/term-check",
@@ -531,4 +544,6 @@ export const {
   useGetConnectedBankAccountQuery,
   useConnectBankAccountMutation,
   useUpdateBankAccountMutation,
+  useCreatorWithdrawMutation,
+  useGetCreatorWalletHistoryQuery,
 } = geniApi;

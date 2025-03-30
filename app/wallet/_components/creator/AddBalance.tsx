@@ -20,8 +20,6 @@ import SuccessModal from "@/components/common/SuccessModal";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import Image from "next/image";
 import {
-  useGetBankListQuery,
-  useCheckBankAccountNameMutation,
   useGetConnectedBankAccountQuery,
   useConnectBankAccountMutation,
   useUpdateBankAccountMutation,
@@ -31,18 +29,21 @@ import debounce from "lodash/debounce";
 
 interface AddBalanceProps {
   walletInfo: any;
+  bankList: any;
+  onTransactionComplete: () => Promise<void>;
+  accountName: string;
+  isCheckingName: boolean;
 }
 
-function AddBalance({ walletInfo }: AddBalanceProps) {
+function AddBalance({
+  bankList,
+  onTransactionComplete,
+  accountName,
+  isCheckingName,
+}: AddBalanceProps) {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [accountName, setAccountName] = useState("");
-  const [isCheckingName, setIsCheckingName] = useState(false);
   const [hasConnectedAccount, setHasConnectedAccount] = useState(false);
-
-  // @ts-ignore
-  const { data: bankList } = useGetBankListQuery();
-  const [checkBankAccountName] = useCheckBankAccountNameMutation();
   // @ts-ignore
   const { data: connectedAccount } = useGetConnectedBankAccountQuery();
   const [connectBankAccount] = useConnectBankAccountMutation();
@@ -71,64 +72,29 @@ function AddBalance({ walletInfo }: AddBalanceProps) {
         setIsSuccess(true);
         setDialogOpen(false);
         toast.success("Данс амжилттай холбогдлоо");
+        await onTransactionComplete();
       } catch (error) {
         toast.error("Алдаа гарлаа");
       }
     },
   });
 
-  const checkAccountName = useCallback(
-    debounce(async (bankCode: string, accountNumber: string) => {
-      if (accountNumber.length >= 8 && bankCode) {
-        setIsCheckingName(true);
-        try {
-          const response = await checkBankAccountName({
-            BankCode: bankCode,
-            AcntNo: accountNumber,
-          }).unwrap();
-          setAccountName(response.Name);
-          formik.setFieldValue("bankAccountOwner", response.Name);
-        } catch (error) {
-          toast.error("Дансны нэр олдсонгүй");
-        } finally {
-          setIsCheckingName(false);
-        }
-      }
-    }, 500),
-    []
-  );
-
   useEffect(() => {
     if (connectedAccount) {
       setHasConnectedAccount(true);
-      setAccountName(connectedAccount.Name);
       formik.setValues({
         bankName: connectedAccount.BankCode,
         bankAccountNumber: connectedAccount.AcntNo,
-        bankAccountOwner: connectedAccount.Name,
+        bankAccountOwner: accountName,
       });
     }
-  }, [connectedAccount]);
-
-  useEffect(() => {
-    if (isDialogOpen && connectedAccount) {
-      setHasConnectedAccount(true);
-      setAccountName(connectedAccount.Name);
-      formik.setValues({
-        bankName: connectedAccount.BankCode,
-        bankAccountNumber: connectedAccount.AcntNo,
-        bankAccountOwner: connectedAccount.Name,
-      });
-      checkAccountName(connectedAccount.BankCode, connectedAccount.AcntNo);
-    }
-  }, [isDialogOpen, connectedAccount, checkAccountName]);
+  }, [connectedAccount, accountName]);
 
   const handleAccountNumberChange = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = e.target.value;
     formik.setFieldValue("bankAccountNumber", value);
-    checkAccountName(formik.values.bankName, value);
   };
 
   return (
@@ -136,7 +102,9 @@ function AddBalance({ walletInfo }: AddBalanceProps) {
       <DialogTrigger className="aspect-[200/50] text-sm sm:text-base w-[200px] rounded-lg border-[1px] border-[#2D262D] flex justify-center items-center">
         Данс холбох
       </DialogTrigger>
+      {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-4 sm:gap-2 max-h-[739px] w-full lg:w-full max-w-3xl rounded-3xl">
+        {/* @ts-ignore */}
         <DialogTitle className="text-2xl sm:text-3xl xl:text-4xl font-bold">
           Данс холбох
         </DialogTitle>
@@ -155,24 +123,29 @@ function AddBalance({ walletInfo }: AddBalanceProps) {
                   formik.setFieldValue("bankName", value)
                 }
               >
+                {/* @ts-ignore */}
                 <SelectTrigger className="bg-primary-bg rounded-xl h-12 border-none px-3 w-full text-base sm:text-lg">
                   <SelectValue placeholder="Банк сонгох" />
                 </SelectTrigger>
+                {/* @ts-ignore */}
                 <SelectContent>
                   {bankList?.map((bank) => (
+                    // @ts-ignore
                     <SelectItem
-                      className="text-base sm:text-lg !flex !flex-row items-center gap-2"
+                      className="text-base sm:text-lg"
                       key={bank.BankCode}
                       value={bank.BankCode}
                     >
-                      <Image
-                        src={`data:image/png;base64,${bank.Image}`}
-                        width={24}
-                        height={24}
-                        alt={bank.Name}
-                        className="w-6 h-6 object-contain"
-                      />
-                      {bank.Name}
+                      <div className="flex flex-row gap-2 items-center">
+                        <Image
+                          src={bank.Image}
+                          width={36}
+                          height={36}
+                          alt={bank.Name}
+                          className="w-9 h-9 rounded-lg object-contain"
+                        />
+                        {bank.Name}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -206,11 +179,10 @@ function AddBalance({ walletInfo }: AddBalanceProps) {
               name="bankAccountOwner"
               type="text"
               min={0}
-              className="no-spinner bg-primary-bg text-lg sm:text-xl"
+              className="no-spinner bg-primary-bg text-lg sm:text-xl cursor-not-allowed"
               label="Данс эзэмшигчийн нэр"
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
-              placeholder="Дамдиндорж"
               value={formik.values.bankAccountOwner}
               readOnly
               disabled={isCheckingName}
@@ -241,7 +213,7 @@ function AddBalance({ walletInfo }: AddBalanceProps) {
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
-            isSuccess={isSuccess}
+            isSuccessDialogOpen={isSuccess}
           />
         </form>
       </DialogContent>
