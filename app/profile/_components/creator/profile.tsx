@@ -9,7 +9,6 @@ import Link from "next/link";
 
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "@/components/ContentGallery";
-import CreatorTier from "@/components/CreatorTier";
 import LogoutButton from "@/components/common/LogoutButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
@@ -20,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import CreatorTier from "@/components/CreatorTier";
 
 function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const [profileState, setProfileState] = useState("content-progress");

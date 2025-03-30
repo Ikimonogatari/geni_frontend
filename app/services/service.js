@@ -428,6 +428,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getBrandCreditHistory: builder.query({
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/user/brand/credit/hist?limit=${limit}&offset=${offset}`,
+        method: "GET",
+      }),
+    }),
     getBankList: builder.query({
       query: () => ({
         url: "/api/web/private/banks",
@@ -554,4 +560,5 @@ export const {
   useUpdateBankAccountMutation,
   useCreatorWithdrawMutation,
   useGetCreatorWalletHistoryQuery,
+  useGetBrandCreditHistoryQuery,
 } = geniApi;

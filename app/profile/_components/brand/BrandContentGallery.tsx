@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import CreatorTier from "@/components/CreatorTier";
 import EmptyList from "@/components/common/EmptyList";
+import CreatorTier from "@/components/CreatorTier";
 
 function BrandContentGallery({ contentsGallery }) {
   const [showModal, setShowModal] = useState(false);

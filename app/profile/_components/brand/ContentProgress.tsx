@@ -12,6 +12,7 @@ import EmptyList from "@/components/common/EmptyList";
 import { AlignJustify } from "lucide-react";
 import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
 import ContentReceiveModal from "./ContentReceiveModal";
+import CreatorTier from "@/components/CreatorTier";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -174,6 +175,7 @@ function ContentProgress({ currentContents }) {
                 >
                   {p.Nickname ? p.Nickname : "Geni бүтээгч"}
                 </a>
+                <CreatorTier tier={p?.LevelName} />
               </div>
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
               <StatusIndicator status={p.Status} />
