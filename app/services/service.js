@@ -488,6 +488,13 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getContentProcess: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/content/process",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -561,4 +568,5 @@ export const {
   useGetCreatorWalletHistoryQuery,
   useGetBrandCreditHistoryQuery,
   useCreatorXpHistoryQuery,
+  useGetContentProcessMutation,
 } = geniApi;
