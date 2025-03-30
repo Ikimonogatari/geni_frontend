@@ -49,6 +49,7 @@ export const mainStates = {
   ContentRejected: "Контент буцаагдсан",
   ContentReceived: "Контент хүлээн авсан",
   ContentApproved: "Контент зөвшөөрөгдсөн",
+  ContentEditRequest: "Контент дахин илгээгдсэн",
 };
 
 // huselt batalgaajsan

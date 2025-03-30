@@ -1,16 +1,17 @@
 import React from "react";
 import { Content, FormikTypes } from "./content.services";
-import { FormikProps } from "formik";
+import { FormikProps, useFormikContext } from "formik";
 import { Textarea } from "../ui/textarea";
 
 type EditRequestProps = {
   content: Content;
-  formik: FormikProps<FormikTypes>;
 };
 
 const MAX_REASONS = 3;
 
-const EditRequest: React.FC<EditRequestProps> = ({ content, formik }) => {
+const EditRequest: React.FC<EditRequestProps> = ({ content }) => {
+  const formik = useFormikContext<FormikTypes>();
+
   const addReason = () => {
     if (formik.values.reasons.length < MAX_REASONS) {
       formik.setFieldValue("reasons", [...formik.values.reasons, ""]);
@@ -25,8 +26,8 @@ const EditRequest: React.FC<EditRequestProps> = ({ content, formik }) => {
   };
 
   return (
-    <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
-      <div className="flex-1 overflow-y-auto pr-2">
+    <div className="w-full flex flex-col p-2">
+      <div className="flex-1 pr-2">
         <p className="text-xl font-bold mb-3">Контент засах хүсэлт илгээх</p>
         <div className="flex flex-col gap-3">
           {formik.values.reasons.map((_, index) => (
@@ -47,13 +48,14 @@ const EditRequest: React.FC<EditRequestProps> = ({ content, formik }) => {
                 }
                 wrapperClassName="w-full"
               />
-              {/* <button
+              <button
                 type="button"
                 onClick={() => removeReason(index)}
                 disabled={formik.values.reasons.length === 1}
+                className="mr-4"
               >
                 ✖
-              </button> */}
+              </button>
             </div>
           ))}
           <button
@@ -75,14 +77,6 @@ const EditRequest: React.FC<EditRequestProps> = ({ content, formik }) => {
           {/* {formik.values.reasons.length == MAX_REASONS && (
           )} */}
         </div>
-      </div>
-      <div className="pt-4 mt-auto border-t">
-        <button
-          type="submit"
-          className="w-full bg-secondary text-white py-3 font-bold rounded-xl"
-        >
-          Засвар илгээх
-        </button>
       </div>
     </div>
   );

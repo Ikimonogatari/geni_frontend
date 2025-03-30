@@ -270,20 +270,17 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               className="p-3 min-h-[210px] w-full border bg-[#F5F4F0] border-gray-300 rounded-xl"
             />
           </div>
-          {contentThumbnail && contentVideo && caption ? (
-            <button
-              onClick={handleContentSubmit}
-              className={`mt-6 ${
-                parsedUserInfo?.UserType === "Student"
-                  ? "bg-[#4FB755]"
-                  : "bg-[#CA7FFE]"
-              } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
-            >
-              Илгээх
-            </button>
-          ) : (
-            <></>
-          )}
+          <button
+            onClick={handleContentSubmit}
+            className={`mt-6 ${
+              parsedUserInfo?.UserType === "Student"
+                ? "bg-[#4FB755]"
+                : "bg-[#CA7FFE]"
+            } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
+            disabled={!contentThumbnail && !contentVideo && !caption}
+          >
+            Илгээх
+          </button>
         </div>
       </div>
       <UploadSuccessModal

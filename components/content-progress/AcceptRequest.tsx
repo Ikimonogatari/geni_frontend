@@ -1,17 +1,15 @@
 import React from "react";
-import { FormikProps } from "formik";
+import { FormikProps, useFormikContext } from "formik";
 import { FormikTypes } from "./content.services";
 import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 
-type AcceptRequestProps = {
-  formik: FormikProps<FormikTypes>;
-};
+const AcceptRequest: React.FC = () => {
+  const formik = useFormikContext<FormikTypes>();
 
-const AcceptRequest: React.FC<AcceptRequestProps> = ({ formik }) => {
   return (
-    <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
-      <div className="flex-1 overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
+    <div className="w-full flex flex-col p-4">
+      <div className="flex-1 pr-2">
         <div className="flex flex-col gap-6">
           <p className="text-xl font-bold">Та контент бүтээгчид оноо өгнө үү</p>
           <div className="flex flex-col gap-4 border-[1px] border-[#E6E6E6] rounded-xl p-4">
@@ -185,14 +183,6 @@ const AcceptRequest: React.FC<AcceptRequestProps> = ({ formik }) => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="pt-4 mt-auto border-t">
-        <button
-          type="submit"
-          className="w-full bg-secondary text-white py-3 font-bold rounded-xl"
-        >
-          Хүлээж авах
-        </button>
       </div>
     </div>
   );

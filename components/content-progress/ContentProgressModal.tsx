@@ -20,6 +20,49 @@ import AcceptRequest from "./AcceptRequest";
 import { DialogTitle } from "../ui/dialogc";
 import Payment from "./Payment";
 import ReturnSection from "./ReturnSection";
+import ProgressStepper from "./ProgressStepper";
+
+export const getStepIndex = (status: string): number => {
+  const arr = [
+    ["Request"],
+    ["ProdDelivering", "Payment"],
+    ["ContentInProgress", "ContentOnHold"],
+    [
+      "ContentInReview",
+      "ContentSent",
+      "ProdRejected",
+      "ProdApproved",
+      "ContentRejected",
+    ],
+    ["ContentReceived", "ContentApproved", "ContentEditRequest"],
+  ];
+
+  const index = arr.findIndex((item) => item.includes(status));
+  return index == -1 ? 0 : index;
+};
+
+export const getCurrentStepColor = (status: string): CurrentStepStatus => {
+  const arr = {
+    green: [
+      "Request",
+      "ProdApproved",
+      "ContentApproved",
+      "ContentReceived",
+      "ContentEditRequest",
+    ],
+    yellow: [
+      "ProdDelivering",
+      "ContentInProgress",
+      "ContentInReview",
+      "Payment",
+    ],
+    red: ["ContentOnHold", "ProdRejected", "ContentRejected"],
+  };
+
+  return Object.keys(arr).find((key) =>
+    arr[key].includes(status)
+  ) as CurrentStepStatus;
+};
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -30,6 +73,7 @@ const ContentProgressModalContent: React.FC<
 > = ({ content }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
+  const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
   const userType = Cookies.get("userType");
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -74,6 +118,7 @@ const ContentProgressModalContent: React.FC<
   useEffect(() => {
     if (content) {
       setActiveStep(getStepIndex(content.Status));
+      setOpenReturnSection(false);
     }
   }, [content]);
 
@@ -103,42 +148,6 @@ const ContentProgressModalContent: React.FC<
     <CirclePlay className="w-10 h-10 text-[#6F6F6F] p-2" />,
   ];
 
-  const getStepIndex = (status: string): number => {
-    const arr = [
-      ["Request"],
-      ["ProdDelivering", "Payment"],
-      ["ContentInProgress", "ContentOnHold"],
-      [
-        "ContentInReview",
-        "ContentSent",
-        "ProdRejected",
-        "ProdApproved",
-        "ContentRejected",
-      ],
-      ["ContentReceived", "ContentApproved"],
-    ];
-
-    const index = arr.findIndex((item) => item.includes(status));
-    return index == -1 ? 0 : index;
-  };
-
-  const getCurrentStepColor = (status: string): CurrentStepStatus => {
-    const arr = {
-      green: ["Request", "ProdApproved", "ContentApproved", "ContentReceived"],
-      yellow: [
-        "ProdDelivering",
-        "ContentInProgress",
-        "ContentInReview",
-        "Payment",
-      ],
-      red: ["ContentOnHold", "ProdRejected", "ContentRejected"],
-    };
-
-    return Object.keys(arr).find((key) =>
-      arr[key].includes(status)
-    ) as CurrentStepStatus;
-  };
-
   const handleClose = (currentDialogType: DialogType) => {
     if (userType == "Brand") {
       if (currentDialogType == DialogType.CONTENT) {
@@ -154,9 +163,15 @@ const ContentProgressModalContent: React.FC<
     formik.resetForm();
   };
 
+  const handleReasonSubmit = () => {
+    if (formik.validateField("returnReason")) {
+      formik.submitForm();
+    }
+  };
+
   if (!content) return <></>;
 
-  const createrModalContents = () => {
+  const creatorModalContents = () => {
     return (
       <>
         {/* {content.Status === "Request" ? ( */}
@@ -165,15 +180,19 @@ const ContentProgressModalContent: React.FC<
         ) : (
           <></>
         )}
-        {/* {content.Status === "ContentRejected" ? ( */}
-        {dialogType == DialogType.CONTENT_REJECTED ? (
-          <FeedbackModal
-            parsedUserInfo={parsedUserInfo}
-            contentId={content?.ContentId}
-            feedbacks={content?.FeedBacks}
-          />
-        ) : (
-          <></>
+        {/* {dialogType == DialogType.CONTENT_REJECTED ? ( */}
+        {content.Status === "ProdRejected" &&
+          dialogType != DialogType.CONTENT_IN_PROGRESS && (
+            <FeedbackModal
+              parsedUserInfo={parsedUserInfo}
+              contentId={content?.ContentId}
+              feedbacks={content?.FeedBacks}
+              setDialogType={setDialogType}
+            />
+          )}
+
+        {content.Status === "ProdDelivering" && openReturnSection && (
+          <ReturnSection />
         )}
         {/* {content.Status === "ContentInProgress" ? ( */}
         {dialogType == DialogType.CONTENT_IN_PROGRESS ? (
@@ -183,11 +202,37 @@ const ContentProgressModalContent: React.FC<
           />
         ) : null}
         {/* {content.Status === "ContentReceived" ? ( */}
-        {dialogType == DialogType.CONTENT_RECEIVED ? (
+        {content.Status === "ContentReceived" && (
           <ContentReviewModal p={content} />
-        ) : null}
+        )}
 
         {dialogType == DialogType.PAYMENT && <Payment content={content} />}
+
+        {content.Status === "ContentEditRequest" &&
+          dialogType != DialogType.CONTENT_IN_PROGRESS && (
+            <>
+              <div className="border-[1px] border-[#E6E6E6] p-4 rounded-xl">
+                <span className="text-3xl font-bold">Засварлах хүсэлт</span>
+                <div className="mt-4 flex flex-col gap-3">
+                  {[]?.map((f, i) => (
+                    <div
+                      key={i}
+                      className="flex flex-row items-center gap-3 sm:gap-6 p-3 sm:p-5 bg-[#F5F4F0] rounded-3xl"
+                    >
+                      <div className="rounded-full w-2 h-2 sm:w-3 sm:h-3 bg-[#D9D9D9]"></div>
+                      <span className="text-sm sm:text-base">{f.Feedback}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <button
+                onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
+                className="mt-5 sm:mt-10 w-full py-2 text-white font-semibold bg-[#CA7FFE] rounded-lg"
+              >
+                Дахин илгээх
+              </button>
+            </>
+          )}
       </>
     );
   };
@@ -200,49 +245,74 @@ const ContentProgressModalContent: React.FC<
         )}
 
         {dialogType == DialogType.EDIT_REQUEST && (
-          <EditRequest content={content} formik={formik} />
+          <EditRequest content={content} />
         )}
 
-        {dialogType == DialogType.ACCEPT_REQUEST && (
-          <AcceptRequest formik={formik} />
-        )}
+        {dialogType == DialogType.ACCEPT_REQUEST && <AcceptRequest />}
       </>
     );
   };
 
-  const creatorModalTriggersAndMessage = () => {
+  const creatorModalMessages = () => {
     return (
       <>
-        {content.Status == "ContentOnHold" && (
-          <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5 mt-2">
-            <h3 className="text-lg font-semibold">Сануулга !</h3>
-            <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
-              Та контент илгээх хугацаанаасаа 3 хоног хоцорсон байна. <br />
-              Таны дараагийн бүтээгдэхүүн хүсэх эрх 3 хоног хаагдах болно
-            </p>
+        {content.Status == "ContentOnHold" &&
+          ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
+            dialogType
+          ) && (
+            <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5 mt-2">
+              <h3 className="text-lg font-semibold">Сануулга !</h3>
+              <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
+                Та контент илгээх хугацаанаасаа 3 хоног хоцорсон байна. <br />
+                Таны дараагийн бүтээгдэхүүн хүсэх эрх 3 хоног хаагдах болно
+              </p>
+            </div>
+          )}
+      </>
+    );
+  };
+
+  const creatorModalFooterActions = () => {
+    return (
+      <>
+        {content.Status === "Payment" && dialogType != DialogType.PAYMENT && (
+          <div className="pt-2">
+            <button
+              onClick={() => setDialogType(DialogType.PAYMENT)}
+              className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
+
+              // className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
+            >
+              Төлбөр төлөх
+            </button>
           </div>
         )}
-        {content.Status === "Payment" && dialogType != DialogType.PAYMENT && (
-          <button
-            onClick={() => setDialogType(DialogType.PAYMENT)}
-            className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
-
-            // className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
-          >
-            Төлбөр төлөх
-          </button>
-        )}
         {content.Status === "Request" && dialogType != DialogType.REQUEST && (
-          <button
-            onClick={() => setDialogType(DialogType.REQUEST)}
-            // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
-            className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
-          >
-            Хүсэлт буцаах
-          </button>
+          <div className="pt-2">
+            <button
+              onClick={() => setDialogType(DialogType.REQUEST)}
+              // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+              className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
+            >
+              Хүсэлт буцаах
+            </button>
+          </div>
         )}
-        {content.Status === "ProdDelivering" && <ReturnSection />}
-        {content.Status === "ContentRejected" &&
+        {content.Status === "ProdDelivering" && (
+          <div className="border-t pt-2">
+            <button
+              onClick={() =>
+                openReturnSection
+                  ? handleReasonSubmit()
+                  : setOpenReturnSection(true)
+              }
+              className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+            >
+              Бүтээгдэхүүн буцаах
+            </button>
+          </div>
+        )}
+        {/* {content.Status === "ContentRejected" &&
           dialogType != DialogType.CONTENT_REJECTED && (
             <button
               onClick={() => setDialogType(DialogType.CONTENT_REJECTED)}
@@ -250,22 +320,47 @@ const ContentProgressModalContent: React.FC<
             >
               Дэлгэрэнгүй
             </button>
-          )}
+          )} */}
         {
-          ["ContentInProgress", "ContentOnHold"].includes(content.Status) &&
+          content.Status === "ContentInProgress" &&
             dialogType != DialogType.CONTENT_IN_PROGRESS && (
-              <button
-                onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-                className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
-              >
-                Контент илгээх
-              </button>
-            ) // <ContentUploadModal
+              <div className="pt-2">
+                <button
+                  onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
+                  className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+                >
+                  Контент илгээх
+                </button>
+              </div>
+            )
+          // <ContentUploadModal
           //   parsedUserInfo={parsedUserInfo}
           //   contentId={content?.ContentId}
           // />
         }
-        {content.Status === "ContentReceived" &&
+        {content.Status === "ContentOnHold" &&
+          ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
+            dialogType
+          ) && (
+            <div className="border-t pt-2">
+              {true ? (
+                <button
+                  onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
+                  className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+                >
+                  Контент илгээх
+                </button>
+              ) : (
+                <button
+                  onClick={() => setDialogType(DialogType.PAYMENT)}
+                  className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+                >
+                  Төлбөр төлөх
+                </button>
+              )}
+            </div>
+          )}
+        {/* {content.Status === "ContentReceived" &&
           dialogType != DialogType.CONTENT_RECEIVED && (
             // <ContentReviewModal p={content} />
             <button
@@ -274,12 +369,55 @@ const ContentProgressModalContent: React.FC<
             >
               Сэтгэгдэл харах
             </button>
-          )}
+          )} */}
       </>
     );
   };
 
-  const brandModalTriggersAndMessage = () => {
+  const brandModalFooterActions = () => {
+    return (
+      <>
+        {getStepIndex(content.Status) >= 3 &&
+          ![
+            DialogType.ACCEPT_REQUEST,
+            DialogType.CONTENT_IN_PROGRESS,
+            DialogType.EDIT_REQUEST,
+            DialogType.CONTENT,
+          ].includes(dialogType) && (
+            <button
+              onClick={() => setDialogType(DialogType.CONTENT)}
+              className="w-full bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
+            >
+              Контент үзэх
+            </button>
+          )}
+
+        {dialogType == DialogType.ACCEPT_REQUEST && (
+          <div className="pt-4 mt-auto border-t">
+            <button
+              type="submit"
+              className="w-full bg-secondary text-white py-3 font-bold rounded-xl"
+            >
+              Хүлээж авах
+            </button>
+          </div>
+        )}
+
+        {dialogType == DialogType.EDIT_REQUEST && (
+          <div className="pt-4 mt-auto border-t">
+            <button
+              type="submit"
+              className="w-full bg-secondary text-white py-3 font-bold rounded-xl"
+            >
+              Засвар илгээх
+            </button>
+          </div>
+        )}
+      </>
+    );
+  };
+
+  const brandModalMessages = () => {
     return (
       <>
         {/* Контент хоцорсон сануулга */}
@@ -293,54 +431,41 @@ const ContentProgressModalContent: React.FC<
           </div>
         )}
 
-        {getStepIndex(content.Status) == 4 && (
+        {content.Status == "ContentReceived" && (
           <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
             <p>Танд контент бүтээгчид өгсөн дундаж оноо: 123</p>
-            <div className="flex flex-col gap-3 border-geni-gray border-[1px] rounded-xl p-4 pt-0">
-              <div className="flex flex-col gap-2 bg-white rounded-xl p-4">
-                <p className="text-xl font-bold mb-2">
-                  Контент пост хийх хүсэлт
-                </p>
-                <label className="flex items-center justify-between p-2 border rounded-xl">
-                  <span>Үг үсгийн алдаагаа засаарай</span>
-                  <input
-                    type="checkbox"
-                    name="sharePost"
-                    checked={true}
-                    disabled={true}
-                    className="w-5 h-5"
-                  />
-                </label>
-                <label className="flex items-center justify-between p-2 border rounded-xl">
-                  <span>
-                    Бусад брэндийн бүтээгдэхүүнийг хэт их оруулсан байна
-                  </span>
-                  <input
-                    type="checkbox"
-                    name="collabPost"
-                    checked={false}
-                    disabled={true}
-                    className="w-5 h-5"
-                  />
-                </label>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* Контент үзэх */}
-        {getStepIndex(content.Status) >= 3 &&
-          dialogType != DialogType.CONTENT &&
-          dialogType != DialogType.EDIT_REQUEST && (
-            <>
-              <button
-                onClick={() => setDialogType(DialogType.CONTENT)}
-                className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
-              >
-                Контент үзэх
-              </button>
-            </>
-          )}
+        {content.Status == "ContentEditRequest" && (
+          <div className="flex flex-col gap-3 border-geni-gray border-[1px] rounded-xl p-4 pt-0">
+            <div className="flex flex-col gap-2 bg-white rounded-xl p-4">
+              <p className="text-xl font-bold mb-2">Контент пост хийх хүсэлт</p>
+              <label className="flex items-center justify-between p-2 border rounded-xl">
+                <span>Үг үсгийн алдаагаа засаарай</span>
+                <input
+                  type="checkbox"
+                  name="sharePost"
+                  checked={true}
+                  disabled={true}
+                  className="w-5 h-5"
+                />
+              </label>
+              <label className="flex items-center justify-between p-2 border rounded-xl">
+                <span>
+                  Бусад брэндийн бүтээгдэхүүнийг хэт их оруулсан байна
+                </span>
+                <input
+                  type="checkbox"
+                  name="collabPost"
+                  checked={false}
+                  disabled={true}
+                  className="w-5 h-5"
+                />
+              </label>
+            </div>
+          </div>
+        )}
       </>
     );
   };
@@ -353,88 +478,29 @@ const ContentProgressModalContent: React.FC<
         </DialogTrigger>
         {/* @ts-ignore */}
         <DialogContent
-          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl"
+          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto rounded-3xl"
           hideCloseButton={true}
+          aria-describedby="content-progress-modal"
         >
           <DialogTitle></DialogTitle>
           <FormikProvider value={formik}>
-            <form
-              onSubmit={formik.handleSubmit}
-              className="h-full w-full flex flex-col gap-2"
-            >
-              {dialogType == DialogType.PROGRESS && (
-                <div className="flex flex-col gap-6 h-full w-full">
-                  <div className="flex flex-row items-center gap-4 w-full h-full sm:min-w-[272px] bg-[#F5F4F0] rounded-2xl p-4">
-                    <div className="basis-1/3 lg:flex-none">
-                      <Image
-                        src={
-                          content.ContentThumbnail || "/no-content-image.png"
-                        }
-                        alt=""
-                        width={200}
-                        height={200}
-                        className="rounded-2xl aspect-square object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2 basis-2/3 lg:grow">
-                      <div className="flex flex-row gap-2 items-center justify-start">
-                        <Image
-                          src={"/no-content-image.png"}
-                          alt=""
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
-                        <p className="text-xl font-bold">{content.Nickname}</p>
-                      </div>
-                      <p className="text-lg">{content.ProductName}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-4 w-full border-[1px] border-[#E6E6E6] rounded-xl p-5 lg:p-10">
-                    <Stepper
-                      steps={steps}
-                      activeStep={activeStep}
-                      setActiveStep={setActiveStep}
-                      currentStepStatus={
-                        getCurrentStepColor(content.Status) as CurrentStepStatus
-                      }
-                      horizontal={true}
-                    />
-                    <div className="flex flex-row gap-8 w-full">
-                      <div className="flex-none mx-5 lg:mx-24">
-                        <Stepper
-                          steps={Object.entries(myStates[activeStep]).map(
-                            (_, index) => (
-                              <div key={index} />
-                            )
-                          )}
-                          labels={Object.entries(myStates[activeStep]).map(
-                            ([key, value]) => ({
-                              title: value,
-                              // subtitle: "Контент илгээх сүүлийн хугацаа: 12.04.2025",
-                              date: "12.04.2025",
-                            })
-                          )}
-                          activeStep={activeStep}
-                          setActiveStep={setActiveStep}
-                          currentStepStatus={
-                            getCurrentStepColor(
-                              content.Status
-                            ) as CurrentStepStatus
-                          }
-                          horizontal={false}
-                          hasBg={false}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {userType == "Creator" && createrModalContents()}
-              {userType == "Brand" && brandModalContents()}
-              {userType == "Creator" && creatorModalTriggersAndMessage()}
-              {userType == "Brand" && brandModalTriggersAndMessage()}
+            <form onSubmit={formik.handleSubmit} className="h-full w-full">
+              <div className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1">
+                {dialogType == DialogType.PROGRESS && (
+                  <ProgressStepper
+                    content={content}
+                    activeStep={activeStep}
+                    setActiveStep={setActiveStep}
+                    steps={steps}
+                  />
+                )}
+                {userType == "Creator" && creatorModalContents()}
+                {userType == "Brand" && brandModalContents()}
+                {userType == "Creator" && creatorModalMessages()}
+                {userType == "Brand" && brandModalMessages()}
+              </div>
+              {userType == "Creator" && creatorModalFooterActions()}
+              {userType == "Brand" && brandModalFooterActions()}
             </form>
           </FormikProvider>
 

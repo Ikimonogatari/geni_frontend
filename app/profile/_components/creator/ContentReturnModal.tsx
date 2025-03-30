@@ -35,36 +35,26 @@ function ContentReturnModal({ requestId }) {
   };
 
   return (
-    <>
-      {/* <Dialog>
-        <DialogTrigger
-          type="submit"
-          className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
-        >
-          Хүсэлт буцаах
-        </DialogTrigger>
-        @ts-ignore
-        <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl"> */}
+    <div className="w-full h-full flex flex-col items-center justify-between">
       <span className="text-[#4FB755] text-2xl sm:text-3xl text-center font-bold uppercase">
         контент хүсэлтээ буцаахдаа итгэлтэй байна уу?
       </span>
-      <Image
-        src={"/content-return.png"}
-        width={209}
-        height={220}
-        alt="recieved"
-      />
-      {/* <DialogClose className="w-full">
-            <button
-              onClick={handleUndoContentRequest}
-              className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
-            >
-              Тийм
-            </button>
-          </DialogClose>
-        </DialogContent>
-      </Dialog> */}
-    </>
+      <div className="flex justify-center">
+        <Image
+          src={"/content-return.png"}
+          width={209}
+          height={220}
+          alt="recieved"
+        />
+      </div>
+
+      <button
+        onClick={handleUndoContentRequest}
+        className="w-full py-3 text-white font-semibold bg-[#CA7FFE] text-2xl rounded-2xl"
+      >
+        Тийм
+      </button>
+    </div>
   );
 }
 
