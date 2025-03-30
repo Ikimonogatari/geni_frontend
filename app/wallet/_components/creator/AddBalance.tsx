@@ -45,6 +45,7 @@ function AddBalance({
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [hasConnectedAccount, setHasConnectedAccount] = useState(false);
   const [localIsCheckingName, setLocalIsCheckingName] = useState(false);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
   // @ts-ignore
   const { data: connectedAccount } = useGetConnectedBankAccountQuery();
   const [connectBankAccount, { isSuccess: isConnectSuccess }] =
@@ -91,6 +92,12 @@ function AddBalance({
       });
     }
   }, [connectedAccount, accountName]);
+
+  useEffect(() => {
+    if (isConnectSuccess || isUpdateSuccess) {
+      setIsSuccessDialogOpen(true);
+    }
+  }, [isConnectSuccess, isUpdateSuccess]);
 
   const checkAccountName = useCallback(
     debounce(async (bankCode: string, accountNumber: string) => {
@@ -231,11 +238,12 @@ function AddBalance({
             />
           </FadeInAnimation>
           <SuccessModal
+            setIsSuccessDialogOpen={setIsSuccessDialogOpen}
             modalImage="/payment-success.png"
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
-            isSuccessDialogOpen={isConnectSuccess || isUpdateSuccess}
+            isSuccessDialogOpen={isSuccessDialogOpen}
           />
         </form>
       </DialogContent>
