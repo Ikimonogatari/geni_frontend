@@ -146,7 +146,7 @@ function CoursePurchaseModal({
       >
         {buttonText}
         <Image
-          src={"/add-icon.png"}
+          src={"/arrow-right-icon.png"}
           width={14}
           height={14}
           alt="arrow"

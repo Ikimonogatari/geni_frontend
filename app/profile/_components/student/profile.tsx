@@ -218,7 +218,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
                   target="_blank"
                   href={b.link}
                   key={i}
-                  className={`border-[1px] whitespace-nowrap border-[#2D262D] bg-[#4FB755] text-white px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-xs sm:text-base`}
+                  className={`border-[1px] whitespace-nowrap border-[#CDCDCD] text-[#6F6F6F] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-xs sm:text-lg`}
                 >
                   {b.title}
                 </a>
@@ -270,7 +270,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
       />
       {getUserInfoData && (
         <GuideModal
-          hasSeenGuide={!getUserInfoData?.HasSeenGuide}
+          hasSeenGuide={getUserInfoData?.HasSeenGuide}
           slides={guideSlides}
           theme="student"
         />
@@ -283,7 +283,7 @@ export default StudentProfile;
 
 const brandProfileButtons = [
   {
-    title: "Хичээл үзэх",
+    title: "Онлайн хичээл",
     value: "content-progress",
     link: "https://meirapage.gumroad.com/l/hxwkma/hic5m2k",
   },

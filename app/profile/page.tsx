@@ -15,9 +15,18 @@ export default function Page() {
   const router = useRouter();
 
   if (
-    userInfo?.UserType === "Brand" &&
-    userInfo?.IsVerified === false &&
-    userInfo?.OnBoardingStatus === "New"
+    (userInfo?.UserType === "Student" &&
+      (!userInfo?.Nickname ||
+        !userInfo?.LastName ||
+        !userInfo?.FirstName ||
+        !userInfo?.Bio ||
+        !userInfo?.RegNo ||
+        !userInfo?.PhoneNumber ||
+        !userInfo?.Birthday ||
+        !userInfo?.Gender)) ||
+    (userInfo?.UserType === "Brand" &&
+      userInfo?.IsVerified === false &&
+      userInfo?.OnBoardingStatus === "New")
   ) {
     router.push("/onboarding");
     return null;
