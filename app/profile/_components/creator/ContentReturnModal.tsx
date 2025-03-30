@@ -35,34 +35,26 @@ function ContentReturnModal({ requestId }) {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger
-        type="submit"
-        className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
-      >
-        <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
-      </DialogTrigger>
-      {/* @ts-ignore */}
-      <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
-        <span className="text-[#4FB755] text-2xl sm:text-3xl text-center font-bold uppercase">
-          контент хүсэлтээ буцаахдаа итгэлтэй байна уу?
-        </span>
+    <div className="w-full h-full flex flex-col items-center justify-between">
+      <span className="text-[#4FB755] text-2xl sm:text-3xl text-center font-bold uppercase">
+        контент хүсэлтээ буцаахдаа итгэлтэй байна уу?
+      </span>
+      <div className="flex justify-center">
         <Image
           src={"/content-return.png"}
           width={209}
           height={220}
           alt="recieved"
         />
-        <DialogClose className="w-full">
-          <button
-            onClick={handleUndoContentRequest}
-            className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
-          >
-            Тийм
-          </button>
-        </DialogClose>
-      </DialogContent>
-    </Dialog>
+      </div>
+
+      <button
+        onClick={handleUndoContentRequest}
+        className="w-full py-3 text-white font-semibold bg-[#CA7FFE] text-2xl rounded-2xl"
+      >
+        Тийм
+      </button>
+    </div>
   );
 }
 

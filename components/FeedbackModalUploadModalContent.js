@@ -185,7 +185,8 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
   };
 
   return (
-    <DialogContent className="overflow-y-auto flex flex-col p-6 w-full sm:w-auto lg:w-full max-h-[739px] max-w-[1000px] rounded-3xl">
+    <>
+      {/* <DialogContent className="overflow-y-auto flex flex-col p-6 w-full sm:w-auto lg:w-full max-h-[739px] max-w-[1000px] rounded-3xl"> */}
       <span className="text-3xl font-bold">Контент илгээх</span>
       <div className="w-full flex flex-col lg:flex-row gap-6">
         <div className="w-full flex flex-col gap-4">
@@ -271,20 +272,17 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               className="p-3 min-h-[210px] w-full border bg-[#F5F4F0] border-gray-300 rounded-xl"
             />
           </div>
-          {contentThumbnail && contentVideo && caption ? (
-            <button
-              onClick={handleContentSubmit}
-              className={`mt-6 ${
-                parsedUserInfo?.UserType === "Student"
-                  ? "bg-[#4FB755]"
-                  : "bg-[#CA7FFE]"
-              } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
-            >
-              Илгээх
-            </button>
-          ) : (
-            <></>
-          )}
+          <button
+            onClick={handleContentSubmit}
+            className={`mt-6 ${
+              parsedUserInfo?.UserType === "Student"
+                ? "bg-[#4FB755]"
+                : "bg-[#CA7FFE]"
+            } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
+            disabled={!contentThumbnail && !contentVideo && !caption}
+          >
+            Илгээх
+          </button>
         </div>
       </div>
       <UploadSuccessModal
@@ -300,7 +298,8 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
             : setIsContentSuccess
         }
       />
-    </DialogContent>
+      {/* </DialogContent> */}
+    </>
   );
 }
 

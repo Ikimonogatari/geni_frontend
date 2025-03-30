@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
 import EmptyList from "@/components/common/EmptyList";
+import { AlignJustify } from "lucide-react";
+import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
 import ContentReceiveModal from "./ContentReceiveModal";
 import CreatorTier from "@/components/CreatorTier";
 
@@ -150,7 +152,7 @@ function ContentProgress({ currentContents }) {
             </div>
             <span className="col-span-1">Бүтээгч</span>
             <div className="col-span-1 flex flex-row items-center justify-between">
-              <span>Статус</span>
+              <span>Төлөв</span>
               <Image
                 src={"/brand-profile-arrow-icon.png"}
                 width={24}
@@ -177,8 +179,9 @@ function ContentProgress({ currentContents }) {
               </div>
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
               <StatusIndicator status={p.Status} />
-              <div className="col-span-1">
-                {p.Status === "ContentApproved" ? (
+              <div className="col-span-1 flex justify-end">
+                <ContentProgressModalContent content={p} />
+                {/* {p.Status === "ContentApproved" ? (
                   <ContentReceiveModal
                     contentVideoFileId={p.ContentVideoFileId}
                     contentThumbnailFileId={p.ContentThumbnailFileId}
@@ -204,7 +207,7 @@ function ContentProgress({ currentContents }) {
                   />
                 ) : (
                   <></>
-                )}
+                )} */}
               </div>
             </div>
           ))}
