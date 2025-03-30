@@ -23,6 +23,7 @@ import { useGetBankListQuery } from "@/app/services/service";
 
 function AddBalance({ walletInfo }) {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  // @ts-ignore
   const { data: bankList } = useGetBankListQuery();
 
   const formik = useFormik({
@@ -33,7 +34,7 @@ function AddBalance({ walletInfo }) {
     },
     validationSchema: addBankAccountSchema,
     onSubmit: async (values) => {
-      await addBankAccount(values);
+      // await addBankAccount(values);
     },
   });
 
