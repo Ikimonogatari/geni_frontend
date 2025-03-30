@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
 import EmptyList from "@/components/common/EmptyList";
 import ContentReceiveModal from "./ContentReceiveModal";
+import CreatorTier from "@/components/CreatorTier";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -172,6 +173,7 @@ function ContentProgress({ currentContents }) {
                 >
                   {p.Nickname ? p.Nickname : "Geni бүтээгч"}
                 </a>
+                <CreatorTier tier={p?.LevelName} />
               </div>
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
               <StatusIndicator status={p.Status} />

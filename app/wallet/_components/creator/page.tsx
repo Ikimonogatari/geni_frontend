@@ -133,7 +133,7 @@ function CreatorWallet() {
                   >
                     <span>{walletHistoryItem.TxnDesc}</span>
                     <span
-                      className={`max-w-min rounded-xl text-white py-1 px-4 text-center text-xs sm:text-lg ${
+                      className={`max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-lg ${
                         walletHistoryItem.IsAdd
                           ? "bg-geni-green"
                           : "bg-geni-red"
