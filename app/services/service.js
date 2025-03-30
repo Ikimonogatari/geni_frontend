@@ -376,6 +376,19 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    creatorWithdraw: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/wallet",
+        method: "POST",
+        body,
+      }),
+    }),
+    getCreatorWalletHistory: builder.query({
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/wallet/txn-hist?&limit=${limit}&offset=${offset}`,
+        method: "GET",
+      }),
+    }),
     brandTermCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/term-check",
@@ -439,6 +452,33 @@ export const geniApi = createApi({
       query: (body) => ({
         url: "/api/web/private/content/process",
         method: "POST",
+        body,
+      }),
+    }),
+    checkBankAccountName: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cgw/check-name",
+        method: "POST",
+        body,
+      }),
+    }),
+    getConnectedBankAccount: builder.query({
+      query: () => ({
+        url: "/api/web/private/cust-bank",
+        method: "GET",
+      }),
+    }),
+    connectBankAccount: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cust-bank",
+        method: "POST",
+        body,
+      }),
+    }),
+    updateBankAccount: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cust-bank",
+        method: "PUT",
         body,
       }),
     }),
@@ -508,4 +548,10 @@ export const {
   usePurchaseCourseMutation,
   useGetBankListQuery,
   useGetContentProcessMutation,
+  useCheckBankAccountNameMutation,
+  useGetConnectedBankAccountQuery,
+  useConnectBankAccountMutation,
+  useUpdateBankAccountMutation,
+  useCreatorWithdrawMutation,
+  useGetCreatorWalletHistoryQuery,
 } = geniApi;
