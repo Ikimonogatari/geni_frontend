@@ -1,14 +1,16 @@
 import Image from "next/image";
-import { Content, myStates } from "./content.services";
+import { Content, GetContentProcessResponse } from "./content.services";
 import { getCurrentStepColor } from "./ContentProgressModal";
 import Stepper, { CurrentStepStatus } from "../Stepper";
 import { Dispatch, SetStateAction } from "react";
+import moment from "moment";
 
 type ProgressStepperProps = {
   content: Content;
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
   steps: React.ReactNode[];
+  contentProcess: GetContentProcessResponse;
 };
 
 const ProgressStepper: React.FC<ProgressStepperProps> = ({
@@ -16,6 +18,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   activeStep,
   setActiveStep,
   steps,
+  contentProcess,
 }) => {
   return (
     <div className="flex flex-col gap-6 h-full w-full">
@@ -57,16 +60,14 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         <div className="flex flex-row gap-8 w-full">
           <div className="flex-none mx-5 lg:mx-24">
             <Stepper
-              steps={Object.entries(myStates[activeStep]).map((_, index) => (
+              steps={contentProcess.map((_, index) => (
                 <div key={index} />
               ))}
-              labels={Object.entries(myStates[activeStep]).map(
-                ([key, value]) => ({
-                  title: value,
-                  // subtitle: "Контент илгээх сүүлийн хугацаа: 12.04.2025",
-                  date: "12.04.2025",
-                })
-              )}
+              labels={contentProcess.map((v) => ({
+                title: v.Desc.String,
+                // subtitle: "Контент илгээх сүүлийн хугацаа: 12.04.2025",
+                date: moment(v.CreatedAt).format("DD.MM.YYYY"),
+              }))}
               activeStep={activeStep}
               setActiveStep={setActiveStep}
               currentStepStatus={

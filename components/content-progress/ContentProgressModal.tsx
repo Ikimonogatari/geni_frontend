@@ -1,18 +1,22 @@
-import Stepper, { CurrentStepStatus } from "@/components/Stepper";
+import { CurrentStepStatus } from "@/components/Stepper";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { AlignJustify, CirclePlay, Truck, X } from "lucide-react";
+import { AlignJustify, CirclePlay, Loader2, Truck, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Formik, FormikProvider, useFormik } from "formik";
+import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
-import { Textarea } from "@/components/ui/textarea";
 import Cookies from "js-cookie";
 import ContentReturnModal from "@/app/profile/_components/creator/ContentReturnModal";
 import ContentUploadModal from "../ContentUploadModal";
 import ContentReviewModal from "../ContentReviewModal";
 import FeedbackModal from "../FeedbackModal";
-import { DialogType, FormikTypes, myStates } from "./content.services";
+import {
+  DialogType,
+  FormikTypes,
+  GetContentProcessResponse,
+  STATUS_LIST,
+} from "./content.services";
 import { Content } from "./content.services";
 import ViewContent from "./ViewContent";
 import EditRequest from "./EditRequest";
@@ -21,42 +25,49 @@ import { DialogTitle } from "../ui/dialogc";
 import Payment from "./Payment";
 import ReturnSection from "./ReturnSection";
 import ProgressStepper from "./ProgressStepper";
+import { useGetContentProcessMutation } from "@/app/services/service";
+import moment from "moment";
 
-export const getStepIndex = (status: string): number => {
-  const arr = [
-    ["Request"],
-    ["ProdDelivering", "Payment"],
-    ["ContentInProgress", "ContentOnHold"],
-    [
-      "ContentInReview",
-      "ContentSent",
-      "ProdRejected",
-      "ProdApproved",
-      "ContentRejected",
-    ],
-    ["ContentReceived", "ContentApproved", "ContentEditRequest"],
-  ];
+// export const getStepIndex = (status: string): number => {
+//   const arr = [
+//     ["Request"],
+//     ["ProdDelivering", "Payment"],
+//     ["ContentInProgress", "ContentOverDue"],
+//     [
+//       "ContentInReview",
+//       "ContentSent",
+//       "ProdRejected",
+//       "ProdApproved",
+//       "ContentRejected",
+//     ],
+//     ["ContentReceived", "ContentApproved", "ContentEditRequest"],
+//   ];
 
-  const index = arr.findIndex((item) => item.includes(status));
-  return index == -1 ? 0 : index;
-};
+//   const index = arr.findIndex((item) => item.includes(status));
+//   return index == -1 ? 0 : index;
+// };
 
 export const getCurrentStepColor = (status: string): CurrentStepStatus => {
   const arr = {
     green: [
       "Request",
       "ProdApproved",
+      "ContentSent",
+      "ContentSentToBrand",
       "ContentApproved",
-      "ContentReceived",
-      "ContentEditRequest",
+      "ContentReSent",
     ],
     yellow: [
-      "ProdDelivering",
-      "ContentInProgress",
-      "ContentInReview",
-      "Payment",
+      "RequestSent",
+      "RequestApproved",
+      "DeliveryPaymentPending",
+      "Delivery",
+      "DeliverySuccess",
+      "ContentPending",
+      "GeniConfirming",
+      "ContentFixRequest",
     ],
-    red: ["ContentOnHold", "ProdRejected", "ContentRejected"],
+    red: ["DeliveryRefund", "ContentOverDue", "ContentRejected"],
   };
 
   return Object.keys(arr).find((key) =>
@@ -71,12 +82,23 @@ type ContentProgressModalContentProps = {
 const ContentProgressModalContent: React.FC<
   ContentProgressModalContentProps
 > = ({ content }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogDisabled, setDialogDisabled] = useState(true);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
   const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
   const userType = Cookies.get("userType");
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const [
+    getContentProcess,
+    {
+      isLoading: isLoadingContentProcess,
+      data: contentProcessData,
+      error: contentProcessError,
+      isSuccess,
+    },
+  ] = useGetContentProcessMutation();
 
   const pick = (obj, keys) =>
     Object.fromEntries(
@@ -117,8 +139,13 @@ const ContentProgressModalContent: React.FC<
 
   useEffect(() => {
     if (content) {
-      setActiveStep(getStepIndex(content.Status));
+      // setActiveStep(getStepIndex(content.Status));
+      setActiveStep(content?.CurrentStepId - 1);
       setOpenReturnSection(false);
+
+      if (content.Status === null || content.Status === "") {
+        setDialogDisabled(false);
+      }
     }
   }, [content]);
 
@@ -148,6 +175,78 @@ const ContentProgressModalContent: React.FC<
     <CirclePlay className="w-10 h-10 text-[#6F6F6F] p-2" />,
   ];
 
+  function getCreatedAtByStatus(
+    processList: GetContentProcessResponse,
+    status: STATUS_LIST
+  ) {
+    const foundItem = processList.find(
+      (item) => item.ContentStepStatusCode?.String === status
+    );
+    return foundItem ? foundItem.CreatedAt : null;
+  }
+
+  const overdueDays = (created_date: string): number => {
+    const date = moment(created_date);
+    const now = moment();
+    return now.diff(date, "days");
+  };
+
+  const isOverdueWeek = (created_date: string | null): boolean => {
+    if (!created_date) return false;
+    return overdueDays(created_date) <= 7;
+  };
+
+  const showSendContentButton = (
+    status: STATUS_LIST,
+    created_date: string
+  ): boolean => {
+    if (status === STATUS_LIST.ContentOverDue)
+      return !isOverdueWeek(created_date);
+
+    return [
+      STATUS_LIST.ContentPending,
+      STATUS_LIST.ContentRejected,
+      STATUS_LIST.ContentFixRequest,
+    ].includes(status);
+  };
+
+  const showViewContentButton = (status: STATUS_LIST): boolean => {
+    return [
+      STATUS_LIST.ContentSent,
+      STATUS_LIST.GeniConfirming,
+      STATUS_LIST.ContentRejected,
+      STATUS_LIST.ContentFixRequest,
+      STATUS_LIST.ContentReSent,
+      STATUS_LIST.ContentApproved,
+    ].includes(status);
+  };
+
+  const renderAvgStar = (
+    instruction: number,
+    context: number,
+    creation: number
+  ) => {
+    const validScores = [instruction, context, creation].filter(
+      (score) => typeof score === "number" && !isNaN(score)
+    );
+
+    if (validScores.length === 0) return 0; // Avoid division by zero
+
+    return (
+      validScores.reduce((sum, score) => sum + score, 0) / validScores.length
+    ).toFixed(1);
+  };
+
+  const handleOpen = (open: boolean) => {
+    setDialogOpen(open);
+
+    getContentProcess({
+      UserType: userType,
+      ContentId: content?.ContentId,
+      ContentStepId: content?.CurrentStepId,
+    });
+  };
+
   const handleClose = (currentDialogType: DialogType) => {
     if (userType == "Brand") {
       if (currentDialogType == DialogType.CONTENT) {
@@ -174,14 +273,12 @@ const ContentProgressModalContent: React.FC<
   const creatorModalContents = () => {
     return (
       <>
-        {/* {content.Status === "Request" ? ( */}
         {dialogType == DialogType.REQUEST ? (
           <ContentReturnModal requestId={content?.ContentId} />
         ) : (
           <></>
         )}
-        {/* {dialogType == DialogType.CONTENT_REJECTED ? ( */}
-        {content.Status === "ProdRejected" &&
+        {content.CurrentStepName === STATUS_LIST.ContentRejected &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
             <FeedbackModal
               parsedUserInfo={parsedUserInfo}
@@ -191,24 +288,23 @@ const ContentProgressModalContent: React.FC<
             />
           )}
 
-        {content.Status === "ProdDelivering" && openReturnSection && (
-          <ReturnSection />
-        )}
-        {/* {content.Status === "ContentInProgress" ? ( */}
+        {content.CurrentStepName === STATUS_LIST.DeliverySuccess &&
+          openReturnSection && <ReturnSection />}
+
         {dialogType == DialogType.CONTENT_IN_PROGRESS ? (
           <ContentUploadModal
             parsedUserInfo={parsedUserInfo}
             contentId={content?.ContentId}
           />
         ) : null}
-        {/* {content.Status === "ContentReceived" ? ( */}
-        {content.Status === "ContentReceived" && (
+
+        {content.CurrentStepName === STATUS_LIST.ContentApproved && (
           <ContentReviewModal p={content} />
         )}
 
         {dialogType == DialogType.PAYMENT && <Payment content={content} />}
 
-        {content.Status === "ContentEditRequest" &&
+        {content.CurrentStepName === STATUS_LIST.ContentFixRequest &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
             <>
               <div className="border-[1px] border-[#E6E6E6] p-4 rounded-xl">
@@ -256,7 +352,7 @@ const ContentProgressModalContent: React.FC<
   const creatorModalMessages = () => {
     return (
       <>
-        {content.Status == "ContentOnHold" &&
+        {content.CurrentStepName == STATUS_LIST.ContentOverDue &&
           ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
             dialogType
           ) && (
@@ -275,30 +371,32 @@ const ContentProgressModalContent: React.FC<
   const creatorModalFooterActions = () => {
     return (
       <>
-        {content.Status === "Payment" && dialogType != DialogType.PAYMENT && (
-          <div className="pt-2">
-            <button
-              onClick={() => setDialogType(DialogType.PAYMENT)}
-              className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
+        {content.CurrentStepName === STATUS_LIST.DeliveryPaymentPending &&
+          dialogType != DialogType.PAYMENT && (
+            <div className="pt-2">
+              <button
+                onClick={() => setDialogType(DialogType.PAYMENT)}
+                className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
 
-              // className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
-            >
-              Төлбөр төлөх
-            </button>
-          </div>
-        )}
-        {content.Status === "Request" && dialogType != DialogType.REQUEST && (
-          <div className="pt-2">
-            <button
-              onClick={() => setDialogType(DialogType.REQUEST)}
-              // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
-              className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
-            >
-              Хүсэлт буцаах
-            </button>
-          </div>
-        )}
-        {content.Status === "ProdDelivering" && (
+                // className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
+              >
+                Төлбөр төлөх
+              </button>
+            </div>
+          )}
+        {content.CurrentStepName === STATUS_LIST.RequestSent &&
+          dialogType != DialogType.REQUEST && (
+            <div className="pt-2">
+              <button
+                onClick={() => setDialogType(DialogType.REQUEST)}
+                // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+                className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
+              >
+                Хүсэлт буцаах
+              </button>
+            </div>
+          )}
+        {content.CurrentStepName === STATUS_LIST.DeliverySuccess && (
           <div className="border-t pt-2">
             <button
               onClick={() =>
@@ -322,8 +420,14 @@ const ContentProgressModalContent: React.FC<
             </button>
           )} */}
         {
-          content.Status === "ContentInProgress" &&
-            dialogType != DialogType.CONTENT_IN_PROGRESS && (
+          dialogType != DialogType.CONTENT_IN_PROGRESS &&
+            showSendContentButton(
+              content.CurrentStepName as STATUS_LIST,
+              getCreatedAtByStatus(
+                contentProcessData,
+                STATUS_LIST.ContentOverDue
+              )
+            ) && (
               <div className="pt-2">
                 <button
                   onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
@@ -338,38 +442,22 @@ const ContentProgressModalContent: React.FC<
           //   contentId={content?.ContentId}
           // />
         }
-        {content.Status === "ContentOnHold" &&
+        {content.CurrentStepName === STATUS_LIST.ContentOverDue &&
+          !isOverdueWeek(
+            getCreatedAtByStatus(contentProcessData, STATUS_LIST.ContentOverDue)
+          ) &&
           ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
             dialogType
           ) && (
             <div className="border-t pt-2">
-              {true ? (
-                <button
-                  onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-                  className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  Контент илгээх
-                </button>
-              ) : (
-                <button
-                  onClick={() => setDialogType(DialogType.PAYMENT)}
-                  className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  Төлбөр төлөх
-                </button>
-              )}
+              <button
+                onClick={() => setDialogType(DialogType.PAYMENT)}
+                className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+              >
+                Төлбөр төлөх
+              </button>
             </div>
           )}
-        {/* {content.Status === "ContentReceived" &&
-          dialogType != DialogType.CONTENT_RECEIVED && (
-            // <ContentReviewModal p={content} />
-            <button
-              onClick={() => setDialogType(DialogType.CONTENT_RECEIVED)}
-              className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
-            >
-              Сэтгэгдэл харах
-            </button>
-          )} */}
       </>
     );
   };
@@ -377,7 +465,8 @@ const ContentProgressModalContent: React.FC<
   const brandModalFooterActions = () => {
     return (
       <>
-        {getStepIndex(content.Status) >= 3 &&
+        {/* {getStepIndex(content.Status) >= 3 && */}
+        {showViewContentButton(content.CurrentStepName as STATUS_LIST) &&
           ![
             DialogType.ACCEPT_REQUEST,
             DialogType.CONTENT_IN_PROGRESS,
@@ -421,23 +510,44 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {/* Контент хоцорсон сануулга */}
-        {content.Status == "ContentOnHold" && (
-          <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5">
-            <h3 className="text-lg font-semibold">Сануулга !</h3>
-            <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
-              Контент бүтээгчид 7 хоногоос дээш хоцроосон тохиолдолд бид таны
-              Geni Credit-г нөхөн олгох боломжгүй болно.
-            </p>
-          </div>
-        )}
+        {content.CurrentStepName == STATUS_LIST.ContentOverDue &&
+          isOverdueWeek(content.CreatedAt) && (
+            <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5">
+              <h3 className="text-lg font-semibold">Сануулга !</h3>
+              <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
+                Контент бүтээгчид 7 хоногоос дээш хоцроосон тохиолдолд бид таны
+                Geni Credit-г нөхөн олгох боломжгүй болно.
+              </p>
+            </div>
+          )}
 
-        {content.Status == "ContentReceived" && (
+        {content.CurrentStepName == STATUS_LIST.ContentApproved && (
           <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
-            <p>Танд контент бүтээгчид өгсөн дундаж оноо: 123</p>
+            <div>
+              Танд контент бүтээгчид өгсөн дундаж оноо:
+              <Image
+                src={"/star.png"}
+                width={28}
+                height={28}
+                alt=""
+                className="w-7 h-7"
+              />
+              <span>
+                {content && (
+                  <span className="text-lg font-bold">
+                    {renderAvgStar(
+                      content?.BrandInstructionPnt || 0,
+                      content?.ContextPnt || 0,
+                      content?.CreationPnt || 0
+                    )}
+                  </span>
+                )}
+              </span>
+            </div>
           </div>
         )}
 
-        {content.Status == "ContentEditRequest" && (
+        {/* {content.CurrentStepName == "ContentEditRequest" && (
           <div className="flex flex-col gap-3 border-geni-gray border-[1px] rounded-xl p-4 pt-0">
             <div className="flex flex-col gap-2 bg-white rounded-xl p-4">
               <p className="text-xl font-bold mb-2">Контент пост хийх хүсэлт</p>
@@ -465,16 +575,25 @@ const ContentProgressModalContent: React.FC<
               </label>
             </div>
           </div>
-        )}
+        )} */}
       </>
     );
   };
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger>
-          <AlignJustify className="w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2" />
+      <Dialog open={dialogOpen} onOpenChange={handleOpen}>
+        <DialogTrigger asChild>
+          <button
+            onClick={(e) => dialogDisabled && e.preventDefault()}
+            disabled={dialogDisabled}
+            className={`${dialogDisabled ? "cursor-not-allowed" : ""}`}
+            // className={`w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2 ${
+            //   dialogDisabled ? "cursor-not-allowed" : ""
+            // }`}
+          >
+            <AlignJustify />
+          </button>
         </DialogTrigger>
         {/* @ts-ignore */}
         <DialogContent
@@ -483,42 +602,52 @@ const ContentProgressModalContent: React.FC<
           aria-describedby="content-progress-modal"
         >
           <DialogTitle></DialogTitle>
-          <FormikProvider value={formik}>
-            <form onSubmit={formik.handleSubmit} className="h-full w-full">
-              <div className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1">
-                {dialogType == DialogType.PROGRESS && (
-                  <ProgressStepper
-                    content={content}
-                    activeStep={activeStep}
-                    setActiveStep={setActiveStep}
-                    steps={steps}
-                  />
-                )}
-                {userType == "Creator" && creatorModalContents()}
-                {userType == "Brand" && brandModalContents()}
-                {userType == "Creator" && creatorModalMessages()}
-                {userType == "Brand" && brandModalMessages()}
-              </div>
-              {userType == "Creator" && creatorModalFooterActions()}
-              {userType == "Brand" && brandModalFooterActions()}
-            </form>
-          </FormikProvider>
-
-          {/* custom close button */}
-          {dialogType == DialogType.PROGRESS && (
-            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogPrimitive.Close>
+          {isLoadingContentProcess && (
+            <div className="w-full h-full flex items-center justify-center">
+              <Loader2 className="w-10 h-10 animate-spin" />
+            </div>
           )}
-          {dialogType != DialogType.PROGRESS && (
-            <button
-              className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none"
-              onClick={() => handleClose(dialogType)}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </button>
+          {isSuccess && (
+            <>
+              <FormikProvider value={formik}>
+                <form onSubmit={formik.handleSubmit} className="h-full w-full">
+                  <div className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1">
+                    {dialogType == DialogType.PROGRESS && (
+                      <ProgressStepper
+                        content={content}
+                        activeStep={activeStep}
+                        setActiveStep={setActiveStep}
+                        steps={steps}
+                        contentProcess={contentProcessData}
+                      />
+                    )}
+                    {userType == "Creator" && creatorModalContents()}
+                    {userType == "Brand" && brandModalContents()}
+                    {userType == "Creator" && creatorModalMessages()}
+                    {userType == "Brand" && brandModalMessages()}
+                  </div>
+                  {userType == "Creator" && creatorModalFooterActions()}
+                  {userType == "Brand" && brandModalFooterActions()}
+                </form>
+              </FormikProvider>
+
+              {/* custom close button */}
+              {dialogType == DialogType.PROGRESS && (
+                <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none">
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+                </DialogPrimitive.Close>
+              )}
+              {dialogType != DialogType.PROGRESS && (
+                <button
+                  className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none"
+                  onClick={() => handleClose(dialogType)}
+                >
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+                </button>
+              )}
+            </>
           )}
         </DialogContent>
       </Dialog>

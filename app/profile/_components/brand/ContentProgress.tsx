@@ -32,28 +32,8 @@ function renderStars(score, setScore, playSound) {
     </span>
   ));
 }
-const mainStates = {
-  Request: "Хүсэлт илгээгдсэн",
-  ProdDelivering: "Бүтээгдэхүүн хүргэж байна",
-  ContentSent: "Контент илгээсэн",
-  ContentOnHold: "Контент хоцорсон",
-  ContentInProgress: "Контент хүлээгдэж байна",
-  ContentRejected: "Контент буцаагдсан",
-  ContentInReview: "Geni шалгаж байна",
-  ProdApproved: "Geni-гээс зөвшөөрсөн",
-  ProdRejected: "Geni-гээс зөвшөөрөгдөөгүй",
-  ContentApproved: "Контент зөвшөөрөгдсөн",
-  ContentReceived: "Контент хүлээн авсан",
-};
+
 function ContentProgress({ currentContents }) {
-  const tempContent = currentContents[0];
-  currentContents = [
-    ...Object.keys(mainStates).map((state) => ({
-      ...tempContent,
-      Status: state,
-    })),
-    ...currentContents,
-  ];
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [qualityScore, setQualityScore] = useState(null);
@@ -199,7 +179,7 @@ function ContentProgress({ currentContents }) {
               <StatusIndicator status={p.Status} />
               <div className="col-span-1 flex justify-end">
                 <ContentProgressModalContent content={p} />
-                {p.Status === "ContentApproved" ? (
+                {/* {p.Status === "ContentApproved" ? (
                   <ContentReceiveModal
                     contentVideoFileId={p.ContentVideoFileId}
                     contentThumbnailFileId={p.ContentThumbnailFileId}
@@ -225,7 +205,7 @@ function ContentProgress({ currentContents }) {
                   />
                 ) : (
                   <></>
-                )}
+                )} */}
               </div>
             </div>
           ))}
