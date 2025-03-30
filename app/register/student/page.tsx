@@ -4,18 +4,19 @@ import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
-  useBrandRegisterMutation,
   useSendOtpToEmailMutation,
-} from "../services/service";
+  useStudentRegisterMutation,
+} from "../../services/service";
 import toast from "react-hot-toast";
-import Verification from "./Verification";
+import Verification from "../Verification";
 import { Input } from "@/components/ui/input";
+import SuccessModal from "@/components/common/SuccessModal";
 
-function Page() {
+function StudentRegister() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [brandRegisterFinished, setBrandRegisterFinished] = useState(false);
 
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
@@ -24,22 +25,22 @@ function Page() {
   const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
   const [
-    brandRegister,
+    studentRegister,
     {
-      data: brandRegisterData,
-      error: brandRegisterError,
-      isLoading: brandRegisterLoading,
-      isSuccess: brandRegisterSuccess,
+      data: studentRegisterData,
+      error: studentRegisterError,
+      isLoading: studentRegisterLoading,
+      isSuccess: studentRegisterSuccess,
     },
-  ] = useBrandRegisterMutation();
+  ] = useStudentRegisterMutation();
 
   const [
-    brandVerification,
+    studentVerification,
     {
-      data: brandVerificationData,
-      error: brandVerificationError,
-      isLoading: brandVerificationLoading,
-      isSuccess: brandVerificationSuccess,
+      data: studentVerificationData,
+      error: studentVerificationError,
+      isLoading: studentVerificationLoading,
+      isSuccess: studentVerificationSuccess,
     },
   ] = useSendOtpToEmailMutation();
 
@@ -66,8 +67,7 @@ function Page() {
       OTP: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
-      setBrandRegisterFinished(false);
-      brandRegister({
+      studentRegister({
         Email: values.Email,
         Password: values.Password,
         OTP: values.OTP,
@@ -78,6 +78,7 @@ function Page() {
 
   const handleSendOtp = async () => {
     try {
+      // @ts-ignore
       await registerForm.validateForm({
         Email: registerForm.values.Email,
         Password: registerForm.values.Password,
@@ -94,11 +95,11 @@ function Page() {
         !registerForm.errors.ConfirmPassword
       ) {
         const { Email } = registerForm.values;
-        brandVerification({
+        studentVerification({
           To: Email,
-          UserType: "Brand",
+          UserType: "Creator",
           Channel: "smtp",
-          Type: "register",
+          Type: "creatorregister",
         });
       } else {
         toast.error("Та бүх талбарыг зөв бөглөнө үү");
@@ -109,22 +110,25 @@ function Page() {
   };
 
   useEffect(() => {
-    if (brandVerificationSuccess) {
+    if (studentVerificationSuccess) {
       toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
       setDialogOpen(true);
-    } else if (brandVerificationError) {
-      toast.error(brandVerificationError?.data?.error);
+    } else if (studentVerificationError) {
+      // @ts-ignore
+      toast.error(studentVerificationError?.data?.error);
     }
-  }, [brandVerificationSuccess, brandVerificationError]);
+  }, [studentVerificationSuccess, studentVerificationError]);
 
   useEffect(() => {
-    if (brandRegisterSuccess) {
+    if (studentRegisterSuccess) {
       toast.success("Амжилттай бүртгэгдлээ");
-      setBrandRegisterFinished(true);
-    } else if (brandRegisterError) {
-      toast.error(brandRegister?.data?.error);
+      setDialogOpen(false);
+      setIsSuccessDialogOpen(true);
+    } else if (studentRegisterError) {
+      // @ts-ignore
+      toast.error(studentRegister?.data?.error);
     }
-  }, [brandRegisterSuccess, brandRegisterError]);
+  }, [studentRegisterSuccess, studentRegisterError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -136,7 +140,7 @@ function Page() {
           >
             <div className="rounded-2xl max-w-3xl w-full">
               <Image
-                src={"/brand-login-image.png"}
+                src={"/student-register-image.png"}
                 width={584}
                 height={378}
                 alt="login"
@@ -145,7 +149,7 @@ function Page() {
             </div>
             <div className="flex flex-col gap-4 w-full max-w-3xl xl:max-w-md">
               <span className="text-lg sm:text-xl font-bold">
-                Geni Брэнд Бүртгүүлэх
+                Geni Сурагч Бүртгүүлэх
               </span>
 
               <Input
@@ -156,6 +160,7 @@ function Page() {
                 onChange={registerForm.handleChange}
                 value={registerForm.values.Email}
                 errorText={registerForm.errors.Email}
+                // @ts-ignore
                 errorVisible={
                   registerForm.touched.Email && registerForm.errors.Email
                 }
@@ -172,6 +177,7 @@ function Page() {
                 onChange={registerForm.handleChange}
                 value={registerForm.values.Password}
                 errorText={registerForm.errors.Password}
+                // @ts-ignore
                 errorVisible={
                   registerForm.touched.Password && registerForm.errors.Password
                 }
@@ -209,6 +215,7 @@ function Page() {
                 onChange={registerForm.handleChange}
                 value={registerForm.values.ConfirmPassword}
                 errorText={registerForm.errors.ConfirmPassword}
+                // @ts-ignore
                 errorVisible={
                   registerForm.touched.ConfirmPassword &&
                   registerForm.errors.ConfirmPassword
@@ -244,25 +251,41 @@ function Page() {
               <button
                 type="button"
                 onClick={handleSendOtp}
-                className={`bg-[#4D55F5] shadow-[0.25rem_0.25rem_#1920B4] mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-4 text-white text-lg font-bold cursor-pointer border border-[#2D262D] rounded-md transition-all transform translate-x-[-0.25rem] translate-y-[-0.25rem] active:translate-x-0 active:translate-y-0 active:shadow-none flex flex-row items-center justify-center gap-2`}
+                className={`bg-[#4FB755] shadow-[0.25rem_0.25rem_#3B7A3C] mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-4 text-white text-lg font-bold cursor-pointer border border-[#2D262D] rounded-md transition-all transform translate-x-[-0.25rem] translate-y-[-0.25rem] active:translate-x-0 active:translate-y-0 active:shadow-none flex flex-row items-center justify-center gap-2`}
               >
                 Бүртгүүлэх
               </button>
               <Verification
+                colorTheme={"bg-geni-green"}
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
+                // @ts-ignore
                 handleSendOtp={handleSendOtp}
                 registerForm={registerForm}
-                brandRegisterFinished={brandRegisterFinished}
-                brandVerificationData={brandVerificationData}
-                brandVerificationSuccess={brandVerificationSuccess}
+                verificationData={studentVerificationData}
+                verificationSuccess={studentVerificationSuccess}
               />
             </div>
           </form>
         </div>
       </div>
+      <SuccessModal
+        isSuccessDialogOpen={isSuccessDialogOpen}
+        setIsSuccessDialogOpen={setIsSuccessDialogOpen}
+        modalImage="/creator-image.png"
+        modalTitle="амжилттай Бүртгэгдлээ"
+        imageClassName="w-[209px] h-[220px]"
+        context={
+          <a
+            href="/login"
+            className="mt-8 w-full py-4 text-center text-white font-semibold bg-geni-green text-2xl border border-[#2D262D] rounded-2xl"
+          >
+            Нэвтрэх
+          </a>
+        }
+      />
     </div>
   );
 }
 
-export default Page;
+export default StudentRegister;

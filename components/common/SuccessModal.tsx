@@ -8,8 +8,8 @@ import {
 import Image from "next/image";
 
 interface SuccessModalProps {
-  isMainDialogOpen?: boolean;
-  setIsMainDialogOpen: (open: boolean) => void;
+  isSuccessDialogOpen?: boolean;
+  setIsSuccessDialogOpen?: (open: boolean) => void;
   modalImage: string;
   modalTitle: string;
   modalTriggerText?: string;
@@ -18,8 +18,8 @@ interface SuccessModalProps {
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
-  isMainDialogOpen,
-  setIsMainDialogOpen,
+  isSuccessDialogOpen,
+  setIsSuccessDialogOpen,
   modalImage,
   modalTitle,
   modalTriggerText,
@@ -27,7 +27,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   imageClassName,
 }) => {
   return (
-    <Dialog open={isMainDialogOpen} onOpenChange={setIsMainDialogOpen}>
+    <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
       {modalTriggerText && (
         <DialogTrigger
           type="submit"

@@ -13,16 +13,16 @@ import {
 } from "../app/services/service";
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
+import useS3Upload from "./hooks/useUploadToS3";
 
 function HomeworkUploadModal({ parsedUserInfo }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
-  const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
-  const [isVideoUploadLoading, setIsVideoUploadLoading] = useState(false);
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
+  const { uploadToS3, progress, isUploading } = useS3Upload();
 
   const [
     getImagePresignedUrl,
@@ -63,11 +63,8 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   useEffect(() => {
     if (getImagePresignedUrlError) {
       toast.error(getImagePresignedUrlError?.data?.error);
-      setIsImageUploadLoading(false);
     }
     if (getImagePresignedUrlData) {
-      setIsImageUploadLoading(false);
-
       setContentThumbnail(getImagePresignedUrlData.url);
     }
   }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
@@ -75,10 +72,8 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   useEffect(() => {
     if (getVideoPresignedUrlError) {
       toast.error(getVideoPresignedUrlError?.data?.error);
-      setIsVideoUploadLoading(false);
     }
     if (getVideoPresignedUrlData) {
-      setIsVideoUploadLoading(false);
       setContentVideo(getVideoPresignedUrlData.url);
     }
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
@@ -95,8 +90,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
   useEffect(() => {
     if (uploadFileError) {
       toast.error(uploadFileError?.data?.error);
-      setIsVideoUploadLoading(false);
-      setIsImageUploadLoading(false);
     }
   }, [uploadFileData, uploadFileError]);
   const {
@@ -111,13 +104,12 @@ function HomeworkUploadModal({ parsedUserInfo }) {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        setIsImageUploadLoading(true);
         uploadFile({ FolderName: "content-thumbnail" })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               setContentThumbnailId(fileId);
-              uploadToS3(uploadURL, file).then(() => {
+              uploadToS3(uploadURL, file, "image").then(() => {
                 getImagePresignedUrl({
                   FileId: fileId,
                 });
@@ -143,13 +135,12 @@ function HomeworkUploadModal({ parsedUserInfo }) {
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const file = acceptedFiles[0];
-        setIsVideoUploadLoading(true);
         uploadFile({ FolderName: "content-video" })
           .then((response) => {
             if (response.data) {
               const { fileId, uploadURL } = response.data;
               setContentVideoId(fileId);
-              uploadToS3(uploadURL, file).then(() => {
+              uploadToS3(uploadURL, file, "video").then(() => {
                 getVideoPresignedUrl({
                   FileId: fileId,
                 });
@@ -162,31 +153,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
       }
     },
   });
-
-  const uploadToS3 = async (url, file) => {
-    try {
-      const response = await axios.put(url, file, {
-        headers: {
-          "Content-Type": "application/octet-stream",
-        },
-      });
-
-      if (response.status == 200) {
-      } else {
-        throw new Error(`HTTP error! status: ${response}`);
-      }
-    } catch (error) {
-      console.error("Error uploading to S3:", error);
-      throw error;
-    }
-  };
-  const handleContentSubmit = () => {
-    uploadHomework({
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
-    });
-  };
 
   return (
     <>
@@ -212,16 +178,11 @@ function HomeworkUploadModal({ parsedUserInfo }) {
                   <source src={contentVideo} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-              ) : isVideoUploadLoading ? (
-                <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
-                  <ClipLoader
-                    loading={isVideoUploadLoading}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                    className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                    size={50}
-                  />
-                </div>
+              ) : isUploading.video ? (
+                <ContentUploadProgress
+                  isLoading={isUploading.video}
+                  progress={progress.video}
+                />
               ) : (
                 <div
                   {...getRootPropsForVideo()}
@@ -252,16 +213,11 @@ function HomeworkUploadModal({ parsedUserInfo }) {
                   alt=""
                   className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                 />
-              ) : isImageUploadLoading ? (
-                <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
-                  <ClipLoader
-                    loading={isImageUploadLoading}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                    className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-                    size={50}
-                  />
-                </div>
+              ) : isUploading.image ? (
+                <ContentUploadProgress
+                  isLoading={isUploading.image}
+                  progress={progress.image}
+                />
               ) : (
                 <div
                   {...getRootPropsForImage()}

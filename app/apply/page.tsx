@@ -86,7 +86,7 @@ function CreatorOnboarding() {
             onSubmit={formik.handleSubmit}
             className="flex flex-col sm:flex-row items-start gap-5 sm:gap-10"
           >
-            <div className="grid grid-cols-3 sm:grid-cols-1 gap-2 sm:max-w-[215px] w-full">
+            <div className="grid grid-cols-3 sm:grid-cols-1 gap-2 sm:min-w-[215px] sm:max-w-[215px] w-full">
               {sidebarNavs.map((s, i) => (
                 <div
                   key={i}
@@ -110,14 +110,17 @@ function CreatorOnboarding() {
                 </div>
               ))}
             </div>
-            <div className="bg-geni-gray h-[1px] sm:h-[835px] w-full sm:w-[1px] sm:py-1"></div>
-            {renderStepContent()}
+            <div className="flex flex-col sm:flex-row flex-grow items-start gap-5 sm:gap-10">
+              <div className="border-t-[1px] border-l-0 sm:border-t-0 sm:border-l-[1px] pt-5 sm:pl-10 border-[#CDCDCD]">
+                {renderStepContent()}
+              </div>
+            </div>
           </form>
         </div>
       </div>
       <SuccessModal
-        isMainDialogOpen={isSuccessModalOpen}
-        setIsMainDialogOpen={setIsSuccessModalOpen}
+        isSuccessDialogOpen={isSuccessModalOpen}
+        setIsSuccessDialogOpen={setIsSuccessModalOpen}
         modalImage="/creator-image.png"
         modalTitle="ӨРГӨДӨЛ АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ"
         context={

@@ -15,19 +15,24 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
-interface PaymentModalProps {
+interface SubscriptionModalProps {
   selectedPackageId: number;
   setIsMainDialogOpen: (open: boolean) => void;
+  selectedPayment: string;
 }
 
-const PaymentModal: React.FC<PaymentModalProps> = ({
+const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   selectedPackageId,
   setIsMainDialogOpen,
+  selectedPayment,
 }) => {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [invoiceHtml, setInvoiceHtml] = useState<string | null>(null);
 
   const [
     subscribePlan,
@@ -48,8 +53,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   useEffect(() => {
     if (subscribePlanSuccess) {
-      setTxId(subscribePlanData?.UserTxnId || null);
-      setPaymentDialogOpen(true);
+      if (selectedPayment === "qpay") {
+        setTxId(subscribePlanData?.UserTxnId || null);
+        setPaymentDialogOpen(true);
+      } else if (
+        selectedPayment === "invoice" &&
+        subscribePlanData?.InvoiceHtml
+      ) {
+        setInvoiceHtml(subscribePlanData.InvoiceHtml); // Decode base64 HTML
+        generatePDF(subscribePlanData.InvoiceHtml);
+      }
     }
     if (subscribePlanError) {
       //@ts-ignore
@@ -83,12 +96,74 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     setIsPaymentSuccess(false);
   };
 
+  const generatePDF = async (htmlString: string) => {
+    try {
+      // Decode Base64 HTML safely
+      const decodedHtml = new TextDecoder("utf-8").decode(
+        Uint8Array.from(atob(htmlString), (c) => c.charCodeAt(0))
+      );
+      let cleanedHtml = decodedHtml.replace(/₮+/g, "₮");
+
+      // Create hidden iframe
+      const iframe = document.createElement("iframe");
+      document.body.appendChild(iframe);
+      Object.assign(iframe.style, {
+        position: "absolute",
+        left: "-9999px",
+        width: "800px",
+        height: "1123px",
+      });
+
+      iframe.contentDocument?.open();
+      iframe.contentDocument?.write(`
+        <html>
+          <head><meta charset="UTF-8"></head>
+          <body>${cleanedHtml}</body>
+        </html>
+      `);
+      console.log(`
+        <html>
+          <head><meta charset="UTF-8"></head>
+          <body>${cleanedHtml}</body>
+        </html>
+      `);
+      iframe.contentDocument?.close();
+
+      // Wait for iframe content to fully load
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (iframe.contentDocument) {
+        window.devicePixelRatio = 2; // Improve resolution
+        iframe.contentWindow?.scrollTo(0, 0); // Ensure full view is captured
+
+        const canvas = await html2canvas(iframe.contentDocument.body, {
+          scale: 2,
+          useCORS: true,
+          logging: true,
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        pdf.save("invoice.pdf");
+      }
+
+      document.body.removeChild(iframe); // Clean up
+      toast.success("Нэхэмжлэл татагдлаа");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("PDF үүсгэхэд алдаа гарлаа");
+    }
+  };
+
   return (
     <>
       <button
         onClick={handleSubscription}
         disabled={subscribePlanLoading}
-        className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+        className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-geni-green border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
       >
         Үргэлжлүүлэх
         <Image
@@ -181,4 +256,4 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   );
 };
 
-export default PaymentModal;
+export default SubscriptionModal;
