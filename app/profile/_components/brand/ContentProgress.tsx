@@ -180,7 +180,7 @@ function ContentProgress({ currentContents }) {
               <StatusIndicator
                 status={
                   p.Status === null || p.Status === ""
-                    ? p.CurrentStepName
+                    ? p.CurrentStepName.String
                     : p.Status
                 }
               />

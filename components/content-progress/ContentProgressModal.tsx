@@ -95,29 +95,29 @@ const ContentProgressModalContent: React.FC<
   const [status, setStatus] = useState<STATUS_LIST>(STATUS_LIST.RequestSent);
   // console.log("getCurrentStepColor", getCurrentStepColor(status));
   // const [contentProcessData, setContentProcessData] = useState<GetContentProcessResponse | []>([]);
-  // const [
-  //   getContentProcess,
-  //   {
-  //     isLoading: isLoadingContentProcess,
-  //     data: contentProcessData,
-  //     error: contentProcessError,
-  //     isSuccess,
-  //   },
-  // ] = useGetContentProcessMutation();
-  const isSuccess = true;
-  const isLoadingContentProcess = false;
-  const contentProcessData = [
+  const [
+    getContentProcess,
     {
-      ContentId: "testid",
-      ContentProccessId: 1,
-      ContentStepId: 1,
-      StepName: "Контентийн хүсэлт",
-      ContentStepStatusCode: { String: content.CurrentStepName, Valid: true },
-      ContentStepStatusId: 1,
-      Desc: { String: STATUS_LIST_VALUE[content.CurrentStepName], Valid: true },
-      CreatedAt: "2025-03-28T12:13:28.276835Z",
+      isLoading: isLoadingContentProcess,
+      data: contentProcessData,
+      error: contentProcessError,
+      isSuccess,
     },
-  ];
+  ] = useGetContentProcessMutation();
+  // const isSuccess = true;
+  // const isLoadingContentProcess = false;
+  // const contentProcessData = [
+  //   {
+  //     ContentId: "testid",
+  //     ContentProccessId: 1,
+  //     ContentStepId: 1,
+  //     StepName: "Контентийн хүсэлт",
+  //     ContentStepStatusCode: { String: content.CurrentStepName.String, Valid: true },
+  //     ContentStepStatusId: 1,
+  //     Desc: { String: STATUS_LIST_VALUE[content.CurrentStepName.String], Valid: true },
+  //     CreatedAt: "2025-03-28T12:13:28.276835Z",
+  //   },
+  // ];
 
   const pick = (obj, keys) =>
     Object.fromEntries(
@@ -259,13 +259,13 @@ const ContentProgressModalContent: React.FC<
   const handleOpen = (open: boolean) => {
     setDialogOpen(open);
 
-    // getContentProcess({
-    //   UserType: userType,
-    //   ContentId: content?.ContentId,
-    //   ContentStepId: content?.CurrentStepId,
-    // });
+    getContentProcess({
+      UserType: userType,
+      ContentId: content?.ContentId,
+      ContentStepId: content?.CurrentStepId,
+    });
     // setContentProcessData(content['Process'] as any);
-    setStatus(content.CurrentStepName as STATUS_LIST);
+    // setStatus(content.CurrentStepName.String as STATUS_LIST);
   };
 
   const handleClose = (currentDialogType: DialogType) => {

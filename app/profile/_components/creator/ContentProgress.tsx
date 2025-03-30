@@ -22,7 +22,7 @@ function ContentProgress({ currentContents }) {
   //     ...tempContent,
   //     Status: "",
   //     CurrentStepId: getStepIndex(state) + 1,
-  //     CurrentStepName: state,
+  //     CurrentStepName: { String: state, Valid: true },
   //     // Process: [
   //     //   {
   //     //     ContentId: "testid",
@@ -84,7 +84,7 @@ function ContentProgress({ currentContents }) {
             <StatusIndicator
               status={
                 p.Status === null || p.Status === ""
-                  ? p.CurrentStepName
+                  ? p.CurrentStepName.String
                   : p.Status
               }
             />

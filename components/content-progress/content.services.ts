@@ -47,7 +47,10 @@ export type Content = {
   LevelName: string;
   LvlId: number;
   CurrentStepId: number;
-  CurrentStepName: string;
+  CurrentStepName: {
+    String: string;
+    Valid: boolean;
+  };
   Status: string;
 };
 

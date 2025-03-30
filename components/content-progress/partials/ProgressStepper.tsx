@@ -53,7 +53,9 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           activeStep={activeStep}
           setActiveStep={setActiveStep}
           currentStepStatus={
-            getCurrentStepColor(content.CurrentStepName) as CurrentStepStatus
+            getCurrentStepColor(
+              content.CurrentStepName.String
+            ) as CurrentStepStatus
           }
           horizontal={true}
         />
@@ -71,7 +73,9 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               activeStep={activeStep}
               setActiveStep={setActiveStep}
               currentStepStatus={
-                getCurrentStepColor(content.CurrentStepName) as CurrentStepStatus
+                getCurrentStepColor(
+                  content.CurrentStepName.String
+                ) as CurrentStepStatus
               }
               horizontal={false}
               hasBg={false}
