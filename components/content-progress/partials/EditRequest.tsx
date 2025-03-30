@@ -1,7 +1,7 @@
 import React from "react";
-import { Content, FormikTypes } from "./content.services";
-import { FormikProps, useFormikContext } from "formik";
-import { Textarea } from "../ui/textarea";
+import { Content, FormikTypes } from "../content.services";
+import { useFormikContext } from "formik";
+import { Textarea } from "@/components/ui/textarea";
 
 type EditRequestProps = {
   content: Content;

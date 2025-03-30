@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { DialogType } from "./content.services";
+import React from "react";
+import { DialogType } from "../content.services";
 
 function FeedbackModalContent({ feedbacks, setDialogType }) {
   return (
@@ -19,12 +19,6 @@ function FeedbackModalContent({ feedbacks, setDialogType }) {
             ))}
           </div>
         </div>
-        <button
-          onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-          className="mt-5 sm:mt-10 w-full py-2 text-white font-semibold bg-[#CA7FFE] rounded-xl"
-        >
-          Дахин илгээх
-        </button>
       </div>
     </>
   );

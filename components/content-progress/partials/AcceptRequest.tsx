@@ -1,7 +1,7 @@
 import React from "react";
 import { FormikProps, useFormikContext } from "formik";
-import { FormikTypes } from "./content.services";
-import { Textarea } from "../ui/textarea";
+import { FormikTypes } from "../content.services";
+import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 
 const AcceptRequest: React.FC = () => {

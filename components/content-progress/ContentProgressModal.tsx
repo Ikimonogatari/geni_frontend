@@ -7,50 +7,47 @@ import { useEffect, useState } from "react";
 import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import ContentReturnModal from "@/app/profile/_components/creator/ContentReturnModal";
-import ContentUploadModal from "../ContentUploadModal";
-import ContentReviewModal from "../ContentReviewModal";
 import {
   DialogType,
   FormikTypes,
   GetContentProcessResponse,
   STATUS_LIST,
+  STATUS_LIST_VALUE,
 } from "./content.services";
 import { Content } from "./content.services";
-import ViewContent from "./ViewContent";
-import EditRequest from "./EditRequest";
-import AcceptRequest from "./AcceptRequest";
+import ViewContent from "./partials/ViewContent";
+import EditRequest from "./partials/EditRequest";
+import AcceptRequest from "./partials/AcceptRequest";
 import { DialogTitle } from "../ui/dialogc";
-import Payment from "./Payment";
-import ReturnSection from "./ReturnSection";
-import ProgressStepper from "./ProgressStepper";
+import Payment from "./partials/Payment";
+import ReturnSection from "./partials/ReturnSection";
+import ProgressStepper from "./partials/ProgressStepper";
 import { useGetContentProcessMutation } from "@/app/services/service";
 import moment from "moment";
-import FeedbackModalContent from "./FeedbackModalContent";
+import FeedbackModalContent from "./partials/FeedbackModalContent";
+import ContentReviewModalContent from "./partials/ContentReviewModalContent";
+import ContentReturnModalContent from "./partials/ContentReturnModalContent";
+import ContentUploadModalContent from "./partials/ContentUploadModalContent";
 
-// export const getStepIndex = (status: string): number => {
-//   const arr = [
-//     ["Request"],
-//     ["ProdDelivering", "Payment"],
-//     ["ContentInProgress", "ContentOverDue"],
-//     [
-//       "ContentInReview",
-//       "ContentSent",
-//       "ProdRejected",
-//       "ProdApproved",
-//       "ContentRejected",
-//     ],
-//     ["ContentReceived", "ContentApproved", "ContentEditRequest"],
-//   ];
+export const getStepIndex = (status: string): number => {
+  const arr = [
+    ["RequestSent", "RequestApproved", "RequestRejected"],
+    ["DeliveryPaymentPending", "Delivery", "DeliverySuccess", "DeliveryRefund"],
+    ["ContentPending", "ContentSent", "ContentOverDue"],
+    ["GeniConfirming", "ContentSentToBrand", "ContentRejected"],
+    ["ContentApproved", "ContentFixRequest", "ContentReSent"],
+  ];
 
-//   const index = arr.findIndex((item) => item.includes(status));
-//   return index == -1 ? 0 : index;
-// };
+  const index = arr.findIndex((item) => item.includes(status));
+  return index == -1 ? 0 : index;
+};
 
 export const getCurrentStepColor = (status: string): CurrentStepStatus => {
   const arr = {
     green: [
       "Request",
+      "RequestApproved",
+      "DeliverySuccess",
       "ProdApproved",
       "ContentSent",
       "ContentSentToBrand",
@@ -59,7 +56,7 @@ export const getCurrentStepColor = (status: string): CurrentStepStatus => {
     ],
     yellow: [
       "RequestSent",
-      "RequestApproved",
+      // "RequestApproved",
       "DeliveryPaymentPending",
       "Delivery",
       "DeliverySuccess",
@@ -67,7 +64,12 @@ export const getCurrentStepColor = (status: string): CurrentStepStatus => {
       "GeniConfirming",
       "ContentFixRequest",
     ],
-    red: ["DeliveryRefund", "ContentOverDue", "ContentRejected"],
+    red: [
+      "RequestRejected",
+      "DeliveryRefund",
+      "ContentOverDue",
+      "ContentRejected",
+    ],
   };
 
   return Object.keys(arr).find((key) =>
@@ -90,15 +92,32 @@ const ContentProgressModalContent: React.FC<
   const userType = Cookies.get("userType");
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-  const [
-    getContentProcess,
+  const [status, setStatus] = useState<STATUS_LIST>(STATUS_LIST.RequestSent);
+  // console.log("getCurrentStepColor", getCurrentStepColor(status));
+  // const [contentProcessData, setContentProcessData] = useState<GetContentProcessResponse | []>([]);
+  // const [
+  //   getContentProcess,
+  //   {
+  //     isLoading: isLoadingContentProcess,
+  //     data: contentProcessData,
+  //     error: contentProcessError,
+  //     isSuccess,
+  //   },
+  // ] = useGetContentProcessMutation();
+  const isSuccess = true;
+  const isLoadingContentProcess = false;
+  const contentProcessData = [
     {
-      isLoading: isLoadingContentProcess,
-      data: contentProcessData,
-      error: contentProcessError,
-      isSuccess,
+      ContentId: "testid",
+      ContentProccessId: 1,
+      ContentStepId: 1,
+      StepName: "Контентийн хүсэлт",
+      ContentStepStatusCode: { String: content.CurrentStepName, Valid: true },
+      ContentStepStatusId: 1,
+      Desc: { String: STATUS_LIST_VALUE[content.CurrentStepName], Valid: true },
+      CreatedAt: "2025-03-28T12:13:28.276835Z",
     },
-  ] = useGetContentProcessMutation();
+  ];
 
   const pick = (obj, keys) =>
     Object.fromEntries(
@@ -240,11 +259,13 @@ const ContentProgressModalContent: React.FC<
   const handleOpen = (open: boolean) => {
     setDialogOpen(open);
 
-    getContentProcess({
-      UserType: userType,
-      ContentId: content?.ContentId,
-      ContentStepId: content?.CurrentStepId,
-    });
+    // getContentProcess({
+    //   UserType: userType,
+    //   ContentId: content?.ContentId,
+    //   ContentStepId: content?.CurrentStepId,
+    // });
+    // setContentProcessData(content['Process'] as any);
+    setStatus(content.CurrentStepName as STATUS_LIST);
   };
 
   const handleClose = (currentDialogType: DialogType) => {
@@ -274,11 +295,11 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {dialogType == DialogType.REQUEST ? (
-          <ContentReturnModal requestId={content?.ContentId} />
+          <ContentReturnModalContent requestId={content?.ContentId} />
         ) : (
           <></>
         )}
-        {content.CurrentStepName === STATUS_LIST.ContentRejected &&
+        {status === STATUS_LIST.ContentRejected &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
             <FeedbackModalContent
               feedbacks={content?.FeedBacks}
@@ -286,23 +307,24 @@ const ContentProgressModalContent: React.FC<
             />
           )}
 
-        {content.CurrentStepName === STATUS_LIST.DeliverySuccess &&
-          openReturnSection && <ReturnSection />}
+        {status === STATUS_LIST.DeliverySuccess && openReturnSection && (
+          <ReturnSection />
+        )}
 
         {dialogType == DialogType.CONTENT_IN_PROGRESS ? (
-          <ContentUploadModal
+          <ContentUploadModalContent
             parsedUserInfo={parsedUserInfo}
             contentId={content?.ContentId}
           />
         ) : null}
 
-        {content.CurrentStepName === STATUS_LIST.ContentApproved && (
-          <ContentReviewModal p={content} />
+        {status === STATUS_LIST.ContentApproved && (
+          <ContentReviewModalContent p={content} />
         )}
 
         {dialogType == DialogType.PAYMENT && <Payment content={content} />}
 
-        {content.CurrentStepName === STATUS_LIST.ContentFixRequest &&
+        {status === STATUS_LIST.ContentFixRequest &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
             <>
               <div className="border-[1px] border-[#E6E6E6] p-4 rounded-xl">
@@ -319,12 +341,12 @@ const ContentProgressModalContent: React.FC<
                   ))}
                 </div>
               </div>
-              <button
+              {/* <button
                 onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
                 className="mt-5 sm:mt-10 w-full py-2 text-white font-semibold bg-[#CA7FFE] rounded-lg"
               >
                 Дахин илгээх
-              </button>
+              </button> */}
             </>
           )}
       </>
@@ -350,15 +372,19 @@ const ContentProgressModalContent: React.FC<
   const creatorModalMessages = () => {
     return (
       <>
-        {content.CurrentStepName == STATUS_LIST.ContentOverDue &&
+        {status == STATUS_LIST.ContentOverDue &&
           ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
             dialogType
           ) && (
             <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5 mt-2">
               <h3 className="text-lg font-semibold">Сануулга !</h3>
               <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
-                Та контент илгээх хугацаанаасаа 3 хоног хоцорсон байна. <br />
-                Таны дараагийн бүтээгдэхүүн хүсэх эрх 3 хоног хаагдах болно
+                Та контент илгээх хугацаанаасаа{" "}
+                {overdueDays(contentProcessData.slice(-1)[0].CreatedAt)} хоног
+                хоцорсон байна. <br />
+                Таны дараагийн бүтээгдэхүүн хүсэх эрх{" "}
+                {overdueDays(contentProcessData.slice(-1)[0].CreatedAt)} хоног
+                хаагдах болно
               </p>
             </div>
           )}
@@ -369,7 +395,7 @@ const ContentProgressModalContent: React.FC<
   const creatorModalFooterActions = () => {
     return (
       <>
-        {content.CurrentStepName === STATUS_LIST.DeliveryPaymentPending &&
+        {status === STATUS_LIST.DeliveryPaymentPending &&
           dialogType != DialogType.PAYMENT && (
             <div className="pt-2">
               <button
@@ -382,7 +408,7 @@ const ContentProgressModalContent: React.FC<
               </button>
             </div>
           )}
-        {content.CurrentStepName === STATUS_LIST.RequestSent &&
+        {status === STATUS_LIST.RequestSent &&
           dialogType != DialogType.REQUEST && (
             <div className="pt-2">
               <button
@@ -394,7 +420,7 @@ const ContentProgressModalContent: React.FC<
               </button>
             </div>
           )}
-        {content.CurrentStepName === STATUS_LIST.DeliverySuccess && (
+        {status === STATUS_LIST.DeliverySuccess && (
           <div className="border-t pt-2">
             <button
               onClick={() =>
@@ -420,7 +446,7 @@ const ContentProgressModalContent: React.FC<
         {
           dialogType != DialogType.CONTENT_IN_PROGRESS &&
             showSendContentButton(
-              content.CurrentStepName as STATUS_LIST,
+              status as STATUS_LIST,
               getCreatedAtByStatus(
                 contentProcessData,
                 STATUS_LIST.ContentOverDue
@@ -431,7 +457,10 @@ const ContentProgressModalContent: React.FC<
                   onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
                   className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
                 >
-                  Контент илгээх
+                  {status === STATUS_LIST.ContentRejected ||
+                  status === STATUS_LIST.ContentFixRequest
+                    ? "Дахин илгээх"
+                    : "Контент илгээх"}
                 </button>
               </div>
             )
@@ -440,7 +469,7 @@ const ContentProgressModalContent: React.FC<
           //   contentId={content?.ContentId}
           // />
         }
-        {content.CurrentStepName === STATUS_LIST.ContentOverDue &&
+        {status === STATUS_LIST.ContentOverDue &&
           !isOverdueWeek(
             getCreatedAtByStatus(contentProcessData, STATUS_LIST.ContentOverDue)
           ) &&
@@ -464,7 +493,7 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {/* {getStepIndex(content.Status) >= 3 && */}
-        {showViewContentButton(content.CurrentStepName as STATUS_LIST) &&
+        {showViewContentButton(status as STATUS_LIST) &&
           ![
             DialogType.ACCEPT_REQUEST,
             DialogType.CONTENT_IN_PROGRESS,
@@ -508,8 +537,8 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {/* Контент хоцорсон сануулга */}
-        {content.CurrentStepName == STATUS_LIST.ContentOverDue &&
-          isOverdueWeek(content.CreatedAt) && (
+        {status == STATUS_LIST.ContentOverDue &&
+          isOverdueWeek(contentProcessData.slice(-1)[0].CreatedAt) && (
             <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5">
               <h3 className="text-lg font-semibold">Сануулга !</h3>
               <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
@@ -519,7 +548,7 @@ const ContentProgressModalContent: React.FC<
             </div>
           )}
 
-        {content.CurrentStepName == STATUS_LIST.ContentApproved && (
+        {status == STATUS_LIST.ContentApproved && (
           <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
             <div>
               Танд контент бүтээгчид өгсөн дундаж оноо:
@@ -545,7 +574,7 @@ const ContentProgressModalContent: React.FC<
           </div>
         )}
 
-        {/* {content.CurrentStepName == "ContentEditRequest" && (
+        {/* {status == "ContentEditRequest" && (
           <div className="flex flex-col gap-3 border-geni-gray border-[1px] rounded-xl p-4 pt-0">
             <div className="flex flex-col gap-2 bg-white rounded-xl p-4">
               <p className="text-xl font-bold mb-2">Контент пост хийх хүсэлт</p>
@@ -605,7 +634,7 @@ const ContentProgressModalContent: React.FC<
               <Loader2 className="w-10 h-10 animate-spin" />
             </div>
           )}
-          {isSuccess && (
+          {content && isSuccess && (
             <>
               <FormikProvider value={formik}>
                 <form onSubmit={formik.handleSubmit} className="h-full w-full">

@@ -178,10 +178,17 @@ function ContentProgress({ currentContents }) {
                 <CreatorTier tier={p?.LevelName} />
               </div>
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
-              <StatusIndicator status={p.Status} />
+              <StatusIndicator
+                status={
+                  p.Status === null || p.Status === ""
+                    ? p.CurrentStepName
+                    : p.Status
+                }
+              />
               <div className="col-span-1 flex justify-end">
-                <ContentProgressModalContent content={p} />
-                {/* {p.Status === "ContentApproved" ? (
+                {p.Status === null || p.Status === "" ? (
+                  <ContentProgressModalContent content={p} />
+                ) : p.Status === "ContentApproved" ? (
                   <ContentReceiveModal
                     contentVideoFileId={p.ContentVideoFileId}
                     contentThumbnailFileId={p.ContentThumbnailFileId}
@@ -207,7 +214,8 @@ function ContentProgress({ currentContents }) {
                   />
                 ) : (
                   <></>
-                )} */}
+                )}
+                <ContentProgressModalContent content={p} />
               </div>
             </div>
           ))}
