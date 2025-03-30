@@ -4,40 +4,58 @@ import Image from "next/image";
 const getColorClass = (status) => {
   switch (status) {
     case "Request":
-      return "bg-[#4D55F5] text-white";
+      return "bg-[#4D55F5]";
     case "ProdApproved":
-      return "bg-[#4FB755] text-white";
+      return "bg-[#4FB755]";
     case "ProdRejected":
-      return "bg-[#F41919] text-white";
+      return "bg-[#F41919]";
     case "ProdDelivering":
-      return "bg-[#F49D19] text-white";
+      return "bg-[#F49D19]";
     case "ContentInProgress":
-      return "bg-[#F49D19] text-white";
+      return "bg-[#F49D19]";
     case "ContentInReview":
-      return "bg-[#4D55F5] text-white";
+      return "bg-[#4D55F5]";
     case "ContentSent":
-      return "bg-[#4FB755] text-white";
+      return "bg-[#4FB755]";
     case "ContentRejected":
-      return "bg-[#F41919] text-white";
+      return "bg-[#F41919]";
     case "ContentReceived":
-      return "bg-[#4FB755] text-white";
+      return "bg-[#4FB755]";
+    case "ContentApproved":
+      return "bg-[#4FB755]";
+    case "ContentHold":
+      return "bg-[#F49D19]";
     default:
-      return "bg-[#4D55F5] text-white";
+      return "bg-[#4D55F5]";
   }
 };
 
 const getStatusImage = (status) => {
   switch (status) {
+    case "Request":
+      return "/content-status-icon1.png";
+    case "ProdApproved":
+      return "/content-status-icon6.png";
+    case "ProdRejected":
+      return "/content-status-icon3.png";
     case "ProdDelivering":
-      return "/stage-icon1.png";
+      return "/content-status-icon2.png";
     case "ContentInProgress":
-      return "/stage-icon2.png";
+      return "/content-status-icon3.png";
     case "ContentInReview":
-      return "/stage-icon3.png";
+      return "/content-status-icon4.png";
     case "ContentSent":
-      return "/stage-icon4.png";
+      return "/content-status-icon6.png";
+    case "ContentReceived":
+      return "/content-status-icon7.png";
+    case "ContentRejected":
+      return "/content-status-icon5.png";
+    case "ContentApproved":
+      return "/content-status-icon6.png";
+    case "ContentHold":
+      return "/content-status-icon5.png";
     default:
-      return "/stage-icon1.png";
+      return "/content-status-icon1.png";
   }
 };
 
@@ -63,6 +81,8 @@ const getStatusName = (status) => {
       return "Контент зөвшөөрөгдсөн";
     case "ContentReceived":
       return "Контент хүлээн авсан";
+    case "ContentHold":
+      return "Түр зогссон";
     default:
       return status;
   }
@@ -70,19 +90,19 @@ const getStatusName = (status) => {
 
 const StatusIndicator = ({ status }) => {
   return (
-    <div className="col-span-1 flex flex-row items-center gap-3">
-      <div className={`${getColorClass(status)} inline-flex items-center gap-3 px-3 py-1 rounded-full`}>
-        <Image
-          src={getStatusImage(status)}
-          width={24}
-          height={24}
-          alt=""
-          className="w-4 h-4 sm:w-5 sm:h-5 brightness-0 invert"
-        />
-        <span className="text-xs sm:text-sm whitespace-nowrap">
-          {getStatusName(status)}
-        </span>
-      </div>
+    <div
+      className={`${getColorClass(
+        status
+      )} col-span-1 flex flex-row items-center justify-center max-w-max rounded-full px-2 py-1 gap-1 text-white`}
+    >
+      <Image
+        src={getStatusImage(status)}
+        width={24}
+        height={24}
+        alt=""
+        className="w-4 h-4 sm:w-6 sm:h-6"
+      />
+      <span>{getStatusName(status)}</span>
     </div>
   );
 };

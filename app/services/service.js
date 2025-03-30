@@ -160,10 +160,9 @@ export const geniApi = createApi({
       }),
     }),
     listPublicProducts: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
         method: "GET",
-        body,
       }),
     }),
     getPublicProductById: builder.query({
@@ -389,7 +388,7 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
-    brandGuideCheck: builder.mutation({
+    guideCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/no-guide",
         method: "POST",
@@ -413,6 +412,12 @@ export const geniApi = createApi({
     getBrandCreditInfo: builder.query({
       query: () => ({
         url: "/api/web/private/user/credit",
+        method: "GET",
+      }),
+    }),
+    getBankList: builder.query({
+      query: () => ({
+        url: "/api/web/private/banks",
         method: "GET",
       }),
     }),
@@ -489,9 +494,10 @@ export const {
   useGetWalletInfoQuery,
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
-  useBrandGuideCheckMutation,
+  useGuideCheckMutation,
   useGetBrandCreditInfoQuery,
   useCreatorApplyMutation,
   useStudentRegisterMutation,
   usePurchaseCourseMutation,
+  useGetBankListQuery,
 } = geniApi;

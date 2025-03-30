@@ -12,6 +12,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { formatSocialMediaUrl } from "@/utils/socialMedia";
 
 import toast from "react-hot-toast";
 
@@ -39,6 +40,11 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
       isSuccess: updateSocialChannelSuccess,
     },
   ] = useUpdateSocialChannelMutation();
+
+  const handleSocialChange = (platform, value) => {
+    const formattedUrl = formatSocialMediaUrl(platform, value);
+    setSocials({ ...socials, [platform]: formattedUrl });
+  };
 
   const handleSaveOrUpdateSocialChannels = async () => {
     try {
@@ -186,7 +192,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                   className="bg-transparent outline-none w-full"
                   value={socials.instagram}
                   onChange={(e) =>
-                    setSocials({ ...socials, instagram: e.target.value })
+                    handleSocialChange("instagram", e.target.value)
                   }
                 />
               </div>
@@ -222,7 +228,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                   value={socials.facebook}
                   className="bg-transparent outline-none w-full"
                   onChange={(e) =>
-                    setSocials({ ...socials, facebook: e.target.value })
+                    handleSocialChange("facebook", e.target.value)
                   }
                 />
               </div>

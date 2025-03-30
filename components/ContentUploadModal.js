@@ -164,115 +164,122 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
 
   return (
     <>
-      {/* <Dialog>
+      <Dialog>
         <DialogTrigger
           type="submit"
-          className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+          className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
         >
-          Контент илгээх
+          <Image
+            src={"/hamburger-menu-icon.png"}
+            alt=""
+            width={24}
+            height={24}
+          />
         </DialogTrigger>
 
-        <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl"> */}
-      <span className="text-3xl font-bold">Контент илгээх</span>
-      <div className="w-full flex flex-col lg:flex-row gap-6">
-        <div className="w-full flex flex-col gap-4">
-          <span className="text-lg">Контент</span>
+        <DialogContent className="overflow-y-auto flex flex-col p-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
+          <span className="text-3xl font-bold">Контент илгээх</span>
+          <div className="w-full flex flex-col lg:flex-row gap-6">
+            <div className="w-full flex flex-col gap-4">
+              <span className="text-lg">Контент</span>
 
-          {contentVideo ? (
-            <video
-              controls
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-            >
-              <source src={contentVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : isUploading.video ? (
-            <ContentUploadProgress
-              isLoading={isUploading.video}
-              progress={progress.video}
-            />
-          ) : (
-            <div
-              {...getRootPropsForVideo()}
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-            >
-              <input {...getInputPropsForVideo()} />
+              {contentVideo ? (
+                <video
+                  controls
+                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                >
+                  <source src={contentVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : isUploading.video ? (
+                <ContentUploadProgress
+                  isLoading={isUploading.video}
+                  progress={progress.video}
+                />
+              ) : (
+                <div
+                  {...getRootPropsForVideo()}
+                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                >
+                  <input {...getInputPropsForVideo()} />
 
-              <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
-                  <Image
-                    src={"/add-icon.png"}
-                    width={20}
-                    height={20}
-                    alt=""
-                    className="w-5 h-5"
-                  />
+                  <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
+                    <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
+                      <Image
+                        src={"/add-icon.png"}
+                        width={20}
+                        height={20}
+                        alt=""
+                        className="w-5 h-5"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="w-full flex flex-col gap-4">
-          <span className="text-lg">Thumbnail зураг</span>
-          {contentThumbnail ? (
-            <img
-              src={contentThumbnail}
-              alt=""
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-            />
-          ) : isUploading.image ? (
-            <ContentUploadProgress
-              isLoading={isUploading.image}
-              progress={progress.image}
-            />
-          ) : (
-            <div
-              {...getRootPropsForImage()}
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-            >
-              <input {...getInputPropsForImage()} />
-              <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
-                <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
-                  <Image
-                    src={"/add-icon.png"}
-                    width={20}
-                    height={20}
-                    alt=""
-                    className="w-5 h-5"
-                  />
+            <div className="w-full flex flex-col gap-4">
+              <span className="text-lg">Thumbnail зураг</span>
+              {contentThumbnail ? (
+                <img
+                  src={contentThumbnail}
+                  alt=""
+                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                />
+              ) : isUploading.image ? (
+                <ContentUploadProgress
+                  isLoading={isUploading.image}
+                  progress={progress.image}
+                />
+              ) : (
+                <div
+                  {...getRootPropsForImage()}
+                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                >
+                  <input {...getInputPropsForImage()} />
+                  <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
+                    <div className="w-14 h-14 rounded-2xl bg-[#CA7FFE] flex justify-center items-center">
+                      <Image
+                        src={"/add-icon.png"}
+                        width={20}
+                        height={20}
+                        alt=""
+                        className="w-5 h-5"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="w-full flex flex-col h-full justify-between">
-          <div className="flex flex-col gap-4">
-            <span className="text-lg">Тайлбар</span>
-            <textarea
-              type="text"
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-              className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
-            />
+            <div className="w-full flex flex-col h-full justify-between">
+              <div className="flex flex-col gap-4">
+                <span className="text-lg">
+                  Бүтээгдэхүүн хэрэглэсэн өөрийн сэтгэгдэлээ хуваалцаарай.
+                </span>
+                <textarea
+                  type="text"
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                  placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
+                  className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
+                />
+              </div>
+              <button
+                onClick={handleContentSubmit}
+                disabled={!(contentThumbnail && contentVideo && caption)} // Disable when conditions are not met
+                className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${
+                  contentThumbnail && contentVideo && caption
+                    ? "opacity-100"
+                    : "opacity-55 cursor-not-allowed"
+                }`}
+              >
+                Илгээх
+              </button>
+            </div>
           </div>
-          <button
-            onClick={handleContentSubmit}
-            disabled={!(contentThumbnail && contentVideo && caption)} // Disable when conditions are not met
-            className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${
-              contentThumbnail && contentVideo && caption
-                ? "opacity-100"
-                : "opacity-55 cursor-not-allowed"
-            }`}
-          >
-            Илгээх
-          </button>
-        </div>
-      </div>
-      {/* </DialogContent>
-      </Dialog> */}
+        </DialogContent>
+      </Dialog>
       <UploadSuccessModal
         isContentSubmitSuccess={isContentSuccess}
         parsedUserInfo={parsedUserInfo}

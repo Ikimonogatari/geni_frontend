@@ -21,7 +21,7 @@ function CreatorWallet() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32 mb-12">
-        <div className="max-w-4xl min-h-screen mx-auto px-7 py-11 container">
+        <div className="max-w-5xl min-h-screen mx-auto px-7 py-11 container">
           <button
             onClick={() => router.back()}
             className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
@@ -54,10 +54,10 @@ function CreatorWallet() {
                 </span>
               </div>
             </div>
-            {/* <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
+            <div className="flex flex-row justify-center sm:justify-end md:justify-normal md:flex-col gap-4">
               <AddBalance walletInfo={getWalletInfoData} />
               <WithdrawCredit walletInfo={getWalletInfoData} />
-            </div> */}
+            </div>
           </div>
           {/* <div className="min-w-[540px] w-full pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
             <span className="text-2xl font-bold">Дансны түүх</span>

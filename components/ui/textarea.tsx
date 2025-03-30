@@ -62,10 +62,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               {...(max && { maxLength })}
               {...props}
             />
-            <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
-              {charCount !== undefined &&
-                `Тэмдэгтийн тоо: ${charCount}/${maxLength}`}
-            </div>
+            {maxLength && (
+              <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
+                {charCount !== undefined &&
+                  `Тэмдэгтийн тоо: ${charCount}/${maxLength}`}
+              </div>
+            )}
           </div>
           {errorVisible && (
             <FadeInAnimation visible={errorVisible}>
