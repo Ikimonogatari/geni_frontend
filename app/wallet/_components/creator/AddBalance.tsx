@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,12 +19,34 @@ import { ErrorText } from "@/components/ui/error-text";
 import SuccessModal from "@/components/common/SuccessModal";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import Image from "next/image";
-import { useGetBankListQuery } from "@/app/services/service";
+import {
+  useGetBankListQuery,
+  useCheckBankAccountNameMutation,
+  useGetConnectedBankAccountQuery,
+  useConnectBankAccountMutation,
+  useUpdateBankAccountMutation,
+} from "@/app/services/service";
+import toast from "react-hot-toast";
+import debounce from "lodash/debounce";
 
-function AddBalance({ walletInfo }) {
+interface AddBalanceProps {
+  walletInfo: any;
+}
+
+function AddBalance({ walletInfo }: AddBalanceProps) {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [accountName, setAccountName] = useState("");
+  const [isCheckingName, setIsCheckingName] = useState(false);
+  const [hasConnectedAccount, setHasConnectedAccount] = useState(false);
+
   // @ts-ignore
   const { data: bankList } = useGetBankListQuery();
+  const [checkBankAccountName] = useCheckBankAccountNameMutation();
+  // @ts-ignore
+  const { data: connectedAccount } = useGetConnectedBankAccountQuery();
+  const [connectBankAccount] = useConnectBankAccountMutation();
+  const [updateBankAccount] = useUpdateBankAccountMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -34,18 +56,87 @@ function AddBalance({ walletInfo }) {
     },
     validationSchema: addBankAccountSchema,
     onSubmit: async (values) => {
-      // await addBankAccount(values);
+      try {
+        const accountData = {
+          BankCode: values.bankName,
+          AcntNo: values.bankAccountNumber,
+        };
+
+        if (hasConnectedAccount) {
+          await updateBankAccount(accountData).unwrap();
+        } else {
+          await connectBankAccount(accountData).unwrap();
+        }
+
+        setIsSuccess(true);
+        setDialogOpen(false);
+        toast.success("Данс амжилттай холбогдлоо");
+      } catch (error) {
+        toast.error("Алдаа гарлаа");
+      }
     },
   });
+
+  const checkAccountName = useCallback(
+    debounce(async (bankCode: string, accountNumber: string) => {
+      if (accountNumber.length >= 8 && bankCode) {
+        setIsCheckingName(true);
+        try {
+          const response = await checkBankAccountName({
+            BankCode: bankCode,
+            AcntNo: accountNumber,
+          }).unwrap();
+          setAccountName(response.Name);
+          formik.setFieldValue("bankAccountOwner", response.Name);
+        } catch (error) {
+          toast.error("Дансны нэр олдсонгүй");
+        } finally {
+          setIsCheckingName(false);
+        }
+      }
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (connectedAccount) {
+      setHasConnectedAccount(true);
+      setAccountName(connectedAccount.Name);
+      formik.setValues({
+        bankName: connectedAccount.BankCode,
+        bankAccountNumber: connectedAccount.AcntNo,
+        bankAccountOwner: connectedAccount.Name,
+      });
+    }
+  }, [connectedAccount]);
+
+  useEffect(() => {
+    if (isDialogOpen && connectedAccount) {
+      setHasConnectedAccount(true);
+      setAccountName(connectedAccount.Name);
+      formik.setValues({
+        bankName: connectedAccount.BankCode,
+        bankAccountNumber: connectedAccount.AcntNo,
+        bankAccountOwner: connectedAccount.Name,
+      });
+      checkAccountName(connectedAccount.BankCode, connectedAccount.AcntNo);
+    }
+  }, [isDialogOpen, connectedAccount, checkAccountName]);
+
+  const handleAccountNumberChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    formik.setFieldValue("bankAccountNumber", value);
+    checkAccountName(formik.values.bankName, value);
+  };
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger className="aspect-[200/50] text-sm sm:text-base w-[200px] rounded-lg border-[1px] border-[#2D262D] flex justify-center items-center">
         Данс холбох
       </DialogTrigger>
-      {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-4 sm:gap-2 max-h-[739px] w-full lg:w-full max-w-3xl rounded-3xl">
-        {/* @ts-ignore */}
         <DialogTitle className="text-2xl sm:text-3xl xl:text-4xl font-bold">
           Данс холбох
         </DialogTitle>
@@ -64,14 +155,11 @@ function AddBalance({ walletInfo }) {
                   formik.setFieldValue("bankName", value)
                 }
               >
-                {/* @ts-ignore */}
                 <SelectTrigger className="bg-primary-bg rounded-xl h-12 border-none px-3 w-full text-base sm:text-lg">
                   <SelectValue placeholder="Банк сонгох" />
                 </SelectTrigger>
-                {/* @ts-ignore */}
                 <SelectContent>
                   {bankList?.map((bank) => (
-                    // @ts-ignore
                     <SelectItem
                       className="text-base sm:text-lg !flex !flex-row items-center gap-2"
                       key={bank.BankCode}
@@ -104,7 +192,7 @@ function AddBalance({ walletInfo }) {
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
               placeholder="0000 0000 0000"
-              onChange={formik.handleChange}
+              onChange={handleAccountNumberChange}
               onBlur={formik.handleBlur}
               value={formik.values.bankAccountNumber}
               errorText={formik.errors.bankAccountNumber}
@@ -123,14 +211,9 @@ function AddBalance({ walletInfo }) {
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
               placeholder="Дамдиндорж"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
               value={formik.values.bankAccountOwner}
-              errorText={formik.errors.bankAccountOwner}
-              errorVisible={
-                !!formik.touched.bankAccountOwner &&
-                !!formik.errors.bankAccountOwner
-              }
+              readOnly
+              disabled={isCheckingName}
             />
           </div>
           <FadeInAnimation
@@ -158,6 +241,7 @@ function AddBalance({ walletInfo }) {
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
+            isSuccess={isSuccess}
           />
         </form>
       </DialogContent>

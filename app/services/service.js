@@ -435,6 +435,33 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    checkBankAccountName: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cgw/check-name",
+        method: "POST",
+        body,
+      }),
+    }),
+    getConnectedBankAccount: builder.query({
+      query: () => ({
+        url: "/api/web/private/cust-bank",
+        method: "GET",
+      }),
+    }),
+    connectBankAccount: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cust-bank",
+        method: "POST",
+        body,
+      }),
+    }),
+    updateBankAccount: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cust-bank",
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -500,4 +527,8 @@ export const {
   useStudentRegisterMutation,
   usePurchaseCourseMutation,
   useGetBankListQuery,
+  useCheckBankAccountNameMutation,
+  useGetConnectedBankAccountQuery,
+  useConnectBankAccountMutation,
+  useUpdateBankAccountMutation,
 } = geniApi;
