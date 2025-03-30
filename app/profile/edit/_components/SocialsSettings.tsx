@@ -1,17 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
+import { formatSocialMediaUrl, extractUsername } from "@/utils/socialMedia";
+
 interface SocialsSettingsProps {
   parsedUserInfo: any;
   socials: any;
   setSocials: (value: any) => void;
   handleSaveOrUpdateSocialChannels: () => void;
 }
+
 function SocialsSettings({
   parsedUserInfo,
   socials,
   setSocials,
   handleSaveOrUpdateSocialChannels,
 }: SocialsSettingsProps) {
+  // Initialize display values with usernames
+  const [displayValues, setDisplayValues] = React.useState({
+    instagram: "",
+    facebook: "",
+  });
+
+  // Update display values when component mounts or socials change
+  useEffect(() => {
+    setDisplayValues({
+      instagram: extractUsername("instagram", socials.instagram),
+      facebook: extractUsername("facebook", socials.facebook),
+    });
+  }, [socials]);
+
+  const handleSocialChange = (
+    platform: "instagram" | "facebook",
+    value: string
+  ) => {
+    // Update display value immediately
+    setDisplayValues((prev) => ({ ...prev, [platform]: value }));
+
+    // Format URL for storage
+    const formattedUrl = formatSocialMediaUrl(platform, value);
+    setSocials((prev) => ({ ...prev, [platform]: formattedUrl }));
+  };
+
   return (
     <div className="flex flex-row gap-4 w-full">
       <div className="flex flex-col gap-3 w-full">
@@ -35,13 +64,10 @@ function SocialsSettings({
                     (channel) => channel.PlatformId === 2
                   )?.SocialAddress || ""
                 }
-                className="bg-transparent outline-none"
-                value={socials.instagram}
+                className="bg-transparent outline-none w-full"
+                value={displayValues.instagram}
                 onChange={(e) =>
-                  setSocials({
-                    ...socials,
-                    instagram: e.target.value,
-                  })
+                  handleSocialChange("instagram", e.target.value)
                 }
               />
             </div>
@@ -60,11 +86,9 @@ function SocialsSettings({
                     (channel) => channel.PlatformId === 1
                   )?.SocialAddress || ""
                 }
-                value={socials.facebook}
-                className="bg-transparent outline-none"
-                onChange={(e) =>
-                  setSocials({ ...socials, facebook: e.target.value })
-                }
+                value={displayValues.facebook}
+                className="bg-transparent outline-none w-full"
+                onChange={(e) => handleSocialChange("facebook", e.target.value)}
               />
             </div>
           </div>
