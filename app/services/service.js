@@ -478,7 +478,14 @@ export const geniApi = createApi({
       query: (body) => ({
         url: "/api/web/private/cust-bank",
         method: "PUT",
-        body,
+      }),
+    }),
+    creatorXpHistory: builder.query({
+      // query: ({ limit, offset }) => ({
+      query: () => ({
+        // url: `/api/web/private/creator-xp?limit=${limit}&offset=${offset}`,
+        url: `/api/web/private/creator-xp`,
+        method: "GET",
       }),
     }),
   }),
@@ -553,4 +560,5 @@ export const {
   useCreatorWithdrawMutation,
   useGetCreatorWalletHistoryQuery,
   useGetBrandCreditHistoryQuery,
+  useCreatorXpHistoryQuery,
 } = geniApi;
