@@ -1,12 +1,18 @@
 import React from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface CreatorTierProps {
   isSwiper?: boolean;
   tier: string;
+  className?: string;
 }
 
-export default function CreatorTier({ isSwiper, tier }: CreatorTierProps) {
+export default function CreatorTier({
+  isSwiper,
+  tier,
+  className,
+}: CreatorTierProps) {
   const proTierSwiperClassName = "aspect-[58/22] w-[44px]";
   const proTierClassName = "w-[29px] h-[11px] sm:w-[58px] sm:h-[22px]";
   const certifiedSwiperClassName = "w-[20px] h-[20px]";
@@ -48,7 +54,13 @@ export default function CreatorTier({ isSwiper, tier }: CreatorTierProps) {
   return (
     <div>
       {src ? (
-        <Image src={src} alt="" width={58} height={22} className={classes} />
+        <Image
+          src={src}
+          alt=""
+          width={58}
+          height={22}
+          className={cn(classes, className)}
+        />
       ) : (
         <></>
       )}

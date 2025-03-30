@@ -454,13 +454,6 @@ export const geniApi = createApi({
         body,
       }),
     }),
-    getContentProcess: builder.mutation({
-      query: (body) => ({
-        url: "/api/web/private/content/process",
-        method: "POST",
-        body,
-      }),
-    }),
     checkBankAccountName: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/cgw/check-name",
@@ -485,6 +478,20 @@ export const geniApi = createApi({
       query: (body) => ({
         url: "/api/web/private/cust-bank",
         method: "PUT",
+      }),
+    }),
+    creatorXpHistory: builder.query({
+      // query: ({ limit, offset }) => ({
+      query: () => ({
+        // url: `/api/web/private/creator-xp?limit=${limit}&offset=${offset}`,
+        url: `/api/web/private/creator-xp`,
+        method: "GET",
+      }),
+    }),
+    getContentProcess: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/content/process",
+        method: "POST",
         body,
       }),
     }),
@@ -553,7 +560,6 @@ export const {
   useStudentRegisterMutation,
   usePurchaseCourseMutation,
   useGetBankListQuery,
-  useGetContentProcessMutation,
   useCheckBankAccountNameMutation,
   useGetConnectedBankAccountQuery,
   useConnectBankAccountMutation,
@@ -561,4 +567,6 @@ export const {
   useCreatorWithdrawMutation,
   useGetCreatorWalletHistoryQuery,
   useGetBrandCreditHistoryQuery,
+  useCreatorXpHistoryQuery,
+  useGetContentProcessMutation,
 } = geniApi;

@@ -9,10 +9,9 @@ import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import StatusIndicator from "@/components/StatusIndicator";
 import EmptyList from "@/components/common/EmptyList";
-import { AlignJustify } from "lucide-react";
-import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
 import ContentReceiveModal from "./ContentReceiveModal";
 import CreatorTier from "@/components/CreatorTier";
+import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -152,7 +151,7 @@ function ContentProgress({ currentContents }) {
             </div>
             <span className="col-span-1">Бүтээгч</span>
             <div className="col-span-1 flex flex-row items-center justify-between">
-              <span>Төлөв</span>
+              <span>Статус</span>
               <Image
                 src={"/brand-profile-arrow-icon.png"}
                 width={24}

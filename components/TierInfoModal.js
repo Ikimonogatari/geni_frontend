@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 function TierInfoModal() {
   return (
     <Dialog>
-      <DialogTrigger className="py-4 px-7 max-w-min min-w-[271px] text-center border border-primary rounded-lg font-bold text-base sm:text-lg">
+      <DialogTrigger className="py-4 px-7 sm:max-w-min w-full sm:w-auto whitespace-nowrap sm:min-w-[271px] text-center border border-primary rounded-lg font-bold text-base sm:text-lg">
         Түвшин бүтэц харах
       </DialogTrigger>
       <DialogContent className="h-full sm:h-auto overflow-y-auto max-w-sm w-full sm:max-w-5xl flex flex-col gap-10">
