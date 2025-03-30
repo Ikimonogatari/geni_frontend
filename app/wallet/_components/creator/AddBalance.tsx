@@ -23,6 +23,7 @@ import {
   useGetConnectedBankAccountQuery,
   useConnectBankAccountMutation,
   useUpdateBankAccountMutation,
+  useCheckBankAccountNameMutation,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import debounce from "lodash/debounce";
@@ -39,15 +40,18 @@ function AddBalance({
   bankList,
   onTransactionComplete,
   accountName,
-  isCheckingName,
+  isCheckingName: parentIsCheckingName,
 }: AddBalanceProps) {
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [hasConnectedAccount, setHasConnectedAccount] = useState(false);
+  const [localIsCheckingName, setLocalIsCheckingName] = useState(false);
   // @ts-ignore
   const { data: connectedAccount } = useGetConnectedBankAccountQuery();
-  const [connectBankAccount] = useConnectBankAccountMutation();
-  const [updateBankAccount] = useUpdateBankAccountMutation();
+  const [connectBankAccount, { isSuccess: isConnectSuccess }] =
+    useConnectBankAccountMutation();
+  const [updateBankAccount, { isSuccess: isUpdateSuccess }] =
+    useUpdateBankAccountMutation();
+  const [checkBankAccountName] = useCheckBankAccountNameMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -69,8 +73,6 @@ function AddBalance({
           await connectBankAccount(accountData).unwrap();
         }
 
-        setIsSuccess(true);
-        setDialogOpen(false);
         toast.success("Данс амжилттай холбогдлоо");
         await onTransactionComplete();
       } catch (error) {
@@ -90,11 +92,32 @@ function AddBalance({
     }
   }, [connectedAccount, accountName]);
 
+  const checkAccountName = useCallback(
+    debounce(async (bankCode: string, accountNumber: string) => {
+      if (accountNumber.length >= 8 && bankCode) {
+        setLocalIsCheckingName(true);
+        try {
+          const response = await checkBankAccountName({
+            BankCode: bankCode,
+            AcntNo: accountNumber,
+          }).unwrap();
+          formik.setFieldValue("bankAccountOwner", response.Name);
+        } catch (error) {
+          toast.error("Дансны нэр олдсонгүй");
+        } finally {
+          setLocalIsCheckingName(false);
+        }
+      }
+    }, 500),
+    []
+  );
+
   const handleAccountNumberChange = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = e.target.value;
     formik.setFieldValue("bankAccountNumber", value);
+    checkAccountName(formik.values.bankName, value);
   };
 
   return (
@@ -185,7 +208,7 @@ function AddBalance({
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
               value={formik.values.bankAccountOwner}
               readOnly
-              disabled={isCheckingName}
+              disabled={localIsCheckingName || parentIsCheckingName}
             />
           </div>
           <FadeInAnimation
@@ -208,12 +231,11 @@ function AddBalance({
             />
           </FadeInAnimation>
           <SuccessModal
-            setIsSuccessDialogOpen={setDialogOpen}
             modalImage="/payment-success.png"
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
-            isSuccessDialogOpen={isSuccess}
+            isSuccessDialogOpen={isConnectSuccess || isUpdateSuccess}
           />
         </form>
       </DialogContent>
