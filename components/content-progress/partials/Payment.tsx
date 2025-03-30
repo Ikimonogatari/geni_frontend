@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import { Content } from "./content.services";
+import { Content } from "../content.services";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { useState } from "react";
 import Image from "next/image";

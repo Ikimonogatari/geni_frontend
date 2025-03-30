@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { Content, DialogType } from "./content.services";
+import { Content, DialogType } from "../content.services";
 import Image from "next/image";
 
 type ViewContentProps = {

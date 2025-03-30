@@ -11,6 +11,7 @@ import StatusIndicator from "@/components/StatusIndicator";
 import EmptyList from "@/components/common/EmptyList";
 import ContentReceiveModal from "./ContentReceiveModal";
 import CreatorTier from "@/components/CreatorTier";
+import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
 
 function renderStars(score, setScore, playSound) {
   return [1, 2, 3, 4, 5].map((star, index) => (
@@ -176,9 +177,17 @@ function ContentProgress({ currentContents }) {
                 <CreatorTier tier={p?.LevelName} />
               </div>
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
-              <StatusIndicator status={p.Status} />
-              <div className="col-span-1">
-                {p.Status === "ContentApproved" ? (
+              <StatusIndicator
+                status={
+                  p.Status === null || p.Status === ""
+                    ? p.CurrentStepName.String
+                    : p.Status
+                }
+              />
+              <div className="col-span-1 flex justify-end">
+                {p.Status === null || p.Status === "" ? (
+                  <ContentProgressModalContent content={p} />
+                ) : p.Status === "ContentApproved" ? (
                   <ContentReceiveModal
                     contentVideoFileId={p.ContentVideoFileId}
                     contentThumbnailFileId={p.ContentThumbnailFileId}
@@ -205,6 +214,7 @@ function ContentProgress({ currentContents }) {
                 ) : (
                   <></>
                 )}
+                <ContentProgressModalContent content={p} />
               </div>
             </div>
           ))}

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { Content, GetContentProcessResponse } from "./content.services";
-import { getCurrentStepColor } from "./ContentProgressModal";
-import Stepper, { CurrentStepStatus } from "../Stepper";
+import { Content, GetContentProcessResponse } from "../content.services";
+import { getCurrentStepColor } from "../ContentProgressModal";
+import Stepper, { CurrentStepStatus } from "@/components/Stepper";
 import { Dispatch, SetStateAction } from "react";
 import moment from "moment";
 
@@ -53,7 +53,9 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           activeStep={activeStep}
           setActiveStep={setActiveStep}
           currentStepStatus={
-            getCurrentStepColor(content.Status) as CurrentStepStatus
+            getCurrentStepColor(
+              content.CurrentStepName.String
+            ) as CurrentStepStatus
           }
           horizontal={true}
         />
@@ -71,7 +73,9 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               activeStep={activeStep}
               setActiveStep={setActiveStep}
               currentStepStatus={
-                getCurrentStepColor(content.Status) as CurrentStepStatus
+                getCurrentStepColor(
+                  content.CurrentStepName.String
+                ) as CurrentStepStatus
               }
               horizontal={false}
               hasBg={false}
