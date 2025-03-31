@@ -162,11 +162,11 @@ function EditProfileBrand() {
       BrandAoADescription: "temp-desc",
     },
     validationSchema: Yup.object({
-      Name: Yup.string().required("Required"),
-      PhoneNumber: Yup.string().required("Required"),
-      Bio: Yup.string().required("Required"),
-      RegNo: Yup.string().required("Required"),
-      Address: Yup.string().required("Required"),
+      Name: Yup.string().required("Заавал бөглөнө үү"),
+      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
+      Bio: Yup.string().required("Заавал бөглөнө үү"),
+      RegNo: Yup.string().required("Заавал бөглөнө үү"),
+      Address: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
       editBrandProfile(values).unwrap();

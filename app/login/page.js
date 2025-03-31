@@ -60,7 +60,7 @@ function Page() {
     validationSchema: Yup.object({
       forgotEmail: Yup.string()
         .email("Зөв имэйл хаяг оруулна уу")
-        .required("Required"),
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: (value) => {
       sendOtpToEmail({
@@ -78,7 +78,7 @@ function Page() {
     validationSchema: Yup.object({
       otp: Yup.string()
         .matches(/^\d{4}$/, "Зөв код оруулна уу")
-        .required("Required"),
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: () => {
       setForgotPasswordState("3");
@@ -90,10 +90,10 @@ function Page() {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      newPassword: Yup.string().required("Required"),
+      newPassword: Yup.string().required("Заавал бөглөнө үү"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("newPassword"), null], "Нууц үг таарч байх ёстой")
-        .required("Required"),
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
       forgotPassword({
@@ -113,8 +113,10 @@ function Page() {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().required("Required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Заавал бөглөнө үү"),
+      password: Yup.string().required("Заавал бөглөнө үү"),
     }),
 
     onSubmit: (values) => {

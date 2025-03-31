@@ -59,7 +59,7 @@ function Page() {
       files: [],
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Required"),
+      name: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {},
   });

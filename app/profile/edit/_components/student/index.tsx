@@ -145,12 +145,12 @@ function EditProfileStudent() {
       Gender: "M",
     },
     validationSchema: Yup.object({
-      FirstName: Yup.string().required("Required"),
-      LastName: Yup.string().required("Required"),
-      PhoneNumber: Yup.string().required("Required"),
-      Bio: Yup.string().required("Required"),
-      Location: Yup.string().required("Required"),
-      RegNo: Yup.string().required("Required"),
+      FirstName: Yup.string().required("Заавал бөглөнө үү"),
+      LastName: Yup.string().required("Заавал бөглөнө үү"),
+      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
+      Bio: Yup.string().required("Заавал бөглөнө үү"),
+      Location: Yup.string().required("Заавал бөглөнө үү"),
+      RegNo: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
       editCreatorProfile(values).unwrap();
@@ -426,8 +426,9 @@ function EditProfileStudent() {
                   }
                   labelClassName="text-[#6F6F6F] text-lg font-normal"
                   wrapperClassName="w-full sm:auto"
-                  className="bg-[#F5F4F0] text-base sm:text-xl"
+                  className="bg-[#F5F4F0] text-base sm:text-xl cursor-not-allowed"
                   layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
+                  disabled={true}
                 />
                 <Input
                   id="LastName"
@@ -443,8 +444,9 @@ function EditProfileStudent() {
                   }
                   labelClassName="text-[#6F6F6F] text-lg font-normal"
                   wrapperClassName="w-full sm:auto"
-                  className="bg-[#F5F4F0] text-base sm:text-xl"
+                  className="bg-[#F5F4F0] text-base sm:text-xl cursor-not-allowed"
                   layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
+                  disabled={true}
                 />
               </div>
               <Input

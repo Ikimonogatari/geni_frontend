@@ -17,6 +17,7 @@ function StudentOnboarding() {
   const [step, setStep] = useState(1);
 
   const handleNextStep = async () => {
+    await formik.validateForm();
     if (step === 1) {
       await formik.validateField("LastName");
       await formik.validateField("FirstName");

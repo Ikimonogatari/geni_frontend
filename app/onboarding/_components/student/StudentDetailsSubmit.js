@@ -12,7 +12,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { formatSocialMediaUrl } from "@/utils/socialMedia";
+import { formatSocialMediaUrl, extractUsername } from "@/utils/socialMedia";
 
 import toast from "react-hot-toast";
 
@@ -21,6 +21,21 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
     instagram: "",
     facebook: "",
   });
+
+  // Initialize display values with usernames
+  const [displayValues, setDisplayValues] = useState({
+    instagram: "",
+    facebook: "",
+  });
+
+  // Update display values when component mounts or socials change
+  useEffect(() => {
+    setDisplayValues({
+      instagram: extractUsername("instagram", socials.instagram),
+      facebook: extractUsername("facebook", socials.facebook),
+    });
+  }, [socials]);
+
   const [
     createSocialChannel,
     {
@@ -42,8 +57,12 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   ] = useUpdateSocialChannelMutation();
 
   const handleSocialChange = (platform, value) => {
+    // Update display value immediately
+    setDisplayValues((prev) => ({ ...prev, [platform]: value }));
+
+    // Format URL for storage
     const formattedUrl = formatSocialMediaUrl(platform, value);
-    setSocials({ ...socials, [platform]: formattedUrl });
+    setSocials((prev) => ({ ...prev, [platform]: formattedUrl }));
   };
 
   const handleSaveOrUpdateSocialChannels = async () => {
@@ -89,6 +108,20 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
       toast.error("Алдаа гарлаа");
     }
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Check if there are any formik errors
+    if (Object.keys(formik.errors).length > 0) {
+      toast.error("Бүх талбарыг зөв бөглөнө үү");
+      return;
+    }
+
+    // If no errors, proceed with form submission
+    formik.handleSubmit(e);
+  };
+
   return (
     <div className="flex flex-col items-start justify-between w-full gap-4">
       <div className="flex flex-col items-start sm:flex-row gap-4 w-full">
@@ -188,7 +221,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                     )?.SocialAddress || ""
                   }
                   className="bg-transparent outline-none w-full"
-                  value={socials.instagram}
+                  value={displayValues.instagram}
                   onChange={(e) =>
                     handleSocialChange("instagram", e.target.value)
                   }
@@ -223,7 +256,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                       (channel) => channel.PlatformId === 1
                     )?.SocialAddress || ""
                   }
-                  value={socials.facebook}
+                  value={displayValues.facebook}
                   className="bg-transparent outline-none w-full"
                   onChange={(e) =>
                     handleSocialChange("facebook", e.target.value)
@@ -265,6 +298,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         </button>
         <button
           type="submit"
+          onClick={handleSubmit}
           className="w-full gap-2 bg-geni-green text-white rounded-lg sm:rounded-xl border border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
         >
           Дуусгах
