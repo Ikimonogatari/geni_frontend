@@ -111,7 +111,7 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
                           className="absolute top-2 right-2 bg-white rounded-full shadow-md p-1 hover:bg-gray-100 transition-colors"
                           aria-label="Remove image"
                         >
-                          <XCircleIcon color="#CA7FFE" size={24} />
+                          <XCircleIcon color="#4D55F5" size={24} />
                         </button>
                       </div>
                     </SwiperSlide>

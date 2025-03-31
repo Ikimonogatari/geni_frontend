@@ -115,29 +115,37 @@ function Page() {
         ) || [];
 
       // Set formik values
-      formik.setValues({
-        productName: getPublicProductByIdData?.ProductName || "",
-        information: getPublicProductByIdData?.Information || "",
-        requestForCreators: getPublicProductByIdData?.RequestForCreators || "",
-        amount: getPublicProductByIdData?.Amount || "",
-        addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
-        totalPrice: getPublicProductByIdData?.TotalPrice || "",
-        creditUsage: getPublicProductByIdData
-          ? getPublicProductByIdData?.Quantity /
-            getPublicProductByIdData?.ContentLimit
-          : "",
-        price: getPublicProductByIdData?.Price || "",
-        contentInfo: [
-          ...initialContentTypes.map((type) => ({ Type: "Type", Name: type })),
-          ...initialContentOutcomes.map((outcome) => ({
-            Type: "Result",
-            Name: outcome,
-          })),
-        ],
-        productTypes: initialProductTypes.map((type) => type.ProductTypeId), // Transform to ProductTypeId array
-        productPics:
-          getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) || [],
-      });
+      formik.setValues(
+        {
+          productName: getPublicProductByIdData?.ProductName || "",
+          information: getPublicProductByIdData?.Information || "",
+          requestForCreators:
+            getPublicProductByIdData?.RequestForCreators || "",
+          amount: getPublicProductByIdData?.Amount || "",
+          addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
+          totalPrice: getPublicProductByIdData?.TotalPrice || "",
+          creditUsage: getPublicProductByIdData
+            ? getPublicProductByIdData?.Quantity /
+              getPublicProductByIdData?.ContentLimit
+            : "",
+          price: getPublicProductByIdData?.Price || "",
+          contentInfo: [
+            ...initialContentTypes.map((type) => ({
+              Type: "Type",
+              Name: type,
+            })),
+            ...initialContentOutcomes.map((outcome) => ({
+              Type: "Result",
+              Name: outcome,
+            })),
+          ],
+          productTypes: initialProductTypes.map((type) => type.ProductTypeId),
+          productPics:
+            getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) ||
+            [],
+        },
+        true
+      );
 
       // Set productTypes state
       setProductTypes(initialProductTypes);
@@ -335,12 +343,15 @@ function Page() {
           >
             <MediaUploader
               onDrop={({ ids }) => {
+                // Add new image IDs to the existing ones
                 formik.setFieldValue("productPics", [
                   ...formik.values.productPics,
                   ...ids,
                 ]);
+                formik.setFieldTouched("productPics", true);
               }}
               onRemove={(fileId) => {
+                // Remove the fileId from formik state
                 const updatedPics = formik.values.productPics.filter(
                   (id) => id !== fileId
                 );

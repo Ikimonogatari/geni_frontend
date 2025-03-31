@@ -294,7 +294,6 @@ function Page() {
                   (id) => id !== fileId
                 );
                 formik.setFieldValue("productPics", updatedPics);
-                formik.setFieldTouched("productPics", true);
               }}
             />
             <div className="flex flex-col gap-4 w-full lg::max-w-lg">

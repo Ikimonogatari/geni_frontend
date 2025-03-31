@@ -1,5 +1,5 @@
 import { useUploadFileMutation } from "@/app/services/service";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 
@@ -17,21 +17,20 @@ function useMediaUpload({
   onRemove?: (fileId: string) => void;
   initialImages?: { url: string; fileId: string }[];
 }) {
-  // Track both initial and new images separately
-  const [initialImageState, setInitialImageState] =
+  // Track initial images that haven't been removed
+  const [activeInitialImages, setActiveInitialImages] =
     useState<ImageData[]>(initialImages);
+  // Track newly uploaded images
   const [newImages, setNewImages] = useState<ImageData[]>([]);
+  // Track if initial images have been set
+  const initialImagesSet = useRef(false);
 
-  // Combined images for display
-  const [allImages, setAllImages] = useState<ImageData[]>([]);
-
+  // Update initial images only once when they first arrive
   useEffect(() => {
-    setAllImages([...initialImageState, ...newImages]);
-  }, [initialImageState, newImages]);
-
-  // Update initial images when prop changes
-  useEffect(() => {
-    setInitialImageState(initialImages);
+    if (!initialImagesSet.current && initialImages.length > 0) {
+      setActiveInitialImages(initialImages);
+      initialImagesSet.current = true;
+    }
   }, [initialImages]);
 
   const [
@@ -51,26 +50,26 @@ function useMediaUpload({
   }, [uploadFileData, uploadFileError]);
 
   const removeImage = (index: number) => {
-    const imageToRemove = allImages[index];
-    if (!imageToRemove) return;
+    // Calculate which array the index belongs to
+    const initialImagesLength = activeInitialImages.length;
 
-    // Check if the image is from initial images
-    const isInitialImage = initialImageState.some(
-      (img) => img.fileId === imageToRemove.fileId
-    );
-
-    if (isInitialImage) {
-      // Remove from initial images and notify parent
-      setInitialImageState((prev) =>
+    if (index < initialImagesLength) {
+      // Remove from initial images
+      const imageToRemove = activeInitialImages[index];
+      setActiveInitialImages((prev) =>
         prev.filter((img) => img.fileId !== imageToRemove.fileId)
       );
       onRemove && onRemove(imageToRemove.fileId);
     } else {
-      // Remove from newly uploaded images and notify parent
-      setNewImages((prev) =>
-        prev.filter((img) => img.fileId !== imageToRemove.fileId)
-      );
-      onRemove && onRemove(imageToRemove.fileId);
+      // Remove from new images
+      const newIndex = index - initialImagesLength;
+      const imageToRemove = newImages[newIndex];
+      if (imageToRemove) {
+        setNewImages((prev) =>
+          prev.filter((img) => img.fileId !== imageToRemove.fileId)
+        );
+        onRemove && onRemove(imageToRemove.fileId);
+      }
     }
   };
 
@@ -111,6 +110,9 @@ function useMediaUpload({
       });
     },
   });
+
+  // Combine active initial images and new images for display
+  const allImages = [...activeInitialImages, ...newImages];
 
   return {
     getRootProps,
