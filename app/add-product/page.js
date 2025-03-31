@@ -246,10 +246,12 @@ function Page() {
 
     if (!isNaN(creditUsage) && !isNaN(price)) {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", price * creditUsage);
+      formik.setFieldValue("totalPrice", (price * creditUsage).toString());
+      formik.setFieldTouched("totalPrice", true);
     } else {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", 0);
+      formik.setFieldValue("totalPrice", "0");
+      formik.setFieldTouched("totalPrice", true);
     }
   };
 
@@ -259,19 +261,21 @@ function Page() {
 
     if (!isNaN(creditUsage) && !isNaN(price)) {
       formik.setFieldValue("creditUsage", creditUsage);
-      formik.setFieldValue("totalPrice", price * creditUsage);
+      formik.setFieldValue("totalPrice", (price * creditUsage).toString());
+      formik.setFieldTouched("totalPrice", true);
     } else {
       formik.setFieldValue("creditUsage", creditUsage);
-      formik.setFieldValue("totalPrice", 0);
+      formik.setFieldValue("totalPrice", "0");
+      formik.setFieldTouched("totalPrice", true);
     }
   };
 
-  const isFormDisabled = false;
-  // !formik.dirty ||
-  // !formik.isValid ||
-  // formik.isSubmitting ||
-  // !formik.values.productTypes ||
-  // !formik.values.productPics;
+  const isFormDisabled =
+    !formik.dirty ||
+    !formik.isValid ||
+    formik.isSubmitting ||
+    !formik.values.productTypes.length ||
+    !formik.values.productPics.length;
 
   return (
     <div className="min-h-screen w-full bg-white">
