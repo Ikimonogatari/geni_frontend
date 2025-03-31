@@ -131,6 +131,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
       case "brand-products":
         return (
           <BrandProducts
+            isLoading={listBrandProductsLoading}
             brandProducts={currentContents}
             brandData={getUserInfoData ? getUserInfoData : null}
           />
