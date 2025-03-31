@@ -289,6 +289,13 @@ function Page() {
                   ...ids,
                 ]);
               }}
+              onRemove={(fileId) => {
+                const updatedPics = formik.values.productPics.filter(
+                  (id) => id !== fileId
+                );
+                formik.setFieldValue("productPics", updatedPics);
+                formik.setFieldTouched("productPics", true);
+              }}
             />
             <div className="flex flex-col gap-4 w-full lg::max-w-lg">
               <div className="flex flex-row items-center gap-3">

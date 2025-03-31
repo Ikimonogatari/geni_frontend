@@ -340,9 +340,21 @@ function Page() {
                   ...ids,
                 ]);
               }}
+              onRemove={(fileId) => {
+                const updatedPics = formik.values.productPics.filter(
+                  (id) => id !== fileId
+                );
+                formik.setFieldValue("productPics", updatedPics);
+                formik.setFieldTouched("productPics", true);
+              }}
               initialImageUrls={
                 getPublicProductByIdData?.ProductPics?.map((pic) => pic.Url) ||
                 []
+              }
+              initialFileIds={
+                getPublicProductByIdData?.ProductPics?.map(
+                  (pic) => pic.FileId
+                ) || []
               }
             />
 

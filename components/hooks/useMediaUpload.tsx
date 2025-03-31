@@ -3,12 +3,36 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 
+interface ImageData {
+  url: string;
+  fileId: string;
+}
+
 function useMediaUpload({
   onDrop,
+  onRemove,
+  initialImages = [],
 }: {
   onDrop?: ({ ids }: { ids: string[] }) => void;
+  onRemove?: (fileId: string) => void;
+  initialImages?: { url: string; fileId: string }[];
 }) {
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  // Track both initial and new images separately
+  const [initialImageState, setInitialImageState] =
+    useState<ImageData[]>(initialImages);
+  const [newImages, setNewImages] = useState<ImageData[]>([]);
+
+  // Combined images for display
+  const [allImages, setAllImages] = useState<ImageData[]>([]);
+
+  useEffect(() => {
+    setAllImages([...initialImageState, ...newImages]);
+  }, [initialImageState, newImages]);
+
+  // Update initial images when prop changes
+  useEffect(() => {
+    setInitialImageState(initialImages);
+  }, [initialImages]);
 
   const [
     uploadFile,
@@ -25,6 +49,30 @@ function useMediaUpload({
       toast.error(uploadFileError?.data?.error || "Error uploading file");
     }
   }, [uploadFileData, uploadFileError]);
+
+  const removeImage = (index: number) => {
+    const imageToRemove = allImages[index];
+    if (!imageToRemove) return;
+
+    // Check if the image is from initial images
+    const isInitialImage = initialImageState.some(
+      (img) => img.fileId === imageToRemove.fileId
+    );
+
+    if (isInitialImage) {
+      // Remove from initial images and notify parent
+      setInitialImageState((prev) =>
+        prev.filter((img) => img.fileId !== imageToRemove.fileId)
+      );
+      onRemove && onRemove(imageToRemove.fileId);
+    } else {
+      // Remove from newly uploaded images and notify parent
+      setNewImages((prev) =>
+        prev.filter((img) => img.fileId !== imageToRemove.fileId)
+      );
+      onRemove && onRemove(imageToRemove.fileId);
+    }
+  };
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -49,12 +97,16 @@ function useMediaUpload({
         const validResponses = responses.filter(
           (response) => response !== null
         );
-        const urls = validResponses.map((response) => response.Url);
 
+        const newImageData = validResponses.map((response) => ({
+          url: response.Url,
+          fileId: response.FileId,
+        }));
+
+        setNewImages((prev) => [...prev, ...newImageData]);
+
+        // Extract just the FileIds for the onDrop callback
         const ids = validResponses.map((response) => response.FileId);
-
-        setImageUrls((prev) => [...prev, ...urls]);
-
         onDrop && onDrop({ ids });
       });
     },
@@ -63,8 +115,9 @@ function useMediaUpload({
   return {
     getRootProps,
     getInputProps,
-    imageUrls,
+    images: allImages,
     uploadFileLoading,
+    removeImage,
   };
 }
 
