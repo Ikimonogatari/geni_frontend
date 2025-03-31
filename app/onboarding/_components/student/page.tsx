@@ -44,13 +44,19 @@ function StudentOnboarding() {
 
   const formik = useFormik({
     initialValues: {
-      FirstName: parsedUserInfo ? parsedUserInfo?.Name : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.Name : "",
-      Nickname: parsedUserInfo ? parsedUserInfo?.Name : "",
+      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
+      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
+      Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
       Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
+      Location: parsedUserInfo ? parsedUserInfo?.Location : "",
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
-      Birthday: parsedUserInfo ? parsedUserInfo?.RegNo : "",
+      EbarimtConsumerNo: parsedUserInfo
+        ? parsedUserInfo?.EbarimtConsumerNo
+        : "9876543211",
+      Birthday: parsedUserInfo?.Birthday
+        ? new Date(parsedUserInfo.Birthday).toISOString().split("T")[0]
+        : "",
       Gender: parsedUserInfo ? parsedUserInfo?.Gender : "",
     },
     validationSchema: addStudentDetailsSchema,

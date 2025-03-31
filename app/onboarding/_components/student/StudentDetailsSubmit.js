@@ -110,7 +110,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         <Input
           id="PhoneNumber"
           name="PhoneNumber"
-          type="number"
+          type="text"
           className="text-base sm:text-xl w-full no-spinner"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -169,9 +169,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
       </div>
       <div className="flex flex-row gap-4 w-full">
         <div className="flex flex-col gap-3 w-full">
-          <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
-            Сошиал хаягууд
-          </label>
+          <label className="text-[#6F6F6F] text-lg">Сошиал хаягууд</label>
           <div className="flex flex-col sm:flex-row gap-4 w-full items-start">
             <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
               <div className="flex flex-row items-center gap-3 w-full">
