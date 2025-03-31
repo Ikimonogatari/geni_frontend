@@ -94,14 +94,20 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
                   {images.map((image, index) => (
                     <SwiperSlide key={index}>
                       <div className="relative">
-                        <Image
-                          src={image.url}
-                          alt={`Uploaded image ${index + 1}`}
-                          layout="responsive"
-                          width={554}
-                          height={554}
-                          className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg"
-                        />
+                        {image.isUploading ? (
+                          <div className="aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg bg-[#F5F4F0] flex items-center justify-center">
+                            <ClipLoader color="#4D55F5" size={50} />
+                          </div>
+                        ) : (
+                          <Image
+                            src={image.url}
+                            alt={`Uploaded image ${index + 1}`}
+                            layout="responsive"
+                            width={554}
+                            height={554}
+                            className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg"
+                          />
+                        )}
                         <button
                           type="button"
                           onClick={(e) => {
@@ -134,6 +140,7 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
         ) : (
           <div className="max-w-[554px] max-h-[554px] w-full h-full flex justify-center items-center">
             <ClipLoader
+              color="#4D55F5"
               loading={uploadFileLoading}
               aria-label="Loading Spinner"
               data-testid="loader"

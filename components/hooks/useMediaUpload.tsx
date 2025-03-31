@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 interface ImageData {
   url: string;
   fileId: string;
+  isUploading?: boolean;
 }
 
 function useMediaUpload({
@@ -78,36 +79,49 @@ function useMediaUpload({
       "image/png": [".png"],
       "image/jpeg": [".jpg", ".jpeg"],
     },
-    onDrop: (acceptedFiles) => {
-      const fileUploadPromises = acceptedFiles.map(async (file) => {
+    onDrop: async (acceptedFiles) => {
+      const uploadPromises = acceptedFiles.map(async (file) => {
+        // Add a placeholder for the uploading image
+        const tempId = Math.random().toString(36).substring(7);
+        const tempImage: ImageData = {
+          url: URL.createObjectURL(file),
+          fileId: tempId,
+          isUploading: true,
+        };
+        setNewImages((prev) => [...prev, tempImage]);
+
         const formData = new FormData();
         formData.append("file", file);
         formData.append("folder", "product-pic");
 
-        const response = await uploadFile(formData);
-        if (response.data) {
-          return response.data;
-        } else {
+        try {
+          const response = await uploadFile(formData);
+          if (response.data) {
+            // Replace the placeholder with the actual uploaded image
+            setNewImages((prev) =>
+              prev.map((img) =>
+                img.fileId === tempId
+                  ? {
+                      url: response.data.Url,
+                      fileId: response.data.FileId,
+                      isUploading: false,
+                    }
+                  : img
+              )
+            );
+            return response.data;
+          }
+        } catch (error) {
+          // Remove the placeholder on error
+          setNewImages((prev) => prev.filter((img) => img.fileId !== tempId));
           return null;
         }
       });
 
-      Promise.all(fileUploadPromises).then((responses) => {
-        const validResponses = responses.filter(
-          (response) => response !== null
-        );
-
-        const newImageData = validResponses.map((response) => ({
-          url: response.Url,
-          fileId: response.FileId,
-        }));
-
-        setNewImages((prev) => [...prev, ...newImageData]);
-
-        // Extract just the FileIds for the onDrop callback
-        const ids = validResponses.map((response) => response.FileId);
-        onDrop && onDrop({ ids });
-      });
+      const responses = await Promise.all(uploadPromises);
+      const validResponses = responses.filter((response) => response !== null);
+      const ids = validResponses.map((response) => response.FileId);
+      onDrop && onDrop({ ids });
     },
   });
 
