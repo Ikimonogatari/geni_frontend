@@ -12,7 +12,7 @@ const colorStyles: Record<string, { bg: string; shadow: string }> = {
   pink: { bg: "bg-geni-pink", shadow: "shadow-[0.25rem_0.25rem_#9C44DA]" },
   blue: { bg: "bg-geni-blue", shadow: "shadow-[0.25rem_0.25rem_#131aaf]" },
   green: { bg: "bg-geni-green", shadow: "shadow-[0.25rem_0.25rem_#1b7b2b]" },
-  orange: { bg: "bg-geni-orange", shadow: "shadow-[0.25rem_0.25rem_#b86416]" },
+  orange: { bg: "bg-[#F75423]", shadow: "shadow-[0.25rem_0.25rem_#b86416]" },
 };
 
 const ElevatedButton = forwardRef<HTMLButtonElement, ElevatedButtonProps>(

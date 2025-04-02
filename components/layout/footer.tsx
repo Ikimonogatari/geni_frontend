@@ -68,8 +68,8 @@ function Footer() {
           <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-40 text-[#2D262D]">
             <nav className="hidden md:flex flex-col gap-1 sm:gap-3">
               {navItems.map((item, index) => (
-                <div className="flex items-center gap-6">
-                  <Link key={item.name} href={item.href} className="">
+                <div key={item.name} className="flex items-center gap-6">
+                  <Link href={item.href} className="">
                     {item.name}
                   </Link>
                 </div>
@@ -77,7 +77,7 @@ function Footer() {
             </nav>
             <nav className="flex flex-col gap-1 sm:gap-3">
               {addNavItems.map((item, index) => (
-                <Link key={index} href={item.href}>
+                <Link key={item.name} href={item.href}>
                   {item.name}
                 </Link>
               ))}

@@ -45,7 +45,7 @@ function Testimonials() {
         <CarouselContent>
           {testimonialData.map((testimonial, index) => (
             <CarouselItem key={index} className="p-4 sm:basis-1/2">
-              <div className="flex flex-col gap-4 border border-primary bg-primary-bg p-10 rounded-[30px]">
+              <div className="flex flex-col gap-4 border border-border-bg/60 p-10 pt-9 rounded-[30px] hover:bg-primary-bg">
                 <span className="text-lg">{testimonial.text}</span>
                 <div className="flex flex-row items-center gap-6">
                   <Image

@@ -29,10 +29,12 @@ function Statistics() {
       <div className="relative col-span-1 row-span-2 flex flex-col items-start justify-center bg-primary-bg rounded-[30px]">
         <Image
           src={"/landing/stats-rocket.png"}
-          width={169}
-          height={369}
           alt=""
           className="absolute"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "auto", height: "100%" }}
         />
       </div>
       <StatsCard

@@ -20,7 +20,7 @@ export const StatsCard = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-start justify-center px-8 py-5 bg-primary-bg border border-primary rounded-[30px] relative",
+        "flex flex-col items-start justify-center px-8 py-5 bg-primary-bg border border-border-gray/60 rounded-[30px] relative",
         wrapperClassName
       )}
     >

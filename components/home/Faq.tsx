@@ -13,7 +13,7 @@ function Faq() {
       {faq.map((f, i) => (
         <Accordion key={i} type="single" collapsible>
           <AccordionItem
-            className="border border-primary rounded-2xl px-8 py-2"
+            className="border border-border-gray/60 rounded-2xl px-8 py-2"
             value={f.q}
           >
             <AccordionTrigger className="font-normal text-xl">

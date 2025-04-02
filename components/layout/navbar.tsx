@@ -56,12 +56,11 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item, index) => (
-            <div className="flex items-center gap-6">
+            <div key={item.name} className="flex items-center gap-6">
               {index !== 0 && (
                 <div className="size-1 rounded-full bg-black/75" />
               )}
               <Link
-                key={item.name}
                 href={item.href}
                 className="text-base font-bold text-muted-foreground transition-colors hover:text-primary relative"
               >
