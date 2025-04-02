@@ -488,6 +488,25 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    qpayDeliveryPayment: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/qpay-delivery-payment/${id}`,
+        method: "POST",
+      }),
+    }),
+    dictList: builder.mutation({
+      query: ({ ...params }) => ({
+        url: `/api/web/public/dict?${new URLSearchParams(params)}`,
+        method: "GET",
+      }),
+    }),
+    contentProcessRefund: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/content/content-process/refund`,
+        method: "POST",
+        body,
+      }),
+    }),
     getContentProcess: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/process",
@@ -568,5 +587,8 @@ export const {
   useGetCreatorWalletHistoryQuery,
   useGetBrandCreditHistoryQuery,
   useCreatorXpHistoryQuery,
+  useQpayDeliveryPaymentMutation,
+  useDictListMutation,
+  useContentProcessRefundMutation,
   useGetContentProcessMutation,
 } = geniApi;

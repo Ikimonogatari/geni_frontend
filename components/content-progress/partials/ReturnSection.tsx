@@ -1,62 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormikContext } from "formik";
+import { useDictListMutation } from "@/app/services/service";
+import {
+  DictCode,
+  RefundReason,
+} from "@/components/content-progress/content.services";
+import _ from "lodash";
+import { Loader2 } from "lucide-react";
 
 const ReturnSection = () => {
-  const { setFieldValue } = useFormikContext<any>();
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [extraInput, setExtraInput] = useState("");
+  const { setFieldValue, values } = useFormikContext<any>();
 
-  const returnOptions = [
-    { id: "incomplete", label: "Бүтээгдэхүүн эвдэрсэн" },
-    { id: "quality", label: "Бүтээгдэхүүний хугацаа дууссан" },
-    { id: "damaged", label: "Бүтээгдэхүүн хэмжээ зөрсөн" },
-    { id: "wrong", label: "Буруу бүтээгдэхүүн ирсэн байна" },
-    { id: "other", label: "Бусад" },
-  ];
+  const [dictList, { isLoading, data }] = useDictListMutation();
+  const [returnOptions, setReturnOptions] = useState<RefundReason[]>([]);
 
-  const handleOptionChange = (option: string) => {
-    setSelectedOptions((prev) => {
-      const newSelection = prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option];
-
-      const selectedLabels = returnOptions
-        .filter((opt) => newSelection.includes(opt.id))
-        .map((opt) => opt.label);
-
-      let returnReason = selectedLabels.join("\n");
-      if (
-        extraInput &&
-        (newSelection.includes("other") || selectedLabels.length > 0)
-      ) {
-        returnReason += "\nНэмэлт тайлбар: " + extraInput;
-      }
-
-      setFieldValue("returnReason", returnReason);
-      return newSelection;
+  useEffect(() => {
+    dictList({
+      dictCode: DictCode.REFUND_REASON,
     });
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      setReturnOptions(data);
+    }
+  }, [data]);
+  const handleOptionChange = (optionId: number) => {
+    if (values.returnReason.includes(optionId)) {
+      setFieldValue("returnReason", _.without(values.returnReason, optionId));
+      if (
+        optionId ===
+        returnOptions.find((option) => option.DictVal === "Бусад")?.DictId
+      ) {
+        setFieldValue("returnReasonDescription", "");
+      }
+    } else {
+      setFieldValue("returnReason", _.union(values.returnReason, [optionId]));
+    }
   };
 
   const handleExtraInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    const newExtraInput = e.target.value;
-    setExtraInput(newExtraInput);
-
-    const selectedLabels = returnOptions
-      .filter((opt) => selectedOptions.includes(opt.id))
-      .map((opt) => opt.label);
-
-    let returnReason = selectedLabels.join("\n");
-    if (
-      newExtraInput &&
-      (selectedOptions.includes("other") || selectedLabels.length > 0)
-    ) {
-      returnReason += "\nНэмэлт тайлбар: " + newExtraInput;
-    }
-
-    setFieldValue("returnReason", returnReason);
+    setFieldValue(
+      "returnReason",
+      _.union(values.returnReason, [
+        returnOptions.find((option) => option.DictVal === "Бусад")?.DictId,
+      ])
+    );
+    setFieldValue("returnReasonDescription", e.target.value);
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center mt-3">
+        <Loader2 className="w-10 h-10 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -64,26 +65,26 @@ const ReturnSection = () => {
         <h3 className="text-lg font-medium">Буцаах шалгаанаа оруулна уу</h3>
 
         <div className="space-y-2">
-          {returnOptions.map((option) => (
+          {returnOptions.map((option, index) => (
             <div
-              key={option.id}
+              key={index}
               className="flex items-center border-geni-gray border-[1px] rounded-xl p-3 gap-2"
             >
               <div className="relative">
                 <input
                   type="checkbox"
-                  id={`checkbox-${option.id}`}
+                  id={`checkbox-${option.DictId}`}
                   className="peer hidden"
-                  checked={selectedOptions.includes(option.id)}
-                  onChange={() => handleOptionChange(option.id)}
+                  checked={values.returnReason.includes(option.DictId)}
+                  onChange={() => handleOptionChange(option.DictId)}
                 />
                 <label
-                  htmlFor={`checkbox-${option.id}`}
+                  htmlFor={`checkbox-${option.DictId}`}
                   className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
                 >
                   <span
                     className={`text-sm sm:text-base ${
-                      selectedOptions.includes(option.id)
+                      values.returnReason.includes(option.DictId)
                         ? "text-green-500"
                         : "hidden"
                     } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
@@ -92,7 +93,9 @@ const ReturnSection = () => {
                   </span>
                 </label>
               </div>
-              <label htmlFor={`checkbox-${option.id}`}>{option.label}</label>
+              <label htmlFor={`checkbox-${option.DictId}`}>
+                {option.DictVal}
+              </label>
             </div>
           ))}
         </div>
@@ -102,7 +105,7 @@ const ReturnSection = () => {
             className="w-full p-2 border rounded-xl"
             placeholder="Та өөр шалтгаанаа энд бичнэ үү."
             rows={4}
-            value={extraInput}
+            value={values.returnReasonDescription}
             onChange={handleExtraInputChange}
           />
         </div>

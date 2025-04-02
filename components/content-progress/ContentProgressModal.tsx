@@ -8,6 +8,7 @@ import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import {
+  ContentProcessRefundParams,
   DialogType,
   FormikTypes,
   GetContentProcessResponse,
@@ -22,7 +23,10 @@ import { DialogTitle } from "../ui/dialogc";
 import Payment from "./partials/Payment";
 import ReturnSection from "./partials/ReturnSection";
 import ProgressStepper from "./partials/ProgressStepper";
-import { useGetContentProcessMutation } from "@/app/services/service";
+import {
+  useContentProcessRefundMutation,
+  useGetContentProcessMutation,
+} from "@/app/services/service";
 import moment from "moment";
 import FeedbackModalContent from "./partials/FeedbackModalContent";
 import ContentReviewModalContent from "./partials/ContentReviewModalContent";
@@ -104,6 +108,8 @@ const ContentProgressModalContent: React.FC<
       isSuccess,
     },
   ] = useGetContentProcessMutation();
+  const [contentProcessRefund, { isLoading: isLoadingContentProcessRefund }] =
+    useContentProcessRefundMutation();
   // const isSuccess = true;
   // const isLoadingContentProcess = false;
   // const contentProcessData = [
@@ -141,7 +147,8 @@ const ContentProgressModalContent: React.FC<
       comment: "",
       sharePost: false,
       collabPost: false,
-      returnReason: "",
+      returnReason: [],
+      returnReasonDescription: "",
     },
     // validationSchema: addCreatorDetailsSchema,
     onSubmit: async (values) => {
@@ -152,6 +159,14 @@ const ContentProgressModalContent: React.FC<
           console.log(pick(values, ["reasons"]));
         } else if (values.returnReason) {
           console.log(pick(values, ["returnReason"]));
+          const data: ContentProcessRefundParams = {
+            ContentId: content?.ContentId,
+            ReasonId: values.returnReason,
+            ReasonDesc: values.returnReasonDescription,
+            StatusId: 7,
+          };
+          console.log(data);
+          contentProcessRefund(data);
         }
         // await creatorApply({
         //   ...values,
@@ -161,6 +176,13 @@ const ContentProgressModalContent: React.FC<
       }
     },
   });
+
+  useEffect(() => {
+    if (!dialogOpen) {
+      setOpenReturnSection(false);
+      formik.resetForm();
+    }
+  }, [dialogOpen]);
 
   useEffect(() => {
     if (content) {
@@ -176,28 +198,40 @@ const ContentProgressModalContent: React.FC<
 
   const steps = [
     <Image
-      src={"/stage-icon1.png"}
-      width={24}
-      height={24}
-      alt=""
-      className="w-5 h-5 brightness-0 invert"
-    />,
-    <Truck className="w-9 h-9 text-[#6F6F6F] p-2" />,
-    <Image
-      src={"/stage-icon2.png"}
+      src={"/content-status-icon1.png"}
       width={24}
       height={24}
       alt=""
       className="w-5 h-5 brightness-0 invert"
     />,
     <Image
-      src={"/stage-icon3.png"}
+      src={"/content-status-icon2.png"}
       width={24}
       height={24}
       alt=""
       className="w-5 h-5 brightness-0 invert"
     />,
-    <CirclePlay className="w-10 h-10 text-[#6F6F6F] p-2" />,
+    <Image
+      src={"/content-status-icon3.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+    <Image
+      src={"/content-status-icon4.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+    <Image
+      src={"/content-status-icon7.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
   ];
 
   function getCreatedAtByStatus(
@@ -271,7 +305,8 @@ const ContentProgressModalContent: React.FC<
       ContentId: content?.ContentId,
       ContentStepId: content?.CurrentStepId,
     });
-    // setContentProcessData(content['Process'] as any);
+    // setContentProcessData(content["Process"] as any);
+    // setStatus("DeliverySuccess" as STATUS_LIST);
     setStatus(content.CurrentStepName.String as STATUS_LIST);
   };
 

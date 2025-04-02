@@ -129,7 +129,8 @@ export type FormikTypes = {
   comment: string;
   sharePost: boolean;
   collabPost: boolean;
-  returnReason: string;
+  returnReason: number[];
+  returnReasonDescription: string;
 };
 
 export type GetContentProcessResponse = {
@@ -142,3 +143,21 @@ export type GetContentProcessResponse = {
   Desc: { String: string; Valid: boolean };
   CreatedAt: string;
 }[];
+
+
+export enum DictCode {
+  REFUND_REASON = "RefundReason",
+}
+
+export type RefundReason = {
+  DictId: number;
+  DictCode: string;
+  DictVal: string;
+}
+
+export type ContentProcessRefundParams = {
+  ContentId: string;
+  ReasonId: number[];
+  ReasonDesc: string;
+  StatusId: number;
+}
