@@ -4,6 +4,7 @@ import {
   useCreatorXpHistoryQuery,
   useGetUserInfoQuery,
 } from "@/app/services/service";
+import BackButton from "@/components/common/BackButton";
 import ListRowLayout from "@/components/common/ListRowLayout";
 import CreatorTier from "@/components/CreatorTier";
 import TierInfoModal from "@/components/TierInfoModal";
@@ -15,12 +16,12 @@ function page() {
   const { data: userInfoData } = useGetUserInfoQuery({});
   // @ts-ignore
   const { data } = useCreatorXpHistoryQuery();
-  const tier = "Pro creator bronze";
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="mt-20 sm:mt-32 pb-12 sm:pb-24">
         <div className="max-w-7xl mx-auto container py-11 sm:py-20 flex flex-col gap-4 sm:gap-6">
-          <span className="text-3xl sm:text-5xl font-bold">
+          <BackButton />
+          <span className="text-3xl sm:text-5xl font-extrabold">
             Таны онооны самбар
           </span>
           <div className="bg-primary-bg rounded-2xl w-full p-8 flex flex-col md:flex-row sm:items-center justify-between gap-5 md:gap-0">
@@ -52,7 +53,7 @@ function page() {
             <TierInfoModal />
           </div>
           <div className="w-full overflow-x-auto flex flex-col gap-4">
-            <span className="font-bold text-2xl">XP оноо түүх</span>
+            <span className="font-bold text-2xl px-5">XP оноо түүх</span>
             <div className="min-w-[540px] w-full flex flex-col gap-3">
               <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[1fr,1fr,2fr,1fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
                 <span className="col-span-1">Ашиглагдсан</span>
@@ -66,12 +67,19 @@ function page() {
                   key={i}
                   layout="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[1fr,1fr,2fr,1fr,1fr] gap-6 w-full items-center text-primary"
                 >
-                  <span className="col-span-1">{h.Xp} XP</span>
+                  <span
+                    className={`col-span-1 font-bold text-sm sm:text-base lg:text-lg ${
+                      h.IsAdd ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {h.IsAdd ? "+" : "-"}
+                    {h.Xp} XP
+                  </span>
                   <span className="col-span-1">{h.AfterXp} XP</span>
                   <span className="col-span-1">{h.Desc}</span>
                   <span className="col-span-1">{formatDate(h.CreatedAt)}</span>
                   <span
-                    className={`col-span-1 max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-lg ${
+                    className={`col-span-1 max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-sm lg:text-lg ${
                       h.IsAdd ? "bg-green-500" : "bg-red-500"
                     }`}
                   >

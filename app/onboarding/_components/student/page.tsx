@@ -52,9 +52,7 @@ function StudentOnboarding() {
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       Location: parsedUserInfo ? parsedUserInfo?.Location : "",
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
-      EbarimtConsumerNo: parsedUserInfo
-        ? parsedUserInfo?.EbarimtConsumerNo
-        : "9876543211",
+      EbarimtConsumerNo: "9876543211",
       Birthday: parsedUserInfo?.Birthday
         ? new Date(parsedUserInfo.Birthday).toISOString().split("T")[0]
         : "",

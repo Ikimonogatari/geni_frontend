@@ -6,7 +6,7 @@ function TierInfoModal() {
   return (
     <Dialog>
       <DialogTrigger className="py-4 px-7 sm:max-w-min w-full sm:w-auto whitespace-nowrap sm:min-w-[271px] text-center border border-primary rounded-lg font-bold text-base sm:text-lg">
-        Түвшин бүтэц харах
+        Онооны түвшин
       </DialogTrigger>
       <DialogContent className="h-full sm:h-auto overflow-y-auto max-w-sm w-full sm:max-w-5xl flex flex-col gap-10">
         <span className="text-2xl sm:text-3xl font-medium">Creator түвшин</span>
@@ -110,7 +110,7 @@ const creator_level = [
     level_name: "Pro creator gold",
     badge: "/rating-gold.png",
     badge_size: "w-[29px] h-[11px] sm:w-[58px] sm:h-[22px]",
-    xp: "50’000",
+    xp: "15’000",
     price: "₮48’000 - ₮80’000",
     advantage: "3 бүтээгдэхүүн зэрэг хүсэх эрх",
   },
@@ -118,7 +118,7 @@ const creator_level = [
     level_name: "Pro creator silver",
     badge: "/rating-silver.png",
     badge_size: "w-[29px] h-[11px] sm:w-[58px] sm:h-[22px]",
-    xp: "10’000",
+    xp: "5’000",
     price: "₮30’000 - ₮50’000",
     advantage: "2 бүтээгдэхүүн зэрэг хүсэх эрх",
   },
