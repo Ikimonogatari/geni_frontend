@@ -1,29 +1,26 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
-import { CheckCircle, Circle } from "lucide-react";
+import { GetContentProcessResponse } from "./content-progress/content.services";
+import moment from "moment";
 
 export type CurrentStepStatus = "yellow" | "green" | "red";
 
 type StepperProps = {
   steps: React.ReactNode[];
-  labels?: {
-    title: string;
-    subtitle?: string;
-    date?: string;
-  }[];
   activeStep: number;
   setActiveStep?: Dispatch<SetStateAction<number>>;
   hasNavigation?: boolean;
   currentStepStatus?: CurrentStepStatus;
   horizontal?: boolean;
   hasBg?: boolean;
+  contentProcess?: GetContentProcessResponse;
 };
 
 const Stepper: React.FC<StepperProps> = (props) => {
   const {
     steps,
-    labels,
+    contentProcess,
     activeStep,
     setActiveStep,
     hasNavigation = false,
@@ -32,25 +29,42 @@ const Stepper: React.FC<StepperProps> = (props) => {
     hasBg = true,
   } = props;
 
+  const getColor = (colorName: string, isTextColor = false) => {
+    switch (colorName) {
+      case "yellow":
+        return isTextColor ? "text-[#F49D19]" : "bg-[#F49D19]";
+      case "green":
+        return isTextColor ? "text-green-500" : "bg-green-500";
+      case "red":
+        return isTextColor ? "text-red-500" : "bg-red-500";
+      default:
+        return isTextColor ? "text-yellow-500" : "bg-yellow-500";
+    }
+  };
+
   const getStepColor = (index: number, isTextColor = false) => {
     if (index < activeStep) {
       return isTextColor ? "text-green-500" : "bg-green-500";
     }
 
     if (index === activeStep) {
-      switch (currentStepStatus) {
-        case "yellow":
-          return isTextColor ? "text-[#F49D19]" : "bg-[#F49D19]";
-        case "green":
-          return isTextColor ? "text-green-500" : "bg-green-500";
-        case "red":
-          return isTextColor ? "text-red-500" : "bg-red-500";
-        default:
-          return isTextColor ? "text-yellow-500" : "bg-yellow-500";
-      }
+      return getColor(currentStepStatus, isTextColor);
     }
 
     return isTextColor ? "text-gray-300" : "bg-gray-300";
+  };
+
+  const getHorizontalStepColor = (
+    index: number,
+    length: number,
+    colorName: string,
+    isTextColor = false
+  ) => {
+    if (index < length - 1) {
+      return isTextColor ? "text-green-500" : "bg-green-500";
+    }
+
+    return getColor(colorName, isTextColor);
   };
 
   const getLineColor = (index: number) => {
@@ -78,19 +92,26 @@ const Stepper: React.FC<StepperProps> = (props) => {
               )}
             </div>
 
-            {labels && (
+            {contentProcess && (
               <div className="flex flex-col gap-1 -mt-1">
                 <span
-                  className={`${getStepColor(index, true)} font-medium text-base`}
+                  className={`${getHorizontalStepColor(
+                    index,
+                    contentProcess.length,
+                    contentProcess[index].ContentStepStatusCode
+                      .String as CurrentStepStatus,
+                    true
+                  )} font-medium text-base`}
                 >
-                  {labels[index].title}
+                  {contentProcess[index].Desc.String}
                 </span>
-                {(labels[index].subtitle || labels[index].date) && (
+                {contentProcess[index].CreatedAt && (
                   <div className="flex flex-col text-sm text-gray-600">
-                    {labels[index].subtitle && (
-                      <span>{labels[index].subtitle}</span>
-                    )}
-                    {labels[index].date && <span>{labels[index].date}</span>}
+                    <span>
+                      {moment(contentProcess[index].CreatedAt).format(
+                        "YYYY-MM-DD HH:mm"
+                      )}
+                    </span>
                   </div>
                 )}
               </div>

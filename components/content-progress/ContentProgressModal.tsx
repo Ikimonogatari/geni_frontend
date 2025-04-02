@@ -112,10 +112,16 @@ const ContentProgressModalContent: React.FC<
   //     ContentProccessId: 1,
   //     ContentStepId: 1,
   //     StepName: "Контентийн хүсэлт",
-  //     ContentStepStatusCode: { String: content.CurrentStepName.String, Valid: true },
+  //     ContentStepStatusCode: {
+  //       String: content.CurrentStepName.String,
+  //       Valid: true,
+  //     },
   //     ContentStepStatusId: 1,
-  //     Desc: { String: STATUS_LIST_VALUE[content.CurrentStepName.String], Valid: true },
-  //     CreatedAt: "2025-03-28T12:13:28.276835Z",
+  //     Desc: {
+  //       String: STATUS_LIST_VALUE[content.CurrentStepName.String],
+  //       Valid: true,
+  //     },
+  //     CreatedAt: "2025-03-20T12:13:28.276835Z",
   //   },
   // ];
 
@@ -212,15 +218,16 @@ const ContentProgressModalContent: React.FC<
 
   const isOverdueWeek = (created_date: string | null): boolean => {
     if (!created_date) return false;
-    return overdueDays(created_date) <= 7;
+    return overdueDays(created_date) > 7;
   };
 
   const showSendContentButton = (
     status: STATUS_LIST,
     created_date: string
   ): boolean => {
-    if (status === STATUS_LIST.ContentOverDue)
+    if (status === STATUS_LIST.ContentOverDue) {
       return !isOverdueWeek(created_date);
+    }
 
     return [
       STATUS_LIST.ContentPending,
@@ -265,7 +272,7 @@ const ContentProgressModalContent: React.FC<
       ContentStepId: content?.CurrentStepId,
     });
     // setContentProcessData(content['Process'] as any);
-    // setStatus(content.CurrentStepName.String as STATUS_LIST);
+    setStatus(content.CurrentStepName.String as STATUS_LIST);
   };
 
   const handleClose = (currentDialogType: DialogType) => {
@@ -470,7 +477,7 @@ const ContentProgressModalContent: React.FC<
           // />
         }
         {status === STATUS_LIST.ContentOverDue &&
-          !isOverdueWeek(
+          isOverdueWeek(
             getCreatedAtByStatus(contentProcessData, STATUS_LIST.ContentOverDue)
           ) &&
           ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(

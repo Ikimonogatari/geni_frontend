@@ -65,11 +65,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               steps={contentProcess.map((_, index) => (
                 <div key={index} />
               ))}
-              labels={contentProcess.map((v) => ({
-                title: v.Desc.String,
-                // subtitle: "Контент илгээх сүүлийн хугацаа: 12.04.2025",
-                date: moment(v.CreatedAt).format("DD.MM.YYYY"),
-              }))}
+              contentProcess={contentProcess}
               activeStep={activeStep}
               setActiveStep={setActiveStep}
               currentStepStatus={
