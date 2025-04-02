@@ -38,6 +38,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
+    refetch: refetchCreatorContents,
   } = useListCreatorContentsQuery(
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
@@ -99,12 +100,22 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const renderCreatorProfile = () => {
     switch (profileState) {
       case "content-progress":
-        return <ContentProgress currentContents={currentContents} />;
+        return (
+          <ContentProgress
+            currentContents={currentContents}
+            refetchCreatorContents={refetchCreatorContents}
+          />
+        );
       case "content-gallery":
         return <ContentGallery contentsGallery={currentContents} />;
 
       default:
-        return <ContentProgress currentContents={currentContents} />;
+        return (
+          <ContentProgress
+            currentContents={currentContents}
+            refetchCreatorContents={refetchCreatorContents}
+          />
+        );
     }
   };
 
@@ -279,7 +290,6 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     height={24}
                     alt="icon"
                     className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                    min-
                   />
                 </Link>
                 <LogoutButton />

@@ -1,15 +1,16 @@
 import { CurrentStepStatus } from "@/components/Stepper";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { AlignJustify, CirclePlay, Loader2, Truck, X } from "lucide-react";
+import { AlignJustify, Loader2, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import {
   ContentProcessRefundParams,
   DialogType,
+  DictCode,
   FormikTypes,
   GetContentProcessResponse,
   STATUS_LIST,
@@ -25,7 +26,9 @@ import ReturnSection from "./partials/ReturnSection";
 import ProgressStepper from "./partials/ProgressStepper";
 import {
   useContentProcessRefundMutation,
+  useDictListMutation,
   useGetContentProcessMutation,
+  useReceivedProductMutation,
 } from "@/app/services/service";
 import moment from "moment";
 import FeedbackModalContent from "./partials/FeedbackModalContent";
@@ -83,16 +86,18 @@ export const getCurrentStepColor = (status: string): CurrentStepStatus => {
 
 type ContentProgressModalContentProps = {
   content: Content;
+  refetch?: () => void;
 };
 
 const ContentProgressModalContent: React.FC<
   ContentProgressModalContentProps
-> = ({ content }) => {
+> = ({ content, refetch }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogDisabled, setDialogDisabled] = useState(true);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
   const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const userType = Cookies.get("userType");
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -177,10 +182,30 @@ const ContentProgressModalContent: React.FC<
     },
   });
 
+  const [
+    dictList,
+    {
+      isLoading: isDictListLoading,
+      data: dictListData,
+      isSuccess: isDictListSuccess,
+      reset: resetDictList,
+    },
+  ] = useDictListMutation();
+
+  const [
+    receivedProduct,
+    {
+      isLoading: isReceivedProductLoading,
+      data: receivedProductData,
+      isSuccess: isReceivedProductSuccess,
+    },
+  ] = useReceivedProductMutation();
+
   useEffect(() => {
     if (!dialogOpen) {
       setOpenReturnSection(false);
       formik.resetForm();
+      resetDictList();
     }
   }, [dialogOpen]);
 
@@ -188,7 +213,7 @@ const ContentProgressModalContent: React.FC<
     if (content) {
       // setActiveStep(getStepIndex(content.Status));
       setActiveStep(content?.CurrentStepId - 1);
-      setOpenReturnSection(false);
+      // setOpenReturnSection(false);
 
       if (content.Status === null || content.Status === "") {
         setDialogDisabled(false);
@@ -331,6 +356,24 @@ const ContentProgressModalContent: React.FC<
     }
   };
 
+  const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleOpenReturnSection = () => {
+    setOpenReturnSection(true);
+    dictList({
+      dictCode: DictCode.REFUND_REASON,
+    }).then((res) => {
+      scrollToBottom();
+    });
+  };
+
   if (!content) return <></>;
 
   const creatorModalContents = () => {
@@ -350,7 +393,7 @@ const ContentProgressModalContent: React.FC<
           )}
 
         {status === STATUS_LIST.DeliverySuccess && openReturnSection && (
-          <ReturnSection />
+          <ReturnSection isLoading={isDictListLoading} data={dictListData} />
         )}
 
         {dialogType == DialogType.CONTENT_IN_PROGRESS ? (
@@ -441,6 +484,7 @@ const ContentProgressModalContent: React.FC<
           dialogType != DialogType.PAYMENT && (
             <div className="pt-2">
               <button
+                type="button"
                 onClick={() => setDialogType(DialogType.PAYMENT)}
                 className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
 
@@ -454,6 +498,7 @@ const ContentProgressModalContent: React.FC<
           dialogType != DialogType.REQUEST && (
             <div className="pt-2">
               <button
+                type="button"
                 onClick={() => setDialogType(DialogType.REQUEST)}
                 // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
                 className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
@@ -463,16 +508,33 @@ const ContentProgressModalContent: React.FC<
             </div>
           )}
         {status === STATUS_LIST.DeliverySuccess && (
-          <div className="border-t pt-2">
+          <div className="flex flex-col gap-2 border-t pt-2">
             <button
+              type="button"
               onClick={() =>
                 openReturnSection
                   ? handleReasonSubmit()
-                  : setOpenReturnSection(true)
+                  : handleOpenReturnSection()
               }
-              className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
+              className={`w-full text-center text-xs sm:text-base ${
+                isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
+              } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
             >
               Бүтээгдэхүүн буцаах
+            </button>
+            <button
+              type="button"
+              disabled={isReceivedProductLoading || isReceivedProductSuccess}
+              onClick={() =>
+                receivedProduct(content?.ContentId).then(() => {
+                  toast.success("Бүтээгдэхүүн хүлээн авсан");
+                  setDialogOpen(false);
+                  refetch && refetch();
+                })
+              }
+              className={`w-full text-center text-xs sm:text-base  bg-secondary px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
+            >
+              Бүтээгдэхүүн хүлээн авсан
             </button>
           </div>
         )}
@@ -496,6 +558,7 @@ const ContentProgressModalContent: React.FC<
             ) && (
               <div className="pt-2">
                 <button
+                  type="button"
                   onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
                   className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
                 >
@@ -520,6 +583,7 @@ const ContentProgressModalContent: React.FC<
           ) && (
             <div className="border-t pt-2">
               <button
+                type="button"
                 onClick={() => setDialogType(DialogType.PAYMENT)}
                 className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
               >
@@ -543,6 +607,7 @@ const ContentProgressModalContent: React.FC<
             DialogType.CONTENT,
           ].includes(dialogType) && (
             <button
+              type="button"
               onClick={() => setDialogType(DialogType.CONTENT)}
               className="w-full bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
             >
@@ -654,6 +719,7 @@ const ContentProgressModalContent: React.FC<
       <Dialog open={dialogOpen} onOpenChange={handleOpen}>
         <DialogTrigger asChild>
           <button
+            type="button"
             onClick={(e) => dialogDisabled && e.preventDefault()}
             disabled={dialogDisabled}
             className={`${dialogDisabled ? "cursor-not-allowed" : ""}`}
@@ -666,9 +732,9 @@ const ContentProgressModalContent: React.FC<
         </DialogTrigger>
         {/* @ts-ignore */}
         <DialogContent
-          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto rounded-3xl"
+          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-w-[1000px] w-full sm:w-auto rounded-3xl"
           hideCloseButton={true}
-          aria-describedby="content-progress-modal"
+          aria-describedby={undefined}
         >
           <DialogTitle></DialogTitle>
           {isLoadingContentProcess && (
@@ -680,7 +746,10 @@ const ContentProgressModalContent: React.FC<
             <>
               <FormikProvider value={formik}>
                 <form onSubmit={formik.handleSubmit} className="h-full w-full">
-                  <div className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1">
+                  <div
+                    ref={scrollContainerRef}
+                    className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
+                  >
                     {dialogType == DialogType.PROGRESS && (
                       <ProgressStepper
                         content={content}
@@ -709,6 +778,7 @@ const ContentProgressModalContent: React.FC<
               )}
               {dialogType != DialogType.PROGRESS && (
                 <button
+                  type="button"
                   className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none"
                   onClick={() => handleClose(dialogType)}
                 >

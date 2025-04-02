@@ -252,6 +252,7 @@ function ContentUploadModalContent({ parsedUserInfo, contentId }) {
             />
           </div>
           <button
+            type="button"
             onClick={handleContentSubmit}
             disabled={!(contentThumbnail && contentVideo && caption)} // Disable when conditions are not met
             className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${

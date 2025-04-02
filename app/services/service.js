@@ -507,6 +507,12 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    receivedProduct: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/content-process/received/${id}`,
+        method: "POST",
+      }),
+    }),
     getContentProcess: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/process",
@@ -590,5 +596,6 @@ export const {
   useQpayDeliveryPaymentMutation,
   useDictListMutation,
   useContentProcessRefundMutation,
+  useReceivedProductMutation,
   useGetContentProcessMutation,
 } = geniApi;

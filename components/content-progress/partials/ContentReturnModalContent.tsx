@@ -43,6 +43,7 @@ function ContentReturnModalContent({ requestId }) {
       </div>
 
       <button
+        type="button"
         onClick={handleUndoContentRequest}
         className="w-full py-3 text-white font-semibold bg-[#CA7FFE] text-2xl rounded-2xl"
       >

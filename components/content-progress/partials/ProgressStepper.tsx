@@ -21,7 +21,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   contentProcess,
 }) => {
   return (
-    <div className="flex flex-col gap-6 h-full w-full">
+    <div className="flex flex-col gap-6 h-fit w-full">
       <div className="flex flex-row items-center gap-4 w-full h-full sm:min-w-[272px] bg-[#F5F4F0] rounded-2xl p-4 h-[180px]">
         <div className="basis-1/3 lg:flex-none">
           <Image

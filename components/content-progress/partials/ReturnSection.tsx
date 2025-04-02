@@ -1,36 +1,21 @@
-import React, { useEffect, useState } from "react";
 import { useFormikContext } from "formik";
-import { useDictListMutation } from "@/app/services/service";
-import {
-  DictCode,
-  RefundReason,
-} from "@/components/content-progress/content.services";
+import { RefundReason } from "@/components/content-progress/content.services";
 import _ from "lodash";
 import { Loader2 } from "lucide-react";
 
-const ReturnSection = () => {
+type ReturnSectionProps = {
+  isLoading: boolean;
+  data: RefundReason[];
+};
+
+const ReturnSection: React.FC<ReturnSectionProps> = ({ isLoading, data }) => {
   const { setFieldValue, values } = useFormikContext<any>();
 
-  const [dictList, { isLoading, data }] = useDictListMutation();
-  const [returnOptions, setReturnOptions] = useState<RefundReason[]>([]);
-
-  useEffect(() => {
-    dictList({
-      dictCode: DictCode.REFUND_REASON,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      setReturnOptions(data);
-    }
-  }, [data]);
   const handleOptionChange = (optionId: number) => {
     if (values.returnReason.includes(optionId)) {
       setFieldValue("returnReason", _.without(values.returnReason, optionId));
       if (
-        optionId ===
-        returnOptions.find((option) => option.DictVal === "Бусад")?.DictId
+        optionId === data.find((option) => option.DictVal === "Бусад")?.DictId
       ) {
         setFieldValue("returnReasonDescription", "");
       }
@@ -45,7 +30,7 @@ const ReturnSection = () => {
     setFieldValue(
       "returnReason",
       _.union(values.returnReason, [
-        returnOptions.find((option) => option.DictVal === "Бусад")?.DictId,
+        data.find((option) => option.DictVal === "Бусад")?.DictId,
       ])
     );
     setFieldValue("returnReasonDescription", e.target.value);
@@ -65,7 +50,7 @@ const ReturnSection = () => {
         <h3 className="text-lg font-medium">Буцаах шалгаанаа оруулна уу</h3>
 
         <div className="space-y-2">
-          {returnOptions.map((option, index) => (
+          {data.map((option, index) => (
             <div
               key={index}
               className="flex items-center border-geni-gray border-[1px] rounded-xl p-3 gap-2"

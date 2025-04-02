@@ -43,12 +43,14 @@ const ViewContent: React.FC<ViewContentProps> = ({
           </div>
           <div className="flex flex-col justify-between gap-2">
             <button
+              type="button"
               className="bg-[#F49D19] text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
               onClick={() => setDialogType(DialogType.EDIT_REQUEST)}
             >
               Контент засах хүсэлт илгээх
             </button>
             <button
+              type="button"
               className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
               onClick={() => setDialogType(DialogType.ACCEPT_REQUEST)}
             >

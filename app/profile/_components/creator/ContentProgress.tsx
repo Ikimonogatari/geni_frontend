@@ -15,7 +15,7 @@ import ContentProgressModalContent, {
 //   STATUS_LIST_VALUE,
 // } from "@/components/content-progress/content.services";
 
-function ContentProgress({ currentContents }) {
+function ContentProgress({ currentContents, refetchCreatorContents = null }) {
   // const tempContent = currentContents[0];
   // currentContents = [
   //   ...Object.keys(STATUS_LIST).map((state) => ({
@@ -95,7 +95,10 @@ function ContentProgress({ currentContents }) {
             )} */}
             <div className="col-span-1 flex justify-end">
               {p.Status === null || p.Status === "" ? (
-                <ContentProgressModalContent content={p} />
+                <ContentProgressModalContent
+                  content={p}
+                  refetch={refetchCreatorContents}
+                />
               ) : (
                 <>
                   {p.Status === "Request" ? (
