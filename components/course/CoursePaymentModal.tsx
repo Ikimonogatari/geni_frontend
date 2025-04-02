@@ -15,8 +15,6 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
 
 interface CoursePaymentProps {
   selectedPackageId: number;
@@ -34,15 +32,14 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
-  const [invoiceHtml, setInvoiceHtml] = useState<string | null>(null);
 
   const [
-    subscribePlan,
+    purchaseCourse,
     {
-      data: subscribePlanData,
-      error: subscribePlanError,
-      isLoading: subscribePlanLoading,
-      isSuccess: subscribePlanSuccess,
+      data: purchaseCourseData,
+      error: purchaseCourseError,
+      isLoading: purchaseCourseLoading,
+      isSuccess: purchaseCourseSuccess,
     },
   ] = usePurchaseCourseMutation();
 
@@ -54,27 +51,21 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   } = useCheckPaymentQuery(txId, { skip: !txId });
 
   useEffect(() => {
-    if (subscribePlanSuccess) {
+    if (purchaseCourseSuccess) {
       if (selectedPayment === "qpay") {
-        setTxId(subscribePlanData?.invoice_id || null);
+        setTxId(purchaseCourseData?.UserTxnId || null);
         setPaymentDialogOpen(true);
-      } else if (
-        selectedPayment === "invoice" &&
-        subscribePlanData?.InvoiceHtml
-      ) {
-        setInvoiceHtml(subscribePlanData.InvoiceHtml); // Decode base64 HTML
-        generatePDF(subscribePlanData.InvoiceHtml);
       }
     }
-    if (subscribePlanError) {
+    if (purchaseCourseError) {
       //@ts-ignore
-      toast.error(subscribePlanError?.data?.error);
+      toast.error(purchaseCourseError?.data?.error);
     }
-  }, [subscribePlanSuccess, subscribePlanError]);
+  }, [purchaseCourseSuccess, purchaseCourseError]);
 
   const handleSubscription = () => {
     console.log(couponCode, "COUPON HERE", { PromoCode: couponCode });
-    subscribePlan({ PromoCode: couponCode });
+    purchaseCourse({ PromoCode: couponCode });
   };
 
   const handleCheckPayment = async () => {
@@ -99,73 +90,11 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
     setIsPaymentSuccess(false);
   };
 
-  const generatePDF = async (htmlString: string) => {
-    try {
-      // Decode Base64 HTML safely
-      const decodedHtml = new TextDecoder("utf-8").decode(
-        Uint8Array.from(atob(htmlString), (c) => c.charCodeAt(0))
-      );
-      let cleanedHtml = decodedHtml.replace(/₮+/g, "₮");
-
-      // Create hidden iframe
-      const iframe = document.createElement("iframe");
-      document.body.appendChild(iframe);
-      Object.assign(iframe.style, {
-        position: "absolute",
-        left: "-9999px",
-        width: "800px",
-        height: "1123px",
-      });
-
-      iframe.contentDocument?.open();
-      iframe.contentDocument?.write(`
-        <html>
-          <head><meta charset="UTF-8"></head>
-          <body>${cleanedHtml}</body>
-        </html>
-      `);
-      console.log(`
-        <html>
-          <head><meta charset="UTF-8"></head>
-          <body>${cleanedHtml}</body>
-        </html>
-      `);
-      iframe.contentDocument?.close();
-
-      // Wait for iframe content to fully load
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      if (iframe.contentDocument) {
-        window.devicePixelRatio = 2; // Improve resolution
-        iframe.contentWindow?.scrollTo(0, 0); // Ensure full view is captured
-
-        const canvas = await html2canvas(iframe.contentDocument.body, {
-          scale: 2,
-          useCORS: true,
-          logging: true,
-        });
-
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const imgWidth = 210;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-        pdf.save("invoice.pdf");
-      }
-
-      document.body.removeChild(iframe); // Clean up
-      toast.success("Нэхэмжлэл татагдлаа");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("PDF үүсгэхэд алдаа гарлаа");
-    }
-  };
-
   return (
     <>
       <button
         onClick={handleSubscription}
-        disabled={subscribePlanLoading}
+        disabled={purchaseCourseLoading}
         className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-geni-green border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
       >
         Үргэлжлүүлэх
@@ -188,12 +117,12 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
             </DialogHeader>
           )}
           <div className="flex justify-center items-center w-full">
-            {subscribePlanSuccess && subscribePlanData ? (
+            {purchaseCourseSuccess && purchaseCourseData ? (
               !isPaymentSuccess ? (
                 <div className="flex flex-col gap-6 w-full">
-                  {!subscribePlanLoading && subscribePlanData ? (
+                  {!purchaseCourseLoading && purchaseCourseData ? (
                     <Image
-                      src={`data:image/png;base64,${subscribePlanData?.qr_image}`}
+                      src={`data:image/png;base64,${purchaseCourseData?.QrImage}`}
                       width={394}
                       height={394}
                       alt=""
@@ -202,7 +131,7 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
                   ) : (
                     <div className="w-[394px] h-[394px] rounded-2xl aspect-square bg-primary-bg flex justify-center items-center">
                       <ClipLoader
-                        loading={subscribePlanLoading}
+                        loading={purchaseCourseLoading}
                         aria-label="Loading Spinner"
                         data-testid="loader"
                         className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
@@ -256,10 +185,10 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
               )
             ) : (
               <>
-                {!subscribePlanError && (
+                {!purchaseCourseError && (
                   <div className="w-[394px] h-[394px] rounded-2xl aspect-square bg-primary-bg flex justify-center items-center">
                     <ClipLoader
-                      loading={subscribePlanLoading}
+                      loading={purchaseCourseLoading}
                       aria-label="Loading Spinner"
                       data-testid="loader"
                       className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
