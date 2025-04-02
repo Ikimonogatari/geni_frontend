@@ -3,13 +3,25 @@ import Image from "next/image";
 import { useListPaymentPlansQuery } from "@/app/services/service";
 import PriceFormatter from "@/components/common/FormatPrice";
 import { Input } from "@/components/ui/input";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
+interface Step3Props {
+  selectedPackageIndex: number;
+  selectedPayment: string;
+  setSelectedPayment: (payment: string) => void;
+  formik: any;
+  couponData?: {
+    coupon_value: string;
+    coupon_type: string;
+  };
+}
 
 function Step3({
   selectedPackageIndex,
   selectedPayment,
   setSelectedPayment,
   formik,
-}) {
+  couponData,
+}: Step3Props) {
   const {
     data: listPaymentPlansData,
     error: listPaymentPlansError,
@@ -19,6 +31,14 @@ function Step3({
   const selectedPackageData = listPaymentPlansData
     ? listPaymentPlansData[selectedPackageIndex]
     : null;
+
+  const originalPrice = 480000;
+  const discountAmount = couponData
+    ? couponData.coupon_type === "percentage"
+      ? (originalPrice * parseInt(couponData.coupon_value)) / 100
+      : parseInt(couponData.coupon_value)
+    : 0;
+  const finalPrice = originalPrice - discountAmount;
 
   return (
     <div className="flex flex-col items-start gap-2 w-full">
@@ -42,17 +62,21 @@ function Step3({
             <div className="flex flex-col">
               <span className="text-sm sm:text-base">Нийт үнэ:</span>
               <span className="text-xl sm:text-2xl">
-                <PriceFormatter price={480000} />
+                <PriceFormatter price={originalPrice} />
               </span>
-              <span className="text-geni-green">
-                Купон хөнгөлөлт: <PriceFormatter price={-88000} />
-              </span>
+              <FadeInAnimation visible={couponData ? true : false}>
+                <span className="text-geni-green">
+                  Купон хөнгөлөлт: <PriceFormatter price={-discountAmount} />
+                  {couponData?.coupon_type === "percentage" &&
+                    ` (${couponData?.coupon_value}%)`}
+                </span>
+              </FadeInAnimation>
             </div>
 
             <div className="flex flex-col">
               <span className="text-sm sm:text-base">Төлөх дүн: </span>
               <span className="text-xl sm:text-2xl">
-                <PriceFormatter price={398000} />
+                <PriceFormatter price={finalPrice} />
               </span>
             </div>
           </div>
@@ -66,7 +90,11 @@ function Step3({
             layoutClassName="h-full p-2 w-full"
             label="Купон код оруулах"
             rightSection={
-              <button className="bg-geni-green rounded-lg border-primary border text-white text-sm px-2 py-2">
+              <button
+                onClick={() => formik.handleSubmit()}
+                type="button"
+                className="bg-geni-green rounded-lg border-primary border text-white text-sm px-2 py-2"
+              >
                 Идэвхжүүлэх
               </button>
             }

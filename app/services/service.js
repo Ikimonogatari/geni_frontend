@@ -454,6 +454,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    checkCoupon: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student/check-coupon",
+        method: "POST",
+        body,
+      }),
+    }),
     checkBankAccountName: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/cgw/check-name",
@@ -584,6 +591,7 @@ export const {
   useCreatorApplyMutation,
   useStudentRegisterMutation,
   usePurchaseCourseMutation,
+  useCheckCouponMutation,
   useGetBankListQuery,
   useCheckBankAccountNameMutation,
   useGetConnectedBankAccountQuery,

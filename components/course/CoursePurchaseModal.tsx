@@ -6,7 +6,7 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import {
   useBrandTermCheckMutation,
-  useUseFreeContentMutation,
+  useCheckCouponMutation,
 } from "@/app/services/service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -35,25 +35,17 @@ function CoursePurchaseModal({
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [isAgreed, setIsAgreed] = useState(userInfo?.IsCheckedTerm);
 
-  const [
-    brandTermCheck,
-    {
-      data: brandTermCheckData,
-      error: brandTermCheckError,
-      isLoading: brandTermCheckLoading,
-      isSuccess: brandTermCheckSuccess,
-    },
-  ] = useBrandTermCheckMutation();
+  const [termCheck] = useBrandTermCheckMutation();
 
   const [
-    useFreeContent,
+    checkCoupon,
     {
-      data: useFreeContentData,
-      error: useFreeContentError,
-      isLoading: useFreeContentLoading,
-      isSuccess: useFreeContentSuccess,
+      data: checkCouponData,
+      error: checkCouponError,
+      isLoading: checkCouponLoading,
+      isSuccess: checkCouponSuccess,
     },
-  ] = useUseFreeContentMutation();
+  ] = useCheckCouponMutation();
 
   const couponCodeformik = useFormik({
     initialValues: {
@@ -63,6 +55,7 @@ function CoursePurchaseModal({
     onSubmit: async (values) => {
       try {
         // @ts-ignore
+        checkCoupon({ PromoCode: values.couponCode });
       } catch (error) {
         toast.error("Алдаа гарлаа");
         console.error("Error submitting the form", error);
@@ -71,35 +64,30 @@ function CoursePurchaseModal({
   });
 
   useEffect(() => {
-    if (useFreeContentSuccess) {
-      toast.success("Танд 1ш үнэгүй контэнт хийлгэх эрх үүслээ");
-      router.push("/add-product");
+    if (checkCouponSuccess) {
+      toast.success("Таны купон амжилттай идэвхжилээ");
     }
-    if (useFreeContentError) {
+    if (checkCouponError) {
       //@ts-ignore
-      toast.error(useFreeContentError?.data?.error);
+      toast.error(checkCouponError?.data?.error);
     }
-  }, [useFreeContentSuccess, useFreeContentError]);
+  }, [checkCouponSuccess, checkCouponError]);
 
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
     setIsAgreed(isChecked);
     if (isChecked) {
-      brandTermCheck({});
+      termCheck({});
     }
   };
 
   const nextStep = () => {
-    if (selectedOption === "freecontent") {
-      useFreeContent({});
-    } else {
-      setCurrentStep((prevStep) => {
-        if (userInfo?.IsCheckedTerm && prevStep === 1) {
-          return 3; // Skip Step 2
-        }
-        return Math.min(prevStep + 1, 3);
-      });
-    }
+    setCurrentStep((prevStep) => {
+      if (userInfo?.IsCheckedTerm && prevStep === 1) {
+        return 3; // Skip Step 2
+      }
+      return Math.min(prevStep + 1, 3);
+    });
   };
 
   const previousStep = () => {
@@ -131,6 +119,7 @@ function CoursePurchaseModal({
             setSelectedPayment={setSelectedPayment}
             selectedPayment={selectedPayment}
             formik={couponCodeformik}
+            couponData={checkCouponData}
           />
         );
 
