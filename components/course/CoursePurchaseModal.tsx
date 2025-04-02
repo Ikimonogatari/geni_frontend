@@ -119,7 +119,6 @@ function CoursePurchaseModal({
             setSelectedPayment={setSelectedPayment}
             selectedPayment={selectedPayment}
             formik={couponCodeformik}
-            couponData={checkCouponData}
           />
         );
 

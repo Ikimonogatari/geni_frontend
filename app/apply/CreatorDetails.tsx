@@ -93,7 +93,12 @@ function CreatorDetails({ formik }) {
           label="Төрсөн огноо"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.Birthday}
+          value={
+            formik.values.Birthday &&
+            formik.values.Birthday !== "0001-01-01T00:00:00Z"
+              ? formik.values.Birthday
+              : new Date().toISOString().split("T")[0]
+          }
           errorText={formik.errors.Birthday}
           errorVisible={formik.touched.Birthday && formik.errors.Birthday}
         />

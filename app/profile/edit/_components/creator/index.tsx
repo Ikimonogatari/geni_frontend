@@ -140,12 +140,16 @@ function EditProfileCreator() {
       LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
       Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
       Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      RegNo: parsedUserInfo ? parsedUserInfo?.Bio : "",
+      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
       AdditionalPhoneNum: "+12345678902",
       Location: parsedUserInfo ? parsedUserInfo?.Location : "",
       EbarimtConsumerNo: "9876543211",
-      Birthday: "1990-01-11",
+      Birthday:
+        parsedUserInfo?.Birthday &&
+        parsedUserInfo.Birthday !== "0001-01-01T00:00:00Z"
+          ? parsedUserInfo.Birthday
+          : new Date().toISOString().split("T")[0],
       EduId: 3,
       Gender: "M",
     },

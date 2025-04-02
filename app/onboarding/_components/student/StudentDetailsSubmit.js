@@ -168,7 +168,9 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           label="Төрсөн огноо"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.Birthday}
+          value={
+            formik.values.Birthday || new Date().toISOString().split("T")[0]
+          }
           errorText={formik.errors.Birthday}
           errorVisible={formik.touched.Birthday && formik.errors.Birthday}
         />

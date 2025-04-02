@@ -53,9 +53,11 @@ function StudentOnboarding() {
       Location: parsedUserInfo ? parsedUserInfo?.Location : "",
       RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
       EbarimtConsumerNo: "9876543211",
-      Birthday: parsedUserInfo?.Birthday
-        ? new Date(parsedUserInfo.Birthday).toISOString().split("T")[0]
-        : "",
+      Birthday:
+        parsedUserInfo?.Birthday &&
+        parsedUserInfo.Birthday !== "0001-01-01T00:00:00Z"
+          ? new Date(parsedUserInfo.Birthday).toISOString().split("T")[0]
+          : "",
       Gender: parsedUserInfo ? parsedUserInfo?.Gender : "",
     },
     validationSchema: addStudentDetailsSchema,
