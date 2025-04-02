@@ -2,7 +2,7 @@
 import BrandProfile from "./_components/brand/profile";
 import CreatorProfile from "./_components/creator/profile";
 import StudentProfile from "./_components/student/profile";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useGetUserInfoQuery } from "../services/service";
 import Loader from "@/components/common/Loader";
 
@@ -12,7 +12,6 @@ export default function Page() {
   if (isLoading) {
     return <Loader />;
   }
-  const router = useRouter();
 
   if (
     (userInfo?.UserType === "Student" &&
@@ -28,8 +27,7 @@ export default function Page() {
       userInfo?.IsVerified === false &&
       userInfo?.OnBoardingStatus === "New")
   ) {
-    router.push("/onboarding");
-    return null;
+    redirect("/onboarding");
   }
 
   return (

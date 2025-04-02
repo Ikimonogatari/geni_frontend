@@ -114,28 +114,36 @@ function BrandWallet() {
           <div className="w-full overflow-x-auto pt-3 mt-7 border-t-[1px] border-[#F5F4F0] flex flex-col gap-3">
             <span className="text-2xl font-bold">Кредит түүх</span>
             <div className="flex flex-col gap-3 min-w-[450px]">
-              <div className="px-5 text-[10px] gap-3 sm:gap-6 sm:text-base grid grid-cols-5 text-[#6F6F6F]">
+              <div className="px-5 text-[10px] gap-3 sm:gap-6 sm:text-base grid grid-cols-[1fr,1fr,1fr,2fr] text-[#6F6F6F]">
                 <span className="col-span-1">Ашигласан</span>
-                <span className="col-span-1">Үлдэгдэл</span>
-                <span className="col-span-1">Тайлбар</span>
-                <span className="col-span-1">Хугацаа</span>
                 <span className="col-span-1">Төлөв</span>
+                <span className="col-span-1">Хугацаа</span>
+                <span className="col-span-1">Тайлбар</span>
               </div>
               {getBrandCreditHistoryData &&
                 getBrandCreditHistoryData?.Data?.map((h, i) => (
-                  <ListRowLayout key={i} layout="grid grid-cols-5">
-                    <span className="col-span-1">{h.Credit}</span>
-                    <span className="col-span-1">{h.Balance}</span>
-                    <span className="col-span-1">{h.Description}</span>
-                    <span className="col-span-1">
-                      {formatDate(h.CreatedAt)}
+                  <ListRowLayout
+                    key={i}
+                    layout="grid grid grid-cols-[1fr,1fr,1fr,2fr]"
+                  >
+                    <span
+                      className={`col-span-1 font-bold text-sm sm:text-base lg:text-lg ${
+                        h.Type ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {h.Type ? "+" : "-"}
+                      {h.Credit}
                     </span>
                     <span
-                      className={`col-span-1 max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-lg ${
+                      className={`col-span-1 max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-sm lg:text-lg ${
                         h.Type ? "bg-geni-green" : "bg-geni-red"
                       }`}
                     >
                       {h.Type ? "Нэмэгдсэн" : "Хасагдсан"}
+                    </span>
+                    <span className="col-span-1">
+                      {formatDate(h.CreatedAt)}
+                      <span className="col-span-1">{h.Description}</span>
                     </span>
                   </ListRowLayout>
                 ))}
