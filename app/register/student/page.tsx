@@ -259,7 +259,6 @@ function StudentRegister() {
                 colorTheme={"bg-geni-green"}
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
-                // @ts-ignore
                 handleSendOtp={handleSendOtp}
                 registerForm={registerForm}
                 verificationData={studentVerificationData}

@@ -169,7 +169,7 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
                   </p>
                   <a
                     target="_blank"
-                    href="https://discord.gg/wGSCNBKJ"
+                    href="https://discord.gg/6eG2ptvm3f"
                     className="flex flex-row items-center justify-center text-lg gap-2 bg-geni-pink text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
                   >
                     <Image

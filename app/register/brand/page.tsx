@@ -258,11 +258,11 @@ function BrandRegister() {
               <Verification
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
-                // @ts-ignore
                 handleSendOtp={handleSendOtp}
+                colorTheme={"bg-geni-blue"}
                 registerForm={registerForm}
-                brandVerificationData={brandVerificationData}
-                brandVerificationSuccess={brandVerificationSuccess}
+                verificationData={brandVerificationData}
+                verificationSuccess={brandVerificationSuccess}
               />
             </div>
           </form>

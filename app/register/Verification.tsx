@@ -8,6 +8,7 @@ function Verification({
   verificationData,
   verificationSuccess,
   registerForm,
+  handleSendOtp,
   colorTheme,
 }) {
   return (
@@ -47,6 +48,13 @@ function Verification({
               {verificationSuccess && (
                 <OtpTimeLeft otpDuration={verificationData?.otpDuration} />
               )}
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
+              >
+                Нууц код дахин авах
+              </button>
               <button
                 type="submit"
                 className={`mt-2 w-full py-4 text-lg text-white font-bold rounded-lg border border-[#2D262D] ${colorTheme}`}
