@@ -38,17 +38,22 @@ type ModalStep = "order" | "payment" | "success";
 const ElevatedButton = ({
   children,
   className,
+  disabled,
   ...props
 }: {
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       className={cn(
         "relative flex items-center justify-start border border-primary px-14 py-6 rounded-[30px] bg-geni-pink text-white cursor-pointer shadow-[2px_3px_0px_#9C44DA,2px_3px_0px_1px_#2D262D] transition duration-150 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none",
+        disabled &&
+          "opacity-50 cursor-not-allowed shadow-none bg-gray-400 border-gray-500",
         className
       )}
+      disabled={disabled}
       {...props}
     >
       {children}
@@ -565,19 +570,31 @@ const Pro100: React.FC = () => {
   const [minutes, setMinutes] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const fetchPreOrderStatus = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_AWS_URL}api/web/public/pre-order/active`
-        );
-        const data = await response.json();
+  // For testing - uncomment to manually set timer to 0
+  // useEffect(() => {
+  //   setDays(0);
+  //   setHours(0);
+  //   setMinutes(0);
+  // }, []);
 
-        if (data.ExpiresAt) {
-          const expiresAt = new Date(data.ExpiresAt);
-          const now = new Date();
-          const diffMs = expiresAt.getTime() - now.getTime();
+  const fetchPreOrderStatus = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_AWS_URL}api/web/public/pre-order/active`
+      );
+      const data = await response.json();
 
+      if (data.ExpiresAt) {
+        const expiresAt = new Date(data.ExpiresAt);
+        const now = new Date();
+        const diffMs = expiresAt.getTime() - now.getTime();
+
+        if (diffMs <= 0) {
+          // Already expired
+          setDays(0);
+          setHours(0);
+          setMinutes(0);
+        } else {
           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           const diffHours = Math.floor(
             (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -590,13 +607,15 @@ const Pro100: React.FC = () => {
           setHours(diffHours);
           setMinutes(diffMinutes);
         }
-
-        setPreOrderData(data);
-      } catch (error) {
-        console.error("Failed to fetch pre-order status:", error);
       }
-    };
 
+      setPreOrderData(data);
+    } catch (error) {
+      console.error("Failed to fetch pre-order status:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchPreOrderStatus();
   }, []);
 
@@ -605,14 +624,19 @@ const Pro100: React.FC = () => {
       if (minutes > 0) {
         setMinutes(minutes - 1);
       } else {
-        setMinutes(59);
         if (hours > 0) {
           setHours(hours - 1);
+          setMinutes(59);
         } else {
-          setHours(23);
           if (days > 0) {
             setDays(days - 1);
+            setHours(23);
+            setMinutes(59);
           } else {
+            // Timer has reached 0
+            setDays(0);
+            setHours(0);
+            setMinutes(0);
             clearInterval(timer);
           }
         }
@@ -756,8 +780,13 @@ const Pro100: React.FC = () => {
             <ElevatedButton
               className="mt-6 md:mt-0 px-12 sm:px-14"
               onClick={() => setShowModal(true)}
+              disabled={days <= 0 && hours <= 0 && minutes <= 0}
             >
-              <p className="text-xl font-bold">Урьдчилсан захиалга хийх</p>
+              <p className="text-xl font-bold">
+                {days <= 0 && hours <= 0 && minutes <= 0
+                  ? "Урьдчилсан захиалга дууссан"
+                  : "Урьдчилсан захиалга хийх"}
+              </p>
             </ElevatedButton>
           </div>
         </div>
