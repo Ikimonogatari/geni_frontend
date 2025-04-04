@@ -251,7 +251,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             <span className="block sm:hidden text-[#6F6F6F] text-xs sm:text-base">
               {getUserInfoData ? getUserInfoData.Bio : ""}
             </span>
-            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-center sm:flex-col gap-2 sm:gap-4">
+            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-end sm:flex-col gap-2 sm:gap-4">
               <Link
                 href={"/wallet"}
                 className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg"
@@ -296,8 +296,8 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
           </div>
           <div className="mt-4 sm:mt-16 w-full overflow-x-auto">
-            <div className="z-50 -mb-[1px] flex flex-row items-center justify-between">
-              <div className="flex flex-row items-end">
+            <div className="z-50 -mb-[2px] flex flex-row items-start justify-between">
+              <div className="flex flex-row gap-2">
                 {creatorProfileButtons.map((b, i) => (
                   <div
                     key={i}
@@ -305,7 +305,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     className={`cursor-pointer text-center rounded-t-2xl ${
                       b.value === profileState
                         ? "pb-3 bg-white border border-[#CDCDCD] border-b-0 font-medium"
-                        : "p-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
+                        : "pb-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
                     }`}
                   >
                     <div
@@ -323,7 +323,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                   </div>
                 ))}
               </div>
-              <div className="flex justify-end py-2">
+              <div className="flex justify-end">
                 <Link
                   href="/products"
                   className="flex whitespace-nowrap flex-row text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"

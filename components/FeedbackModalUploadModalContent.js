@@ -192,10 +192,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
         <div className="w-full flex flex-col gap-4">
           <span className="text-lg">Контент</span>
           {contentVideo ? (
-            <video
-              controls
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-            >
+            <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
               <source src={contentVideo} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -207,7 +204,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
           ) : (
             <div
               {...getRootPropsForVideo()}
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+              className="aspect-[9/16] w-full h-full rounded-2xl"
             >
               <input {...getInputPropsForVideo()} />
               <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
@@ -231,7 +228,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
             <img
               src={contentThumbnail}
               alt=""
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+              className="aspect-[9/16] w-full h-full rounded-2xl"
             />
           ) : isUploading.image ? (
             <ContentUploadProgress
@@ -241,7 +238,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
           ) : (
             <div
               {...getRootPropsForImage()}
-              className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+              className="aspect-[9/16] w-full h-full rounded-2xl"
             >
               <input {...getInputPropsForImage()} />
               <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">

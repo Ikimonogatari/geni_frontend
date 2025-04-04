@@ -251,7 +251,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   userInfo={getUserInfoData}
                 />
               )}
-              <div className="flex items-center justify-between sm:items-center flex-col-reverse sm:flex-col gap-4">
+              <div className="flex items-center justify-between sm:items-end flex-col-reverse sm:flex-col gap-4">
                 <Link
                   href={"/wallet"}
                   className="flex flex-row items-center gap-2 px-2 py-[9px] sm:px-4 sm:py-3 bg-[#4FB755] rounded-lg"
@@ -300,7 +300,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
           <div className="overflow-x-auto pl-7 md:px-7 mt-4 sm:mt-16 w-full">
             <div className="">
               <div className="z-50 -mb-[1px] flex flex-row justify-between text-sm sm:text-base">
-                <div className="flex flex-row items-end">
+                <div className="flex flex-row gap-2 items-end">
                   {brandProfileButtons.map((b, i) => (
                     <div
                       key={i}
@@ -308,7 +308,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                       className={`cursor-pointer text-center rounded-t-2xl ${
                         b.value === profileState
                           ? "pb-3 bg-white border border-[#CDCDCD] border-b-0 font-medium"
-                          : "p-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
+                          : "pb-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
                       }`}
                     >
                       <div
@@ -326,7 +326,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-end py-2">
+                <div className="flex justify-end pb-2">
                   {getUserInfoData?.IsSubscribed === true ||
                   getUserInfoData?.Credit > 0 ? (
                     <Link
