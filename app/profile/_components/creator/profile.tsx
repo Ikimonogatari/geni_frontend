@@ -296,6 +296,13 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
           </div>
           <div className="mt-4 sm:mt-16 w-full overflow-x-auto">
+            <Link
+              href="/products"
+              className="mb-4 sm:hidden flex whitespace-nowrap flex-row justify-center text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
+            >
+              Бүтээгдэхүүн сонгох
+              <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
+            </Link>
             <div className="z-50 -mb-[2px] flex flex-row items-start justify-between">
               <div className="flex flex-row gap-2">
                 {creatorProfileButtons.map((b, i) => (
@@ -326,7 +333,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
               <div className="flex justify-end">
                 <Link
                   href="/products"
-                  className="flex whitespace-nowrap flex-row text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
+                  className="hidden sm:flex whitespace-nowrap flex-row text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
                 >
                   Бүтээгдэхүүн сонгох
                   <Image

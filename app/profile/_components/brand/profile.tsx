@@ -155,7 +155,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pt-32 pb-16 sm:pb-24">
         <div className=" text-[#2D262D] max-w-7xl min-h-screen mx-auto py-10 sm:py-20">
-          <div className="px-7 flex flex-col md:flex-row items-start justify-between w-full">
+          <div className="px-7 flex flex-col gap-3 md:flex-row items-start justify-between w-full">
             <div className="flex flex-row items-center gap-4 sm:gap-7">
               {getUserInfoData ? (
                 <Image
@@ -226,32 +226,8 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-row w-full sm:w-auto justify-between sm:justify-normal items-end sm:items-center gap-2 sm:gap-4 mt-5 md:mt-0">
-              {getUserInfoData?.IsSubscribed === true ||
-              getUserInfoData?.Credit > 0 ? (
-                <Link
-                  href={"/add-product"}
-                  className={`flex md:hidden whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-                >
-                  Шинэ бүтээгдэхүүн нэмэх
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              ) : (
-                <CreditPurchase
-                  buttonIconSize={""}
-                  className={
-                    "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
-                  }
-                  buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
-                  userInfo={getUserInfoData}
-                />
-              )}
-              <div className="flex items-center justify-between sm:items-end flex-col-reverse sm:flex-col gap-4">
+            <div className="flex flex-row w-full md:w-auto justify-between sm:justify-normal items-end sm:items-center gap-2 sm:gap-4 mt-5 md:mt-0">
+              <div className="w-full md:w-auto flex items-center justify-between sm:items-end flex-row md:flex-col gap-4">
                 <Link
                   href={"/wallet"}
                   className="flex flex-row items-center gap-2 px-2 py-[9px] sm:px-4 sm:py-3 bg-[#4FB755] rounded-lg"
@@ -295,17 +271,41 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                 </div>
               </div>
             </div>
+            {getUserInfoData?.IsSubscribed === true ||
+            getUserInfoData?.Credit > 0 ? (
+              <Link
+                href={"/add-product"}
+                className={`flex md:hidden whitespace-nowrap w-full flex-row justify-center text-xs items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              >
+                Шинэ бүтээгдэхүүн нэмэх
+                <Image
+                  src={"/add-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Link>
+            ) : (
+              <CreditPurchase
+                buttonIconSize={""}
+                className={
+                  "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                }
+                buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
+                userInfo={getUserInfoData}
+              />
+            )}
           </div>
 
-          <div className="overflow-x-auto pl-7 md:px-7 mt-4 sm:mt-16 w-full">
+          <div className="overflow-x-auto pl-7 md:px-7 mt-4 md:mt-16 w-full">
             <div className="">
-              <div className="z-50 -mb-[1px] flex flex-row justify-between text-sm sm:text-base">
-                <div className="flex flex-row gap-2 items-end">
+              <div className="z-50 -mb-[1px] overflow-x-auto flex flex-row justify-between text-sm sm:text-base">
+                <div className="min-w-[540px] flex flex-row gap-2 items-end">
                   {brandProfileButtons.map((b, i) => (
                     <div
                       key={i}
                       onClick={() => setProfileState(b.value)}
-                      className={`cursor-pointer text-center rounded-t-2xl ${
+                      className={`whitespace-nowrap cursor-pointer text-center rounded-t-2xl ${
                         b.value === profileState
                           ? "pb-3 bg-white border border-[#CDCDCD] border-b-0 font-medium"
                           : "pb-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
