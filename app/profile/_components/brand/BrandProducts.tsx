@@ -135,7 +135,7 @@ function BrandProducts({ brandProducts, brandData, isLoading }) {
             image="/no-product-image.png"
           />
         ) : (
-          <div className="min-w-[540px] w-full px-7 pt-3 mt-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+          <div className="min-w-[540px] w-full flex flex-col gap-3">
             <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[2fr,1fr,2fr,2fr] sm:grid-cols-[2fr,1fr,2fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
               <div className="col-span-1 flex flex-row gap-2 items-center justify-between">
                 <span>Бүтээгдэхүүн</span>

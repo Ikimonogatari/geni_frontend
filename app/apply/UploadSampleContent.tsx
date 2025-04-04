@@ -110,10 +110,7 @@ function UploadSampleContent({ formik }) {
         errorVisible={formik.touched.ContentLink && formik.errors.ContentLink}
       />
       {contentVideo ? (
-        <video
-          controls
-          className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
-        >
+        <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
           <source src={contentVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -125,7 +122,7 @@ function UploadSampleContent({ formik }) {
       ) : (
         <div
           {...getRootPropsForVideo()}
-          className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+          className="aspect-[9/16] w-full h-full rounded-2xl"
         >
           <input {...getInputPropsForVideo()} />
 

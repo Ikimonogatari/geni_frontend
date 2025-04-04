@@ -208,7 +208,6 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
                   className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
                 />
               </Link>
-              <LogoutButton />
             </div>
           </div>
           <div className="mt-4 sm:mt-16 w-full flex flex-row items-center justify-between gap-4">

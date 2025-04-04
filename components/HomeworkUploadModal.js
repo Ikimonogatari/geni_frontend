@@ -173,7 +173,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
               {contentVideo ? (
                 <video
                   controls
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 >
                   <source src={contentVideo} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -186,7 +186,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
               ) : (
                 <div
                   {...getRootPropsForVideo()}
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl bg-[#F5F4F0]"
+                  className="aspect-[9/16] w-full h-full rounded-2xl bg-[#F5F4F0]"
                 >
                   <input {...getInputPropsForVideo()} />
 
@@ -211,7 +211,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
                 <img
                   src={contentThumbnail}
                   alt=""
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 />
               ) : isUploading.image ? (
                 <ContentUploadProgress
@@ -221,7 +221,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
               ) : (
                 <div
                   {...getRootPropsForImage()}
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 >
                   <input {...getInputPropsForImage()} />
 

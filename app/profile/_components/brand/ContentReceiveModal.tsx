@@ -53,6 +53,24 @@ function ContentReceiveModal({
   playSound,
   p,
 }: ContentReceiveModalProps) {
+  // Get the file ID from the URL
+  const getFileIdFromUrl = (url: string): string => {
+    if (!url) return "";
+    const segments = url.split("/");
+    return segments[segments.length - 1] || "";
+  };
+
+  // For the content video
+  const videoFileId = contentVideoFileId || getFileIdFromUrl(contentVideo);
+  // For the thumbnail image
+  const thumbnailFileId =
+    contentThumbnailFileId || getFileIdFromUrl(contentThumbnail);
+
+  // Using the download API endpoint
+  const getDownloadUrl = (fileId: string): string => {
+    return `${process.env.NEXT_PUBLIC_AWS_URL}api/web/file/download/${fileId}`;
+  };
+
   return (
     <Dialog>
       <DialogTrigger
@@ -67,29 +85,89 @@ function ContentReceiveModal({
       {/* @ts-ignore */}
       <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-h-[739px] max-w-[1000px] w-full sm:w-auto lg:w-full rounded-3xl">
         <div className="flex flex-col lg:flex-row gap-6 h-full">
-          <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
-            <span className="text-base font-semibold">Контент</span>
+          <div className="flex flex-col gap-4 w-full h-full">
+            <div className="flex flex-row items-center justify-between">
+              <span className="text-base font-semibold">Контент</span>
+              {videoFileId && (
+                <a
+                  href={getDownloadUrl(videoFileId)}
+                  download="video.mp4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-[#4D55F5] text-sm font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>Т
+                  </svg>
+                  Татах
+                </a>
+              )}
+            </div>
             {contentVideo ? (
-              <video
-                controls
-                controlsList="nodownload"
-                className="aspect-[9/16] w-full h-full sm:max-w-[272px] rounded-2xl"
-              >
-                <source src={contentVideo} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <div className="relative">
+                <video
+                  controls
+                  controlsList="nodownload"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
+                >
+                  <source src={contentVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
             ) : (
               <></>
             )}
           </div>
-          <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
-            <span className="text-base font-semibold">Thumbnail зураг</span>
+          <div className="flex flex-col gap-4 w-full h-full">
+            <div className="flex flex-row items-center justify-between">
+              <span className="text-base font-semibold">Thumbnail зураг</span>
+              {thumbnailFileId && (
+                <a
+                  href={getDownloadUrl(thumbnailFileId)}
+                  download="thumbnail.jpg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-[#4D55F5] text-sm font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Татах
+                </a>
+              )}
+            </div>
             {contentThumbnail ? (
-              <img
-                src={contentThumbnail}
-                alt=""
-                className="aspect-[9/16] w-full h-full sm:max-w-[272px] rounded-2xl"
-              />
+              <div className="relative">
+                <img
+                  src={contentThumbnail}
+                  alt=""
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
+                />
+              </div>
             ) : (
               <></>
             )}

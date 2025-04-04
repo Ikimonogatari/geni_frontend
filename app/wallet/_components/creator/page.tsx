@@ -173,7 +173,12 @@ function CreatorWallet() {
                     >
                       {history.Type ? "Нэмэгдсэн" : "Хасагдсан"}
                     </span>{" "}
-                    <span className="col-span-1">
+                    <span
+                      className={`col-span-1 ${
+                        history.Type ? "text-geni-green" : "text-geni-red"
+                      }`}
+                    >
+                      {history.Type ? "+" : "-"}
                       <PriceFormatter price={history.TxnAmt} />
                     </span>
                   </ListRowLayout>
