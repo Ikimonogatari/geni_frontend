@@ -10,7 +10,6 @@ import {
 } from "@/app/services/service";
 import Link from "next/link";
 import BrandContentGallery from "./BrandContentGallery";
-import LogoutButton from "@/components/common/LogoutButton";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
 import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateModal";
@@ -293,7 +292,6 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                       className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
                     />
                   </Link>
-                  <LogoutButton />
                 </div>
               </div>
             </div>
