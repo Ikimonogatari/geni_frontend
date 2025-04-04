@@ -29,6 +29,7 @@ import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import BackButton from "@/components/common/BackButton";
 
 function EditProfileBrand() {
   const router = useRouter();
@@ -701,20 +702,20 @@ function EditProfileBrand() {
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-20 sm:mt-32 mb-12 py-11 container mx-auto">
-        <div className="flex flex-row items-start gap-4 sm:gap-7 my-7">
-          <button
-            onClick={() => router.back()}
-            className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
-          >
-            <Image src={"/arrow-left.png"} width={24} height={24} alt="" />
-          </button>
-          <p className="text-4xl sm:text-5xl xl:text-6xl font-bold">
+        <BackButton />
+        <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
+          <Sidebar
+            className="!text-lg md:hidden"
+            items={sidebarItems}
+            activeSection={activeSection}
+          />
+          <p className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold">
             Хуудас тохиргоо
           </p>
         </div>
         <div className="flex flex-col md:flex-row bg-white">
           <Sidebar
-            className="!text-lg"
+            className="!text-lg hidden md:block"
             items={sidebarItems}
             activeSection={activeSection}
           />

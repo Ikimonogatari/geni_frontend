@@ -16,6 +16,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
     onClick?: () => void;
   }[];
   activeSection?: string;
+  className?: string;
 }
 
 export function Sidebar({
@@ -25,7 +26,7 @@ export function Sidebar({
   ...props
 }: SidebarProps) {
   const pathname = usePathname();
-
+  console.log(className);
   const linkStyles = (isActive: boolean) =>
     cn(
       "flex items-center gap-2 px-4 py-2 text-sm sm:text-lg font-medium transition-colors rounded-lg",
@@ -35,13 +36,16 @@ export function Sidebar({
     );
 
   return (
-    <div className="flex h-full">
+    <div className={cn("flex h-full", className)}>
       {/* Mobile Sidebar */}
       <Sheet>
-        <SheetTrigger asChild>
+        <SheetTrigger
+          asChild
+          className="min-w-12 min-h-12 aspect-square flex items-center justify-center"
+        >
           <Button
             themeType="ghost"
-            className="px-2 py-2 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+            className="px-2 py-2 aspect-square text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
           >
             <Menu className="h-6 w-6" />
             <span className="sr-only">Toggle Menu</span>
