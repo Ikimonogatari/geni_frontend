@@ -7,13 +7,12 @@ import FeedbackModal from "@/components/FeedbackModal";
 import StatusIndicator from "@/components/StatusIndicator";
 import Cookies from "js-cookie";
 import ContentReturnModal from "./ContentReturnModal";
-import ContentProgressModalContent, {
+import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
+import {
   getStepIndex,
-} from "@/components/content-progress/ContentProgressModal";
-// import {
-//   STATUS_LIST,
-//   STATUS_LIST_VALUE,
-// } from "@/components/content-progress/content.services";
+  STATUS_LIST,
+  STATUS_LIST_VALUE,
+} from "@/components/content-progress/content.services";
 
 function ContentProgress({ currentContents, refetchCreatorContents = null }) {
   // const tempContent = currentContents[0];

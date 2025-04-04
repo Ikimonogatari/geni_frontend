@@ -1,7 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { STATUS_LIST_VALUE } from "./content-progress/content.services";
-import { getCurrentStepColor } from "./content-progress/ContentProgressModal";
+import {
+  getCurrentStepColor,
+  STATUS_LIST_VALUE,
+} from "./content-progress/content.services";
 
 const getColorClass = (status) => {
   switch (status) {
@@ -93,7 +95,9 @@ const getStatusImage = (status) => {
 const StatusIndicator = ({ status }) => {
   return (
     <div
-      className={`bg-${getCurrentStepColor(status)}-500 col-span-1 flex flex-row items-center justify-center max-w-max rounded-full px-2 py-1 gap-1 text-white`}
+      className={`bg-${getCurrentStepColor(
+        status
+      )}-500 col-span-1 flex flex-row items-center justify-center max-w-max rounded-full px-2 py-1 gap-1 text-white`}
       // className={`${getColorClass(status)} col-span-1 flex flex-row items-center justify-center max-w-max rounded-full px-2 py-1 gap-1 text-white`}
     >
       <Image

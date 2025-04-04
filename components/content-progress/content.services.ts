@@ -65,6 +65,8 @@ export const STATUS_LIST_VALUE = {
   ContentPending: "Контент хүлээгдэж байна",
   ContentSent: "Контент илгээгдсэн",
   ContentOverDue: "Контент хоцорсон",
+  ContentBanned: "Контент блоклогдсон",
+  ContentBanPayment: "Төлбөр төлөгдсөн",
   GeniConfirming: "Geni шалгаж байна",
   ContentSentToBrand: "Брэндэд контент илгээгдсэн",
   ContentRejected: "Контент буцаагдсан",
@@ -84,6 +86,8 @@ export enum STATUS_LIST {
   ContentPending = "ContentPending",
   ContentSent = "ContentSent",
   ContentOverDue = "ContentOverDue",
+  ContentBanned = "ContentBanned",
+  ContentBanPayment = "ContentBanPayment",
   GeniConfirming = "GeniConfirming",
   ContentSentToBrand = "ContentSentToBrand",
   ContentRejected = "ContentRejected",
@@ -92,21 +96,13 @@ export enum STATUS_LIST {
   ContentReSent = "ContentReSent",
 }
 
-// export const mainStates = {
-//   Request: "Хүсэлт илгээгдсэн",
-//   ProdDelivering: "Бүтээгдэхүүн хүргэж байна",
-//   ContentInProgress: "Контент хүлээгдэж байна",
-//   ContentSent: "Контент илгээсэн",
-//   ContentOnHold: "Контент хоцорсон",
-//   ContentInReview: "Geni шалгаж байна",
-//   ProdRejected: "Geni-гээс зөвшөөрөгдөөгүй",
-//   ContentSent2: "Контент илгээсэн",
-//   ProdApproved: "Geni-гээс зөвшөөрсөн",
-//   ContentRejected: "Контент буцаагдсан",
-//   ContentReceived: "Контент хүлээн авсан",
-//   ContentApproved: "Контент зөвшөөрөгдсөн",
-//   ContentEditRequest: "Контент дахин илгээгдсэн",
-// };
+export type CurrentStepStatus = "yellow" | "green" | "red";
+
+export const STATUS_STEPPER_MESSAGES = {
+  [STATUS_LIST.Delivery]: "Бүтээгдэхүүн хүргэгдэх хугацаа: 1-2 өдөр",
+  [STATUS_LIST.ContentPending]: "Контент илгээх сүүлийн хугацаа: ",
+  [STATUS_LIST.ContentOverDue]: "Контент хоцорсон: ",
+};
 
 export enum DialogType {
   PROGRESS = "progress",
@@ -144,7 +140,6 @@ export type GetContentProcessResponse = {
   CreatedAt: string;
 }[];
 
-
 export enum DictCode {
   REFUND_REASON = "RefundReason",
 }
@@ -153,11 +148,74 @@ export type RefundReason = {
   DictId: number;
   DictCode: string;
   DictVal: string;
-}
+};
 
 export type ContentProcessRefundParams = {
   ContentId: string;
   ReasonId: number[];
   ReasonDesc: string;
   StatusId: number;
-}
+};
+
+export type ContentProcessWhenOverdueResponse = {
+  Days: number;
+  Xp: number;
+  BanDate: string;
+  BanDays: number;
+};
+
+export const getStepIndex = (status: string): number => {
+  const arr = [
+    ["RequestSent", "RequestApproved", "RequestRejected"],
+    ["DeliveryPaymentPending", "Delivery", "DeliverySuccess", "DeliveryRefund"],
+    [
+      "ContentPending",
+      "ContentSent",
+      "ContentOverDue",
+      "ContentBanned",
+      "ContentBanPayment",
+    ],
+    ["GeniConfirming", "ContentSentToBrand", "ContentRejected"],
+    ["ContentApproved", "ContentFixRequest", "ContentReSent"],
+  ];
+
+  const index = arr.findIndex((item) => item.includes(status));
+  return index == -1 ? 0 : index;
+};
+
+export const getCurrentStepColor = (status: string): CurrentStepStatus => {
+  const arr = {
+    green: [
+      "Request",
+      "RequestApproved",
+      "DeliverySuccess",
+      "ContentBanPayment",
+      "ProdApproved",
+      "ContentSent",
+      "ContentSentToBrand",
+      "ContentApproved",
+      "ContentReSent",
+    ],
+    yellow: [
+      "RequestSent",
+      // "RequestApproved",
+      "DeliveryPaymentPending",
+      "Delivery",
+      "DeliverySuccess",
+      "ContentPending",
+      "GeniConfirming",
+      "ContentFixRequest",
+    ],
+    red: [
+      "RequestRejected",
+      "DeliveryRefund",
+      "ContentOverDue",
+      "ContentBanned",
+      "ContentRejected",
+    ],
+  };
+
+  return Object.keys(arr).find((key) =>
+    arr[key].includes(status)
+  ) as CurrentStepStatus;
+};

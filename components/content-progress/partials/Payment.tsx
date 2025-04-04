@@ -1,35 +1,56 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import { Content } from "../content.services";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { useEffect } from "react";
+import { Content, STATUS_LIST } from "../content.services";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useQpayDeliveryPaymentMutation } from "@/app/services/service";
+import {
+  useContentProcessOverduePaymentMutation,
+  useQpayDeliveryPaymentMutation,
+} from "@/app/services/service";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 type PaymentProps = {
   content: Content;
+  refetch?: () => void;
+  setDialogOpen?: (open: boolean) => void;
 };
 
-const Payment = ({ content }: PaymentProps) => {
-  const router = useRouter();
-  const [qpayDeliveryPayment, { isLoading, data }] =
-    useQpayDeliveryPaymentMutation();
+const Payment = ({ content, refetch, setDialogOpen }: PaymentProps) => {
+  const [data, setData] = useState<any>(null);
+
+  const [
+    qpayDeliveryPayment,
+    { isLoading: isLoadingQpayDeliveryPayment, data: qpayDeliveryPaymentData },
+  ] = useQpayDeliveryPaymentMutation();
+
+  const [
+    contentProcessOverduePayment,
+    {
+      isLoading: isLoadingContentProcessOverduePayment,
+      data: contentProcessOverduePaymentData,
+    },
+  ] = useContentProcessOverduePaymentMutation();
 
   useEffect(() => {
     if (content) {
-      qpayDeliveryPayment(content.ContentId);
+      if (content.CurrentStepName.String == STATUS_LIST.ContentBanned) {
+        contentProcessOverduePayment(content.ContentId);
+      } else {
+        qpayDeliveryPayment(content.ContentId);
+      }
     }
   }, [content]);
 
   useEffect(() => {
-    if (data) {
-      console.log("dasta", data);
+    if (qpayDeliveryPaymentData) {
+      setData(qpayDeliveryPaymentData);
     }
-  }, [data]);
+    if (contentProcessOverduePaymentData) {
+      setData(contentProcessOverduePaymentData);
+    }
+  }, [qpayDeliveryPaymentData, contentProcessOverduePaymentData]);
 
   const paymentCheck = () => {
     console.log("data", data?.CallBackUrl);
@@ -38,7 +59,8 @@ const Payment = ({ content }: PaymentProps) => {
         if (res.status === 200) {
           if (res.data.IsPaid) {
             toast.success("Төлбөр төлөгдсөн байна.");
-            router.refresh();
+            setDialogOpen(false);
+            refetch && refetch();
           } else {
             toast.error("Төлбөр төлөгдөөгүй байна.");
           }
@@ -47,7 +69,7 @@ const Payment = ({ content }: PaymentProps) => {
     }
   };
 
-  if (isLoading) {
+  if (isLoadingQpayDeliveryPayment || isLoadingContentProcessOverduePayment) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <Loader2 className="w-10 h-10 animate-spin" />
@@ -58,7 +80,7 @@ const Payment = ({ content }: PaymentProps) => {
   return (
     data && (
       <div className="w-full p-4 flex flex-col items-center h-full gap-4">
-        <Tabs defaultValue="apps" className="items-center w-full">
+        <Tabs defaultValue="qr" className="items-center w-full">
           <div className="flex items-center justify-center">
             <TabsList className="mb-3 gap-1 bg-transparent">
               <TabsTrigger

@@ -1,10 +1,15 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
-import { GetContentProcessResponse } from "./content-progress/content.services";
+import {
+  Content,
+  CurrentStepStatus,
+  GetContentProcessResponse,
+  getCurrentStepColor,
+  STATUS_LIST,
+  STATUS_STEPPER_MESSAGES,
+} from "./content-progress/content.services";
 import moment from "moment";
-
-export type CurrentStepStatus = "yellow" | "green" | "red";
 
 type StepperProps = {
   steps: React.ReactNode[];
@@ -15,6 +20,8 @@ type StepperProps = {
   horizontal?: boolean;
   hasBg?: boolean;
   contentProcess?: GetContentProcessResponse;
+  content?: Content;
+  overdueProcess?: any;
 };
 
 const Stepper: React.FC<StepperProps> = (props) => {
@@ -27,6 +34,8 @@ const Stepper: React.FC<StepperProps> = (props) => {
     currentStepStatus = "yellow",
     horizontal = true,
     hasBg = true,
+    content,
+    overdueProcess,
   } = props;
 
   const getColor = (colorName: string, isTextColor = false) => {
@@ -57,10 +66,11 @@ const Stepper: React.FC<StepperProps> = (props) => {
   const getHorizontalStepColor = (
     index: number,
     length: number,
-    colorName: string,
+    statusString: string,
     isTextColor = false
   ) => {
-    if (index < length - 1) {
+    const colorName = getCurrentStepColor(statusString);
+    if (colorName !== "red" && index < length - 1) {
       return isTextColor ? "text-green-500" : "bg-green-500";
     }
 
@@ -77,47 +87,71 @@ const Stepper: React.FC<StepperProps> = (props) => {
   if (!horizontal) {
     return (
       <div className="flex flex-col items-start w-full text-xs">
-        {steps.map((step, index) => (
-          <div key={index} className="flex items-start gap-6">
-            <div className="flex flex-col items-center">
-              <div
-                className={`relative flex items-center justify-center w-4 h-4 rounded-full ${getStepColor(
-                  index
-                )}`}
-              >
-                {step}
-              </div>
-              {index !== steps.length - 1 && (
-                <div className={`w-[2px] h-10 ${getLineColor(index)}`} />
-              )}
-            </div>
-
-            {contentProcess && (
-              <div className="flex flex-col gap-1 -mt-1">
-                <span
-                  className={`${getHorizontalStepColor(
+        {steps.map((step, index) => {
+          const status = contentProcess[index].ContentStepStatusCode
+            .String as STATUS_LIST;
+          return (
+            <div key={index} className="flex items-start gap-6">
+              <div className="flex flex-col items-center">
+                <div
+                  className={`relative flex items-center justify-center w-4 h-4 rounded-full ${getHorizontalStepColor(
                     index,
-                    contentProcess.length,
-                    contentProcess[index].ContentStepStatusCode
-                      .String as CurrentStepStatus,
-                    true
-                  )} font-medium text-base`}
+                    contentProcess?.length || 0,
+                    status
+                  )}`}
                 >
-                  {contentProcess[index].Desc.String}
-                </span>
-                {contentProcess[index].CreatedAt && (
-                  <div className="flex flex-col text-sm text-gray-600">
-                    <span>
-                      {moment(contentProcess[index].CreatedAt).format(
-                        "YYYY-MM-DD HH:mm"
-                      )}
-                    </span>
-                  </div>
+                  {step}
+                </div>
+                {index !== steps.length - 1 && (
+                  <div
+                    className={`w-[2px] h-10 ${getHorizontalStepColor(
+                      index,
+                      contentProcess?.length || 0,
+                      status
+                    )}`}
+                  />
                 )}
               </div>
-            )}
-          </div>
-        ))}
+
+              {contentProcess && (
+                <div className="flex flex-col gap-1 -mt-1">
+                  <span
+                    className={`${getHorizontalStepColor(
+                      index,
+                      contentProcess.length,
+                      status,
+                      true
+                    )} font-medium text-base`}
+                  >
+                    {contentProcess[index].Desc.String}
+                  </span>
+                  {contentProcess[index].CreatedAt && (
+                    <div className="flex flex-col text-sm text-gray-600">
+                      <span>
+                        {STATUS_STEPPER_MESSAGES?.[status] ? (
+                          <>
+                            {STATUS_STEPPER_MESSAGES?.[status]}
+                            <b>
+                              {status == STATUS_LIST.ContentPending &&
+                                content?.Deadline &&
+                                moment(content.Deadline).format("MM.DD.YYYY")}
+                              {status == STATUS_LIST.ContentOverDue &&
+                                overdueProcess?.Days}
+                            </b>
+                          </>
+                        ) : (
+                          moment(contentProcess[index].CreatedAt).format(
+                            "YYYY-MM-DD HH:mm"
+                          )
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   }

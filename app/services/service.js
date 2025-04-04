@@ -520,6 +520,18 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
+    contentProcessOverdue: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/overdue/${id}`,
+        method: "GET",
+      }),
+    }),
+    contentProcessOverduePayment: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/overdue/payment/${id}`,
+        method: "POST",
+      }),
+    }),
     getContentProcess: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/process",
@@ -605,5 +617,7 @@ export const {
   useDictListMutation,
   useContentProcessRefundMutation,
   useReceivedProductMutation,
+  useContentProcessOverdueMutation,
+  useContentProcessOverduePaymentMutation,
   useGetContentProcessMutation,
 } = geniApi;

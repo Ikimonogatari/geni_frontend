@@ -1,9 +1,7 @@
 import Image from "next/image";
-import { Content, GetContentProcessResponse } from "../content.services";
-import { getCurrentStepColor } from "../ContentProgressModal";
-import Stepper, { CurrentStepStatus } from "@/components/Stepper";
+import { Content, CurrentStepStatus, GetContentProcessResponse, getCurrentStepColor } from "../content.services";
+import Stepper from "@/components/Stepper";
 import { Dispatch, SetStateAction } from "react";
-import moment from "moment";
 
 type ProgressStepperProps = {
   content: Content;
@@ -11,6 +9,7 @@ type ProgressStepperProps = {
   setActiveStep: Dispatch<SetStateAction<number>>;
   steps: React.ReactNode[];
   contentProcess: GetContentProcessResponse;
+  overdueProcess?: any;
 };
 
 const ProgressStepper: React.FC<ProgressStepperProps> = ({
@@ -19,6 +18,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   setActiveStep,
   steps,
   contentProcess,
+  overdueProcess,
 }) => {
   return (
     <div className="flex flex-col gap-6 h-fit w-full">
@@ -75,6 +75,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               }
               horizontal={false}
               hasBg={false}
+              content={content}
+              overdueProcess={overdueProcess}
             />
           </div>
         </div>

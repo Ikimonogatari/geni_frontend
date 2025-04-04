@@ -1,4 +1,3 @@
-import { CurrentStepStatus } from "@/components/Stepper";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { AlignJustify, Loader2, X } from "lucide-react";
@@ -25,6 +24,7 @@ import Payment from "./partials/Payment";
 import ReturnSection from "./partials/ReturnSection";
 import ProgressStepper from "./partials/ProgressStepper";
 import {
+  useContentProcessOverdueMutation,
   useContentProcessRefundMutation,
   useDictListMutation,
   useGetContentProcessMutation,
@@ -35,54 +35,7 @@ import FeedbackModalContent from "./partials/FeedbackModalContent";
 import ContentReviewModalContent from "./partials/ContentReviewModalContent";
 import ContentReturnModalContent from "./partials/ContentReturnModalContent";
 import ContentUploadModalContent from "./partials/ContentUploadModalContent";
-
-export const getStepIndex = (status: string): number => {
-  const arr = [
-    ["RequestSent", "RequestApproved", "RequestRejected"],
-    ["DeliveryPaymentPending", "Delivery", "DeliverySuccess", "DeliveryRefund"],
-    ["ContentPending", "ContentSent", "ContentOverDue"],
-    ["GeniConfirming", "ContentSentToBrand", "ContentRejected"],
-    ["ContentApproved", "ContentFixRequest", "ContentReSent"],
-  ];
-
-  const index = arr.findIndex((item) => item.includes(status));
-  return index == -1 ? 0 : index;
-};
-
-export const getCurrentStepColor = (status: string): CurrentStepStatus => {
-  const arr = {
-    green: [
-      "Request",
-      "RequestApproved",
-      "DeliverySuccess",
-      "ProdApproved",
-      "ContentSent",
-      "ContentSentToBrand",
-      "ContentApproved",
-      "ContentReSent",
-    ],
-    yellow: [
-      "RequestSent",
-      // "RequestApproved",
-      "DeliveryPaymentPending",
-      "Delivery",
-      "DeliverySuccess",
-      "ContentPending",
-      "GeniConfirming",
-      "ContentFixRequest",
-    ],
-    red: [
-      "RequestRejected",
-      "DeliveryRefund",
-      "ContentOverDue",
-      "ContentRejected",
-    ],
-  };
-
-  return Object.keys(arr).find((key) =>
-    arr[key].includes(status)
-  ) as CurrentStepStatus;
-};
+import WarningBox from "./partials/WarningBox";
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -115,6 +68,13 @@ const ContentProgressModalContent: React.FC<
   ] = useGetContentProcessMutation();
   const [contentProcessRefund, { isLoading: isLoadingContentProcessRefund }] =
     useContentProcessRefundMutation();
+  const [
+    contentProcessOverdue,
+    {
+      isLoading: isLoadingContentProcessOverdue,
+      data: contentProcessOverdueData,
+    },
+  ] = useContentProcessOverdueMutation();
   // const isSuccess = true;
   // const isLoadingContentProcess = false;
   // const contentProcessData = [
@@ -122,7 +82,39 @@ const ContentProgressModalContent: React.FC<
   //     ContentId: "testid",
   //     ContentProccessId: 1,
   //     ContentStepId: 1,
-  //     StepName: "Контентийн хүсэлт",
+  //     StepName: "Контент хүлээгдэж байна",
+  //     ContentStepStatusCode: {
+  //       String: content.CurrentStepName.String,
+  //       Valid: true,
+  //     },
+  //     ContentStepStatusId: 1,
+  //     Desc: {
+  //       String: STATUS_LIST_VALUE[content.CurrentStepName.String],
+  //       Valid: true,
+  //     },
+  //     CreatedAt: "2025-03-20T12:13:28.276835Z",
+  //   },
+  //   {
+  //     ContentId: "testid",
+  //     ContentProccessId: 1,
+  //     ContentStepId: 1,
+  //     StepName: STATUS_LIST_VALUE.ContentOverDue,
+  //     ContentStepStatusCode: {
+  //       String: STATUS_LIST.ContentOverDue,
+  //       Valid: true,
+  //     },
+  //     ContentStepStatusId: 1,
+  //     Desc: {
+  //       String: STATUS_LIST_VALUE.ContentOverDue,
+  //       Valid: true,
+  //     },
+  //     CreatedAt: "2025-03-20T12:13:28.276835Z",
+  //   },
+  //   {
+  //     ContentId: "testi2",
+  //     ContentProccessId: 1,
+  //     ContentStepId: 1,
+  //     StepName: STATUS_LIST_VALUE[content.CurrentStepName.String],
   //     ContentStepStatusCode: {
   //       String: content.CurrentStepName.String,
   //       Valid: true,
@@ -135,6 +127,13 @@ const ContentProgressModalContent: React.FC<
   //     CreatedAt: "2025-03-20T12:13:28.276835Z",
   //   },
   // ];
+
+  // const contentProcessWhenOverdue = {
+  //   days: 10,
+  //   xp: 100,
+  //   banDate: "2025-03-20T12:13:28.276835Z",
+  //   banDays: 10,
+  // };
 
   const pick = (obj, keys) =>
     Object.fromEntries(
@@ -203,6 +202,7 @@ const ContentProgressModalContent: React.FC<
 
   useEffect(() => {
     if (!dialogOpen) {
+      setDialogType(DialogType.PROGRESS);
       setOpenReturnSection(false);
       formik.resetForm();
       resetDictList();
@@ -218,8 +218,23 @@ const ContentProgressModalContent: React.FC<
       if (content.Status === null || content.Status === "") {
         setDialogDisabled(false);
       }
+
+      if (
+        [STATUS_LIST.ContentOverDue, STATUS_LIST.ContentBanPayment].includes(
+          content?.CurrentStepName.String as STATUS_LIST
+        )
+      ) {
+        contentProcessOverdue(content?.ContentId);
+      }
     }
   }, [content]);
+
+  // useEffect(() => {
+  //   if (contentProcessData?.length > 0) {
+
+  //     contentProcessOverdue(content?.ContentId);
+  //   }
+  // }, [contentProcessData]);
 
   const steps = [
     <Image
@@ -275,23 +290,16 @@ const ContentProgressModalContent: React.FC<
     return now.diff(date, "days");
   };
 
-  const isOverdueWeek = (created_date: string | null): boolean => {
-    if (!created_date) return false;
-    return overdueDays(created_date) > 7;
-  };
-
-  const showSendContentButton = (
-    status: STATUS_LIST,
-    created_date: string
-  ): boolean => {
-    if (status === STATUS_LIST.ContentOverDue) {
-      return !isOverdueWeek(created_date);
-    }
+  const showSendContentButton = (status: STATUS_LIST): boolean => {
+    // if (status === STATUS_LIST.ContentOverDue) {
+    //   return !isOverdueWeek(created_date);
+    // }
 
     return [
       STATUS_LIST.ContentPending,
       STATUS_LIST.ContentRejected,
       STATUS_LIST.ContentFixRequest,
+      STATUS_LIST.ContentOverDue,
     ].includes(status);
   };
 
@@ -303,6 +311,19 @@ const ContentProgressModalContent: React.FC<
       STATUS_LIST.ContentFixRequest,
       STATUS_LIST.ContentReSent,
       STATUS_LIST.ContentApproved,
+    ].includes(status);
+  };
+
+  const showPaymentButton = (status: STATUS_LIST): boolean => {
+    console.log(
+      [STATUS_LIST.DeliveryPaymentPending, STATUS_LIST.ContentBanned].includes(
+        status
+      )
+    );
+    console.log("dialog type", dialogType);
+    return [
+      STATUS_LIST.DeliveryPaymentPending,
+      STATUS_LIST.ContentBanned,
     ].includes(status);
   };
 
@@ -407,7 +428,13 @@ const ContentProgressModalContent: React.FC<
           <ContentReviewModalContent p={content} />
         )}
 
-        {dialogType == DialogType.PAYMENT && <Payment content={content} />}
+        {dialogType == DialogType.PAYMENT && (
+          <Payment
+            content={content}
+            refetch={refetch}
+            setDialogOpen={setDialogOpen}
+          />
+        )}
 
         {status === STATUS_LIST.ContentFixRequest &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
@@ -458,20 +485,27 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {status == STATUS_LIST.ContentOverDue &&
-          ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
-            dialogType
-          ) && (
-            <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5 mt-2">
-              <h3 className="text-lg font-semibold">Сануулга !</h3>
-              <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
-                Та контент илгээх хугацаанаасаа{" "}
-                {overdueDays(contentProcessData.slice(-1)[0].CreatedAt)} хоног
-                хоцорсон байна. <br />
-                Таны дараагийн бүтээгдэхүүн хүсэх эрх{" "}
-                {overdueDays(contentProcessData.slice(-1)[0].CreatedAt)} хоног
-                хаагдах болно
-              </p>
-            </div>
+          DialogType.CONTENT_IN_PROGRESS && (
+            <WarningBox title="Сануулга !">
+              Та контент илгээх хугацаанаасаа {contentProcessOverdueData?.Days}{" "}
+              хоног хоцорсон байна. <br />
+              Таны дараагийн бүтээгдэхүүн хүсэх эрх{" "}
+              {contentProcessOverdueData?.Days} хоног хаагдах болно
+            </WarningBox>
+          )}
+        {status == STATUS_LIST.ContentBanPayment &&
+          DialogType.CONTENT_IN_PROGRESS && (
+            <WarningBox title="Сануулга !">
+              Та бүтээгдэхүүний төлбөрөө төлөөгүй{" "}
+              {contentProcessOverdueData?.BanDays}
+              хоног болсон тул дахин бүтээгдэхүүн хүсэх эрх{" "}
+              {contentProcessOverdueData?.BanDays} хоногоор хаагдаж байна.{" "}
+              <br />
+              Эрх нээгдэх хугацаа:{" "}
+              {moment(contentProcessOverdueData?.BanDate).format(
+                "YYYY.MM.DD - HH:mm"
+              )}
+            </WarningBox>
           )}
       </>
     );
@@ -480,20 +514,6 @@ const ContentProgressModalContent: React.FC<
   const creatorModalFooterActions = () => {
     return (
       <>
-        {status === STATUS_LIST.DeliveryPaymentPending &&
-          dialogType != DialogType.PAYMENT && (
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => setDialogType(DialogType.PAYMENT)}
-                className="w-full text-center text-xs sm:text-base bg-secondary px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
-
-                // className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg transition-all"
-              >
-                Төлбөр төлөх
-              </button>
-            </div>
-          )}
         {status === STATUS_LIST.RequestSent &&
           dialogType != DialogType.REQUEST && (
             <div className="pt-2">
@@ -547,40 +567,23 @@ const ContentProgressModalContent: React.FC<
               Дэлгэрэнгүй
             </button>
           )} */}
-        {
-          dialogType != DialogType.CONTENT_IN_PROGRESS &&
-            showSendContentButton(
-              status as STATUS_LIST,
-              getCreatedAtByStatus(
-                contentProcessData,
-                STATUS_LIST.ContentOverDue
-              )
-            ) && (
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-                  className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
-                >
-                  {status === STATUS_LIST.ContentRejected ||
-                  status === STATUS_LIST.ContentFixRequest
-                    ? "Дахин илгээх"
-                    : "Контент илгээх"}
-                </button>
-              </div>
-            )
-          // <ContentUploadModal
-          //   parsedUserInfo={parsedUserInfo}
-          //   contentId={content?.ContentId}
-          // />
-        }
-        {status === STATUS_LIST.ContentOverDue &&
-          isOverdueWeek(
-            getCreatedAtByStatus(contentProcessData, STATUS_LIST.ContentOverDue)
-          ) &&
-          ![DialogType.CONTENT_IN_PROGRESS, DialogType.PAYMENT].includes(
-            dialogType
-          ) && (
+        {dialogType != DialogType.CONTENT_IN_PROGRESS &&
+          showSendContentButton(status as STATUS_LIST) && (
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
+                className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
+              >
+                {status === STATUS_LIST.ContentRejected ||
+                status === STATUS_LIST.ContentFixRequest
+                  ? "Дахин илгээх"
+                  : "Контент илгээх"}
+              </button>
+            </div>
+          )}
+        {showPaymentButton(status as STATUS_LIST) &&
+          dialogType == DialogType.PROGRESS && (
             <div className="border-t pt-2">
               <button
                 type="button"
@@ -644,16 +647,12 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {/* Контент хоцорсон сануулга */}
-        {status == STATUS_LIST.ContentOverDue &&
-          isOverdueWeek(contentProcessData.slice(-1)[0].CreatedAt) && (
-            <div className="w-full flex flex-col gap-2 border-[2px] border-[#F49D19] rounded-xl p-5">
-              <h3 className="text-lg font-semibold">Сануулга !</h3>
-              <p className="text-sm bg-[#F5F4F0] rounded-lg p-4">
-                Контент бүтээгчид 7 хоногоос дээш хоцроосон тохиолдолд бид таны
-                Geni Credit-г нөхөн олгох боломжгүй болно.
-              </p>
-            </div>
-          )}
+        {status == STATUS_LIST.ContentOverDue && (
+          <WarningBox title="Сануулга !">
+            Контент бүтээгчид 7 хоногоос дээш хоцроосон тохиолдолд бид таны Geni
+            Credit-г нөхөн олгох боломжгүй болно.
+          </WarningBox>
+        )}
 
         {status == STATUS_LIST.ContentApproved && (
           <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
@@ -732,7 +731,7 @@ const ContentProgressModalContent: React.FC<
         </DialogTrigger>
         {/* @ts-ignore */}
         <DialogContent
-          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-w-[1000px] w-full sm:w-auto rounded-3xl"
+          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-w-[1000px] w-[95%] min-w-[320px] sm:w-[700px] lg:w-[1000px] rounded-3xl"
           hideCloseButton={true}
           aria-describedby={undefined}
         >
@@ -757,6 +756,7 @@ const ContentProgressModalContent: React.FC<
                         setActiveStep={setActiveStep}
                         steps={steps}
                         contentProcess={contentProcessData}
+                        overdueProcess={contentProcessOverdueData}
                       />
                     )}
                     {userType == "Creator" && creatorModalContents()}
