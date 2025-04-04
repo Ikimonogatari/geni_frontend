@@ -300,60 +300,78 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
           </div>
 
           <div className="overflow-x-auto pl-7 md:px-7 mt-4 sm:mt-16 w-full">
-            <div className="w-[350px] sm:w-full flex flex-row items-center justify-between">
-              <div className="flex flex-row items-center gap-3">
-                {brandProfileButtons.map((b, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setProfileState(b.value)}
-                    className={`${
-                      b.value === profileState
-                        ? "bg-[#4D55F5] text-white"
-                        : "border-[1px] border-[#CDCDCD] text-[#6F6F6F]"
-                    } whitespace-nowrap px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
-                  >
-                    {b.title}
-                  </button>
-                ))}
+            <div className="">
+              <div className="z-50 -mb-[1px] flex flex-row justify-between text-sm sm:text-base">
+                <div className="flex flex-row items-end">
+                  {brandProfileButtons.map((b, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setProfileState(b.value)}
+                      className={`cursor-pointer text-center rounded-t-2xl ${
+                        b.value === profileState
+                          ? "pb-3 bg-white border border-[#CDCDCD] border-b-0 font-medium"
+                          : "p-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
+                      }`}
+                    >
+                      <div
+                        className={`font-bold w-full text-center px-4 py-2 ${
+                          b.value === profileState
+                            ? ""
+                            : "border border-[#CDCDCD] rounded-lg"
+                        }`}
+                      >
+                        {b.title}
+                      </div>
+                      {b.value === profileState && (
+                        <div className="border-geni-blue border-b-[3px] w-14 mx-auto"></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end py-2">
+                  {getUserInfoData?.IsSubscribed === true ||
+                  getUserInfoData?.Credit > 0 ? (
+                    <Link
+                      href={"/add-product"}
+                      className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold`}
+                    >
+                      Шинэ бүтээгдэхүүн нэмэх
+                      <Image
+                        src={"/add-icon.png"}
+                        width={14}
+                        height={14}
+                        alt="arrow"
+                      />
+                    </Link>
+                  ) : (
+                    <CreditPurchase
+                      buttonIconSize={""}
+                      className={
+                        "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                      }
+                      buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
+                      userInfo={getUserInfoData}
+                    />
+                  )}
+                </div>
               </div>
-              {getUserInfoData?.IsSubscribed === true ||
-              getUserInfoData?.Credit > 0 ? (
-                <Link
-                  href={"/add-product"}
-                  className={`hidden md:flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-                >
-                  Шинэ бүтээгдэхүүн нэмэх
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              ) : (
-                <CreditPurchase
-                  buttonIconSize={""}
-                  className={
-                    "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
-                  }
-                  buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
-                  userInfo={getUserInfoData}
-                />
-              )}
+
+              <div className={`border-t border-[#CDCDCD] py-3`}>
+                {currentContents && !isLoading ? (
+                  renderBrandProfile()
+                ) : (
+                  <div className="space-y-6 mt-2">
+                    {[...Array(8)].map((_, index) => (
+                      <Skeleton
+                        key={index}
+                        className="h-[59px] sm:h-[84px] w-full rounded-3xl"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          {currentContents && !isLoading ? (
-            renderBrandProfile()
-          ) : (
-            <div className="space-y-6 mt-10 px-3 sm:px-7">
-              {[...Array(8)].map((_, index) => (
-                <Skeleton
-                  key={index}
-                  className="h-[59px] sm:h-[84px] w-full rounded-3xl"
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         {listBrandContentsData && totalPages > 1 ? (
@@ -395,7 +413,7 @@ const brandProfileButtons = [
     value: "content-progress",
   },
   {
-    title: "Контент",
+    title: "Миний контент",
     value: "content-gallery",
   },
   {

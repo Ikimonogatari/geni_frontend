@@ -56,7 +56,7 @@ function BrandContentGallery({ contentsGallery }) {
           image="/no-content-image.png"
         />
       ) : (
-        <div className="mt-7 px-3 pt-6 border-t-[1px] border-[#CDCDCD] relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
+        <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
           {contentsGallery ? (
             contentsGallery?.map((content, id) => {
               const avgScore = renderAvgStar(

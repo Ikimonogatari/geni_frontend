@@ -137,7 +137,7 @@ function ContentProgress({ currentContents }) {
           imageClassName="w-[212px] h-[154px]"
         />
       ) : (
-        <div className="min-w-[900px] sm:min-w-[1200px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+        <div className="min-w-[900px] sm:min-w-[1200px] flex flex-col gap-3">
           <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[3fr,3fr,4fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
             <div className="col-span-1 flex flex-row items-center justify-between">
               <span className="">Бүтээгдэхүүн</span>

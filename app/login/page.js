@@ -182,7 +182,7 @@ function Page() {
                 className="w-full h-full lg:min-h-[378px]"
               />
             </div>
-            <div className="flex flex-col w-full max-w-3xl xl:max-w-sm">
+            <div className="flex flex-col w-full max-w-3xl xl:max-w-md">
               <span className="text-xl sm:text-3xl font-bold mb-2">
                 Нэвтрэх
               </span>
@@ -197,10 +197,10 @@ function Page() {
                   }`}
                 >
                   <div
-                    className={`w-full text-center px-4 py-2 rounded-full ${
+                    className={`font-bold w-full text-center px-4 py-2 rounded-full ${
                       userType === "Student"
                         ? "bg-[#4FB755] border border-[#4FB755] text-white"
-                        : "text-[#6F6F6F] border border-black"
+                        : "border border-black"
                     }`}
                   >
                     Student
@@ -215,10 +215,10 @@ function Page() {
                   }`}
                 >
                   <div
-                    className={`w-full text-center px-4 py-2 rounded-full ${
+                    className={`font-bold w-full text-center px-4 py-2 rounded-full ${
                       userType === "Creator"
                         ? "bg-[#CA7FFE] border border-[#CA7FFE] text-white"
-                        : "text-[#6F6F6F] border border-black"
+                        : "border border-black"
                     }`}
                   >
                     Creator
@@ -233,10 +233,10 @@ function Page() {
                   }`}
                 >
                   <div
-                    className={`w-full text-center px-4 py-2 rounded-full ${
+                    className={`font-bold w-full text-center px-4 py-2 rounded-full ${
                       userType === "Brand"
                         ? "bg-[#4D55F5] border border-[#4D55F5] text-white"
-                        : "text-[#6F6F6F] border border-black"
+                        : "border border-black"
                     }`}
                   >
                     Brand
@@ -254,7 +254,7 @@ function Page() {
                 } p-4`}
               >
                 <div className="flex flex-col gap-4">
-                  <span className="text-base sm:text-lg">Имэйл хаяг</span>
+                  <span className="">Имэйл хаяг</span>
                   <div className="flex flex-row items-center justify-between bg-[#F5F4F0] rounded-lg h-14 p-4">
                     <input
                       id="email"
@@ -272,7 +272,7 @@ function Page() {
                       {login.errors.email}
                     </div>
                   ) : null}
-                  <span className="text-base sm:text-lg">Нууц үг</span>
+                  <span className="">Нууц үг</span>
                   <div className="flex flex-row items-center justify-between bg-[#F5F4F0] rounded-lg h-14 p-4">
                     <input
                       name="password"
