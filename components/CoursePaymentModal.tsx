@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   useCheckPaymentQuery,
+  //@ts-ignore
   usePurchaseCourseMutation,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
