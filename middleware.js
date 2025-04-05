@@ -14,7 +14,10 @@ export function middleware(req) {
     "/images",
     "/favicon.ico",
     "/geni-logo.svg",
+    "/geni-logo.png",
     "/v0.2-image.png",
+    "/ig-icon.png",
+    "/mail-icon.png",
   ];
 
   // Check if we're in maintenance mode and the current path is not allowed
