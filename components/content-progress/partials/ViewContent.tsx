@@ -51,7 +51,7 @@ const ViewContent: React.FC<ViewContentProps> = ({
             </caption>
           </div>
           <div className="flex flex-col justify-between gap-2">
-            {content?.CurrentStepName.String != STATUS_LIST.ContentReSent && (
+            {content?.CurrentStepName?.String != STATUS_LIST.ContentReSent && (
               <button
                 type="button"
                 className="bg-[#F49D19] text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"

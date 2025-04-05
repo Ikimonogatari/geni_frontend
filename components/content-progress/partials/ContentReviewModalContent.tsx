@@ -1,7 +1,17 @@
 import React from "react";
 import Image from "next/image";
+import { Content } from "../content.services";
+import { GetFinalContentXpResponse } from "../content.services";
 
-function ContentReviewModalContent({ p }) {
+type ContentReviewModalContentProps = {
+  p: Content;
+  finalContentXpData: GetFinalContentXpResponse;
+};
+
+const ContentReviewModalContent: React.FC<ContentReviewModalContentProps> = ({
+  p,
+  finalContentXpData,
+}) => {
   function renderStars(score) {
     return [1, 2, 3, 4, 5].map((star, index) => (
       <span key={index}>
@@ -88,10 +98,10 @@ function ContentReviewModalContent({ p }) {
 
       <span className="text-[#6F6F6F]">Таны цуглуулсан оноо</span>
       <div className="w-full py-4 text-white font-semibold bg-geni-green text-xl text-center rounded-2xl">
-        30 XP
+        {finalContentXpData?.Xp} XP
       </div>
     </>
   );
-}
+};
 
 export default ContentReviewModalContent;

@@ -201,6 +201,25 @@ export type ContentResendParams = {
   BrandReviewId: number[];
 };
 
+export type GetFinalContentXpResponse = {
+  FeedBack: {
+    FeedbackId: string;
+    ContentId: string;
+    Feedback: string;
+    IsResolved: boolean;
+    CreatedBy: number;
+    CreatedAt: string;
+    ModifiedBy: number;
+    ModifiedAt: string;
+  }[];
+  StarPoint: {
+    BrandInstructionPnt: number;
+    CreationPnt: number;
+    ContextPnt: number;
+  };
+  Xp: number;
+};
+
 export const getStepIndex = (status: string): number => {
   const arr = [
     ["RequestSent", "RequestApproved", "RequestRejected"],

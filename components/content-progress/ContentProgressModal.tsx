@@ -33,8 +33,10 @@ import {
   useContentProcessOverdueMutation,
   useContentProcessRefundMutation,
   useDictListMutation,
+  useGetBrandReviewBrandMutation,
   useGetBrandReviewMutation,
   useGetContentProcessMutation,
+  useGetFinalContentXpMutation,
   useReceivedProductMutation,
 } from "@/app/services/service";
 import moment from "moment";
@@ -201,7 +203,10 @@ const ContentProgressModalContent: React.FC<
             StatusId: 7,
           };
           console.log(data);
-          contentProcessRefund(data);
+          contentProcessRefund(data).then(() => {
+            setDialogOpen(false);
+            refetch();
+          });
         }
         // await creatorApply({
         //   ...values,
@@ -230,6 +235,16 @@ const ContentProgressModalContent: React.FC<
       isSuccess: isReceivedProductSuccess,
     },
   ] = useReceivedProductMutation();
+
+  const [
+    getBrandReviewBrand,
+    { isLoading: isLoadingGetBrandReviewBrand, data: brandReviewBrandData },
+  ] = useGetBrandReviewBrandMutation();
+
+  const [
+    getFinalContentXp,
+    { isLoading: isLoadingGetFinalContentXp, data: finalContentXpData },
+  ] = useGetFinalContentXpMutation();
 
   useEffect(() => {
     if (!dialogOpen) {
@@ -382,11 +397,29 @@ const ContentProgressModalContent: React.FC<
 
     // setContentProcessData(content["Process"] as any);
     // setStatus("DeliverySuccess" as STATUS_LIST);
-    setStatus(content.CurrentStepName.String as STATUS_LIST);
+    setStatus(content.CurrentStepName?.String as STATUS_LIST);
 
     if (content?.CurrentStepName?.String == STATUS_LIST.ContentFixRequest) {
       getBrandReview(content?.ContentId);
     }
+
+    if (
+      content?.CurrentStepName?.String == STATUS_LIST.ContentReSent &&
+      userType == "Brand"
+    ) {
+      getBrandReviewBrand(content?.ContentId);
+    }
+
+    if (
+      content?.CurrentStepName?.String == STATUS_LIST.ContentApproved &&
+      userType == "Creator"
+    ) {
+      getFinalContentXp(content?.ContentId);
+    }
+
+    // if (content?.CurrentStepName?.String == STATUS_LIST.Content) {
+    //   getBrandReviewBrand(content?.ContentId);
+    // }
   };
 
   const handleClose = (currentDialogType: DialogType) => {
@@ -452,6 +485,12 @@ const ContentProgressModalContent: React.FC<
         ) : (
           <></>
         )}
+        {status == STATUS_LIST.DeliverySuccess &&
+          DialogType.CONTENT_IN_PROGRESS && (
+            <InfoBox title="Сануулга !">
+              Та бүтээгдэхүүнээ 24 цагийн хугацаанд буцаах боломжтой.
+            </InfoBox>
+          )}
         {status === STATUS_LIST.ContentRejected &&
           dialogType != DialogType.CONTENT_IN_PROGRESS && (
             <FeedbackModalContent
@@ -475,7 +514,10 @@ const ContentProgressModalContent: React.FC<
         ) : null}
 
         {status === STATUS_LIST.ContentApproved && (
-          <ContentReviewModalContent p={content} />
+          <ContentReviewModalContent
+            p={content}
+            finalContentXpData={finalContentXpData}
+          />
         )}
 
         {dialogType == DialogType.PAYMENT && (
@@ -561,9 +603,50 @@ const ContentProgressModalContent: React.FC<
 
         {dialogType == DialogType.ACCEPT_REQUEST && <AcceptRequest />}
 
-        {content?.CurrentStepName?.String == STATUS_LIST.ContentApproved && (
-          <InfoBox title="Таны илгээсэн засварууд">test</InfoBox>
-        )}
+        {content?.CurrentStepName?.String == STATUS_LIST.ContentReSent &&
+          dialogType == DialogType.PROGRESS && (
+            <InfoBox
+              title="Таны илгээсэн засварууд"
+              type="gray"
+              className="mb-4 !p-3"
+              titleClassName="ml-3 mt-3"
+            >
+              <div className="flex flex-col gap-2">
+                {(brandReviewBrandData as FeedBackResponse)?.map(
+                  (item, index) => (
+                    <label
+                      key={index}
+                      className="flex items-center justify-between p-3 border rounded-xl"
+                    >
+                      <span>{item.FixReason}</span>
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          name="BrandFeedBack"
+                          id={`BrandFeedBack-${item.BrandReviewId}`}
+                          className="peer hidden"
+                          checked={item.CreatorChecked}
+                          disabled={true}
+                        />
+                        <label
+                          htmlFor={`BrandFeedBack-${item.BrandReviewId}`}
+                          className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center transition-all peer-checked:border-green-500"
+                        >
+                          <span
+                            className={`text-sm sm:text-base ${
+                              item.CreatorChecked ? "text-green-500" : "hidden"
+                            } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                          >
+                            ✓
+                          </span>
+                        </label>
+                      </div>
+                    </label>
+                  )
+                )}
+              </div>
+            </InfoBox>
+          )}
       </>
     );
   };
@@ -601,7 +684,7 @@ const ContentProgressModalContent: React.FC<
   const creatorModalFooterActions = () => {
     return (
       <>
-        {status === STATUS_LIST.RequestSent &&
+        {/* {status === STATUS_LIST.RequestSent &&
           dialogType != DialogType.REQUEST && (
             <div className="pt-2">
               <button
@@ -612,7 +695,7 @@ const ContentProgressModalContent: React.FC<
                 Хүсэлт буцаах
               </button>
             </div>
-          )}
+          )} */}
         {status === STATUS_LIST.DeliverySuccess && (
           <div className="flex flex-col gap-2 border-t pt-2">
             <button
@@ -800,6 +883,8 @@ const ContentProgressModalContent: React.FC<
     isLoadingContentFeedback ||
     isLoadingContentProcessOverdue ||
     isLoadingGetBrandReview ||
+    isLoadingGetBrandReviewBrand ||
+    isLoadingGetFinalContentXp ||
     !content;
 
   return (

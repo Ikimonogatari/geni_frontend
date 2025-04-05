@@ -35,7 +35,7 @@ const Payment = ({ content, refetch, setDialogOpen }: PaymentProps) => {
 
   useEffect(() => {
     if (content) {
-      if (content.CurrentStepName.String == STATUS_LIST.ContentBanned) {
+      if (content.CurrentStepName?.String == STATUS_LIST.ContentBanned) {
         contentProcessOverduePayment(content.ContentId);
       } else {
         qpayDeliveryPayment(content.ContentId);

@@ -83,7 +83,7 @@ function ContentProgress({ currentContents, refetchCreatorContents = null }) {
             <StatusIndicator
               status={
                 p.Status === null || p.Status === ""
-                  ? p.CurrentStepName.String
+                  ? p.CurrentStepName?.String
                   : p.Status
               }
             />
