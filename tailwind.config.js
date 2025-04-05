@@ -16,6 +16,30 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+    // extend: {
+    // 	colors: {
+    // primary: '#2D262D',
+    // 'geni-gray': '#CDCDCD',
+    // secondary: '#CA7FFE',
+    // 'primary-bg': '#F5F4F0',
+    // 'geni-red': '#DD2B1F',
+    // sidebar: {
+    //   DEFAULT: 'hsl(var(--sidebar-background))',
+    //   foreground: 'hsl(var(--sidebar-foreground))',
+    //   primary: 'hsl(var(--sidebar-primary))',
+    //   'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+    //   accent: 'hsl(var(--sidebar-accent))',
+    //   'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+    //   border: 'hsl(var(--sidebar-border))',
+    //   ring: 'hsl(var(--sidebar-ring))',
+    // 		}
+    // 	},
+    // 	fontFamily: {
+    // 		sans: [
+    // 			'var(--font-mabry-pro)'
+    // 		]
+    // 	}
+    // }
     extend: {
       colors: {
         "geni-blue": "#4D55F5",
@@ -105,8 +129,6 @@ module.exports = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

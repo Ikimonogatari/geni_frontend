@@ -246,10 +246,12 @@ function Page() {
 
     if (!isNaN(creditUsage) && !isNaN(price)) {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", price * creditUsage);
+      formik.setFieldValue("totalPrice", (price * creditUsage).toString());
+      formik.setFieldTouched("totalPrice", true);
     } else {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", 0);
+      formik.setFieldValue("totalPrice", "0");
+      formik.setFieldTouched("totalPrice", true);
     }
   };
 
@@ -259,19 +261,21 @@ function Page() {
 
     if (!isNaN(creditUsage) && !isNaN(price)) {
       formik.setFieldValue("creditUsage", creditUsage);
-      formik.setFieldValue("totalPrice", price * creditUsage);
+      formik.setFieldValue("totalPrice", (price * creditUsage).toString());
+      formik.setFieldTouched("totalPrice", true);
     } else {
       formik.setFieldValue("creditUsage", creditUsage);
-      formik.setFieldValue("totalPrice", 0);
+      formik.setFieldValue("totalPrice", "0");
+      formik.setFieldTouched("totalPrice", true);
     }
   };
 
-  const isFormDisabled = false;
-  // !formik.dirty ||
-  // !formik.isValid ||
-  // formik.isSubmitting ||
-  // !formik.values.productTypes ||
-  // !formik.values.productPics;
+  const isFormDisabled =
+    !formik.dirty ||
+    !formik.isValid ||
+    formik.isSubmitting ||
+    !formik.values.productTypes.length ||
+    !formik.values.productPics.length;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -288,6 +292,12 @@ function Page() {
                   ...formik.values.productPics,
                   ...ids,
                 ]);
+              }}
+              onRemove={(fileId) => {
+                const updatedPics = formik.values.productPics.filter(
+                  (id) => id !== fileId
+                );
+                formik.setFieldValue("productPics", updatedPics);
               }}
             />
             <div className="flex flex-col gap-4 w-full lg::max-w-lg">
@@ -389,7 +399,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.information}
                 rows={5}
-                maxLength={600}
+                maxLength={1000}
                 charCount={formik.values.information.length}
                 errorText={formik.errors.information}
                 errorVisible={
@@ -486,7 +496,7 @@ function Page() {
                 onBlur={formik.handleBlur}
                 value={formik.values.requestForCreators}
                 rows={5}
-                maxLength={600}
+                maxLength={1000}
                 charCount={formik.values.requestForCreators.length}
                 errorText={formik.errors.requestForCreators}
                 errorVisible={

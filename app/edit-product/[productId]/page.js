@@ -115,28 +115,37 @@ function Page() {
         ) || [];
 
       // Set formik values
-      formik.setValues({
-        productName: getPublicProductByIdData?.ProductName || "",
-        information: getPublicProductByIdData?.Information || "",
-        requestForCreators: getPublicProductByIdData?.RequestForCreators || "",
-        amount: getPublicProductByIdData?.Amount || "",
-        addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
-        totalPrice:
-          getPublicProductByIdData?.Quantity *
-            getPublicProductByIdData?.Price || "",
-        creditUsage: getPublicProductByIdData?.Quantity || "",
-        price: getPublicProductByIdData?.Price || "",
-        contentInfo: [
-          ...initialContentTypes.map((type) => ({ Type: "Type", Name: type })),
-          ...initialContentOutcomes.map((outcome) => ({
-            Type: "Result",
-            Name: outcome,
-          })),
-        ],
-        productTypes: initialProductTypes.map((type) => type.ProductTypeId), // Transform to ProductTypeId array
-        productPics:
-          getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) || [],
-      });
+      formik.setValues(
+        {
+          productName: getPublicProductByIdData?.ProductName || "",
+          information: getPublicProductByIdData?.Information || "",
+          requestForCreators:
+            getPublicProductByIdData?.RequestForCreators || "",
+          amount: getPublicProductByIdData?.Amount || "",
+          addInfoSource: getPublicProductByIdData?.AddInfoSource || "",
+          totalPrice: getPublicProductByIdData?.TotalPrice || "",
+          creditUsage: getPublicProductByIdData
+            ? getPublicProductByIdData?.Quantity /
+              getPublicProductByIdData?.ContentLimit
+            : "",
+          price: getPublicProductByIdData?.Price || "",
+          contentInfo: [
+            ...initialContentTypes.map((type) => ({
+              Type: "Type",
+              Name: type,
+            })),
+            ...initialContentOutcomes.map((outcome) => ({
+              Type: "Result",
+              Name: outcome,
+            })),
+          ],
+          productTypes: initialProductTypes.map((type) => type.ProductTypeId),
+          productPics:
+            getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) ||
+            [],
+        },
+        true
+      );
 
       // Set productTypes state
       setProductTypes(initialProductTypes);
@@ -291,10 +300,12 @@ function Page() {
 
     if (!isNaN(quantity) && !isNaN(price)) {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", price * quantity);
+      formik.setFieldValue("totalPrice", (price * quantity).toString());
+      formik.setFieldTouched("totalPrice", true);
     } else {
       formik.setFieldValue("price", e.target.value);
-      formik.setFieldValue("totalPrice", 0);
+      formik.setFieldValue("totalPrice", "0");
+      formik.setFieldTouched("totalPrice", true);
     }
   };
 
@@ -303,20 +314,21 @@ function Page() {
     const price = parseFloat(formik.values.price);
 
     if (!isNaN(quantity) && !isNaN(price)) {
-      formik.setFieldValue("creditUsage", quantity); // Set as number
-      formik.setFieldValue("totalPrice", price * quantity);
+      formik.setFieldValue("creditUsage", quantity);
+      formik.setFieldValue("totalPrice", (price * quantity).toString());
+      formik.setFieldTouched("totalPrice", true);
     } else {
-      formik.setFieldValue("creditUsage", quantity); // Set as number
-      formik.setFieldValue("totalPrice", 0);
+      formik.setFieldValue("creditUsage", quantity);
+      formik.setFieldValue("totalPrice", "0");
+      formik.setFieldTouched("totalPrice", true);
     }
   };
 
-  const isFormDisabled = false;
-  // !formik.dirty ||
-  // !formik.isValid ||
-  // formik.isSubmitting ||
-  // !formik.values.productTypes ||
-  // !formik.values.productPics;
+  const isFormDisabled =
+    !formik.isValid ||
+    formik.isSubmitting ||
+    !formik.values.productTypes.length ||
+    !formik.values.productPics.length;
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -332,14 +344,29 @@ function Page() {
           >
             <MediaUploader
               onDrop={({ ids }) => {
+                // Add new image IDs to the existing ones
                 formik.setFieldValue("productPics", [
                   ...formik.values.productPics,
                   ...ids,
                 ]);
+                formik.setFieldTouched("productPics", true);
+              }}
+              onRemove={(fileId) => {
+                // Remove the fileId from formik state
+                const updatedPics = formik.values.productPics.filter(
+                  (id) => id !== fileId
+                );
+                formik.setFieldValue("productPics", updatedPics);
+                formik.setFieldTouched("productPics", true);
               }}
               initialImageUrls={
                 getPublicProductByIdData?.ProductPics?.map((pic) => pic.Url) ||
                 []
+              }
+              initialFileIds={
+                getPublicProductByIdData?.ProductPics?.map(
+                  (pic) => pic.FileId
+                ) || []
               }
             />
 

@@ -5,47 +5,39 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useBrandGuideCheckMutation } from "@/app/services/service";
+import { useGuideCheckMutation } from "@/app/services/service";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import clsx from "clsx";
 
-function GuideModal({ hasSeenGuide }) {
+interface GuideModalProps {
+  hasSeenGuide: boolean;
+  slides: {
+    image: string;
+    text: string;
+    title?: string;
+  }[];
+  theme?: "student" | "brand";
+}
+
+function GuideModal({
+  hasSeenGuide,
+  slides,
+  theme = "brand",
+}: GuideModalProps) {
   const [swiper, setSwiper] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDialogOpen, setDialogOpen] = useState(!hasSeenGuide);
   const [isChecked, setIsChecked] = useState(hasSeenGuide);
 
-  const slides = [
-    {
-      image: "/brand-guide-image1.png",
-      text: "Та “Контент статус” хэсгээс Geni Бүтээгчидтэй хамтран ажиллаж буй бүх процессыг хянах боломжтой. Энэхүү процесс нь 5 үе шаттай бөгөөд дээрх зураг шиг бүтээгдэхүүн хүргэж байгаа үеээс эхлэн та контентоо хүлээж авах үйлдэл хүртэлх процесс хамаарагдана.",
-    },
-    {
-      image: "/brand-guide-image2.png",
-      text: "Та “Контент авах” товчин дээр дарсанаар таньд Reel видео контент, Thumbnail зураг болон Geni Бүтээгчийн сэтгэгдэл бүхий тайлбар харагдах юм. Та контентоо хүлээж авахдаа заавал контент бүтээгчийг 3 төрлөөр дүгнэж үнэлгээ өгөх бөгөөд нэмэлтээр та сэтгэгдэлээ илгээх боложмтой.",
-    },
-    {
-      image: "/brand-guide-image3.png",
-      text: "Таны “Контент” хэсэгт Geni Бүтээгчидээс хүлээн авсан бүх контентууд харагдах бөгөөд эндээс та хүссэн үедээ хэрэгтэй контентоо үзэн татаж авах боломжтой.",
-    },
-    {
-      image: "/brand-guide-image4.png",
-      text: "Та “Бүтээгдэхүүн” хэсгээс өөрийн оруулсан бүтээгдэхүүний тоо ширхэгээ хянах юм. Мөн дууссан бүтээгдэхүүний тоо ширхэгээ нэмэх болон бүтээгдэхүүнийхээ мэдээллийг өөрчлөх гэх мэд үйлдэлүүдийг хийх боломжтой.",
-    },
-    {
-      image: "/brand-guide-image5.png",
-      text: "Та “Geni Credit”-н тоогоор контент авах эрхтэй болох бөгөөд та хүссэн үедээ өөрийн хүссэн багцаараа цэнэглэх боломжтой.",
-    },
-  ];
-
   const [
-    brandGuideCheck,
+    guideCheck,
     {
-      data: brandGuideCheckData,
-      error: brandGuideCheckError,
-      isLoading: brandGuideCheckDataLoading,
-      isSuccess: brandGuideCheckDataSuccess,
+      data: guideCheckData,
+      error: guideCheckError,
+      isLoading: guideCheckDataLoading,
+      isSuccess: guideCheckDataSuccess,
     },
-  ] = useBrandGuideCheckMutation();
+  ] = useGuideCheckMutation();
 
   const handleFinish = () => {
     setDialogOpen(false);
@@ -56,9 +48,28 @@ function GuideModal({ hasSeenGuide }) {
     setIsChecked(isChecked);
 
     if (isChecked) {
-      brandGuideCheck(null);
+      guideCheck(null);
     }
   };
+  console.log(theme);
+  const themeClasses = {
+    student: {
+      button: "bg-geni-green",
+      border: "border-geni-green",
+      text: "text-geni-green",
+      paginationColor: "#4FB755",
+    },
+    brand: {
+      button: "bg-geni-blue",
+      border: "border-geni-blue",
+      text: "text-geni-blue",
+      paginationColor: "#4D55F5",
+    },
+  };
+  console.log(themeClasses[theme]);
+
+  const currentTheme =
+    theme && themeClasses[theme] ? themeClasses[theme] : themeClasses.brand;
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -73,7 +84,7 @@ function GuideModal({ hasSeenGuide }) {
           pagination={{ clickable: true, el: ".swiper-pagination" }}
           style={{
             // @ts-ignore
-            "--swiper-pagination-color": "#4D55F5",
+            "--swiper-pagination-color": currentTheme.paginationColor,
             "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
             "--swiper-pagination-bullet-inactive-opacity": "1",
             "--swiper-pagination-bullet-size": "10px",
@@ -81,7 +92,10 @@ function GuideModal({ hasSeenGuide }) {
           }}
         >
           {slides.map((slide, index) => (
-            <SwiperSlide key={index} className="flex flex-col items-center">
+            <SwiperSlide
+              key={index}
+              className="flex flex-col items-center pb-5"
+            >
               <Image
                 src={slide.image}
                 width={800}
@@ -89,14 +103,19 @@ function GuideModal({ hasSeenGuide }) {
                 alt={`Slide ${index + 1}`}
                 className="rounded-lg object-cover"
               />
-              <p className="text-sm sm:text-base lg:text-lg text-gray-700 mt-4">
-                {slide.text}
-              </p>
+              <div className="flex flex-col gap-2 mt-4">
+                {slide.title && (
+                  <h3 className={`text-xl sm:text-2xl font-bold`}>
+                    {slide.title}
+                  </h3>
+                )}
+                <p className="text-sm sm:text-base lg:text-lg">{slide.text}</p>
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
         <div className="relative flex justify-between items-center w-full">
-          {currentIndex > 0 && currentIndex < 4 ? (
+          {currentIndex > 0 && currentIndex < slides.length - 1 ? (
             <button
               className="z-50 flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-1 sm:gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold"
               onClick={() => swiper.slidePrev()}
@@ -110,8 +129,8 @@ function GuideModal({ hasSeenGuide }) {
               />
               Өмнөх
             </button>
-          ) : currentIndex == 4 ? (
-            <div className="z-50 flex flex-row items-center gap-2 sm:gap-3">
+          ) : currentIndex === slides.length - 1 ? (
+            <div className="z-50 flex items-center gap-2 sm:gap-3">
               <div className="relative">
                 <input
                   type="checkbox"
@@ -122,11 +141,16 @@ function GuideModal({ hasSeenGuide }) {
                 />
                 <label
                   htmlFor="checkbox"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-[#4D55F5] peer-checked:border-[#4D55F5]"
+                  className={clsx(
+                    "w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all",
+                    isChecked && `${currentTheme.button} ${currentTheme.border}`
+                  )}
                 >
-                  <span className="text-sm sm:text-base text-white text-center select-none peer-checked:inline-block w-3 h-5 border-white">
-                    ✓
-                  </span>
+                  {isChecked && (
+                    <span className="text-sm sm:text-base text-white select-none w-3 h-5 border-white">
+                      ✓
+                    </span>
+                  )}
                 </label>
               </div>
               <span className="text-xs sm:text-lg font-semibold">
@@ -139,7 +163,7 @@ function GuideModal({ hasSeenGuide }) {
           <div className="swiper-pagination absolute z-0"></div>
           {currentIndex !== slides.length - 1 ? (
             <button
-              className={`z-50 flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-1 sm:gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+              className={`z-50 flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-1 sm:gap-2 ${currentTheme.button} border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
               onClick={() => swiper.slideNext()}
             >
               Дараах
@@ -153,7 +177,7 @@ function GuideModal({ hasSeenGuide }) {
             </button>
           ) : (
             <button
-              className="z-50 flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-1 sm:gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+              className={`z-50 flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-1 sm:gap-2 ${currentTheme.button} border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
               onClick={handleFinish}
             >
               Дуусгах

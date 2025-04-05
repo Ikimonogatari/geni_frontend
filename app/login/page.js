@@ -12,13 +12,12 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import LoginButton from "./LoginButton";
-import OtpTimeLeft from "@/components/OtpTimeLeft";
+import ForgetPasswordModal from "./ForgetPasswordModal";
 
 function Page() {
   const router = useRouter();
-  const [userType, setUserType] = useState("Creator");
+  const [userType, setUserType] = useState("Student");
   const [forgotPasswordState, setForgotPasswordState] = useState("1");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -60,7 +59,7 @@ function Page() {
     validationSchema: Yup.object({
       forgotEmail: Yup.string()
         .email("Зөв имэйл хаяг оруулна уу")
-        .required("Required"),
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: (value) => {
       sendOtpToEmail({
@@ -78,7 +77,7 @@ function Page() {
     validationSchema: Yup.object({
       otp: Yup.string()
         .matches(/^\d{4}$/, "Зөв код оруулна уу")
-        .required("Required"),
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: () => {
       setForgotPasswordState("3");
@@ -90,10 +89,10 @@ function Page() {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      newPassword: Yup.string().required("Required"),
+      newPassword: Yup.string().required("Заавал бөглөнө үү"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("newPassword"), null], "Нууц үг таарч байх ёстой")
-        .required("Required"),
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {
       forgotPassword({
@@ -113,8 +112,10 @@ function Page() {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().required("Required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Заавал бөглөнө үү"),
+      password: Yup.string().required("Заавал бөглөнө үү"),
     }),
 
     onSubmit: (values) => {
@@ -181,334 +182,173 @@ function Page() {
                 className="w-full h-full lg:min-h-[378px]"
               />
             </div>
-            <div className="flex flex-col gap-4 w-full max-w-3xl xl:max-w-md">
-              <span className="text-lg sm:text-xl font-bold">Нэвтрэх</span>
-              <div className="flex flex-row items-center gap-4 sm:gap-6 text-sm sm:text-base">
+            <div className="flex flex-col w-full max-w-3xl xl:max-w-md">
+              <span className="text-xl sm:text-3xl font-bold mb-2">
+                Нэвтрэх
+              </span>
+
+              <div className="z-50 -mb-[1px] flex flex-row text-sm sm:text-base w-full">
+                <div
+                  onClick={() => handleUserType("Student")}
+                  className={`w-full p-2 cursor-pointer text-center rounded-t-[30px] ${
+                    userType === "Student"
+                      ? "bg-white border border-[#CDCDCD] border-b-0 text-[#4FB755] font-medium"
+                      : " border border-x-[1px] border-transparent"
+                  }`}
+                >
+                  <div
+                    className={`font-bold w-full text-center px-4 py-2 rounded-full ${
+                      userType === "Student"
+                        ? "bg-[#4FB755] border border-[#4FB755] text-white"
+                        : "border border-black"
+                    }`}
+                  >
+                    Student
+                  </div>
+                </div>
                 <div
                   onClick={() => handleUserType("Creator")}
-                  className={`transition-all duration-150 ${
+                  className={`w-full p-2 cursor-pointer text-center rounded-t-[30px] ${
                     userType === "Creator"
-                      ? "border-[#CA7FFE]"
-                      : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-4 rounded-lg border-[2px] w-full text-center`}
+                      ? "bg-white border border-[#CDCDCD] border-b-0 text-[#CA7FFE] font-medium"
+                      : "border border-x-[1px] border-transparent"
+                  }`}
                 >
-                  Creator
+                  <div
+                    className={`font-bold w-full text-center px-4 py-2 rounded-full ${
+                      userType === "Creator"
+                        ? "bg-[#CA7FFE] border border-[#CA7FFE] text-white"
+                        : "border border-black"
+                    }`}
+                  >
+                    Creator
+                  </div>
                 </div>
                 <div
                   onClick={() => handleUserType("Brand")}
-                  className={`transition-all duration-150 ${
+                  className={`w-full p-2 cursor-pointer text-center rounded-t-[30px] ${
                     userType === "Brand"
-                      ? "border-[#4D55F5]"
-                      : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
+                      ? "bg-white border border-[#CDCDCD] border-b-0 text-[#4D55F5] font-medium"
+                      : "border border-x-[1px] border-transparent"
+                  }`}
                 >
-                  Brand
+                  <div
+                    className={`font-bold w-full text-center px-4 py-2 rounded-full ${
+                      userType === "Brand"
+                        ? "bg-[#4D55F5] border border-[#4D55F5] text-white"
+                        : "border border-black"
+                    }`}
+                  >
+                    Brand
+                  </div>
                 </div>
-                <div
-                  onClick={() => handleUserType("Student")}
-                  className={`transition-all duration-150 ${
-                    userType === "Student"
-                      ? "border-[#4FB755]"
-                      : "border-[#CDCDCD]"
-                  } cursor-pointer py-3 px-4 rounded-lg  border-[2px] w-full text-center`}
-                >
-                  Student
-                </div>
-              </div>
-              <span className="text-base sm:text-lg">Имэйл хаяг</span>
-              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder=""
-                  className="w-full outline-none text-sm sm:text-base"
-                  onChange={login.handleChange}
-                  value={login.values.email}
-                />
               </div>
 
-              {login.touched.email && login.errors.email ? (
-                <div className="text-red-500 text-sm">{login.errors.email}</div>
-              ) : null}
-              <span className="text-base sm:text-lg">Нууц үг</span>
-              <div className="flex flex-row items-center justify-between border-[2px] border-[#CDCDCD] rounded-lg h-14 p-4">
-                <input
-                  name="password"
-                  id="password"
-                  type={showLoginPassword ? "text" : "password"}
-                  placeholder=""
-                  className="w-full outline-none text-sm sm:text-base"
-                  onChange={login.handleChange}
-                  value={login.values.password}
-                />
-                <button
-                  type="button"
-                  onMouseDown={handleMouseDownLoginPassword}
-                  onMouseUp={handleMouseUpLoginPassword}
-                  onMouseLeave={handleMouseUpLoginPassword} // For when the user moves the mouse away from the button
-                  onTouchStart={handleMouseDownLoginPassword} // For mobile
-                  onTouchEnd={handleMouseUpLoginPassword} // For mobile
-                  className={`${
-                    login.values.password === "" ? "hidden" : "block"
-                  } text-sm opacity-90`}
-                >
-                  <Image
-                    src={"/show-pwd.png"}
-                    width={24}
-                    height={24}
-                    alt=""
-                    className="w-6 h-6"
+              <div
+                className={`border border-[#CDCDCD] rounded-[30px] ${
+                  userType === "Student"
+                    ? "rounded-tl-none"
+                    : userType === "Creator"
+                    ? ""
+                    : "rounded-tr-none"
+                } p-4`}
+              >
+                <div className="flex flex-col gap-4">
+                  <span className="">Имэйл хаяг</span>
+                  <div className="flex flex-row items-center justify-between bg-[#F5F4F0] rounded-lg h-14 p-4">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder=""
+                      className="w-full outline-none text-sm sm:text-base bg-inherit"
+                      onChange={login.handleChange}
+                      value={login.values.email}
+                    />
+                  </div>
+
+                  {login.touched.email && login.errors.email ? (
+                    <div className="text-red-500 text-sm">
+                      {login.errors.email}
+                    </div>
+                  ) : null}
+                  <span className="">Нууц үг</span>
+                  <div className="flex flex-row items-center justify-between bg-[#F5F4F0] rounded-lg h-14 p-4">
+                    <input
+                      name="password"
+                      id="password"
+                      type={showLoginPassword ? "text" : "password"}
+                      placeholder=""
+                      className="w-full outline-none text-sm sm:text-base bg-inherit"
+                      onChange={login.handleChange}
+                      value={login.values.password}
+                    />
+                    <button
+                      type="button"
+                      onMouseDown={handleMouseDownLoginPassword}
+                      onMouseUp={handleMouseUpLoginPassword}
+                      onMouseLeave={handleMouseUpLoginPassword}
+                      onTouchStart={handleMouseDownLoginPassword}
+                      onTouchEnd={handleMouseUpLoginPassword}
+                      className={`${
+                        login.values.password === "" ? "hidden" : "block"
+                      } text-sm opacity-90`}
+                    >
+                      <Image
+                        src={"/show-pwd.png"}
+                        width={24}
+                        height={24}
+                        alt=""
+                        className="w-6 h-6"
+                      />
+                    </button>
+                  </div>
+                  {login.touched.password && login.errors.password ? (
+                    <div className="text-red-500 text-sm">
+                      {login.errors.password}
+                    </div>
+                  ) : null}
+                  <ForgetPasswordModal
+                    forgotPasswordForm={forgotPasswordForm}
+                    setForgotPasswordState={setForgotPasswordState}
+                    showNewPassword={showNewPassword}
+                    showConfirmPassword={showConfirmPassword}
+                    handleMouseDownNewPassword={handleMouseDownNewPassword}
+                    handleMouseUpNewPassword={handleMouseUpNewPassword}
+                    handleMouseDownConfirmPassword={
+                      handleMouseDownConfirmPassword
+                    }
+                    handleMouseUpConfirmPassword={handleMouseUpConfirmPassword}
+                    sendOtpToEmailSuccess={sendOtpToEmailSuccess}
+                    sendOtpToEmailData={sendOtpToEmailData}
+                    onClickEmailForm={emailForm.handleSubmit}
+                    onClickOtpForm={otpForm.handleSubmit}
+                    onClickForgotPasswordForm={forgotPasswordForm.handleSubmit}
+                    emailForm={emailForm}
+                    otpForm={otpForm}
+                    forgotPasswordState={forgotPasswordState}
                   />
-                </button>
-              </div>
-              {login.touched.password && login.errors.password ? (
-                <div className="text-red-500 text-sm">
-                  {login.errors.password}
+
+                  <LoginButton
+                    width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
+                    text={"Нэвтрэх"}
+                    shadowbg={
+                      userType === "Creator"
+                        ? "shadow-[0.25rem_0.25rem_#9c44da]"
+                        : userType === "Brand"
+                        ? "shadow-[0.25rem_0.25rem_#1920B4]"
+                        : "shadow-[0.25rem_0.25rem_#3A8F44]"
+                    }
+                    bg={
+                      userType === "Creator"
+                        ? "bg-[#CA7FFE]"
+                        : userType === "Brand"
+                        ? "bg-[#4D55F5]"
+                        : "bg-[#4FB755]"
+                    }
+                  />
                 </div>
-              ) : null}
-
-              <Dialog>
-                <DialogTrigger className="text-black font-semibold underline">
-                  Нууц үг сэргээх
-                </DialogTrigger>
-                <DialogContent className="rounded-3xl max-w-lg w-full flex flex-col items-center gap-2">
-                  {forgotPasswordState === "1" ? (
-                    <div className="flex flex-col gap-5">
-                      <span className="text-3xl font-bold">
-                        Нууц үг сэргээх
-                      </span>
-                      <span className="mt-6">
-                        Та өөрийн имэйл хаягаа бичнэ үү. Имэйл хаягаар нэг
-                        удаагын нууц код очих болно.
-                      </span>
-                      <form
-                        onSubmit={emailForm.handleSubmit}
-                        className="flex flex-col gap-4"
-                      >
-                        <div className="flex flex-col gap-2">
-                          <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD]  focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl">
-                            <span className="text-[#6F6F6F] text-xs sm:text-sm">
-                              Имэйл хаяг
-                            </span>
-                            <input
-                              id="forgotEmail"
-                              name="forgotEmail"
-                              type="email"
-                              onChange={emailForm.handleChange}
-                              onBlur={emailForm.handleBlur}
-                              value={emailForm.values.forgotEmail}
-                              className="outline-none bg-transparent"
-                            />
-                          </div>
-                          {emailForm.touched.forgotEmail &&
-                          emailForm.errors.forgotEmail ? (
-                            <div className="text-red-500 text-sm">
-                              {emailForm.errors.forgotEmail}
-                            </div>
-                          ) : null}
-                        </div>
-                        <button
-                          type="submit"
-                          className={`w-full py-4 text-white text-lg font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
-                        >
-                          Илгээх
-                        </button>
-                      </form>
-                    </div>
-                  ) : forgotPasswordState === "2" ? (
-                    <div className="flex flex-col gap-5">
-                      <button
-                        onClick={() => setForgotPasswordState("1")}
-                        className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
-                      >
-                        <Image
-                          src={"/arrow-left.png"}
-                          width={24}
-                          height={24}
-                          alt="arrow-left"
-                        />
-                      </button>
-                      <span className="text-3xl font-bold">
-                        Нууц үг сэргээх
-                      </span>
-                      <span className="mt-2 sm:mt-6">
-                        Имэйл хаягт очсон нэг удаагын нууц кодыг оруулна уу.
-                      </span>
-                      <form
-                        onSubmit={otpForm.handleSubmit}
-                        className="flex flex-col gap-2 sm:gap-4"
-                      >
-                        <div className="flex flex-col gap-2">
-                          <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD]  focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl">
-                            <span className="text-[#6F6F6F] text-xs :text-sm">
-                              Нэг удаагын нууц код
-                            </span>
-                            <input
-                              id="otp"
-                              name="otp"
-                              onChange={otpForm.handleChange}
-                              onBlur={otpForm.handleBlur}
-                              value={otpForm.values.otp}
-                              className="outline-none bg-none"
-                            />
-                          </div>
-                          {otpForm.touched.otp && otpForm.errors.otp ? (
-                            <div className="text-red-500 text-sm">
-                              {otpForm.errors.otp}
-                            </div>
-                          ) : null}
-                        </div>
-                        {sendOtpToEmailSuccess && (
-                          <OtpTimeLeft
-                            otpDuration={sendOtpToEmailData?.otpDuration}
-                          />
-                        )}
-
-                        <button
-                          onClick={emailForm.handleSubmit}
-                          className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
-                        >
-                          Нууц код дахин авах
-                        </button>
-                        <button
-                          type="submit"
-                          className={`mt-2 w-full py-4 text-lg text-white font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
-                        >
-                          Баталгаажуулах
-                        </button>
-                      </form>
-                    </div>
-                  ) : (
-                    forgotPasswordState === "3" && (
-                      <div className="flex flex-col gap-5 w-full">
-                        <button
-                          onClick={() => setForgotPasswordState("2")}
-                          className="w-12 sm:w-14 h-12 sm:h-14 bg-[#F5F4F0] rounded-lg p-4"
-                        >
-                          <Image
-                            src={"/arrow-left.png"}
-                            width={24}
-                            height={24}
-                            alt="arrow-left"
-                          />
-                        </button>
-                        <span className="text-3xl font-bold">Шинэ нууц үг</span>
-
-                        <form
-                          onSubmit={forgotPasswordForm.handleSubmit}
-                          className="flex flex-col gap-4 w-full mt-6"
-                        >
-                          <div className="w-full flex flex-col gap-2">
-                            <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD] focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl relative">
-                              <span className="text-[#6F6F6F] text-xs sm:text-sm">
-                                Шинэ нууц үгээ оруулна уу
-                              </span>
-                              <input
-                                id="newPassword"
-                                name="newPassword"
-                                type={showNewPassword ? "text" : "password"}
-                                onChange={forgotPasswordForm.handleChange}
-                                onBlur={forgotPasswordForm.handleBlur}
-                                value={forgotPasswordForm.values.newPassword}
-                                className="outline-none bg-transparent"
-                              />
-                              <button
-                                type="button"
-                                onMouseDown={handleMouseDownNewPassword}
-                                onMouseUp={handleMouseUpNewPassword}
-                                onMouseLeave={handleMouseUpNewPassword} // For when the user moves the mouse away from the button
-                                onTouchStart={handleMouseDownNewPassword} // For mobile
-                                onTouchEnd={handleMouseUpNewPassword} // For mobile
-                                className="absolute right-3 top-9 text-sm text-gray-600"
-                              >
-                                <Image
-                                  src={"/show-pwd.png"}
-                                  width={24}
-                                  height={24}
-                                  alt=""
-                                  className="w-6 h-6"
-                                />
-                              </button>
-                            </div>
-                            {forgotPasswordForm.touched.newPassword &&
-                            forgotPasswordForm.errors.newPassword ? (
-                              <div className="text-red-500 text-sm">
-                                {forgotPasswordForm.errors.newPassword}
-                              </div>
-                            ) : null}
-                          </div>
-                          <div className="w-full flex flex-col gap-2">
-                            <div className="p-3 flex flex-col gap-1 border-[2px] border-[#CDCDCD] focus-within:border-[#4D55F5] focus-within:border-[2px] transition-all duration-200 rounded-xl relative">
-                              <span className="text-[#6F6F6F] text-xs sm:text-sm">
-                                Шинэ нууц үгээ давтан оруулна уу
-                              </span>
-                              <input
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                type={showConfirmPassword ? "text" : "password"}
-                                onChange={forgotPasswordForm.handleChange}
-                                onBlur={forgotPasswordForm.handleBlur}
-                                value={
-                                  forgotPasswordForm.values.confirmPassword
-                                }
-                                className="outline-none bg-transparent"
-                              />
-                              <button
-                                type="button"
-                                onMouseDown={handleMouseDownConfirmPassword}
-                                onMouseUp={handleMouseUpConfirmPassword}
-                                onMouseLeave={handleMouseUpConfirmPassword} // For when the user moves the mouse away from the button
-                                onTouchStart={handleMouseDownConfirmPassword} // For mobile
-                                onTouchEnd={handleMouseUpConfirmPassword} // For mobile
-                                className="absolute right-3 top-9 text-sm text-gray-600"
-                              >
-                                <Image
-                                  src={"/show-pwd.png"}
-                                  width={24}
-                                  height={24}
-                                  alt=""
-                                  className="w-6 h-6"
-                                />
-                              </button>
-                            </div>
-                            {forgotPasswordForm.touched.confirmPassword &&
-                            forgotPasswordForm.errors.confirmPassword ? (
-                              <div className="text-red-500 text-sm">
-                                {forgotPasswordForm.errors.confirmPassword}
-                              </div>
-                            ) : null}
-                          </div>
-                          <button
-                            type="submit"
-                            className={`w-full py-4 text-white text-lg font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
-                          >
-                            Хадгалах
-                          </button>
-                        </form>
-                      </div>
-                    )
-                  )}
-                </DialogContent>
-              </Dialog>
-              <LoginButton
-                width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
-                text={"Нэвтрэх"}
-                shadowbg={
-                  userType === "Creator"
-                    ? "shadow-[0.25rem_0.25rem_#9c44da]"
-                    : userType === "Brand"
-                    ? "shadow-[0.25rem_0.25rem_#1920B4]"
-                    : "shadow-[0.25rem_0.25rem_#3A8F44]"
-                }
-                bg={
-                  userType === "Creator"
-                    ? "bg-[#CA7FFE]"
-                    : userType === "Brand"
-                    ? "bg-[#4D55F5]"
-                    : "bg-[#4FB755]"
-                }
-              />
+              </div>
             </div>
           </form>
         </div>

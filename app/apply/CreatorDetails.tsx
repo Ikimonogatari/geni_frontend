@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 function CreatorDetails({ formik }) {
   return (
     <div className="flex flex-col w-full gap-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-4 w-full">
         <Input
           id="FirstName"
           name="FirstName"
@@ -86,20 +86,25 @@ function CreatorDetails({ formik }) {
           id="Birthday"
           name="Birthday"
           type="date"
-          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg"
+          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg h-5"
           wrapperClassName="w-full col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Төрсөн огноо"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.Birthday}
+          value={
+            formik.values.Birthday &&
+            formik.values.Birthday !== "0001-01-01T00:00:00Z"
+              ? formik.values.Birthday
+              : new Date().toISOString().split("T")[0]
+          }
           errorText={formik.errors.Birthday}
           errorVisible={formik.touched.Birthday && formik.errors.Birthday}
         />
         <Input
-          id="FacebookAddress"
-          name="FacebookAddress"
+          id="FacebookLink"
+          name="FacebookLink"
           type="text"
           className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg"
           wrapperClassName="w-full col-span-1"
@@ -117,15 +122,15 @@ function CreatorDetails({ formik }) {
           }
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.FacebookAddress}
-          errorText={formik.errors.FacebookAddress}
+          value={formik.values.FacebookLink}
+          errorText={formik.errors.FacebookLink}
           errorVisible={
-            formik.touched.FacebookAddress && formik.errors.FacebookAddress
+            formik.touched.FacebookLink && formik.errors.FacebookLink
           }
         />
         <Input
-          id="InstagramAddress"
-          name="InstagramAddress"
+          id="InstagramLink"
+          name="InstagramLink"
           type="text"
           className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg"
           wrapperClassName="w-full col-span-1"
@@ -143,10 +148,10 @@ function CreatorDetails({ formik }) {
           }
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.InstagramAddress}
-          errorText={formik.errors.InstagramAddress}
+          value={formik.values.InstagramLink}
+          errorText={formik.errors.InstagramLink}
           errorVisible={
-            formik.touched.InstagramAddress && formik.errors.InstagramAddress
+            formik.touched.InstagramLink && formik.errors.InstagramLink
           }
         />
       </div>

@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { ErrorText } from "./error-text";
 import InfoHover from "../common/InfoHover";
+import FadeInAnimation from "../common/FadeInAnimation";
 
 interface TextareaProps extends React.ComponentProps<"textarea"> {
   errorText?: string | React.ReactNode;
@@ -11,6 +12,9 @@ interface TextareaProps extends React.ComponentProps<"textarea"> {
   labelClassName?: string;
   layoutClassName?: string;
   hoverInfo?: string;
+  maxLength?: number;
+  wrapperClassName?: string;
+  max?: boolean;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -24,6 +28,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       charCount,
       errorText,
       errorVisible,
+      maxLength,
+      wrapperClassName,
+      max = false,
       ...props
     },
     ref
@@ -37,7 +44,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         label
       );
     return (
-      <div className="flex flex-col gap-3">
+      <div className={cn("flex flex-col gap-3", wrapperClassName)}>
         <div className="flex flex-1 justify-between">
           {labelComponent}
           {hoverInfo && <InfoHover contentText={hoverInfo} />}
@@ -52,16 +59,20 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             <textarea
               ref={ref}
               className={cn("overflow-y-auto outline-none", className)}
+              {...(max && { maxLength })}
               {...props}
             />
-            {charCount && (
+            {maxLength && (
               <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
-                {charCount !== undefined && `Тэмдэгтийн тоо: ${charCount}/600`}
+                {charCount !== undefined &&
+                  `Тэмдэгтийн тоо: ${charCount}/${maxLength}`}
               </div>
             )}
           </div>
           {errorVisible && (
-            <ErrorText text={errorText} visible={errorVisible} />
+            <FadeInAnimation visible={errorVisible}>
+              <ErrorText text={errorText} visible={errorVisible} />
+            </FadeInAnimation>
           )}
         </div>
       </div>

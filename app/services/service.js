@@ -1,6 +1,7 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
+import StudentRegister from "../register/student/page";
 
 // Define a service using a base URL and expected endpoints
 
@@ -66,6 +67,13 @@ export const geniApi = createApi({
     uploadByPresignUrl: builder.mutation({
       query: (body) => ({
         url: "/api/admin/private/file/presign",
+        method: "POST",
+        body,
+      }),
+    }),
+    publicUploadByPresignUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/file/presign",
         method: "POST",
         body,
       }),
@@ -152,10 +160,9 @@ export const geniApi = createApi({
       }),
     }),
     listPublicProducts: builder.query({
-      query: (body) => ({
+      query: () => ({
         url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
         method: "GET",
-        body,
       }),
     }),
     getPublicProductById: builder.query({
@@ -213,6 +220,13 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getPublicVideoPresignedUrl: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/file/url",
+        method: "POST",
+        body,
+      }),
+    }),
     brandReceiveContent: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/receive",
@@ -255,6 +269,13 @@ export const geniApi = createApi({
     becomeCreator: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/student/becomecreator",
+        method: "POST",
+        body,
+      }),
+    }),
+    studentRegister: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/public/student-register",
         method: "POST",
         body,
       }),
@@ -355,6 +376,19 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    creatorWithdraw: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/wallet",
+        method: "POST",
+        body,
+      }),
+    }),
+    getCreatorWalletHistory: builder.query({
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/wallet/txn-hist?&limit=${limit}&offset=${offset}`,
+        method: "GET",
+      }),
+    }),
     brandTermCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/term-check",
@@ -367,7 +401,7 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
-    brandGuideCheck: builder.mutation({
+    guideCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/no-guide",
         method: "POST",
@@ -394,9 +428,151 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getBrandCreditHistory: builder.query({
+      query: ({ limit, offset }) => ({
+        url: `/api/web/private/user/brand/credit/hist?limit=${limit}&offset=${offset}`,
+        method: "GET",
+      }),
+    }),
+    getBankList: builder.query({
+      query: () => ({
+        url: "/api/web/private/banks",
+        method: "GET",
+      }),
+    }),
     creatorApply: builder.mutation({
       query: (body) => ({
         url: "/api/web/public/creator-application",
+        method: "POST",
+        body,
+      }),
+    }),
+    purchaseCourse: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student/qpay",
+        method: "POST",
+        body,
+      }),
+    }),
+    checkCoupon: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student/check-coupon",
+        method: "POST",
+        body,
+      }),
+    }),
+    checkBankAccountName: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cgw/check-name",
+        method: "POST",
+        body,
+      }),
+    }),
+    getConnectedBankAccount: builder.query({
+      query: () => ({
+        url: "/api/web/private/cust-bank",
+        method: "GET",
+      }),
+    }),
+    connectBankAccount: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cust-bank",
+        method: "POST",
+        body,
+      }),
+    }),
+    updateBankAccount: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/cust-bank",
+        method: "PUT",
+      }),
+    }),
+    creatorXpHistory: builder.query({
+      // query: ({ limit, offset }) => ({
+      query: () => ({
+        // url: `/api/web/private/creator-xp?limit=${limit}&offset=${offset}`,
+        url: `/api/web/private/creator-xp`,
+        method: "GET",
+      }),
+    }),
+    qpayDeliveryPayment: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/qpay-delivery-payment/${id}`,
+        method: "POST",
+      }),
+    }),
+    dictList: builder.mutation({
+      query: ({ ...params }) => ({
+        url: `/api/web/public/dict?${new URLSearchParams(params)}`,
+        method: "GET",
+      }),
+    }),
+    contentProcessRefund: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/content/content-process/refund`,
+        method: "POST",
+        body,
+      }),
+    }),
+    receivedProduct: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/content-process/received/${id}`,
+        method: "POST",
+      }),
+    }),
+    contentProcessOverdue: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/overdue/${id}`,
+        method: "GET",
+      }),
+    }),
+    contentProcessOverduePayment: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/overdue/payment/${id}`,
+        method: "POST",
+      }),
+    }),
+    contentFeedback: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/feedback/${id}`,
+        method: "GET",
+      }),
+    }),
+    brandReview: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/content/brand-review`,
+        method: "POST",
+        body,
+      }),
+    }),
+    getBrandReview: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/brand-review/${id}`,
+        method: "GET",
+      }),
+    }),
+    contentResend: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/content/brand-review/resend`,
+        method: "POST",
+        body,
+      }),
+    }),
+    getBrandReviewBrand: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/brand-review/brand/${id}`,
+        method: "GET",
+      }),
+    }),
+    getFinalContentXp: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/brand-feedback/creator/${id}`,
+        method: "GET",
+      }),
+    }),
+    getContentProcess: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/content/process",
         method: "POST",
         body,
       }),
@@ -430,10 +606,12 @@ export const {
   useUpdateContentStatusMutation,
   useListBrandContentsQuery,
   useUploadByPresignUrlMutation,
+  usePublicUploadByPresignUrlMutation,
   useListPaymentPlansQuery,
   useSubscribePlanMutation,
   useCreatorContentSubmitMutation,
   useGetVideoPresignedUrlMutation,
+  useGetPublicVideoPresignedUrlMutation,
   useGetImagePresignedUrlMutation,
   useBrandReceiveContentMutation,
   useCheckPaymentQuery,
@@ -458,7 +636,32 @@ export const {
   useGetWalletInfoQuery,
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
-  useBrandGuideCheckMutation,
+  useGuideCheckMutation,
   useGetBrandCreditInfoQuery,
   useCreatorApplyMutation,
+  useStudentRegisterMutation,
+  usePurchaseCourseMutation,
+  useCheckCouponMutation,
+  useGetBankListQuery,
+  useCheckBankAccountNameMutation,
+  useGetConnectedBankAccountQuery,
+  useConnectBankAccountMutation,
+  useUpdateBankAccountMutation,
+  useCreatorWithdrawMutation,
+  useGetCreatorWalletHistoryQuery,
+  useGetBrandCreditHistoryQuery,
+  useCreatorXpHistoryQuery,
+  useQpayDeliveryPaymentMutation,
+  useDictListMutation,
+  useContentProcessRefundMutation,
+  useReceivedProductMutation,
+  useContentProcessOverdueMutation,
+  useContentProcessOverduePaymentMutation,
+  useContentFeedbackMutation,
+  useBrandReviewMutation,
+  useGetBrandReviewMutation,
+  useContentResendMutation,
+  useGetBrandReviewBrandMutation,
+  useGetFinalContentXpMutation,
+  useGetContentProcessMutation,
 } = geniApi;

@@ -59,7 +59,7 @@ function Page() {
       files: [],
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Required"),
+      name: Yup.string().required("Заавал бөглөнө үү"),
     }),
     onSubmit: (values) => {},
   });
@@ -497,17 +497,3 @@ function Page() {
 }
 
 export default Page;
-
-const contentOptions1 = [
-  "Хэрэглэгчийн сэтгэгдэл яриа",
-  "Хэрэглэгчийн сэтгэгдлээ бичгэн хэлбэрээр илэрхийлсэн",
-  "Бүтээгдэхүүний үзэмжит дүрсээс бүтсэн",
-  "Хэрэглэж буй үе шат харуулсан",
-  "Бүтээгдэхүүний ач холбогдол тайлбарласан",
-];
-
-const contentOptions2 = [
-  "Бүтээгдэхүүн үйлчилгээгээ таниулах",
-  "Анхаарал татах",
-  "Бусад",
-];

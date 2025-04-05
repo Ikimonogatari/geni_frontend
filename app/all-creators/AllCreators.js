@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useGetPublicCreatorListQuery } from "../services/service";
 import PublicCreatorCard from "@/components/PublicCreatorCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function AllCreators() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,24 +39,45 @@ function AllCreators() {
         />
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[10px] sm:gap-4">
-        {filteredCreators?.map((creator, id) => {
-          const instagramLink = creator?.Socials?.find(
-            (channel) => channel.Name === "Instagram"
-          )?.SocialAddress;
+        {!getPublicCreatorListLoading ? (
+          filteredCreators?.map((creator, id) => {
+            const instagramLink = creator?.Socials?.find(
+              (channel) => channel.Name === "Instagram"
+            )?.SocialAddress;
 
-          const facebookLink = creator?.Socials?.find(
-            (channel) => channel.Name === "Facebook"
-          )?.SocialAddress;
+            const facebookLink = creator?.Socials?.find(
+              (channel) => channel.Name === "Facebook"
+            )?.SocialAddress;
 
-          return (
-            <PublicCreatorCard
-              id={id}
-              creator={creator}
-              instagramLink={instagramLink}
-              facebookLink={facebookLink}
-            />
-          );
-        })}
+            return (
+              <PublicCreatorCard
+                key={id}
+                id={id}
+                creator={creator}
+                instagramLink={instagramLink}
+                facebookLink={facebookLink}
+              />
+            );
+          })
+        ) : (
+          <>
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="flex flex-col gap-4">
+                <Skeleton className="w-[94px] h-[94px] sm:w-[194px] sm:h-[194px] rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-20" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                  </div>
+                  <Skeleton className="h-16 w-full" />
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

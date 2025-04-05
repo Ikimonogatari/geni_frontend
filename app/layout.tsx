@@ -1,9 +1,14 @@
-"use client";
 import "./globals.css";
+<<<<<<< HEAD:app/layout.tsx
 import Head from "next/head";
 import localFont from "next/font/local";
+=======
+>>>>>>> 7a0d8c0b4180b788d8c7b5ae03b8fdd94940af41:app/layout.js
 
+import localFont from "next/font/local";
+import Layout from "./rootLayout";
 import "/public/fonts/font/stylesheet.css";
+<<<<<<< HEAD:app/layout.tsx
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
@@ -12,6 +17,8 @@ import { Suspense } from "react";
 import Loader from "@/components/common/Loader";
 import { Navbar } from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
+=======
+>>>>>>> 7a0d8c0b4180b788d8c7b5ae03b8fdd94940af41:app/layout.js
 
 const mabryPro = localFont({
   src: [
@@ -33,8 +40,15 @@ const mabryPro = localFont({
   variable: "--font-mabry-pro",
 });
 
+export const metadata = {
+  title: "Geni Platform",
+  description: "Geni Platform",
+  metadataBase: new URL("https://www.geni.mn/"),
+};
+
 export default function RootLayout({ children }) {
   return (
+<<<<<<< HEAD:app/layout.tsx
     <Provider store={store}>
       <html lang="en" className={mabryPro.className}>
         <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -62,5 +76,12 @@ export default function RootLayout({ children }) {
         </body>
       </html>
     </Provider>
+=======
+    <html lang="en" className={mabryPro.className}>
+      <body className="bg-white text-[#2D262D] min-h-screen">
+        <Layout>{children}</Layout>
+      </body>
+    </html>
+>>>>>>> 7a0d8c0b4180b788d8c7b5ae03b8fdd94940af41:app/layout.js
   );
 }

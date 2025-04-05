@@ -29,8 +29,15 @@ const editProductSchema = Yup.object({
   information: Yup.string().required("Заавал бөглөнө үү"),
   amount: Yup.string().required("Заавал бөглөнө үү"),
   requestForCreators: Yup.string().required("Заавал бөглөнө үү"),
-  creditUsage: Yup.string().required("Заавал бөглөнө үү"),
-  price: Yup.string().required("Заавал бөглөнө үү"),
+  creditUsage: Yup.number()
+    .integer()
+    .min(0)
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required("Заавал бөглөнө үү"),
+  price: Yup.number()
+    .min(0)
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required("Заавал бөглөнө үү"),
   totalPrice: Yup.string()
     .required("Заавал бөглөнө үү")
     .test(
