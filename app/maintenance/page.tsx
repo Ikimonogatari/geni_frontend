@@ -3,11 +3,11 @@ import Image from "next/image";
 
 function page() {
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="sm:mt-20 flex justify-center items-center min-h-[800px]">
       <div className="max-w-3xl container flex flex-col items-center gap-5">
         <div className="flex flex-row items-center gap-2">
           <Image
-            src={"geni-logo.svg"}
+            src={"/geni-logo.svg"}
             width={160}
             height={48}
             alt=""
