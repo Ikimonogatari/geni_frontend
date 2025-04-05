@@ -54,7 +54,7 @@ export type Content = {
   Status: string;
 };
 
-export const STATUS_LIST_VALUE = {
+export const STATUS_LIST_VALUE: Record<STATUS_LIST, string> = {
   RequestSent: "Хүсэлт илгээгдсэн",
   RequestApproved: "Хүсэлт баталгаажсан",
   RequestRejected: "Хүсэлт буцаагдсан",
@@ -69,6 +69,7 @@ export const STATUS_LIST_VALUE = {
   ContentBanPayment: "Төлбөр төлөгдсөн",
   GeniConfirming: "Geni шалгаж байна",
   ContentSentToBrand: "Брэндэд контент илгээгдсэн",
+  BrandConfirming: "Брэнд шалгаж байна",
   ContentRejected: "Контент буцаагдсан",
   ContentApproved: "Контент хүлээн авсан",
   ContentFixRequest: "Засварлах хүсэлт илгээгдсэн",
@@ -90,6 +91,7 @@ export enum STATUS_LIST {
   ContentBanPayment = "ContentBanPayment",
   GeniConfirming = "GeniConfirming",
   ContentSentToBrand = "ContentSentToBrand",
+  BrandConfirming = "BrandConfirming",
   ContentRejected = "ContentRejected",
   ContentApproved = "ContentApproved",
   ContentFixRequest = "ContentFixRequest",
@@ -142,6 +144,7 @@ export type GetContentProcessResponse = {
 
 export enum DictCode {
   REFUND_REASON = "RefundReason",
+  BRAND_REVIEW = "BrandReview",
 }
 
 export type RefundReason = {
@@ -164,6 +167,11 @@ export type ContentProcessWhenOverdueResponse = {
   BanDays: number;
 };
 
+export type BrandReviewParams = {
+  ContentId: string;
+  FixReason: string[];
+};
+
 export const getStepIndex = (status: string): number => {
   const arr = [
     ["RequestSent", "RequestApproved", "RequestRejected"],
@@ -176,7 +184,12 @@ export const getStepIndex = (status: string): number => {
       "ContentBanPayment",
     ],
     ["GeniConfirming", "ContentSentToBrand", "ContentRejected"],
-    ["ContentApproved", "ContentFixRequest", "ContentReSent"],
+    [
+      "ContentApproved",
+      "ContentFixRequest",
+      "ContentReSent",
+      "BrandConfirming",
+    ],
   ];
 
   const index = arr.findIndex((item) => item.includes(status));
@@ -205,6 +218,7 @@ export const getCurrentStepColor = (status: string): CurrentStepStatus => {
       "ContentPending",
       "GeniConfirming",
       "ContentFixRequest",
+      "BrandConfirming",
     ],
     red: [
       "RequestRejected",

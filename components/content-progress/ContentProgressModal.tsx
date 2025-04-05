@@ -7,6 +7,7 @@ import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import {
+  BrandReviewParams,
   ContentProcessRefundParams,
   DialogType,
   DictCode,
@@ -24,6 +25,8 @@ import Payment from "./partials/Payment";
 import ReturnSection from "./partials/ReturnSection";
 import ProgressStepper from "./partials/ProgressStepper";
 import {
+  useBrandReviewMutation,
+  useContentFeedbackMutation,
   useContentProcessOverdueMutation,
   useContentProcessRefundMutation,
   useDictListMutation,
@@ -35,7 +38,7 @@ import FeedbackModalContent from "./partials/FeedbackModalContent";
 import ContentReviewModalContent from "./partials/ContentReviewModalContent";
 import ContentReturnModalContent from "./partials/ContentReturnModalContent";
 import ContentUploadModalContent from "./partials/ContentUploadModalContent";
-import WarningBox from "./partials/WarningBox";
+import InfoBox from "./partials/InfoBox";
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -75,6 +78,11 @@ const ContentProgressModalContent: React.FC<
       data: contentProcessOverdueData,
     },
   ] = useContentProcessOverdueMutation();
+  const [contentFeedback, { isLoading: isLoadingContentFeedback }] =
+    useContentFeedbackMutation();
+  const [brandReview, { isLoading: isLoadingBrandReview }] =
+    useBrandReviewMutation();
+
   // const isSuccess = true;
   // const isLoadingContentProcess = false;
   // const contentProcessData = [
@@ -158,9 +166,15 @@ const ContentProgressModalContent: React.FC<
     onSubmit: async (values) => {
       try {
         if (dialogType == DialogType.EDIT_REQUEST) {
-          console.log(pick(values, ["reasons"]));
+          const data: BrandReviewParams = {
+            ContentId: content?.ContentId,
+            FixReason: values.reasons,
+          };
+          brandReview(data).then(() => {
+            setDialogOpen(false);
+            refetch();
+          });
         } else if (dialogType == DialogType.ACCEPT_REQUEST) {
-          console.log(pick(values, ["reasons"]));
         } else if (values.returnReason) {
           console.log(pick(values, ["returnReason"]));
           const data: ContentProcessRefundParams = {
@@ -221,10 +235,14 @@ const ContentProgressModalContent: React.FC<
 
       if (
         [STATUS_LIST.ContentOverDue, STATUS_LIST.ContentBanPayment].includes(
-          content?.CurrentStepName.String as STATUS_LIST
+          content?.CurrentStepName?.String as STATUS_LIST
         )
       ) {
         contentProcessOverdue(content?.ContentId);
+      }
+
+      if (content?.CurrentStepName?.String == STATUS_LIST.ContentRejected) {
+        contentFeedback(content?.ContentId);
       }
     }
   }, [content]);
@@ -306,7 +324,7 @@ const ContentProgressModalContent: React.FC<
   const showViewContentButton = (status: STATUS_LIST): boolean => {
     return [
       STATUS_LIST.ContentSent,
-      STATUS_LIST.GeniConfirming,
+      STATUS_LIST.BrandConfirming,
       STATUS_LIST.ContentRejected,
       STATUS_LIST.ContentFixRequest,
       STATUS_LIST.ContentReSent,
@@ -351,6 +369,7 @@ const ContentProgressModalContent: React.FC<
       ContentId: content?.ContentId,
       ContentStepId: content?.CurrentStepId,
     });
+
     // setContentProcessData(content["Process"] as any);
     // setStatus("DeliverySuccess" as STATUS_LIST);
     setStatus(content.CurrentStepName.String as STATUS_LIST);
@@ -421,6 +440,8 @@ const ContentProgressModalContent: React.FC<
           <ContentUploadModalContent
             parsedUserInfo={parsedUserInfo}
             contentId={content?.ContentId}
+            refetch={refetch}
+            setDialogOpen={setDialogOpen}
           />
         ) : null}
 
@@ -486,16 +507,16 @@ const ContentProgressModalContent: React.FC<
       <>
         {status == STATUS_LIST.ContentOverDue &&
           DialogType.CONTENT_IN_PROGRESS && (
-            <WarningBox title="Сануулга !">
+            <InfoBox title="Сануулга !">
               Та контент илгээх хугацаанаасаа {contentProcessOverdueData?.Days}{" "}
               хоног хоцорсон байна. <br />
               Таны дараагийн бүтээгдэхүүн хүсэх эрх{" "}
               {contentProcessOverdueData?.Days} хоног хаагдах болно
-            </WarningBox>
+            </InfoBox>
           )}
         {status == STATUS_LIST.ContentBanPayment &&
           DialogType.CONTENT_IN_PROGRESS && (
-            <WarningBox title="Сануулга !">
+            <InfoBox title="Сануулга !">
               Та бүтээгдэхүүний төлбөрөө төлөөгүй{" "}
               {contentProcessOverdueData?.BanDays}
               хоног болсон тул дахин бүтээгдэхүүн хүсэх эрх{" "}
@@ -505,7 +526,7 @@ const ContentProgressModalContent: React.FC<
               {moment(contentProcessOverdueData?.BanDate).format(
                 "YYYY.MM.DD - HH:mm"
               )}
-            </WarningBox>
+            </InfoBox>
           )}
       </>
     );
@@ -520,7 +541,6 @@ const ContentProgressModalContent: React.FC<
               <button
                 type="button"
                 onClick={() => setDialogType(DialogType.REQUEST)}
-                // className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
                 className="w-full text-center text-xs sm:text-base bg-geni-gray px-3 mt-2 sm:px-5 py-2 rounded-lg text-white font-bold"
               >
                 Хүсэлт буцаах
@@ -603,12 +623,7 @@ const ContentProgressModalContent: React.FC<
       <>
         {/* {getStepIndex(content.Status) >= 3 && */}
         {showViewContentButton(status as STATUS_LIST) &&
-          ![
-            DialogType.ACCEPT_REQUEST,
-            DialogType.CONTENT_IN_PROGRESS,
-            DialogType.EDIT_REQUEST,
-            DialogType.CONTENT,
-          ].includes(dialogType) && (
+          dialogType == DialogType.PROGRESS && (
             <button
               type="button"
               onClick={() => setDialogType(DialogType.CONTENT)}
@@ -648,10 +663,11 @@ const ContentProgressModalContent: React.FC<
       <>
         {/* Контент хоцорсон сануулга */}
         {status == STATUS_LIST.ContentOverDue && (
-          <WarningBox title="Сануулга !">
-            Контент бүтээгчид 7 хоногоос дээш хоцроосон тохиолдолд бид таны Geni
-            Credit-г нөхөн олгох боломжгүй болно.
-          </WarningBox>
+          <InfoBox title="Сануулга !">
+            Контент бүтээгчид контент илгээх ёстой хугацаанаасаа 7-с дээш
+            хоногоор хэтрүүлэн контентоо хоцроосон тохиолдолд бид таны Geni
+            Credit-г нөхөн олгох болно.
+          </InfoBox>
         )}
 
         {status == STATUS_LIST.ContentApproved && (
@@ -713,6 +729,13 @@ const ContentProgressModalContent: React.FC<
     );
   };
 
+  const isFullLoading =
+    isLoadingContentProcess ||
+    isLoadingContentFeedback ||
+    (content?.CurrentStepName?.String == STATUS_LIST.ContentFixRequest &&
+      isLoadingBrandReview) ||
+    !content;
+
   return (
     <>
       <Dialog open={dialogOpen} onOpenChange={handleOpen}>
@@ -736,12 +759,12 @@ const ContentProgressModalContent: React.FC<
           aria-describedby={undefined}
         >
           <DialogTitle></DialogTitle>
-          {isLoadingContentProcess && (
+          {isFullLoading && (
             <div className="w-full h-full flex items-center justify-center">
               <Loader2 className="w-10 h-10 animate-spin" />
             </div>
           )}
-          {content && isSuccess && (
+          {!isFullLoading && (
             <>
               <FormikProvider value={formik}>
                 <form onSubmit={formik.handleSubmit} className="h-full w-full">

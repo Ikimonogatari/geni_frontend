@@ -214,7 +214,7 @@ function ContentProgress({ currentContents }) {
                 ) : (
                   <></>
                 )}
-                <ContentProgressModalContent content={p} />
+                {/* <ContentProgressModalContent content={p} /> */}
               </div>
             </div>
           ))}

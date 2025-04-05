@@ -6,7 +6,7 @@ function FeedbackModalContent({ feedbacks, setDialogType }) {
     <>
       <div>
         <div className="border-[1px] border-[#E6E6E6] p-4 rounded-xl">
-          <span className="text-3xl font-bold">Зөвлөгөө</span>
+          <span className="text-3xl font-bold ml-2">Зөвлөгөө</span>
           <div className="mt-4 flex flex-col gap-3">
             {feedbacks?.map((f, i) => (
               <div

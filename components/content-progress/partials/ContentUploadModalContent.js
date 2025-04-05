@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DialogContent, Dialog, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
-import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
 import {
   useGetImagePresignedUrlMutation,
@@ -11,14 +9,17 @@ import {
   useCreatorContentSubmitMutation,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
-import UploadSuccessModal from "@/components/UploadSuccessModal";
 import useS3Upload from "@/components/hooks/useUploadToS3";
 import ContentUploadProgress from "@/components/common/ContentUploadProgress";
 
-function ContentUploadModalContent({ parsedUserInfo, contentId }) {
+function ContentUploadModalContent({
+  parsedUserInfo,
+  contentId,
+  setDialogOpen,
+  refetch,
+}) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
-  const [isContentSuccess, setIsContentSuccess] = useState(false);
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
@@ -82,7 +83,9 @@ function ContentUploadModalContent({ parsedUserInfo, contentId }) {
       toast.error(creatorContentSubmitError?.data.error);
     }
     if (creatorContentSubmitSuccess) {
-      setIsContentSuccess(true);
+      toast.success("Контент илгээгдлээ");
+      setDialogOpen(false);
+      refetch();
     }
   }, [creatorContentSubmitSuccess, creatorContentSubmitError]);
 
@@ -251,7 +254,10 @@ function ContentUploadModalContent({ parsedUserInfo, contentId }) {
           <button
             type="button"
             onClick={handleContentSubmit}
-            disabled={!(contentThumbnail && contentVideo && caption)} // Disable when conditions are not met
+            disabled={
+              !(contentThumbnail && contentVideo && caption) ||
+              creatorContentSubmitLoading
+            }
             className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${
               contentThumbnail && contentVideo && caption
                 ? "opacity-100"
@@ -262,11 +268,6 @@ function ContentUploadModalContent({ parsedUserInfo, contentId }) {
           </button>
         </div>
       </div>
-      <UploadSuccessModal
-        isContentSubmitSuccess={isContentSuccess}
-        parsedUserInfo={parsedUserInfo}
-        setIsContentSubmitSuccess={setIsContentSuccess}
-      />
     </>
   );
 }

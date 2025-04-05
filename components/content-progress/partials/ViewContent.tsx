@@ -30,7 +30,7 @@ const ViewContent: React.FC<ViewContentProps> = ({
               alt="thumbnail"
               height={0}
               width={0}
-              className="rounded-lg border-[1px] border-[#E6E6E6] w-full flex-1 object-cover min-h-0"
+              className="rounded-lg border-[1px] border-[#E6E6E6] w-full h-full flex-1 aspect-[9/16]"
             />
           </div>
         </div>

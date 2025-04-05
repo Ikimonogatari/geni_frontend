@@ -136,7 +136,7 @@ const Stepper: React.FC<StepperProps> = (props) => {
                                 content?.Deadline &&
                                 moment(content.Deadline).format("MM.DD.YYYY")}
                               {status == STATUS_LIST.ContentOverDue &&
-                                overdueProcess?.Days}
+                                overdueProcess?.Days + " өдөр"}
                             </b>
                           </>
                         ) : (
