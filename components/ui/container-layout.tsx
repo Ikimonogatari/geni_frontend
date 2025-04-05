@@ -10,7 +10,9 @@ const ContainerLayout: React.FC<ContainerLayoutProps> = ({
   className,
   children,
 }) => {
-  return <div className={cn("py-10 w-full", className)}>{children}</div>;
+  return (
+    <div className={cn("py-0 md:py-10 w-full", className)}>{children}</div>
+  );
 };
 
 export default ContainerLayout;

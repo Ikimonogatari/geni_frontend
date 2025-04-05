@@ -6,19 +6,21 @@ function CreatorCycle() {
     <>
       <Image
         loading="lazy"
-        src={"/creator-cycle.png"}
-        width={1348}
-        height={442}
+        src="/landing/creator/cycle.png"
+        width={0}
+        height={0}
         alt="cycle-image"
-        className="hidden lg:block mx-auto"
+        sizes="100vw"
+        className="hidden lg:block w-full h-auto mx-auto"
       />
       <Image
         loading="lazy"
-        src={"/creator-cycle-mobile.png"}
-        width={335}
-        height={1505}
+        src="/landing/creator/mobile-cycle.png"
+        width={0}
+        height={0}
+        sizes="100vw"
         alt="cycle-image-mobile"
-        className="block lg:hidden mx-auto"
+        className="block lg:hidden mx-auto w-full h-auto"
       />
     </>
   );

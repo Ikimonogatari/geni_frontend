@@ -1,23 +1,28 @@
 import React from "react";
 import Image from "next/image";
+
 function BrandCycle() {
   return (
-    <div className="container px-7 mx-auto mt-7">
+    <>
       <Image
-        src={"/brand-cycle.png"}
-        width={1348}
-        height={442}
+        loading="lazy"
+        src="/landing/brand/cycle.png"
+        width={0}
+        height={0}
         alt="cycle-image"
-        className="hidden lg:block mx-auto"
+        sizes="100vw"
+        className="hidden lg:block w-full h-auto mx-auto"
       />
       <Image
-        src={"/brand-cycle-mobile.png"}
-        width={335}
-        height={1505}
+        loading="lazy"
+        src="/landing/brand/mobile-cycle.png"
+        width={0}
+        height={0}
+        sizes="100vw"
         alt="cycle-image-mobile"
-        className="block lg:hidden mx-auto"
+        className="block lg:hidden mx-auto w-full h-auto"
       />
-    </div>
+    </>
   );
 }
 

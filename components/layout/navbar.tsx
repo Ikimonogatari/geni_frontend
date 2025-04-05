@@ -15,9 +15,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { info } from "console";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const navItems = [
     {
@@ -25,14 +27,16 @@ export function Navbar() {
       info: "New",
       href: "/student",
       infoColor: "#4FB755",
+      activeClass: "bg-geni-green",
     },
-    { name: "Geni Creator", href: "/creator" },
-    { name: "Geni Brand", href: "/brand" },
+    { name: "Geni Creator", href: "/creator", activeClass: "bg-geni-pink" },
+    { name: "Geni Brand", href: "/brand", activeClass: "bg-geni-blue" },
     {
       name: "Geni Mentor",
       info: "Coming soon",
       href: "/mentor",
       infoColor: "#F49D19",
+      activeClass: "bg-geni-red",
     },
   ];
 
@@ -54,7 +58,7 @@ export function Navbar() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-6">
           {navItems.map((item, index) => (
             <div key={item.name} className="flex items-center gap-6">
               {index !== 0 && (
@@ -62,13 +66,17 @@ export function Navbar() {
               )}
               <Link
                 href={item.href}
-                className="text-base font-bold text-muted-foreground transition-colors hover:text-primary relative"
+                className={cn(
+                  "text-base font-bold text-muted-foreground transition-colors hover:text-primary relative rounded-full py-1.5 px-6",
+                  pathname.includes(item.href) &&
+                    `${item.activeClass} text-white hover:text-white`
+                )}
               >
                 {item.name}
                 {item?.info && (
                   <span
                     className={cn(
-                      "absolute -top-1 -right-1 transform -translate-y-3 translate-x-4 rotate-[20deg] bg-red-500 text-white text-[10px] leading-none py-1 px-1 rounded-full",
+                      "text-nowrap absolute -top-1 -right-1 transform -translate-y-3 translate-x-4 rotate-[20deg] bg-red-500 text-white text-[10px] leading-none py-1 px-1 rounded-full",
                       `bg-[${item.infoColor}]`
                     )}
                   >
@@ -89,7 +97,7 @@ export function Navbar() {
         {/* Mobile Navigation */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button>
+            <Button className="border-none">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
             </Button>

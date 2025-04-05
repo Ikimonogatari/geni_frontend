@@ -13,7 +13,7 @@ function PublicCreatorCard({
   return (
     <div
       key={id}
-      className={`${size} bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-1 sm:gap-2 h-full`}
+      className={`${size} bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-border-gray/60 flex flex-col items-center gap-1 sm:gap-2 h-full`}
     >
       <a href={`/public-profile/${creator.CreatorId}`}>
         <Image
@@ -27,7 +27,7 @@ function PublicCreatorCard({
             isSwiper
               ? "w-[154px] h-[154px] sm:w-[194px] sm:h-[194px]"
               : "w-[94px] sm:w-[194px] h-[94px] sm:h-[194px]"
-          } aspect-square rounded-full border border-[#000000] object-cover`}
+          } aspect-square rounded-full border border-border-gray/60 object-cover`}
         />
       </a>
       <div

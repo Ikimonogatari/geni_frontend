@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -27,8 +27,8 @@ function Creators() {
     isLoading: getPublicCreatorListLoading,
   } = useGetPublicCreatorListQuery();
 
-  const checkViewportSize = () => {
-    const width = window.innerWidth;
+  const checkViewportSize = useCallback(() => {
+    const width = window.screen.width;
     if (width <= 576) {
       // Mobile: display 1 slide
       setSlidesPerView(1);
@@ -42,7 +42,7 @@ function Creators() {
       // Large devices and wider: display 4 slides
       setSlidesPerView(4);
     }
-  };
+  }, []);
 
   useEffect(() => {
     checkViewportSize();
@@ -52,7 +52,7 @@ function Creators() {
     return () => {
       window.removeEventListener("resize", checkViewportSize);
     };
-  }, []);
+  }, [checkViewportSize]);
 
   const goNext = () => {
     swiper.slideNext();
@@ -63,21 +63,21 @@ function Creators() {
 
   return (
     <div className="w-full pt-20">
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex justify-between items-center lg:px-14">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
           Geni Бүтээгчид / {getPublicCreatorListData?.Data?.length}
         </span>
         <a
           href="/all-creators"
-          className="rounded-full bg-[#CA7FFE] text-white py-2 px-6"
+          className="rounded-full bg-[#CA7FFE] text-white py-1 lg:py-2 px-3 lg:px-6"
         >
           Бүгд
         </a>
       </div>
       {getPublicCreatorListData && (
-        <div className="relative flex flex-row gap-3 justify-between items-center mt-10 w-full">
+        <div className="relative flex flex-row gap-3 justify-between items-center mt-4 lg:mt-10 w-full">
           {!isBeginning && (
-            <button onClick={goPrev}>
+            <button onClick={goPrev} className="hidden lg:block">
               <Image
                 src={"/creators-swipe-button.png"}
                 width={42}
@@ -123,7 +123,7 @@ function Creators() {
             })}
           </Swiper>
           {!isEnd && (
-            <button onClick={goNext}>
+            <button onClick={goNext} className="hidden lg:block">
               <Image
                 src={"/creators-swipe-button.png"}
                 width={42}

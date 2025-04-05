@@ -26,13 +26,13 @@ function Footer() {
       name: "About",
       href: "/about",
     },
-    { name: "Terms & Condition", href: "/term&condition" },
+    { name: "Terms & Condition", href: "/tos" },
     { name: "Contact", href: "/contact" },
   ];
   return (
-    <footer className="bg-[#F5F4F0] w-full rounded-t-[30px] pt-16 sm:pt-28 px-7 sm:px-20">
+    <footer className="bg-[#F5F4F0] w-full rounded-t-[30px] pt-16 sm:pt-28 px-8 sm:px-20">
       <div className="mx-auto rounded-t-3xl">
-        <div className="flex flex-row gap-16 lg:gap-0 justify-between items-start lg:items-center px-0">
+        <div className="flex flex-col md:flex-row gap-10 lg:gap-0 justify-between items-start lg:items-center px-0">
           <div className="flex flex-col items-center gap-6">
             <div className="flex items-start">
               <Link href="/">
@@ -44,7 +44,7 @@ function Footer() {
                 />
               </Link>
             </div>
-            <div className="flex flex-row gap-4 items-center">
+            <div className="hidden md:flex flex-row gap-4 items-center">
               <a target="_blank" href="https://www.instagram.com/geni.ugc/">
                 <Image
                   src={"/ig-icon.png"}
@@ -65,8 +65,8 @@ function Footer() {
               </a>
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-40 text-[#2D262D]">
-            <nav className="hidden md:flex flex-col gap-1 sm:gap-3">
+          <div className="w-full flex flex-row justify-between sm:justify-start md:flex-row items-start gap-8 lg:gap-40 text-[#2D262D]">
+            <nav className="flex flex-col gap-3">
               {navItems.map((item, index) => (
                 <div key={item.name} className="flex items-center gap-6">
                   <Link href={item.href} className="">
@@ -75,7 +75,7 @@ function Footer() {
                 </div>
               ))}
             </nav>
-            <nav className="flex flex-col gap-1 sm:gap-3">
+            <nav className="flex flex-col gap-3">
               {addNavItems.map((item, index) => (
                 <Link key={item.name} href={item.href}>
                   {item.name}
@@ -83,8 +83,28 @@ function Footer() {
               ))}
             </nav>
           </div>
+          <div className="flex md:hidden flex-row gap-6 items-center">
+            <a target="_blank" href="https://www.instagram.com/geni.ugc/">
+              <Image
+                src={"/ig-icon.png"}
+                width={24}
+                height={24}
+                alt="logo"
+                className="w-6 h-6"
+              />
+            </a>
+            <a target="_blank" href="mailto:geni.ugc@gmail.com">
+              <Image
+                src={"/mail-icon.png"}
+                width={24}
+                height={24}
+                alt="logo"
+                className="w-7 h-7"
+              />
+            </a>
+          </div>
         </div>
-        <div className="mt-8 lg:mt-24 text-xs sm:text-sm text-[#2D262D] w-full text-center py-4 sm:py-10 border-t-[1px] border-[#2D262D]">
+        <div className="mt-16 md:mt-24 text-xs sm:text-sm text-[#2D262D] w-full text-center py-10 border-t border-[#2D262D]">
           <span>Copyright 2025 Geni Platform - All rights reserved</span>
         </div>
       </div>

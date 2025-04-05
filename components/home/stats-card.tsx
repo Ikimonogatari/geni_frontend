@@ -9,13 +9,17 @@ export const StatsCard = ({
   imgSrc,
   wrapperClassName,
   addImgSrc,
+  postfix,
+  mobileCount,
 }: {
   count: number;
+  mobileCount?: number;
   subtitle: string;
   className?: string;
   imgSrc: string;
   wrapperClassName?: string;
   addImgSrc?: string;
+  postfix?: React.ReactNode;
 }) => {
   return (
     <div
@@ -29,12 +33,23 @@ export const StatsCard = ({
           value={count}
           className={cn(
             "whitespace-pre-wrap text-8xl font-black tracking-tighter",
-            className
+            className,
+            mobileCount && "hidden md:block"
           )}
         />
-        <span>+</span>
+        {mobileCount ? (
+          <NumberTicker
+            value={mobileCount}
+            className={cn(
+              "whitespace-pre-wrap md:hidden text-7xl font-black tracking-tighter",
+              className
+            )}
+          />
+        ) : null}
+        {postfix && postfix}
+        <span className={cn(mobileCount && "text-7xl md:text-8xl")}>+</span>
       </div>
-      <div className="text-2xl text-black font-bold">{subtitle}</div>
+      <div className="text-xl md:text-2xl text-black font-bold">{subtitle}</div>
       <div className="size-6 absolute top-6 right-6 flex items-center justify-center">
         <Image
           src={imgSrc}

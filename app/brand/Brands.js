@@ -69,13 +69,13 @@ function Brands() {
         </span>
         <a
           href="/all-brands"
-          className="rounded-full bg-[#4D55F5] text-white py-2 px-6"
+          className="rounded-full bg-[#4D55F5] text-white py-1 lg:py-2 px-3 lg:px-6"
         >
           Бүгд
         </a>
       </div>
       {getPublicBrandListData && (
-        <div className="relative flex flex-row gap-3 items-center mt-9">
+        <div className="relative flex flex-row gap-3 items-center mt-4 lg:mt-9">
           <button onClick={goPrev}>
             <Image
               src={"/creators-swipe-button.png"}
@@ -108,7 +108,7 @@ function Brands() {
               )?.SocialAddress;
               return (
                 <SwiperSlide key={id} className="">
-                  <div className="bg-[#F5F4F0] min-h-[300px] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center justify-center gap-2 h-full">
+                  <div className="bg-[#F5F4F0] min-h-[300px] rounded-2xl p-4 text-[#2D262D] border border-border-gray/60 flex flex-col items-center justify-center gap-2 h-full">
                     <Image
                       src={
                         brand?.ProfileLink
@@ -118,7 +118,7 @@ function Brands() {
                       width={194}
                       height={194}
                       alt=""
-                      className="aspect-square w-[194px] h-[194px] rounded-full border border-[#000000] object-cover"
+                      className="aspect-square w-[194px] h-[194px] rounded-full border border-border-gray/60 object-cover"
                     />
                     <span className="hover:underline hover:underline-offset-3 text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden">
                       {brand?.Name ? brand?.Name : "Geni Брэнд"}

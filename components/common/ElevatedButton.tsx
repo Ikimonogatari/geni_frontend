@@ -24,7 +24,7 @@ const ElevatedButton = forwardRef<HTMLButtonElement, ElevatedButtonProps>(
         className={cn(
           bg,
           "font-inherit text-base py-5 px-9 font-black text-primary-foreground",
-          "border border-primary rounded-[0.4em]",
+          "border border-primary rounded-[30px]",
           shadow,
           "cursor-pointer",
           "transition-transform duration-100",

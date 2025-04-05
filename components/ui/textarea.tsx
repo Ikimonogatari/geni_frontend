@@ -54,9 +54,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               className={cn("overflow-y-auto outline-none", className)}
               {...props}
             />
-            <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
-              {charCount !== undefined && `Тэмдэгтийн тоо: ${charCount}/600`}
-            </div>
+            {charCount && (
+              <div className="text-[#6F6F6F] text-sm border-t-[1px] pt-2 border-[#6F6F6F]">
+                {charCount !== undefined && `Тэмдэгтийн тоо: ${charCount}/600`}
+              </div>
+            )}
           </div>
           {errorVisible && (
             <ErrorText text={errorText} visible={errorVisible} />
