@@ -28,6 +28,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
     data: listBrandContentsData,
     error: listBrandContentsError,
     isLoading: listBrandContentsLoading,
+    refetch: refetchBrandContents,
   } = useListBrandContentsQuery(
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
@@ -124,7 +125,12 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
   const renderBrandProfile = () => {
     switch (profileState) {
       case "content-progress":
-        return <ContentProgress currentContents={currentContents} />;
+        return (
+          <ContentProgress
+            currentContents={currentContents}
+            refetch={refetchBrandContents}
+          />
+        );
       case "content-gallery":
         return <BrandContentGallery contentsGallery={currentContents} />;
       case "brand-products":
@@ -136,7 +142,12 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
           />
         );
       default:
-        return <ContentProgress currentContents={currentContents} />;
+        return (
+          <ContentProgress
+            currentContents={currentContents}
+            refetch={refetchBrandContents}
+          />
+        );
     }
   };
 

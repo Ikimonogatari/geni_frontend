@@ -1,11 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormikProps, useFormikContext } from "formik";
-import { FormikTypes } from "../content.services";
+import { DictCode, FormikTypes, RefundReason } from "../content.services";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
+import { useDictListMutation } from "@/app/services/service";
+import _ from "lodash";
 
 const AcceptRequest: React.FC = () => {
   const formik = useFormikContext<FormikTypes>();
+  const [dictList, { isLoading: isDictListLoading, data: dictListData }] =
+    useDictListMutation();
+
+  useEffect(() => {
+    dictList({
+      dictCode: DictCode.BRAND_FEEDBACK,
+    });
+  }, []);
+
+  const handleBrandFeedBackChange = (dictId: number) => {
+    if (formik.values.BrandFeedBack.includes(dictId)) {
+      formik.setFieldValue(
+        "BrandFeedBack",
+        _.without(formik.values.BrandFeedBack, dictId)
+      );
+    } else {
+      formik.setFieldValue(
+        "BrandFeedBack",
+        _.union(formik.values.BrandFeedBack, [dictId])
+      );
+    }
+  };
 
   return (
     <div className="w-full flex flex-col p-4">
@@ -127,59 +151,40 @@ const AcceptRequest: React.FC = () => {
           <div className="flex flex-col gap-3 border-geni-gray border-[1px] rounded-xl p-4 pt-0">
             <div className="flex flex-col gap-2 bg-white rounded-xl p-4">
               <p className="text-xl font-bold mb-2">Контент пост хийх хүсэлт</p>
-              <label className="flex items-center justify-between p-2 border rounded-xl">
-                <span>
-                  Контент бүтээгч өөрийн сувaг дээр пост хийх /Instagram,
-                  Facebook/
-                </span>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    name="sharePost"
-                    id={`sharePost`}
-                    className="peer hidden"
-                    checked={formik.values.sharePost}
-                    onChange={formik.handleChange}
-                  />
-                  <label
-                    htmlFor={`sharePost`}
-                    className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
-                  >
-                    <span
-                      className={`text-sm sm:text-base ${
-                        formik.values.sharePost ? "text-green-500" : "hidden"
-                      } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+              {(dictListData as RefundReason[])?.map((item, index) => (
+                <label
+                  key={index}
+                  className="flex items-center justify-between p-2 border rounded-xl"
+                >
+                  <span>{item.DictVal}</span>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      name="BrandFeedBack"
+                      id={`BrandFeedBack-${item.DictId}`}
+                      className="peer hidden"
+                      checked={formik.values.BrandFeedBack.includes(
+                        item.DictId
+                      )}
+                      onChange={() => handleBrandFeedBackChange(item.DictId)}
+                    />
+                    <label
+                      htmlFor={`BrandFeedBack-${item.DictId}`}
+                      className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
                     >
-                      ✓
-                    </span>
-                  </label>
-                </div>
-              </label>
-              <label className="flex items-center justify-between p-2 border rounded-xl">
-                <span>"Collab" пост хийх /Instagram, Facebook/</span>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    name="collabPost"
-                    id={`collabPost`}
-                    className="peer hidden"
-                    checked={formik.values.collabPost}
-                    onChange={formik.handleChange}
-                  />
-                  <label
-                    htmlFor={`collabPost`}
-                    className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
-                  >
-                    <span
-                      className={`text-sm sm:text-base ${
-                        formik.values.collabPost ? "text-green-500" : "hidden"
-                      } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
-                    >
-                      ✓
-                    </span>
-                  </label>
-                </div>
-              </label>
+                      <span
+                        className={`text-sm sm:text-base ${
+                          formik.values.BrandFeedBack.includes(item.DictId)
+                            ? "text-green-500"
+                            : "hidden"
+                        } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                      >
+                        ✓
+                      </span>
+                    </label>
+                  </div>
+                </label>
+              ))}
             </div>
           </div>
         </div>

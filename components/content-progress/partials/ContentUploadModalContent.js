@@ -7,17 +7,21 @@ import {
   useGetVideoPresignedUrlMutation,
   useUploadByPresignUrlMutation,
   useCreatorContentSubmitMutation,
+  useContentResendMutation,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import useS3Upload from "@/components/hooks/useUploadToS3";
 import ContentUploadProgress from "@/components/common/ContentUploadProgress";
+import { useFormikContext } from "formik";
 
 function ContentUploadModalContent({
   parsedUserInfo,
   contentId,
   setDialogOpen,
   refetch,
+  isResend = false,
 }) {
+  const formik = useFormikContext();
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [contentVideoId, setContentVideoId] = useState(null);
@@ -59,6 +63,15 @@ function ContentUploadModalContent({
       isSuccess: creatorContentSubmitSuccess,
     },
   ] = useCreatorContentSubmitMutation();
+  const [
+    contentResend,
+    {
+      data: contentResendData,
+      error: contentResendError,
+      isLoading: contentResendLoading,
+      isSuccess: contentResendSuccess,
+    },
+  ] = useContentResendMutation();
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
@@ -79,21 +92,29 @@ function ContentUploadModalContent({
   }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
   useEffect(() => {
-    if (creatorContentSubmitError) {
-      toast.error(creatorContentSubmitError?.data.error);
+    if (creatorContentSubmitError || contentResendError) {
+      toast.error(
+        creatorContentSubmitError?.data.error || contentResendError?.data.error
+      );
     }
-    if (creatorContentSubmitSuccess) {
+    if (creatorContentSubmitSuccess || contentResendSuccess) {
       toast.success("Контент илгээгдлээ");
       setDialogOpen(false);
       refetch();
     }
-  }, [creatorContentSubmitSuccess, creatorContentSubmitError]);
+  }, [
+    creatorContentSubmitSuccess,
+    creatorContentSubmitError,
+    contentResendSuccess,
+    contentResendError,
+  ]);
 
   useEffect(() => {
     if (uploadFileError) {
       toast.error(uploadFileError?.data?.error);
     }
   }, [uploadFileData, uploadFileError]);
+
   const {
     getRootProps: getRootPropsForImage,
     getInputProps: getInputPropsForImage,
@@ -157,12 +178,22 @@ function ContentUploadModalContent({
   });
 
   const handleContentSubmit = () => {
-    creatorContentSubmit({
-      ContentId: contentId,
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
-    });
+    if (isResend) {
+      contentResend({
+        ContentId: contentId,
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+        BrandReviewId: formik.values.BrandReviewResendFeedback,
+      });
+    } else {
+      creatorContentSubmit({
+        ContentId: contentId,
+        Caption: caption,
+        ContentThumbnailFileId: contentThumbnailId,
+        ContentVideoFileId: contentVideoId,
+      });
+    }
   };
 
   return (
@@ -248,7 +279,7 @@ function ContentUploadModalContent({
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
-              className="p-3 bg-[#F5F4F0] min-h-[200px] w-full border border-gray-300 rounded-xl"
+              className="p-3 bg-[#F5F4F0] min-h-[300px] w-full border border-gray-300 rounded-xl"
             />
           </div>
           <button
@@ -256,7 +287,8 @@ function ContentUploadModalContent({
             onClick={handleContentSubmit}
             disabled={
               !(contentThumbnail && contentVideo && caption) ||
-              creatorContentSubmitLoading
+              creatorContentSubmitLoading ||
+              contentResendLoading
             }
             className={`bg-[#4FB755] border-[1px] border-[#2D262D] mt-6 px-5 py-2 rounded-lg font-bold text-white ${
               contentThumbnail && contentVideo && caption
@@ -264,7 +296,7 @@ function ContentUploadModalContent({
                 : "opacity-55 cursor-not-allowed"
             }`}
           >
-            Илгээх
+            {isResend ? "Дахин илгээх" : "Илгээх"}
           </button>
         </div>
       </div>

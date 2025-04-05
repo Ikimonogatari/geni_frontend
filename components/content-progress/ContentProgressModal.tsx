@@ -7,10 +7,12 @@ import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import {
+  BrandReceiveContentParams,
   BrandReviewParams,
   ContentProcessRefundParams,
   DialogType,
   DictCode,
+  FeedBackResponse,
   FormikTypes,
   GetContentProcessResponse,
   STATUS_LIST,
@@ -25,11 +27,13 @@ import Payment from "./partials/Payment";
 import ReturnSection from "./partials/ReturnSection";
 import ProgressStepper from "./partials/ProgressStepper";
 import {
+  useBrandReceiveContentMutation,
   useBrandReviewMutation,
   useContentFeedbackMutation,
   useContentProcessOverdueMutation,
   useContentProcessRefundMutation,
   useDictListMutation,
+  useGetBrandReviewMutation,
   useGetContentProcessMutation,
   useReceivedProductMutation,
 } from "@/app/services/service";
@@ -39,6 +43,7 @@ import ContentReviewModalContent from "./partials/ContentReviewModalContent";
 import ContentReturnModalContent from "./partials/ContentReturnModalContent";
 import ContentUploadModalContent from "./partials/ContentUploadModalContent";
 import InfoBox from "./partials/InfoBox";
+import _ from "lodash";
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -62,12 +67,7 @@ const ContentProgressModalContent: React.FC<
   // const [contentProcessData, setContentProcessData] = useState<GetContentProcessResponse | []>([]);
   const [
     getContentProcess,
-    {
-      isLoading: isLoadingContentProcess,
-      data: contentProcessData,
-      error: contentProcessError,
-      isSuccess,
-    },
+    { isLoading: isLoadingContentProcess, data: contentProcessData },
   ] = useGetContentProcessMutation();
   const [contentProcessRefund, { isLoading: isLoadingContentProcessRefund }] =
     useContentProcessRefundMutation();
@@ -82,6 +82,12 @@ const ContentProgressModalContent: React.FC<
     useContentFeedbackMutation();
   const [brandReview, { isLoading: isLoadingBrandReview }] =
     useBrandReviewMutation();
+  const [
+    getBrandReview,
+    { isLoading: isLoadingGetBrandReview, data: brandReviewData },
+  ] = useGetBrandReviewMutation();
+  const [brandReceiveContent, { isLoading: isLoadingBrandReceiveContent }] =
+    useBrandReceiveContentMutation();
 
   // const isSuccess = true;
   // const isLoadingContentProcess = false;
@@ -157,10 +163,10 @@ const ContentProgressModalContent: React.FC<
       contentStar: 0,
       contentDesignStar: 0,
       comment: "",
-      sharePost: false,
-      collabPost: false,
       returnReason: [],
       returnReasonDescription: "",
+      BrandFeedBack: [],
+      BrandReviewResendFeedback: [],
     },
     // validationSchema: addCreatorDetailsSchema,
     onSubmit: async (values) => {
@@ -175,8 +181,19 @@ const ContentProgressModalContent: React.FC<
             refetch();
           });
         } else if (dialogType == DialogType.ACCEPT_REQUEST) {
+          const data: BrandReceiveContentParams = {
+            ContentId: content?.ContentId,
+            Comment: values.comment,
+            InstructionStar: values.brandStar,
+            ContextStar: values.contentStar,
+            CreationStar: values.contentDesignStar,
+            BrandFeedBack: values.BrandFeedBack,
+          };
+          brandReceiveContent(data).then(() => {
+            setDialogOpen(false);
+            refetch();
+          });
         } else if (values.returnReason) {
-          console.log(pick(values, ["returnReason"]));
           const data: ContentProcessRefundParams = {
             ContentId: content?.ContentId,
             ReasonId: values.returnReason,
@@ -246,13 +263,6 @@ const ContentProgressModalContent: React.FC<
       }
     }
   }, [content]);
-
-  // useEffect(() => {
-  //   if (contentProcessData?.length > 0) {
-
-  //     contentProcessOverdue(content?.ContentId);
-  //   }
-  // }, [contentProcessData]);
 
   const steps = [
     <Image
@@ -373,6 +383,10 @@ const ContentProgressModalContent: React.FC<
     // setContentProcessData(content["Process"] as any);
     // setStatus("DeliverySuccess" as STATUS_LIST);
     setStatus(content.CurrentStepName.String as STATUS_LIST);
+
+    if (content?.CurrentStepName?.String == STATUS_LIST.ContentFixRequest) {
+      getBrandReview(content?.ContentId);
+    }
   };
 
   const handleClose = (currentDialogType: DialogType) => {
@@ -414,6 +428,20 @@ const ContentProgressModalContent: React.FC<
     });
   };
 
+  const handleBrandReviewResendFeedbackChange = (reviewId: number) => {
+    if (formik.values.BrandReviewResendFeedback.includes(reviewId)) {
+      formik.setFieldValue(
+        "BrandReviewResendFeedback",
+        _.without(formik.values.BrandReviewResendFeedback, reviewId)
+      );
+    } else {
+      formik.setFieldValue(
+        "BrandReviewResendFeedback",
+        _.union(formik.values.BrandReviewResendFeedback, [reviewId])
+      );
+    }
+  };
+
   if (!content) return <></>;
 
   const creatorModalContents = () => {
@@ -442,6 +470,7 @@ const ContentProgressModalContent: React.FC<
             contentId={content?.ContentId}
             refetch={refetch}
             setDialogOpen={setDialogOpen}
+            isResend={status === STATUS_LIST.ContentFixRequest}
           />
         ) : null}
 
@@ -463,15 +492,48 @@ const ContentProgressModalContent: React.FC<
               <div className="border-[1px] border-[#E6E6E6] p-4 rounded-xl">
                 <span className="text-3xl font-bold">Засварлах хүсэлт</span>
                 <div className="mt-4 flex flex-col gap-3">
-                  {[]?.map((f, i) => (
-                    <div
-                      key={i}
-                      className="flex flex-row items-center gap-3 sm:gap-6 p-3 sm:p-5 bg-[#F5F4F0] rounded-3xl"
-                    >
-                      <div className="rounded-full w-2 h-2 sm:w-3 sm:h-3 bg-[#D9D9D9]"></div>
-                      <span className="text-sm sm:text-base">{f.Feedback}</span>
-                    </div>
-                  ))}
+                  {(brandReviewData as FeedBackResponse).map(
+                    (feedback, index) => (
+                      <label
+                        key={index}
+                        className="flex items-center justify-between p-2 border rounded-xl"
+                      >
+                        <span>{feedback.FixReason}</span>
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            name="BrandReviewResendFeedback"
+                            id={`BrandReviewResendFeedback-${feedback.BrandReviewId}`}
+                            className="peer hidden"
+                            checked={formik.values.BrandReviewResendFeedback.includes(
+                              feedback.BrandReviewId
+                            )}
+                            onChange={() =>
+                              handleBrandReviewResendFeedbackChange(
+                                feedback.BrandReviewId
+                              )
+                            }
+                          />
+                          <label
+                            htmlFor={`BrandReviewResendFeedback-${feedback.BrandReviewId}`}
+                            className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
+                          >
+                            <span
+                              className={`text-sm sm:text-base ${
+                                formik.values.BrandReviewResendFeedback.includes(
+                                  feedback.BrandReviewId
+                                )
+                                  ? "text-green-500"
+                                  : "hidden"
+                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                            >
+                              ✓
+                            </span>
+                          </label>
+                        </div>
+                      </label>
+                    )
+                  )}
                 </div>
               </div>
               {/* <button
@@ -498,6 +560,10 @@ const ContentProgressModalContent: React.FC<
         )}
 
         {dialogType == DialogType.ACCEPT_REQUEST && <AcceptRequest />}
+
+        {content?.CurrentStepName?.String == STATUS_LIST.ContentApproved && (
+          <InfoBox title="Таны илгээсэн засварууд">test</InfoBox>
+        )}
       </>
     );
   };
@@ -556,6 +622,7 @@ const ContentProgressModalContent: React.FC<
                   ? handleReasonSubmit()
                   : handleOpenReturnSection()
               }
+              disabled={isLoadingContentProcessRefund}
               className={`w-full text-center text-xs sm:text-base ${
                 isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
               } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
@@ -621,7 +688,6 @@ const ContentProgressModalContent: React.FC<
   const brandModalFooterActions = () => {
     return (
       <>
-        {/* {getStepIndex(content.Status) >= 3 && */}
         {showViewContentButton(status as STATUS_LIST) &&
           dialogType == DialogType.PROGRESS && (
             <button
@@ -632,23 +698,23 @@ const ContentProgressModalContent: React.FC<
               Контент үзэх
             </button>
           )}
-
         {dialogType == DialogType.ACCEPT_REQUEST && (
           <div className="pt-4 mt-auto border-t">
             <button
               type="submit"
               className="w-full bg-secondary text-white py-3 font-bold rounded-xl"
+              disabled={isLoadingBrandReceiveContent}
             >
               Хүлээж авах
             </button>
           </div>
         )}
-
         {dialogType == DialogType.EDIT_REQUEST && (
           <div className="pt-4 mt-auto border-t">
             <button
               type="submit"
               className="w-full bg-secondary text-white py-3 font-bold rounded-xl"
+              disabled={isLoadingBrandReview}
             >
               Засвар илгээх
             </button>
@@ -732,8 +798,8 @@ const ContentProgressModalContent: React.FC<
   const isFullLoading =
     isLoadingContentProcess ||
     isLoadingContentFeedback ||
-    (content?.CurrentStepName?.String == STATUS_LIST.ContentFixRequest &&
-      isLoadingBrandReview) ||
+    isLoadingContentProcessOverdue ||
+    isLoadingGetBrandReview ||
     !content;
 
   return (

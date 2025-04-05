@@ -18,9 +18,9 @@ const InfoBox: React.FC<InfoBoxProps> = ({
       } rounded-xl p-5 mt-2`}
     >
       <h3 className="text-lg font-semibold">{title}</h3>
-      <p className={`text-sm ${!list && "bg-[#F5F4F0]"}rounded-lg p-4`}>
+      <div className={`text-sm ${!list && "bg-[#F5F4F0]"}rounded-lg p-4`}>
         {children}
-      </p>
+      </div>
     </div>
   );
 };

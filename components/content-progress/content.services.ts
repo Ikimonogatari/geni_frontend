@@ -125,10 +125,10 @@ export type FormikTypes = {
   contentStar: number;
   contentDesignStar: number;
   comment: string;
-  sharePost: boolean;
-  collabPost: boolean;
   returnReason: number[];
   returnReasonDescription: string;
+  BrandFeedBack: number[];
+  BrandReviewResendFeedback: number[];
 };
 
 export type GetContentProcessResponse = {
@@ -144,7 +144,7 @@ export type GetContentProcessResponse = {
 
 export enum DictCode {
   REFUND_REASON = "RefundReason",
-  BRAND_REVIEW = "BrandReview",
+  BRAND_FEEDBACK = "BrandFeedBack",
 }
 
 export type RefundReason = {
@@ -170,6 +170,35 @@ export type ContentProcessWhenOverdueResponse = {
 export type BrandReviewParams = {
   ContentId: string;
   FixReason: string[];
+};
+
+export type FeedBackResponse = {
+  BrandId: number;
+  BrandReviewId: number;
+  ContentId: string;
+  CreatedAt: string;
+  CreatedBy: number;
+  CreatorChecked: boolean;
+  FixReason: string;
+  ModifiedAt: string;
+  ModifiedBy: number;
+}[];
+
+export type BrandReceiveContentParams = {
+  ContentId: string;
+  Comment: string;
+  InstructionStar: number;
+  ContextStar: number;
+  CreationStar: number;
+  BrandFeedBack: number[];
+};
+
+export type ContentResendParams = {
+  ContentId: string;
+  Caption: string;
+  ContentThumbnailFileId: number;
+  ContentVideoFileId: number;
+  BrandReviewId: number[];
 };
 
 export const getStepIndex = (status: string): number => {

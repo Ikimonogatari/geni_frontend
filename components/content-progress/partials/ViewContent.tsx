@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { Content, DialogType } from "../content.services";
+import { Content, DialogType, STATUS_LIST } from "../content.services";
 import Image from "next/image";
 
 type ViewContentProps = {
@@ -18,20 +18,29 @@ const ViewContent: React.FC<ViewContentProps> = ({
         <div className="lg:basis-1/2 flex flex-row gap-4">
           <div className="basis-1/2 flex flex-col min-h-0 gap-2">
             <p className="text-sm font-bold">Контент</p>
-            <video
+            <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
+              <source src={content.ContentVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            {/* <video
               src={content.ContentVideo}
               className="rounded-lg border-[1px] border-[#E6E6E6] flex-1 min-h-0"
-            />
+            /> */}
           </div>
           <div className="basis-1/2 flex flex-col min-h-0 gap-2">
             <p className="text-sm font-bold">Thumbnail зураг</p>
-            <Image
+            <img
+              src={content.ContentThumbnail || "/no-content-image.png"}
+              alt=""
+              className="aspect-[9/16] w-full h-full rounded-2xl"
+            />
+            {/* <Image
               src={content.ContentThumbnail || "/no-content-image.png"}
               alt="thumbnail"
               height={0}
               width={0}
               className="rounded-lg border-[1px] border-[#E6E6E6] w-full h-full flex-1 aspect-[9/16]"
-            />
+            /> */}
           </div>
         </div>
         <div className="lg:basis-1/2 flex flex-col justify-between min-h-0 grow">
@@ -42,13 +51,15 @@ const ViewContent: React.FC<ViewContentProps> = ({
             </caption>
           </div>
           <div className="flex flex-col justify-between gap-2">
-            <button
-              type="button"
-              className="bg-[#F49D19] text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
-              onClick={() => setDialogType(DialogType.EDIT_REQUEST)}
-            >
-              Контент засах хүсэлт илгээх
-            </button>
+            {content?.CurrentStepName.String != STATUS_LIST.ContentReSent && (
+              <button
+                type="button"
+                className="bg-[#F49D19] text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
+                onClick={() => setDialogType(DialogType.EDIT_REQUEST)}
+              >
+                Контент засах хүсэлт илгээх
+              </button>
+            )}
             <button
               type="button"
               className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"

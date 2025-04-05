@@ -545,6 +545,19 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getBrandReview: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/brand-review/${id}`,
+        method: "GET",
+      }),
+    }),
+    contentResend: builder.mutation({
+      query: (body) => ({
+        url: `/api/web/private/content/brand-review/resend`,
+        method: "POST",
+        body,
+      }),
+    }),
     getContentProcess: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/content/process",
@@ -634,5 +647,7 @@ export const {
   useContentProcessOverduePaymentMutation,
   useContentFeedbackMutation,
   useBrandReviewMutation,
+  useGetBrandReviewMutation,
+  useContentResendMutation,
   useGetContentProcessMutation,
 } = geniApi;

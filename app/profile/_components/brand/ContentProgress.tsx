@@ -33,100 +33,100 @@ function renderStars(score, setScore, playSound) {
   ));
 }
 
-function ContentProgress({ currentContents }) {
-  const [contentThumbnail, setContentThumbnail] = useState(null);
-  const [contentVideo, setContentVideo] = useState(null);
-  const [qualityScore, setQualityScore] = useState(null);
-  const [guidelineScore, setGuidelineScore] = useState(null);
-  const [conceptScore, setConceptScore] = useState(null);
-  const [comment, setComment] = useState("");
-  const [isCommenting, setIsCommenting] = useState(false);
+function ContentProgress({ currentContents, refetch }) {
+  // const [contentThumbnail, setContentThumbnail] = useState(null);
+  // const [contentVideo, setContentVideo] = useState(null);
+  // const [qualityScore, setQualityScore] = useState(null);
+  // const [guidelineScore, setGuidelineScore] = useState(null);
+  // const [conceptScore, setConceptScore] = useState(null);
+  // const [comment, setComment] = useState("");
+  // const [isCommenting, setIsCommenting] = useState(false);
 
-  const [
-    getImagePresignedUrl,
-    {
-      data: getImagePresignedUrlData,
-      error: getImagePresignedUrlError,
-      isLoading: getImagePresignedUrlLoading,
-    },
-  ] = useGetImagePresignedUrlMutation();
+  // const [
+  //   getImagePresignedUrl,
+  //   {
+  //     data: getImagePresignedUrlData,
+  //     error: getImagePresignedUrlError,
+  //     isLoading: getImagePresignedUrlLoading,
+  //   },
+  // ] = useGetImagePresignedUrlMutation();
 
-  const [
-    getVideoPresignedUrl,
-    {
-      data: getVideoPresignedUrlData,
-      error: getVideoPresignedUrlError,
-      isLoading: getVideoPresignedUrlLoading,
-    },
-  ] = useGetVideoPresignedUrlMutation();
+  // const [
+  //   getVideoPresignedUrl,
+  //   {
+  //     data: getVideoPresignedUrlData,
+  //     error: getVideoPresignedUrlError,
+  //     isLoading: getVideoPresignedUrlLoading,
+  //   },
+  // ] = useGetVideoPresignedUrlMutation();
 
-  useEffect(() => {
-    if (getImagePresignedUrlError) {
-    }
-    if (getImagePresignedUrlData) {
-      setContentThumbnail(getImagePresignedUrlData.url);
-    }
-  }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
+  // useEffect(() => {
+  //   if (getImagePresignedUrlError) {
+  //   }
+  //   if (getImagePresignedUrlData) {
+  //     setContentThumbnail(getImagePresignedUrlData.url);
+  //   }
+  // }, [getImagePresignedUrlData, getVideoPresignedUrlError]);
 
-  useEffect(() => {
-    if (getVideoPresignedUrlError) {
-    }
-    if (getVideoPresignedUrlData) {
-      setContentVideo(getVideoPresignedUrlData.url);
-    }
-  }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
+  // useEffect(() => {
+  //   if (getVideoPresignedUrlError) {
+  //   }
+  //   if (getVideoPresignedUrlData) {
+  //     setContentVideo(getVideoPresignedUrlData.url);
+  //   }
+  // }, [getVideoPresignedUrlData, getVideoPresignedUrlError]);
 
-  const [
-    brandReceiveContent,
-    {
-      data: brandReceiveContentData,
-      error: brandReceiveContentError,
-      isLoading: brandReceiveContentLoading,
-      isSuccess: brandReceiveContentSuccess,
-    },
-  ] = useBrandReceiveContentMutation();
+  // const [
+  //   brandReceiveContent,
+  //   {
+  //     data: brandReceiveContentData,
+  //     error: brandReceiveContentError,
+  //     isLoading: brandReceiveContentLoading,
+  //     isSuccess: brandReceiveContentSuccess,
+  //   },
+  // ] = useBrandReceiveContentMutation();
 
-  useEffect(() => {
-    if (brandReceiveContentError) {
-      //@ts-ignore
-      toast.error(brandReceiveContentError?.data?.error);
-    }
-    if (brandReceiveContentSuccess) {
-      toast.success("Амжилттай");
-    }
-  }, [brandReceiveContentSuccess, brandReceiveContentError]);
+  // useEffect(() => {
+  //   if (brandReceiveContentError) {
+  //     //@ts-ignore
+  //     toast.error(brandReceiveContentError?.data?.error);
+  //   }
+  //   if (brandReceiveContentSuccess) {
+  //     toast.success("Амжилттай");
+  //   }
+  // }, [brandReceiveContentSuccess, brandReceiveContentError]);
 
-  const handleDialogTrigger = (thumbnailId, contentId) => {
-    getImagePresignedUrl({ FileId: thumbnailId });
-    getVideoPresignedUrl({ FileId: contentId });
-  };
+  // const handleDialogTrigger = (thumbnailId, contentId) => {
+  //   getImagePresignedUrl({ FileId: thumbnailId });
+  //   getVideoPresignedUrl({ FileId: contentId });
+  // };
 
-  const handleContentReceive = (contentId) => {
-    brandReceiveContent({
-      ContentId: contentId,
-      Comment: comment,
-      InstructionStar: guidelineScore,
-      ContextStar: conceptScore,
-      CreationStar: qualityScore,
-    });
-  };
+  // const handleContentReceive = (contentId) => {
+  //   brandReceiveContent({
+  //     ContentId: contentId,
+  //     Comment: comment,
+  //     InstructionStar: guidelineScore,
+  //     ContextStar: conceptScore,
+  //     CreationStar: qualityScore,
+  //   });
+  // };
 
-  const playSound = () => {
-    const audio = new Audio("/star-sound.mp3");
-    audio.play();
-  };
+  // const playSound = () => {
+  //   const audio = new Audio("/star-sound.mp3");
+  //   audio.play();
+  // };
 
-  const copyCaptionToClipboard = (caption) => {
-    navigator.clipboard
-      .writeText(caption)
-      .then(() => {
-        toast.success("Тайлбарыг хууллаа!");
-      })
-      .catch((err) => {
-        console.error("Error copying text: ", err);
-        toast.error("Тайлбарыг хуулж чадсангүй!");
-      });
-  };
+  // const copyCaptionToClipboard = (caption) => {
+  //   navigator.clipboard
+  //     .writeText(caption)
+  //     .then(() => {
+  //       toast.success("Тайлбарыг хууллаа!");
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error copying text: ", err);
+  //       toast.error("Тайлбарыг хуулж чадсангүй!");
+  //     });
+  // };
 
   return (
     <div className="w-full overflow-x-auto">
@@ -177,44 +177,9 @@ function ContentProgress({ currentContents }) {
                 <CreatorTier tier={p?.LevelName} />
               </div>
               {/* <span className="col-span-1">{p.ContentPhase}</span> */}
-              <StatusIndicator
-                status={
-                  p.Status === null || p.Status === ""
-                    ? p.CurrentStepName.String
-                    : p.Status
-                }
-              />
+              <StatusIndicator status={p?.CurrentStepName?.String} />
               <div className="col-span-1 flex justify-end">
-                {p.Status === null || p.Status === "" ? (
-                  <ContentProgressModalContent content={p} />
-                ) : p.Status === "ContentApproved" ? (
-                  <ContentReceiveModal
-                    contentVideoFileId={p.ContentVideoFileId}
-                    contentThumbnailFileId={p.ContentThumbnailFileId}
-                    caption={p.Caption}
-                    handleDialogTrigger={handleDialogTrigger}
-                    contentVideo={contentVideo}
-                    contentThumbnail={contentThumbnail}
-                    handleContentReceive={handleContentReceive}
-                    copyCaptionToClipboard={copyCaptionToClipboard}
-                    guidelineScore={guidelineScore}
-                    setGuidelineScore={setGuidelineScore}
-                    conceptScore={conceptScore}
-                    setConceptScore={setConceptScore}
-                    qualityScore={qualityScore}
-                    setQualityScore={setQualityScore}
-                    isCommenting={isCommenting}
-                    setIsCommenting={setIsCommenting}
-                    comment={comment}
-                    setComment={setComment}
-                    renderStars={renderStars}
-                    playSound={playSound}
-                    p={p}
-                  />
-                ) : (
-                  <></>
-                )}
-                {/* <ContentProgressModalContent content={p} /> */}
+                <ContentProgressModalContent content={p} refetch={refetch} />
               </div>
             </div>
           ))}
