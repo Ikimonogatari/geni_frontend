@@ -6,8 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { UserInfoProvider } from "./context/UserInfoContext";
 import { Suspense } from "react";
 import Loader from "@/components/common/Loader";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/navbar";
+import Footer from "@/components/layout/footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <Provider store={store}>
