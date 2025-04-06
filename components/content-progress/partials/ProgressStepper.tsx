@@ -73,7 +73,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
       <div className="flex flex-row items-center gap-4 w-full h-full bg-[#F5F4F0] rounded-2xl p-4">
         <div className="basis-1/3 lg:flex-none">
           <Image
-            src={content.ProductFile || "/no-content-image.png"}
+            src={content.ProductPics?.length > 0 ? content.ProductPics[0].Url : "/no-product-image.png"}
             alt=""
             width={150}
             height={150}
@@ -85,8 +85,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             <Image
               src={
                 (userType === "brand"
-                  ? content.BrandProfileLink
-                  : content.CreatorProfilePic) || "/no-content-image.png"
+                  ? (content.CreatorProfilePic || '/dummy-creator.png')
+                  : (content.BrandProfileLink || "/dummy-brand.png"))
               }
               alt=""
               width={40}

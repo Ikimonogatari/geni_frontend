@@ -202,7 +202,6 @@ const ContentProgressModalContent: React.FC<
             ReasonDesc: values.returnReasonDescription,
             StatusId: 7,
           };
-          console.log(data);
           contentProcessRefund(data).then(() => {
             setDialogOpen(false);
             refetch();
@@ -320,12 +319,6 @@ const ContentProgressModalContent: React.FC<
   };
 
   const showPaymentButton = (status: STATUS_LIST): boolean => {
-    console.log(
-      [STATUS_LIST.DeliveryPaymentPending, STATUS_LIST.ContentBanned].includes(
-        status
-      )
-    );
-    console.log("dialog type", dialogType);
     return [
       STATUS_LIST.DeliveryPaymentPending,
       STATUS_LIST.ContentBanned,

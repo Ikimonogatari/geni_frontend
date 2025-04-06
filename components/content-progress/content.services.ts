@@ -45,6 +45,9 @@ export type Content = {
   PointCnfId: number;
   ProductId: string;
   ProductName: string;
+  ProductPics: {
+    Url: string
+  }[]
   RequestReason: string;
   Star: number;
   LevelName: string;
