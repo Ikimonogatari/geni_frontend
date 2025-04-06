@@ -10,6 +10,7 @@ import {
   STATUS_STEPPER_MESSAGES,
 } from "./content-progress/content.services";
 import moment from "moment";
+import Cookies from "js-cookie";
 
 type StepperProps = {
   steps: React.ReactNode[];
@@ -22,6 +23,8 @@ type StepperProps = {
   contentProcess?: GetContentProcessResponse;
   content?: Content;
   overdueProcess?: any;
+  getContentProcess?: (params) => void;
+  isLoadingContentProcess?: boolean
 };
 
 const Stepper: React.FC<StepperProps> = (props) => {
@@ -36,7 +39,9 @@ const Stepper: React.FC<StepperProps> = (props) => {
     hasBg = true,
     content,
     overdueProcess,
+    getContentProcess, isLoadingContentProcess
   } = props;
+  const userType = Cookies.get("userType");
 
   const getColor = (colorName: string, isTextColor = false) => {
     switch (colorName) {
@@ -83,6 +88,18 @@ const Stepper: React.FC<StepperProps> = (props) => {
     }
     return "bg-[#E6E6E6]";
   };
+
+  const handleStepClick = (stepId) => {
+    getContentProcess({
+      ContentId: content?.ContentId,
+      ContentStepId: stepId,
+      UserType: userType,
+    })
+  }
+
+  const canClick = (stepid) => {
+    return content?.CurrentStepId - 1 >= stepid
+  }
 
   if (!horizontal) {
     return (
@@ -162,17 +179,18 @@ const Stepper: React.FC<StepperProps> = (props) => {
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`flex items-center ${
-              index !== steps.length - 1 ? "flex-1" : ""
-            }`}
+            className={`flex items-center ${index !== steps.length - 1 ? "flex-1" : ""
+              }`}
           >
-            <div
-              className={`relative flex items-center justify-center ${
-                hasBg ? "w-10 h-10 rounded-lg" : "w-6 h-6"
-              } ${getStepColor(index)} [&>svg]:text-white`}
+            <button
+              className={`relative flex items-center justify-center ${hasBg ? "w-10 h-10 rounded-lg" : "w-6 h-6"
+                } ${getStepColor(index)} [&>svg]:text-white ${canClick(index) && 'cursor-pointer'}`}
+
+              onClick={() => handleStepClick(index + 1)}
+              disabled={isLoadingContentProcess || !canClick(index)}
             >
               {step}
-            </div>
+            </button>
 
             {index !== steps.length - 1 && (
               <div className={`flex-1 h-[2px] ${getLineColor(index)}`} />
