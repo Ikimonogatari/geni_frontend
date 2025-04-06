@@ -1,8 +1,17 @@
 import React from "react";
 import Image from "next/image";
 import PriceFormatter from "../common/FormatPrice";
+import { useGetOnboardingCourseQuery } from "@/app/services/service";
 
 function Step1({ handleSelect, selectedOption }) {
+  const {
+    data: courseData,
+    isLoading,
+    error,
+  } = useGetOnboardingCourseQuery({});
+
+  const coursePrice = courseData?.price || 480000; // Fallback to default price if API fails
+
   return (
     <>
       <span className="text-xl sm:text-2xl xl:text-3xl font-bold">
@@ -25,7 +34,7 @@ function Step1({ handleSelect, selectedOption }) {
             <div className="flex flex-col">
               <span className="text-sm sm:text-base">Хичээлийн үнэ:</span>
               <span className="text-xl sm:text-2xl">
-                <PriceFormatter price={480000} />
+                <PriceFormatter price={coursePrice} />
               </span>
             </div>
           </div>

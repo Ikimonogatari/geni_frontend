@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useListPaymentPlansQuery } from "@/app/services/service";
+import {
+  useListPaymentPlansQuery,
+  useGetOnboardingCourseQuery,
+} from "@/app/services/service";
 import PriceFormatter from "@/components/common/FormatPrice";
 import { Input } from "@/components/ui/input";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
@@ -28,11 +31,17 @@ function Step3({
     isLoading: listPaymentPlansLoading,
   } = useListPaymentPlansQuery({});
 
+  const {
+    data: courseData,
+    isLoading: courseLoading,
+    error: courseError,
+  } = useGetOnboardingCourseQuery({});
+
   const selectedPackageData = listPaymentPlansData
     ? listPaymentPlansData[selectedPackageIndex]
     : null;
 
-  const originalPrice = 480000;
+  const originalPrice = courseData?.price || 480000; // Use API price with fallback
   const discountAmount = couponData
     ? couponData.coupon_type === "percentage"
       ? (originalPrice * parseInt(couponData.coupon_value)) / 100

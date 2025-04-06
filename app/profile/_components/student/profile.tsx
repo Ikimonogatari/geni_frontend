@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import {
   useListCreatorContentsQuery,
   useBecomeCreatorMutation,
+  useGetStudentCoursesQuery,
 } from "@/app/services/service";
 import ContentProgress from "./ContentProgress";
 import LogoutButton from "@/components/common/LogoutButton";
@@ -18,6 +19,7 @@ import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
 import CoursePurchaseModal from "@/components/course/CoursePurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
+import StudentCourses from "./StudentCourses";
 
 function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +37,12 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
     { refetchOnMountOrArgChange: true }
   );
 
+  const {
+    data: studentCoursesData,
+    error: studentCoursesError,
+    isLoading: studentCoursesLoading,
+  } = useGetStudentCoursesQuery({});
+
   const [
     becomeCreator,
     {
@@ -46,8 +54,8 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   ] = useBecomeCreatorMutation();
 
   const isLoading = useMemo(() => {
-    return listCreatorContentsLoading;
-  }, [listCreatorContentsLoading]);
+    return listCreatorContentsLoading || studentCoursesLoading;
+  }, [listCreatorContentsLoading, studentCoursesLoading]);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -76,7 +84,12 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   };
 
   const renderStudentProfile = () => {
-    return <ContentProgress currentContents={currentContents} />;
+    return (
+      <>
+        <StudentCourses />
+        <ContentProgress currentContents={currentContents} />
+      </>
+    );
   };
 
   const totalPages = getTotalPages();

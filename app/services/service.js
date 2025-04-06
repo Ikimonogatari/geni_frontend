@@ -461,11 +461,30 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    calculateCoupon: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/geni-course/calculate-coupon",
+        method: "POST",
+        body,
+      }),
+    }),
     checkBankAccountName: builder.mutation({
       query: (body) => ({
         url: "/api/web/private/cgw/check-name",
         method: "POST",
         body,
+      }),
+    }),
+    getOnboardingCourse: builder.query({
+      query: () => ({
+        url: "/api/web/private/geni-course/onboarding",
+        method: "GET",
+      }),
+    }),
+    getStudentCourses: builder.query({
+      query: () => ({
+        url: "/api/web/private/geni-course/my",
+        method: "GET",
       }),
     }),
     getConnectedBankAccount: builder.query({
@@ -642,6 +661,9 @@ export const {
   useStudentRegisterMutation,
   usePurchaseCourseMutation,
   useCheckCouponMutation,
+  useCalculateCouponMutation,
+  useGetOnboardingCourseQuery,
+  useGetStudentCoursesQuery,
   useGetBankListQuery,
   useCheckBankAccountNameMutation,
   useGetConnectedBankAccountQuery,
