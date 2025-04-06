@@ -17,14 +17,12 @@ import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 
 interface CoursePaymentProps {
-  selectedPackageId: number;
   setIsMainDialogOpen: (open: boolean) => void;
   selectedPayment: string;
   couponCode: string;
 }
 
 const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
-  selectedPackageId,
   setIsMainDialogOpen,
   selectedPayment,
   couponCode,
