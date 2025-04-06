@@ -18,7 +18,7 @@ const SingleConcavedCard: React.FC<SingleConcavedCardProps> = ({
   const isLeft = layoutHorizontally === "left";
   const isTop = layoutVertically === "top";
 
-  const containerClasses = `flex w-full h-auto max-w-xl ${
+  const containerClasses = `flex w-full h-full max-w-3xl ${
     isTop ? "flex-col" : "flex-col-reverse"
   }`;
   const rowClasses = `flex w-full items-stretch ${

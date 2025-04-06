@@ -526,6 +526,13 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getFeaturedProductList: builder.query({
+      query: (body) => ({
+        url: "/api/web/public/product/featured?limit=30&offset=0",
+        method: "GET",
+      }),
+    }),
+
     contentProcessRefund: builder.mutation({
       query: (body) => ({
         url: `/api/web/private/content/content-process/refund`,
@@ -686,4 +693,5 @@ export const {
   useGetBrandReviewBrandMutation,
   useGetFinalContentXpMutation,
   useGetContentProcessMutation,
+  useGetFeaturedProductListQuery,
 } = geniApi;

@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { ElevatedButton } from "../common/ElevatedButton";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 type CallToActionProps = {
   headerImgSrc: string;
@@ -14,6 +17,7 @@ type CallToActionProps = {
   imgWidth?: string | number;
   imgClass?: string;
   mobileImgSrc?: string;
+  path: string;
 };
 
 export default function CallToAction({
@@ -27,7 +31,12 @@ export default function CallToAction({
   imgWidth = "85%",
   imgClass,
   mobileImgSrc,
+  path,
 }: CallToActionProps) {
+  const router = useRouter();
+  const handleRoute = () => {
+    router.push(path);
+  };
   return (
     <div
       className="flex flex-col md:flex-row w-full mt-6 relative"
@@ -102,6 +111,7 @@ export default function CallToAction({
           <ElevatedButton
             className="w-full border-black/55 px-3"
             theme={btnColor}
+            onClick={handleRoute}
           >
             <div className="flex gap-2 items-center justify-center">
               <span className="whitespace-nowrap text-lg md:text-2xl font-bold">
@@ -123,6 +133,7 @@ export default function CallToAction({
               <ElevatedButton
                 className="w-full border-black/55 pl-12"
                 theme={btnColor}
+                onClick={handleRoute}
               >
                 <div className="flex gap-2 items-center justify-center whitespace-nowrap">
                   <span className="whitespace-nowrap text-lg md:text-2xl font-bold">

@@ -6,21 +6,21 @@ function Statistics() {
   return (
     <ContainerLayout className="mt-4 md:mt-20 grid grid-cols-7 gap-5">
       <StatsCard
-        count={120}
+        count={520}
         subtitle="Geni Student"
         wrapperClassName="col-span-full md:col-span-2"
         className="text-geni-green"
         imgSrc="/landing/student-stats.png"
       />
       <StatsCard
-        count={80}
+        count={90}
         subtitle="Geni Creator"
         wrapperClassName="col-span-full md:col-span-2"
         className="text-geni-pink col-span-2"
         imgSrc="/landing/creator-stats.png"
       />
       <StatsCard
-        count={60}
+        count={70}
         subtitle="Geni Brand"
         wrapperClassName="col-span-full md:col-span-2"
         className="text-geni-blue col-span-2"
@@ -40,7 +40,7 @@ function Statistics() {
         />
       </div>
       <StatsCard
-        count={700}
+        count={900}
         subtitle="Контент бүтээгдсэн"
         wrapperClassName="col-span-full md:col-span-2"
         className="col-span-2"
@@ -48,8 +48,8 @@ function Statistics() {
         addImgSrc="/landing/play-bw-icon.png"
       />
       <StatsCard
-        count={65000000}
-        mobileCount={65}
+        count={75_000_000}
+        mobileCount={75}
         postfix={<span className="text-7xl md:hidden">сая</span>}
         subtitle="Үнэ бүхий бүтээгдэхүүнүүд бүтээгчдэд хүргэгдсэн"
         wrapperClassName="col-span-full md:col-span-4"

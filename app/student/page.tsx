@@ -37,13 +37,47 @@ function Page() {
         description="UGC контент бүтээх чадварт суралцангаа эхний брэнд хамтралаа хийж төгсөөд Geni certified бүтээгч болоорой."
         btnText="Бүртгүүлэх"
         btnTheme="green"
+        path="/register/student"
       />
 
       <div className="mt-24">
         <Features />
       </div>
       <div className="mt-24">
-        <Testimonials />
+        <Testimonials
+          testimonials={[
+            {
+              text: "“Geni бол үнэхээр цаг үеэ олсон сургалтын платформ. Контент бүтээгчдийн хувьд сурч хөгжих, олон олон шинэ хамтралуудыг бий болгоход туслах цогц систем, маш гоё боломжийг олгож байгаа орон зай гэж харж байгаа.”",
+              name: "Ugc_ukana",
+              position: "Geni Student",
+              image: "/landing/common/testimonials/5.png",
+            },
+            {
+              text: "“Би цаашид UGC контент бүтээгчээрээ тогтмол ажиллаж зах зээлд influencer хүмүүсээс илүү үнэ цэнтэй ашигтай маркетинг хийхийг хүсэж байгаа.”",
+              name: "Lkhamaa",
+              position: "Geni Student",
+              image: "/landing/common/testimonials/6.png",
+            },
+            {
+              text: "“Geni Creator Program cуурыг маань маш зөв цэгцтэй ойлгомжтой тавьж өгсөн, мөн цаашид сайт нь улам өргөжиж, олон байгууллагуудтай хамтарaхад тусална гэдэгт итгэлтэй байна.”",
+              name: "Oyu",
+              position: "Geni Student",
+              image: "/landing/common/testimonials/7.png",
+            },
+            {
+              text: "“Geni хөтөлбөрийн ачаар өөрийн тухтай зоноосоо гарч чадсан. Контент хийх хүслийг минь улам дүрэлзүүлсэн.”",
+              name: "Purevjav",
+              position: "Geni Student",
+              image: "/landing/common/testimonials/8.png",
+            },
+            {
+              text: "“Контент хийхийн хэцүү талуудыг мэдэрч байгаа ч миний бичлэгийг үзээд хүмүүст ямар санагдах бол гэсэн догдлол, нэг хийгээд суухаар цаг өнгөрч байгааг мэдрэхгүй орчноосоо тасрах нь нэг төрлийн бясалгал шиг санагддаг.”",
+              name: "Нүргүл",
+              position: "Geni Student",
+              image: "/landing/common/testimonials/9.png",
+            },
+          ]}
+        />
       </div>
       <div className="mt-24">
         <Cycle />
@@ -59,6 +93,7 @@ function Page() {
           btnText="Geni Student болох"
           btnColor="green"
           descriptionRightPadding={-40}
+          path="/register/student"
         />
       </div>
       <div className="mt-24">

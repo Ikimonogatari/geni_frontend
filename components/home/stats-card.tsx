@@ -28,7 +28,7 @@ export const StatsCard = ({
         wrapperClassName
       )}
     >
-      <div className={cn("text-8xl font-black", className)}>
+      <div className={cn("flex text-8xl font-black", className)}>
         <NumberTicker
           value={count}
           className={cn(
@@ -49,7 +49,7 @@ export const StatsCard = ({
         {postfix && postfix}
         <span className={cn(mobileCount && "text-7xl md:text-8xl")}>+</span>
       </div>
-      <div className="text-xl md:text-2xl text-black font-bold">{subtitle}</div>
+      <div className="text-xl md:text-2xl font-bold">{subtitle}</div>
       <div className="size-6 absolute top-6 right-6 flex items-center justify-center">
         <Image
           src={imgSrc}

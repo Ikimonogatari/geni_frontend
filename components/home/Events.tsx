@@ -15,13 +15,13 @@ function Events() {
           className="w-full"
         >
           <CarouselContent>
-            {[...Array(6)].map((_, index) => (
+            {[...Array(1)].map((_, index) => (
               <CarouselItem
                 key={index}
                 className="min-w-[250px] h-[calc(100vh-160px)] md:h-[444px]"
               >
                 <Image
-                  src="/pro100/1.png"
+                  src="/landing/common/banner.png"
                   priority
                   height={0}
                   width={0}

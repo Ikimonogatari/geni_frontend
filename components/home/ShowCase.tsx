@@ -4,9 +4,16 @@ import ContainerLayout from "../ui/container-layout";
 import SingleConcavedCard from "../common/SingleConcavedCard";
 import { ElevatedButton } from "../common/ElevatedButton";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { useRouter } from "next/navigation";
+import Autoplay from "embla-carousel-autoplay";
+
+const showcaseVideos = [
+  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/1.mp4",
+  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/2.mp4",
+  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/3.mp4",
+  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/4.mp4",
+];
 
 function ShowCase() {
   const router = useRouter();
@@ -49,21 +56,23 @@ function ShowCase() {
               loop: true,
               align: "start",
             }}
-            // autoplay={true}
             autoplayInterval={3000}
             className="-mx-5 mt-4"
           >
             <CarouselContent>
-              {[...Array(6)].map((_, index) => (
-                <CarouselItem key={index} className="py-4 pr-0 pl-10 basis-4/5">
-                  <Image
-                    className="border-[1px] border-border-gray/60 w-full h-auto object-cover rounded-[30px]"
-                    alt=""
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    src={"/landing/common/videos/image.png"}
-                  />
+              {showcaseVideos.map((videoSrc) => (
+                <CarouselItem
+                  key={videoSrc}
+                  className="py-4 pr-0 pl-10 basis-4/5"
+                >
+                  <video
+                    className="border-[1px] border-border-gray/60 w-auto h-full object-cover rounded-[30px]"
+                    autoPlay
+                    loop
+                    muted
+                  >
+                    <source src={videoSrc} type="video/mp4" />
+                  </video>
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -74,7 +83,7 @@ function ShowCase() {
         <SingleConcavedCard
           layoutHorizontally="left"
           layoutVertically="top"
-          contextClassName="flex items-end h-full"
+          contextClassName="flex items-center h-full pl-10 pt-20"
           context={
             <div className="flex flex-col gap-6 w-full">
               <span className="text-xl font-extrabold uppercase">
@@ -88,11 +97,7 @@ function ShowCase() {
             </div>
           }
         >
-          <ElevatedButton
-            className="w-full"
-            theme={"pink"}
-            onClick={routeToJoin}
-          >
+          <ElevatedButton className="w-full" theme="pink" onClick={routeToJoin}>
             <div className="flex gap-2 items-center justify-center whitespace-nowrap">
               <span className="whitespace-nowrap text-lg md:text-xl">
                 Платформд нэгдэх
@@ -110,23 +115,23 @@ function ShowCase() {
             loop: true,
             align: "start",
           }}
-          autoplay={true}
-          autoplayInterval={3000}
-          className="w-full"
+          className="w-full h-full"
+          plugins={[Autoplay({ stopOnMouseEnter: true, delay: 3000 })]}
         >
-          <CarouselContent>
-            {[...Array(6)].map((_, index) => (
+          <CarouselContent className="h-full">
+            {showcaseVideos.map((videoSrc) => (
               <CarouselItem
-                key={index}
-                className="p-4 basis-1/3 min-w-[250px] h-[444px]"
+                key={videoSrc}
+                className="py-1 basis-[40%] min-w-[250px] max-h-[500px]"
               >
-                <Image
-                  className="border-[1px] border-black/15 aspect-[9/16] h-full rounded-2xl object-cover"
-                  alt=""
-                  width={250}
-                  height={444}
-                  src={"/landing/showcase1.png"}
-                />
+                <video
+                  className="border-[1px] border-black/15 aspect-[9/16] h-full rounded-2xl object-cover w-full"
+                  autoPlay
+                  loop
+                  muted
+                >
+                  <source src={videoSrc} type="video/mp4" />
+                </video>
               </CarouselItem>
             ))}
           </CarouselContent>
