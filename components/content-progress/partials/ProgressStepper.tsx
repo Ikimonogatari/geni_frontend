@@ -76,7 +76,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         <div className="flex flex-col gap-2 basis-2/3 lg:grow">
           <div className="flex flex-row gap-2 items-center justify-start">
             <Image
-              src={"/no-content-image.png"}
+              src={content.BrandProfileLink || "/no-content-image.png"}
               alt=""
               width={40}
               height={40}
