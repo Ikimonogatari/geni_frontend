@@ -7,10 +7,11 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
-import { useGetPublicCreatorListQuery } from "../services/service";
-import PublicCreatorCard from "@/components/PublicCreatorCard";
 
-function Creators() {
+import PublicCreatorCard from "@/components/PublicCreatorCard";
+import { useGetFeaturedProductListQuery } from "@/app/services/service";
+
+function FeaturedProductList() {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [slidesPerView, setSlidesPerView] = useState(5);
@@ -22,10 +23,10 @@ function Creators() {
   };
 
   const {
-    data: getPublicCreatorListData,
-    error: getPublicCreatorListError,
-    isLoading: getPublicCreatorListLoading,
-  } = useGetPublicCreatorListQuery();
+    data: listData,
+    error: listError,
+    isLoading: listLoading,
+  } = useGetFeaturedProductListQuery({});
 
   const checkViewportSize = useCallback(() => {
     const width = window.screen.width;
@@ -65,16 +66,10 @@ function Creators() {
     <div className="w-full pt-20">
       <div className="flex justify-between items-center">
         <span className="text-[#6F6F6F] text-base sm:text-2xl">
-          Geni Бүтээгчид / {getPublicCreatorListData?.Data?.length}
+          Эрэлттэй бүтээгдэхүүнүүд
         </span>
-        <a
-          href="/all-creators"
-          className="rounded-full bg-[#CA7FFE] text-white py-1 lg:py-2 px-3 lg:px-6"
-        >
-          Бүгд
-        </a>
       </div>
-      {getPublicCreatorListData && (
+      {listData && (
         <div className="relative flex flex-row gap-3 justify-between items-center mt-4 lg:mt-10 w-full">
           {!isBeginning && (
             <button onClick={goPrev} className="hidden lg:block">
@@ -101,23 +96,47 @@ function Creators() {
             modules={[Autoplay, Pagination, Navigation]}
             className=""
           >
-            {getPublicCreatorListData?.Data.map((creator, id) => {
-              const instagramLink = creator?.Socials?.find(
-                (channel) => channel.Name === "Instagram"
-              )?.SocialAddress;
-              const facebookLink = creator?.Socials?.find(
-                (channel) => channel.Name === "Facebook"
-              )?.SocialAddress;
+            {listData?.Data.map((product) => {
               return (
-                <SwiperSlide key={id} className="">
-                  <PublicCreatorCard
-                    isSwiper={true}
-                    size={"h-[332px] sm:h-auto"}
-                    id={id}
-                    creator={creator}
-                    instagramLink={instagramLink}
-                    facebookLink={facebookLink}
-                  />
+                <SwiperSlide key={product?.ProductId}>
+                  <div className="max-w-xs rounded-[30px] bg-primary-bg border border-border-gray/60 overflow-hidden shadow-sm">
+                    <div className="relative  p-6">
+                      {/* <div className="absolute top-4 right-4">
+                        <span className="bg-orange-400 text-white text-xs px-3 py-1 rounded-full">
+                          {badgeText}
+                        </span>
+                      </div> */}
+                      <div className="flex justify-center items-center">
+                        <Image
+                          src={product?.ProductPics?.[0]?.Url}
+                          alt={product?.ProductName}
+                          width={200}
+                          height={200}
+                          className="object-cover max-w-[200px] max-h-[200px]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-white">
+                      <h3 className="text-sm text-gray-600 font-medium">
+                        {product?.BrandName}
+                      </h3>
+
+                      <h2 className="text-lg font-semibold mt-1 line-clamp-1">
+                        {product?.ProductName}
+                      </h2>
+
+                      <div className="mt-2 flex flex-col space-y-1">
+                        <p className="text-xs text-gray-500">
+                          Хамтрах хүсэлт: {product?.ContentLeft}/
+                          {product?.ContentLimit}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Үнэ: ₮{product?.ProductPrice?.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </SwiperSlide>
               );
             })}
@@ -139,4 +158,4 @@ function Creators() {
   );
 }
 
-export default Creators;
+export default FeaturedProductList;

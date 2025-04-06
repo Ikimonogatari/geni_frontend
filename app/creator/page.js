@@ -1,20 +1,12 @@
-import React from "react";
-import Creators from "./Creators";
-import BecomeCreatorBanner from "./BecomeCreatorBanner";
-import BecomeCreatorSection from "./BecomeCreatorSection";
-import CreatorBenefits from "./CreatorBenefits";
-import CertifiedCreatorBenefits from "./CertifiedCreatorBenefits";
-import CreatorAlumni from "./CreatorAlumni";
-import CreatorCycle from "./CreatorCycle";
-import CreatorHero from "./CreatorHero";
-import CreatorLogo from "./CreatorLogo";
-import MonthlyCompetitionLayout from "./MonthlyCompetitionLayout";
-import Hero from "@/components/landing/hero";
-import CallToAction from "./_components/cta";
-import GeneralCallToAction from "@/components/home/call-to-action";
-import CompetitionBoard from "./_components/competition-board";
 import Bentobox from "@/components/home/Bentobox";
+import GeneralCallToAction from "@/components/home/call-to-action";
 import Faq from "@/components/home/Faq";
+import Hero from "@/components/landing/hero";
+import CompetitionBoard from "./_components/competition-board";
+import CallToAction from "./_components/cta";
+import FeaturedProductList from "./_components/featured-product-list";
+import CreatorCycle from "./CreatorCycle";
+import Creators from "./Creators";
 
 export const metadata = {
   title: "Geni | Бүтээгчид",
@@ -107,9 +99,13 @@ function creators() {
         description="Хөтөлбөрт хамрагдахгүйгээр контент бүтээх чадвараа сориод платформ дээрх брэндүүдтэй шууд хамтрах эрхтэй Geni Certfied Creator бол"
         btnText="Өргөдөл илгээх"
         btnTheme="pink"
+        path="/apply"
       />
       <div className="mt-24">
         <Creators />
+      </div>
+      <div className="mt-24">
+        <FeaturedProductList />
       </div>
       <div className="mt-24">
         <CallToAction />
@@ -133,6 +129,7 @@ function creators() {
           btnText="Өргөдөл илгээх"
           btnColor="pink"
           descriptionRightPadding={0}
+          path="/apply"
         />
       </div>
       <div className="mt-24">

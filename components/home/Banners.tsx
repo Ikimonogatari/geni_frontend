@@ -24,6 +24,7 @@ const banners: {
   imgWidth?: number | string;
   imgClass?: string;
   mobileImgSrc: string;
+  path: string;
 }[] = [
   {
     headerImgSrc: "/genicreator-logo.svg",
@@ -35,6 +36,7 @@ const banners: {
     btnText: "Geni Creator болох",
     btnColor: "pink",
     descriptionRightPadding: 0,
+    path: "/creator",
   },
   {
     headerImgSrc: "/genibrand-logo.svg",
@@ -47,6 +49,7 @@ const banners: {
     btnColor: "blue",
     descriptionRightPadding: 112,
     imgClass: "bottom-0 md:bottom-[13px] ml-0 md:ml-2",
+    path: "/brand",
   },
   {
     headerImgSrc: "/genistudent-logo.svg",
@@ -60,6 +63,7 @@ const banners: {
     descriptionRightPadding: 32,
     imgWidth: "75%",
     imgClass: "md:bottom-[35px]",
+    path: "/student",
   },
 
   {
@@ -74,5 +78,6 @@ const banners: {
     imgClass: "md:bottom-[25px]",
     descriptionRightPadding: 64,
     imgWidth: "75%",
+    path: "/mentor",
   },
 ];

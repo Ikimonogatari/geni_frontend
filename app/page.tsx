@@ -78,8 +78,37 @@ export default function Home() {
             },
           ]}
         />
-        {/* <Faq /> */}
-        <Testimonials />
+        <Testimonials
+          testimonials={[
+            {
+              text: "“Жаахан хүүхдээ харангаа гэрээсээ онлайнаар, дуртай бүтээгдэхүүнээ үнэгүй авч, контентоор хуваалцаад тухайн брэндээ дэмжиж, түгээж байгаагаа мэдэх урамтай байдаг.”",
+              name: "Urtnasan Batsukh",
+              position: "Geni Student",
+              image: "/landing/common/testimonials/1.png",
+            },
+            {
+              text: "“Ad creative-ийн хувьд худалдан авалтад хамгийн их нөлөөлдөг хэлбэр нь UGC гэж боддог. Монгол залуус маань энэ шинэ төрлийн ad creative-ийн онцгой ач холбогдлыг олж харж Монголынхоо бизнесүүдэд санал болгож, нэвтрүүлж байгаад нь үнэхээр сайшаалтай байгаа.”",
+              name: "Erkhbayar M",
+              position: "Founder of Titem brand",
+              image: "/landing/common/testimonials/2.png",
+              type: "brand",
+            },
+            {
+              text: "“Сэтгэл шингээж хийсэн бүтээгдэхүүнийг маань бодит хэрэглэгчид бидний өмнөөс танилцуулж, хайрлаж байгаа бодит контентууд харах үнэхээр урамтай байдаг.”",
+              name: "Khulan Davaadorj",
+              position: "Founder of Lhamour brand",
+              image: "/landing/common/testimonials/3.png",
+              type: "brand",
+            },
+            {
+              text: "“Та бүхэнтэй хамтран ажиллах хугацаанд үр дүн өндөр, хүлээлтээс давсан контентууд хүлээн авсан, урт хугацаанд хамтран ажиллах хүсэлтэй байна.”",
+              name: "Saruul Ts",
+              position: "Brand manager of eMonos",
+              image: "/landing/common/testimonials/4.png",
+              type: "brand",
+            },
+          ]}
+        />
       </div>
     </>
   );

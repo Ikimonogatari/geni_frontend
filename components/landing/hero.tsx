@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { ElevatedButton } from "../common/ElevatedButton";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type HeroProps = {
   logoImgSrc: string;
@@ -9,6 +12,7 @@ type HeroProps = {
   description: string;
   btnText: string;
   btnTheme: "blue" | "green" | "orange" | "pink";
+  path?: string;
 };
 
 export default function Hero({
@@ -18,7 +22,12 @@ export default function Hero({
   description,
   btnTheme,
   btnText,
+  path,
 }: HeroProps) {
+  const router = useRouter();
+  const handleRoute = () => {
+    path && router.push(path);
+  };
   return (
     <div className="grid grid-cols-12">
       <div className="col-span-full lg:col-span-7 flex flex-col items-start gap-5 lg:gap-12">
@@ -44,7 +53,11 @@ export default function Hero({
           sizes="100vw"
           className="lg:hidden w-full max-w-80 h-auto px-16"
         />
-        <ElevatedButton theme={btnTheme} className="w-full lg:w-fit px-14">
+        <ElevatedButton
+          theme={btnTheme}
+          className="w-full lg:w-fit px-14"
+          onClick={handleRoute}
+        >
           <div className="flex gap-2 items-center justify-center">
             <span className="text-lg md:text-2xl font-bold">{btnText}</span>
             <ArrowRight size={24} />

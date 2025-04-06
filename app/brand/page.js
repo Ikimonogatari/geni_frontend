@@ -98,6 +98,7 @@ function Page() {
         description="80 гаруй бүтээгчдэд бүтээгдэхүүнээ санал болгоод хэрэглэсэн сэтгэгдэл суурьтай бүтээлч бичлэг контент хүлээн аваарай"
         btnText="Бүртгүүлэх"
         btnTheme="blue"
+        path="/register/brand"
       />
       <div className="mt-24">
         <Brands />
@@ -120,6 +121,7 @@ function Page() {
           btnText="Geni Brand болох"
           btnColor="blue"
           descriptionRightPadding={-40}
+          path="/register/brand"
         />
       </div>
       <div className="mt-24">

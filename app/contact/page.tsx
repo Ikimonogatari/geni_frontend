@@ -1,45 +1,71 @@
 "use client";
 
-import { useState } from "react";
-import ContainerLayout from "@/components/ui/container-layout";
 import { ElevatedButton } from "@/components/common/ElevatedButton";
-import { Mail, Phone, MapPin, Send, ArrowRight } from "lucide-react";
+import ContainerLayout from "@/components/ui/container-layout";
+import { ArrowRight } from "lucide-react";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
-  firstname: z.string().min(1),
-  lastname: z.string().min(1),
-  email: z.string(),
-  phone: z.number(),
-  description: z.string(),
+  firstname: z.string().min(1, "First name is required"),
+  lastname: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email format"),
+  phone: z.string().min(1, "Phone number is required"),
+  description: z.string().min(1, "Message is required"),
 });
 
 export default function ContactPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstname: "",
+      lastname: "",
+      email: "",
+      phone: "",
+      description: "",
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_AWS_URL}/api/web/public/contact-request`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            FirstName: values.firstname,
+            LastName: values.lastname,
+            Phone: values.phone,
+            Email: values.email,
+            Message: values.description,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit form");
+      }
+
+      form.reset();
+      toast.success("Таны мэдээлэл амжилттай илгээгдлээ");
     } catch (error) {
-      console.error("Form submission error", error);
+      toast.success("Алдаа гарлаа");
     }
   }
 
@@ -61,8 +87,6 @@ export default function ContactPage() {
                   <FormItem className="col-span-full md:col-span-1">
                     <FormControl>
                       <Input
-                        placeholder=""
-                        type=""
                         label="Нэр"
                         labelClassName="text-lg text-[#6F6F6F]"
                         {...field}
@@ -81,8 +105,6 @@ export default function ContactPage() {
                   <FormItem className="col-span-full md:col-span-1">
                     <FormControl>
                       <Input
-                        placeholder=""
-                        type=""
                         label="Овог"
                         labelClassName="text-lg text-[#6F6F6F]"
                         {...field}
@@ -101,7 +123,6 @@ export default function ContactPage() {
                   <FormItem className="col-span-full md:col-span-1">
                     <FormControl>
                       <Input
-                        placeholder=""
                         type="email"
                         label="Имэйл хаяг"
                         labelClassName="text-lg text-[#6F6F6F]"
@@ -121,7 +142,6 @@ export default function ContactPage() {
                   <FormItem className="col-span-full md:col-span-1">
                     <FormControl>
                       <Input
-                        placeholder=""
                         type="number"
                         label="Утасны дугаар"
                         labelClassName="text-lg text-[#6F6F6F]"
@@ -141,7 +161,6 @@ export default function ContactPage() {
                   <FormItem className="col-span-full">
                     <FormControl>
                       <Textarea
-                        placeholder=""
                         className="resize-none"
                         label="Холбогдож буй шалтгаан"
                         labelClassName="text-lg text-[#6F6F6F]"

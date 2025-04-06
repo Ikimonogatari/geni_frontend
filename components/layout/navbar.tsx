@@ -15,11 +15,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { info } from "console";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const routeToLogin = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    router.push("/login");
+  };
 
   const navItems = [
     {
@@ -89,7 +95,10 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex">
-          <Button className="px-14 py-2 h-11 flex items-center rounded-full sm:rounded-full bg-primary text-primary-foreground text-base font-bold">
+          <Button
+            className="px-14 py-2 h-11 flex items-center rounded-full sm:rounded-full bg-primary text-primary-foreground text-base font-bold"
+            onClick={routeToLogin}
+          >
             Нэвтрэх
           </Button>
         </div>
@@ -118,7 +127,9 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="mt-4">
-                <Button className="w-full">Login</Button>
+                <Button className="w-full" onClick={routeToLogin}>
+                  Нэвтрэх
+                </Button>
               </div>
             </nav>
           </SheetContent>

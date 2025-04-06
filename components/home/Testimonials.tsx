@@ -3,34 +3,17 @@ import Image from "next/image";
 import ContainerLayout from "../ui/container-layout";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 
-const testimonialData = [
-  {
-    text: "“Ad creative-ийн хувьд худалдан авалтад хамгийн их нөлөөлдөг хэлбэр нь UGC гэж боддог...”",
-    name: "Erkhbayar M",
-    position: "Founder of Titem brand",
-    image: "/dummy-brand.png",
-  },
-  {
-    text: "“Creative content has the biggest impact on purchases...”",
-    name: "Gankhuyag T",
-    position: "Marketing Director at XYZ Corp",
-    image: "/dummy-brand2.png",
-  },
-  {
-    text: "“Creative content has the biggest impact on purchases...”",
-    name: "Gankhuyag T",
-    position: "Marketing Director at XYZ Corp",
-    image: "/dummy-brand2.png",
-  },
-  {
-    text: "“Creative content has the biggest impact on purchases...”",
-    name: "Gankhuyag T",
-    position: "Marketing Director at XYZ Corp",
-    image: "/dummy-brand2.png",
-  },
-];
+type TestimonialsProps = {
+  testimonials: {
+    text: string;
+    name: string;
+    position: string;
+    image: string;
+    type?: string;
+  }[];
+};
 
-function Testimonials() {
+function Testimonials({ testimonials }: TestimonialsProps) {
   return (
     <ContainerLayout className="w-full overflow-hidden relative my-28 md:my-0">
       <Carousel
@@ -43,28 +26,44 @@ function Testimonials() {
         className="w-full"
       >
         <CarouselContent>
-          {testimonialData.map((testimonial, index) => (
-            <CarouselItem key={index} className="p-0 pl-4 md:p-4 sm:basis-1/2">
-              <div className="flex flex-col gap-4 border border-border-gray/60 p-10 pt-9 rounded-[30px] hover:bg-primary-bg">
-                <span className="text-lg">{testimonial.text}</span>
-                <div className="flex flex-row items-center gap-6">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    width={74}
-                    height={74}
-                    className="rounded-full border border-primary"
-                  />
-                  <div className="flex flex-col text-[#6F6F6F]">
-                    <span className="text-xl font-bold">
-                      {testimonial.name}
-                    </span>
-                    <span className="text-xl">{testimonial.position}</span>
+          {testimonials.map((testimonial, index) => {
+            const { type = "creator" } = testimonial;
+            const typeImgSrc = `/landing/common/testimonials/${type}.png`;
+            return (
+              <CarouselItem
+                key={index}
+                className="p-0 pl-4 md:p-4 sm:basis-1/2"
+              >
+                <div className="flex flex-col gap-4 border border-border-gray/60 p-10 pt-9 rounded-[30px] hover:bg-primary-bg select-none">
+                  <div className="w-full flex items-start gap-2">
+                    <p className="text-lg">{testimonial.text}</p>
+                    <Image
+                      src={typeImgSrc}
+                      alt="type"
+                      width={24}
+                      height={24}
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-row items-center gap-6">
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      width={74}
+                      height={74}
+                      className="rounded-full"
+                    />
+                    <div className="flex flex-col text-[#6F6F6F]">
+                      <span className="text-xl font-bold">
+                        {testimonial.name}
+                      </span>
+                      <span className="text-xl">{testimonial.position}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CarouselItem>
-          ))}
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
       </Carousel>
     </ContainerLayout>

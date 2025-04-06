@@ -6,6 +6,21 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+const getImageSrc = (tier: string) => {
+  switch (tier) {
+    case "Pro creator gold":
+      return "/gold-tier.png";
+    case "Pro creator silver":
+      return "/silver-tier.png";
+    case "Pro creator bronze":
+      return "/bronze-tier.png";
+    case "Certified creator":
+      return "/verified-icon.png";
+    default:
+      return ""; // Default case for no image
+  }
+};
+
 export default function CompetitionBoard() {
   const {
     data: compInfoData,
@@ -13,6 +28,7 @@ export default function CompetitionBoard() {
     isLoading: getCompetitionInfoLoading,
   } = useGetCompetitionInfoQuery({});
 
+  const currentMonthIndex = new Date().getMonth();
   return (
     <div className="relative w-full bg-primary-bg border border-geni-pink rounded-[30px] px-5 lg:pl-9 lg:pr-24 pt-32 pb-14">
       <div
@@ -65,23 +81,24 @@ export default function CompetitionBoard() {
             <div className="flex-1 flex flex-col gap-3">
               <div className="flex flex-col gap-0 lg:gap-3">
                 <h5 className="text-base lg:text-2xl font-bold">
-                  10 сарын шагнал
+                  {currentMonthIndex + 1} сарын шагнал
                 </h5>
-                <h2 className="text-3xl lg:text-4xl font-bold">ВИДЕО ГЭРЭЛ</h2>
+                <h2 className="text-3xl lg:text-4xl font-bold">
+                  {compInfoData?.PrizeName}
+                </h2>
               </div>
               <p className="text-lg pr-8 leading-none lg:leading-normal">
-                Видео контент хийхэд зориулсан хүссэн газраасаа зүүж болох
-                гэрэл. Цагаан ба шар өнгөөр асна.
+                {compInfoData?.PrizeInformation}
               </p>
             </div>
-            <div className="rounded-[30px] border border-geni-green mt-4 lg:mt-0">
+            <div className="rounded-[30px] border border-geni-green mt-4 lg:mt-0 overflow-hidden">
               <Image
-                src=""
+                src={compInfoData?.PrizePicUrl}
                 alt="reward"
                 sizes="100vw"
                 width={0}
                 height={0}
-                className="w-full min-w-40 h-40 lg:h-auto"
+                className="w-full max-w-40 h-40 lg:h-auto"
               />
             </div>
           </div>
@@ -102,7 +119,7 @@ export default function CompetitionBoard() {
 
                 <div className="absolute bottom-1 z-0 size-28 lg:size-20 rounded-full overflow-hidden">
                   <img
-                    src="https://github.com/shadcn.png"
+                    src={compInfoData?.PreviousWinner?.ProPicUrl}
                     alt="User Avatar"
                     className="w-full h-full object-cover"
                   />
@@ -110,68 +127,100 @@ export default function CompetitionBoard() {
               </div>
               <div className="flex flex-col justify-center items-center lg:items-start">
                 <div className="flex gap-3">
-                  <p className="text-base lg:text-2xl font-bold">Urtnasan</p>
+                  <p className="text-base lg:text-2xl font-bold">
+                    {compInfoData?.PreviousWinner?.Nickname}
+                  </p>
                   {/* <Image src='' alt="badge" height={24} width={24}/> */}
                 </div>
-                <p className="text-sm lg:text-lg">Цуглуулсан оноо: 120 XP</p>
+                <p className="text-sm lg:text-lg">
+                  Цуглуулсан оноо: {compInfoData?.PreviousWinner?.Xp} XP
+                </p>
               </div>
             </div>
             <p className="text-base lg:text-2xl font-bold text-center lg:text-start">
-              Шагнал: Утас тогтоогч хөл
+              Шагнал: {compInfoData?.PreviousCompPrizeName}
             </p>
           </div>
         </div>
         <h6 className="my-7 lg:my-4 text-base lg:text-2xl font-medium text-[#6F6F6F]">
           Энэ сарын шилдэг бүтээгчид
         </h6>
-        <div className="flex items-center gap-3">
-          <div className="size-14 lg:size-20 relative">
-            <Image
-              src="/landing/common/competition/ranks/1.png"
-              alt="rank"
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="w-full h-auto"
-            />
-            <p
-              className={cn(
-                "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black"
-              )}
-            >
-              1
-            </p>
-          </div>
-          <div className="absolute bottom-[3.25rem] left-[5rem] lg:static w-full overflow-hidden flex items-center justify-between rounded-[30px] p-2 lg:p-4 bg-white">
-            <div className="flex-1 flex gap-2 lg:gap-5">
-              <Avatar className="size-12">
-                <AvatarImage src="" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <div className="flex items-center gap-3">
-                <p className="text-2xl font-bold">Anudelger</p>
-                <Badge className="border-black text-black font-black bg-[#FFC12F] hover:bg-[#FFC12F] py-1 px-2.5 text-xl !leading-[1rem] tracking-wide">
-                  PRO
-                </Badge>
+        <div className="space-y-3">
+          {compInfoData?.TopParticipants?.map((ptc, index) => (
+            <div className="lg:relative flex items-center gap-3">
+              <div className="size-14 lg:size-20 relative lg:static">
+                <Image
+                  src={`/landing/common/competition/ranks/${
+                    index === 0
+                      ? "1"
+                      : index === 1
+                      ? "2"
+                      : index === 2
+                      ? "3"
+                      : "other"
+                  }.png`}
+                  alt="rank"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-full h-auto relative"
+                />
+                <p
+                  className={cn(
+                    "absolute top-[25px] left-[25px] lg:top-[34px] lg:left-[34px] transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black leading-none tracking-tighter",
+                    ![0, 1, 2].includes(index) &&
+                      "top-[26px] left-[27px] lg:top-9 lg:left-9 font-normal"
+                  )}
+                >
+                  {index + 1}
+                </p>
+                {/* transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black leading-none tracking-tighter */}
+              </div>
+              <div className="absolute left-[5rem] lg:static w-full overflow-hidden flex items-center justify-between rounded-[30px] p-2 lg:p-4 bg-white">
+                <div className="flex-1 flex gap-2 lg:gap-5">
+                  <Avatar className="size-12">
+                    <AvatarImage
+                      src={ptc?.ProPicUrl}
+                      className="object-cover"
+                    />
+                    <AvatarFallback>{ptc?.Nickname}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex items-center gap-3">
+                    <p className="text-2xl font-bold">{ptc?.Nickname}</p>
+                    <Image
+                      src={getImageSrc(ptc?.LvlName)}
+                      alt="badge"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="w-full max-w-14 h-auto"
+                    />
+                    {/* <Badge className="border-black text-black font-black bg-[#FFC12F] hover:bg-[#FFC12F] py-1 px-2.5 text-xl !leading-[1rem] tracking-wide">
+                      PRO
+                    </Badge> */}
+                  </div>
+                </div>
+                <div className="hidden lg:flex flex-1 justify-center">
+                  <p className="text-lg">Нийт хамтрал: {ptc?.ContentCount}</p>
+                </div>
+                <div className="flex-1 hidden lg:flex justify-center">
+                  <p className="text-lg">Цуглуулсан оноо: {ptc?.Xp} XP</p>
+                </div>
+                <div className="flex-1 hidden lg:flex gap-2 justify-center">
+                  <Image
+                    src="/star.png"
+                    alt="star"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
+                  <p className="text-lg">
+                    {ptc?.AvgStar}/5 ({ptc?.ContentCount} контент)
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="hidden lg:flex flex-1 justify-center">
-              <p className="text-lg">Нийт хамтрал: 8</p>
-            </div>
-            <div className="flex-1 hidden lg:flex justify-center">
-              <p className="text-lg">Цуглуулсан оноо: 65 XP</p>
-            </div>
-            <div className="flex-1 hidden lg:flex gap-2 justify-center">
-              <Image
-                src="/star.png"
-                alt="star"
-                width={24}
-                height={24}
-                className="w-6 h-6"
-              />
-              <p className="text-lg">4.5/5 (8 контент)</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

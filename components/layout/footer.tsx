@@ -65,7 +65,7 @@ function Footer() {
               </a>
             </div>
           </div>
-          <div className="w-full flex flex-row justify-between sm:justify-start md:flex-row items-start gap-8 lg:gap-40 text-[#2D262D]">
+          <div className="w-full lg:w-fit flex flex-row justify-between sm:justify-start md:flex-row items-start gap-8 lg:gap-40 text-[#2D262D]">
             <nav className="flex flex-col gap-3">
               {navItems.map((item, index) => (
                 <div key={item.name} className="flex items-center gap-6">
@@ -75,7 +75,7 @@ function Footer() {
                 </div>
               ))}
             </nav>
-            <nav className="flex flex-col gap-3">
+            <nav className="flex flex-col gap-3 mr-12">
               {addNavItems.map((item, index) => (
                 <Link key={item.name} href={item.href}>
                   {item.name}

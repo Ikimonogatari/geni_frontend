@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ElevatedButton } from "@/components/common/ElevatedButton";
+import { useRouter } from "next/navigation";
 
 type CallToActionProps = {
   headerImgSrc: string;
@@ -17,6 +20,11 @@ type CallToActionProps = {
 };
 
 export default function CallToAction({}) {
+  const router = useRouter();
+
+  const handleRoute = () => {
+    router.push("/apply");
+  };
   return (
     <>
       <div className="flex flex-col gap-4 lg:hidden w-full bg-primary-bg px-5 py-8 rounded-[30px]">
@@ -36,7 +44,11 @@ export default function CallToAction({}) {
           Их контент хийж, хаяг хөгжүүлэн, брэндийн санал хүлээхгүйгээр
           брэндүүдтэй тогтмол хамтран, бүтээлч чадвараараа орлогоо нэм
         </p>
-        <ElevatedButton theme="pink" className="px-14 w-full mt-2">
+        <ElevatedButton
+          theme="pink"
+          className="px-14 w-full mt-2"
+          onClick={handleRoute}
+        >
           <div className="flex gap-2 items-center justify-center">
             <span className="text-nowrap md:text-2xl font-bold">
               Өргөдөл илгээх
@@ -73,7 +85,11 @@ export default function CallToAction({}) {
         <div className="flex">
           <div className="flex-[3] bg-primary-bg">
             <div className="bg-white h-full rounded-tr-[30px] pt-7 pr-7">
-              <ElevatedButton theme="pink" className="px-14 w-full">
+              <ElevatedButton
+                theme="pink"
+                className="px-14 w-full"
+                onClick={handleRoute}
+              >
                 <div className="flex gap-2 items-center justify-center">
                   <span className="text-lg md:text-2xl font-bold">
                     Өргөдөл илгээх

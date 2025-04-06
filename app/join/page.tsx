@@ -1,7 +1,10 @@
+"use client";
+
 import { ElevatedButton } from "@/components/common/ElevatedButton";
 import ContainerLayout from "@/components/ui/container-layout";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const joinCallToActions = [
   {
@@ -11,6 +14,7 @@ const joinCallToActions = [
       "Чадвараа сориод шууд брэндтэй хамтрах эрхтэй Geni certified creator болж хамтрал бүрээс нэмэлт урамшуулал авч эхлээрэй.",
     btnText: "Өргөдөл илгээх",
     btnTheme: "purple",
+    path: "/apply",
   },
   {
     headImgSrc: "/genibrand-logo.svg",
@@ -19,6 +23,7 @@ const joinCallToActions = [
       "Бүтээгдэхүүнээ илгээн бүтээгчидтэй тогтмол хамтрал хийж илүү хялбар, үр дүнтэй маркетинг хийж эхэл.",
     btnText: "Бүртгүүлэх",
     btnTheme: "blue",
+    path: "/register/brand",
   },
   {
     headImgSrc: "/genistudent-logo.svg",
@@ -27,6 +32,7 @@ const joinCallToActions = [
       "Контент бүтээх чадварт өөрийн хурдаар онлайнаар суралцангаа хамтрал хийн туршлага хуримтлуулж, Geni Certified Creator болоорой.",
     btnText: "Бүртгүүлэх",
     btnTheme: "green",
+    path: "/register/student",
   },
   {
     headImgSrc: "/genimentor-logo.svg",
@@ -35,10 +41,15 @@ const joinCallToActions = [
       "Чадварлаг бүтээгчдийн онлайн хичээлээс суралцан илүү өндөр үнэлгээтэй бүтээгч болоорой.",
     btnText: "Тухай",
     btnTheme: "orange",
+    path: "/mentor",
   },
 ];
 
 export default function Page() {
+  const router = useRouter();
+  const handleRoute = (path: string) => () => {
+    router.push(path);
+  };
   return (
     <ContainerLayout className="container mt-9 mb-20 md:my-28">
       <div className="flex flex-col gap-9">
@@ -71,6 +82,7 @@ export default function Page() {
               <div className="flex flex-col justify-between mt-6">
                 <ElevatedButton
                   theme={cta.btnTheme as "blue" | "green" | "orange" | "pink"}
+                  onClick={handleRoute(cta.path)}
                 >
                   <div className="flex gap-2 items-center justify-center">
                     <span className="whitespace-nowrap text-lg md:text-xl font-bold">
