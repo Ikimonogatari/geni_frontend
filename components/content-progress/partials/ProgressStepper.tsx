@@ -1,7 +1,13 @@
 import Image from "next/image";
-import { Content, CurrentStepStatus, GetContentProcessResponse, getCurrentStepColor } from "../content.services";
+import {
+  Content,
+  CurrentStepStatus,
+  GetContentProcessResponse,
+  getCurrentStepColor,
+} from "../content.services";
 import Stepper from "@/components/Stepper";
-import { Dispatch, SetStateAction } from "react";
+import Cookies from "js-cookie";
+import { SetStateAction, Dispatch } from "react";
 
 type ProgressStepperProps = {
   content: Content;
@@ -20,8 +26,9 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   contentProcess,
   overdueProcess,
   getContentProcess,
-  isLoadingContentProcess
+  isLoadingContentProcess,
 }) => {
+  const userType = Cookies.get("userType");
 
   const steps = [
     <Image
@@ -66,7 +73,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
       <div className="flex flex-row items-center gap-4 w-full h-full bg-[#F5F4F0] rounded-2xl p-4">
         <div className="basis-1/3 lg:flex-none">
           <Image
-            src={content.ContentThumbnail || "/no-content-image.png"}
+            src={content.ProductFile || "/no-content-image.png"}
             alt=""
             width={150}
             height={150}
@@ -76,7 +83,11 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         <div className="flex flex-col gap-2 basis-2/3 lg:grow">
           <div className="flex flex-row gap-2 items-center justify-start">
             <Image
-              src={content.BrandProfileLink || "/no-content-image.png"}
+              src={
+                (userType === "brand"
+                  ? content.BrandProfileLink
+                  : content.CreatorProfilePic) || "/no-content-image.png"
+              }
               alt=""
               width={40}
               height={40}

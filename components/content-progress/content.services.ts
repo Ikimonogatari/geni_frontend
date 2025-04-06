@@ -30,6 +30,9 @@ export type Content = {
   CreatedBy: number;
   CreatedPnt: number;
   CreatorId: number;
+  CreatorName: string;
+  CreatorProfilePic: string;
+  ProductFile: string | undefined | null;
   Deadline: string | null;
   DeliveryPayment: boolean;
   FeedBacks: string | null;
