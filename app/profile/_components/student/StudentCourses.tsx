@@ -1,45 +1,47 @@
+"use client";
 import React from "react";
-import { useGetStudentCoursesQuery } from "@/app/services/service";
 
-function StudentCourses() {
-  const {
-    data: studentCoursesData,
-    error: studentCoursesError,
-    isLoading: studentCoursesLoading,
-  } = useGetStudentCoursesQuery({});
+import StatusIndicator from "@/components/StatusIndicator";
+import FeedbackModal from "@/components/FeedbackModal";
 
-  if (studentCoursesLoading) {
-    return <div className="mt-8">Loading courses...</div>;
-  }
-
-  if (studentCoursesError || !studentCoursesData?.courses?.length) {
-    return null;
-  }
-
+function StudentCourses({ currentContents, parsedUserInfo }) {
+  console.log(currentContents);
   return (
-    <div className="mt-8">
-      <h2 className="text-xl sm:text-2xl font-bold mb-4">Миний хичээлүүд</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {studentCoursesData.courses.map((course, index) => (
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[850px] sm:min-w-[1200px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">
+        <div className="text-xs sm:text-base px-5 py-3 sm:p-5 grid grid-cols-[2fr,1fr,1fr,2fr,1fr] gap-6 w-full items-center text-[#6F6F6F]">
+          <span className="col-span-1">Үзэх хичээл</span>
+          <span className="col-span-1">Багш</span>
+          <span className="col-span-1">Хичээл</span>
+          <span className="col-span-1">Статус</span>
+          <span className="col-span-1">Үйлдэл</span>
+        </div>
+        {currentContents.map((c, i) => (
           <div
-            key={index}
-            className="border border-[#CDCDCD] rounded-xl p-4 flex flex-col"
+            key={i}
+            className="text-[10px] sm:text-base w-full grid grid-cols-[2fr,1fr,1fr,2fr,1fr] gap-6 items-center px-5 py-3 sm:p-5 border-[#CDCDCD] border-opacity-50 border-[1px] rounded-3xl"
           >
-            <div className="font-bold text-lg mb-2">{course.title}</div>
-            <div className="text-[#6F6F6F] mb-4">{course.description}</div>
-            {course.progress && (
-              <div className="mt-auto">
-                <div className="text-sm text-[#6F6F6F] mb-1">
-                  Үзсэн хэмжээ: {course.progress}%
-                </div>
-                <div className="w-full bg-[#F5F4F0] rounded-full h-2">
-                  <div
-                    className="bg-geni-green h-2 rounded-full"
-                    style={{ width: `${course.progress}%` }}
-                  ></div>
-                </div>
-              </div>
-            )}
+            <span className="col-span-1">{c.CourseName}</span>
+            <span className="col-span-1">Geni</span>
+            <a
+              className="underline col-span-1"
+              target="_blank"
+              href={c.CourseGumroadLink}
+            >
+              Үзэх
+            </a>
+            <StatusIndicator status={c.Status} />
+            <div className="col-span-1">
+              {c.Status === "ContentRejected" ? (
+                <FeedbackModal
+                  parsedUserInfo={parsedUserInfo}
+                  contentId={c.ContentId}
+                  feedbacks={c.FeedBacks}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         ))}
       </div>

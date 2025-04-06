@@ -9,7 +9,6 @@ import {
   useBecomeCreatorMutation,
   useGetStudentCoursesQuery,
 } from "@/app/services/service";
-import ContentProgress from "./ContentProgress";
 import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,19 +19,13 @@ import GuideModal from "@/components/common/GuideModal";
 import StudentCourses from "./StudentCourses";
 
 function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const contentsPerPage = 12;
-  const [currentContents, setCurrentContents] = useState([]);
-  const offset = (currentPage - 1) * contentsPerPage;
   const router = useRouter();
 
   const {
     data: studentCoursesData,
     error: studentCoursesError,
     isLoading: studentCoursesLoading,
-  } = useGetStudentCoursesQuery({
-    
-  });
+  } = useGetStudentCoursesQuery({});
 
   const [
     becomeCreator,
@@ -45,47 +38,8 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   ] = useBecomeCreatorMutation();
 
   const isLoading = useMemo(() => {
-    return studentCoursesLoading ;
+    return studentCoursesLoading;
   }, [studentCoursesLoading]);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, getTotalPages()));
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  useEffect(() => {
-    const contents = getCurrentContents();
-    setCurrentContents(contents);
-  }, [currentPage, studentCoursesData]);
-
-  const getCurrentContents = () => {
-    const contents = studentCoursesData?.Data ?? [];
-    return contents;
-  };
-
-  const getTotalPages = () => {
-    let totalCount;
-    totalCount = studentCoursesData?.RowCount ?? [];
-    return Math.ceil(totalCount / contentsPerPage);
-  };
-
-  const renderStudentProfile = () => {
-    return (
-      <>
-        <StudentCourses />
-        <ContentProgress currentContents={currentContents} />
-      </>
-    );
-  };
-
-  const totalPages = getTotalPages();
-
-  const pageNumbers = usePagination(totalPages, currentPage);
 
   const userInfo = Cookies.get("user-info");
   const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
@@ -229,19 +183,24 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
 
             {/* <HomeworkUploadModal parsedUserInfo={parsedUserInfo} /> */}
-            {(!studentCoursesData || (Array.isArray(studentCoursesData) && studentCoursesData.length === 0)) && (
+            {(!studentCoursesData ||
+              (Array.isArray(studentCoursesData) &&
+                studentCoursesData.length === 0)) && (
               <CoursePurchaseModal
                 buttonIconSize={""}
-              className={
-                "flex flex-row items-center bg-geni-green text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
-              }
-              buttonText={"Хөтөлбөр идэвхжүүлэх"}
-              userInfo={getUserInfoData}
-            />
+                className={
+                  "flex flex-row items-center bg-geni-green text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
+                }
+                buttonText={"Хөтөлбөр идэвхжүүлэх"}
+                userInfo={getUserInfoData}
+              />
             )}
           </div>
-          {currentContents && !isLoading ? (
-            renderStudentProfile()
+          {studentCoursesData && !isLoading ? (
+            <StudentCourses
+              currentContents={studentCoursesData}
+              parsedUserInfo={parsedUserInfo}
+            />
           ) : (
             <div className="space-y-6 mt-10">
               {[...Array(8)].map((_, index) => (
@@ -253,21 +212,6 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
           )}
         </div>
-
-        {studentCoursesData && totalPages > 1 ? (
-          <Pagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            pageNumbers={pageNumbers}
-            handlePrevPage={handlePrevPage}
-            handleNextPage={handleNextPage}
-            paginate={paginate}
-            bg={"bg-geni-green"}
-            border={"border-geni-green"}
-          />
-        ) : (
-          <></>
-        )}
       </div>
       <ConvertToCreatorModal
         isCreator={isCreator}
