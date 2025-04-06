@@ -7,19 +7,60 @@ type ProgressStepperProps = {
   content: Content;
   activeStep: number;
   setActiveStep: Dispatch<SetStateAction<number>>;
-  steps: React.ReactNode[];
   contentProcess: GetContentProcessResponse;
   overdueProcess?: any;
+  getContentProcess?: (params) => void;
+  isLoadingContentProcess?: boolean;
 };
 
 const ProgressStepper: React.FC<ProgressStepperProps> = ({
   content,
   activeStep,
   setActiveStep,
-  steps,
   contentProcess,
   overdueProcess,
+  getContentProcess,
+  isLoadingContentProcess
 }) => {
+
+  const steps = [
+    <Image
+      src={"/content-status-icon1.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+    <Image
+      src={"/content-status-icon2.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+    <Image
+      src={"/content-status-icon3.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+    <Image
+      src={"/content-status-icon4.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+    <Image
+      src={"/content-status-icon7.png"}
+      width={24}
+      height={24}
+      alt=""
+      className="w-5 h-5 brightness-0 invert"
+    />,
+  ];
+
   return (
     <div className="flex flex-col gap-6 h-fit w-full">
       <div className="flex flex-row items-center gap-4 w-full h-full bg-[#F5F4F0] rounded-2xl p-4">
@@ -58,11 +99,14 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             ) as CurrentStepStatus
           }
           horizontal={true}
+          getContentProcess={getContentProcess}
+          content={content}
+          isLoadingContentProcess={isLoadingContentProcess}
         />
         <div className="flex flex-row gap-8 w-full">
           <div className="flex-none mx-5 lg:mx-24">
             <Stepper
-              steps={contentProcess.map((_, index) => (
+              steps={contentProcess?.map((_, index) => (
                 <div key={index} />
               ))}
               contentProcess={contentProcess}

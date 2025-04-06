@@ -279,44 +279,6 @@ const ContentProgressModalContent: React.FC<
     }
   }, [content]);
 
-  const steps = [
-    <Image
-      src={"/content-status-icon1.png"}
-      width={24}
-      height={24}
-      alt=""
-      className="w-5 h-5 brightness-0 invert"
-    />,
-    <Image
-      src={"/content-status-icon2.png"}
-      width={24}
-      height={24}
-      alt=""
-      className="w-5 h-5 brightness-0 invert"
-    />,
-    <Image
-      src={"/content-status-icon3.png"}
-      width={24}
-      height={24}
-      alt=""
-      className="w-5 h-5 brightness-0 invert"
-    />,
-    <Image
-      src={"/content-status-icon4.png"}
-      width={24}
-      height={24}
-      alt=""
-      className="w-5 h-5 brightness-0 invert"
-    />,
-    <Image
-      src={"/content-status-icon7.png"}
-      width={24}
-      height={24}
-      alt=""
-      className="w-5 h-5 brightness-0 invert"
-    />,
-  ];
-
   function getCreatedAtByStatus(
     processList: GetContentProcessResponse,
     status: STATUS_LIST
@@ -561,13 +523,12 @@ const ContentProgressModalContent: React.FC<
                             className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
                           >
                             <span
-                              className={`text-sm sm:text-base ${
-                                formik.values.BrandReviewResendFeedback.includes(
-                                  feedback.BrandReviewId
-                                )
-                                  ? "text-green-500"
-                                  : "hidden"
-                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                              className={`text-sm sm:text-base ${formik.values.BrandReviewResendFeedback.includes(
+                                feedback.BrandReviewId
+                              )
+                                ? "text-green-500"
+                                : "hidden"
+                                } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                             >
                               ✓
                             </span>
@@ -633,9 +594,8 @@ const ContentProgressModalContent: React.FC<
                           className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center transition-all peer-checked:border-green-500"
                         >
                           <span
-                            className={`text-sm sm:text-base ${
-                              item.CreatorChecked ? "text-green-500" : "hidden"
-                            } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                            className={`text-sm sm:text-base ${item.CreatorChecked ? "text-green-500" : "hidden"
+                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                           >
                             ✓
                           </span>
@@ -706,9 +666,8 @@ const ContentProgressModalContent: React.FC<
                   : handleOpenReturnSection()
               }
               disabled={isLoadingContentProcessRefund}
-              className={`w-full text-center text-xs sm:text-base ${
-                isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
-              } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
+              className={`w-full text-center text-xs sm:text-base ${isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
+                } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
             >
               Бүтээгдэхүүн буцаах
             </button>
@@ -746,7 +705,7 @@ const ContentProgressModalContent: React.FC<
                 className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
               >
                 {status === STATUS_LIST.ContentRejected ||
-                status === STATUS_LIST.ContentFixRequest
+                  status === STATUS_LIST.ContentFixRequest
                   ? "Дахин илгээх"
                   : "Контент илгээх"}
               </button>
@@ -896,16 +855,16 @@ const ContentProgressModalContent: React.FC<
             onClick={(e) => dialogDisabled && e.preventDefault()}
             disabled={dialogDisabled}
             className={`${dialogDisabled ? "cursor-not-allowed" : ""}`}
-            // className={`w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2 ${
-            //   dialogDisabled ? "cursor-not-allowed" : ""
-            // }`}
+          // className={`w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2 ${
+          //   dialogDisabled ? "cursor-not-allowed" : ""
+          // }`}
           >
             <AlignJustify />
           </button>
         </DialogTrigger>
         {/* @ts-ignore */}
         <DialogContent
-          className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start p-6 max-w-[1000px] w-[95%] min-w-[320px] sm:w-[700px] lg:w-[1000px] rounded-3xl"
+          className="overflow-y-auto bg-white flex flex-col lg:flex-row items-center lg:items-start p-6 max-w-[1000px] w-[95%] min-w-[320px] sm:w-[700px] lg:w-[1000px] rounded-3xl"
           hideCloseButton={true}
           aria-describedby={undefined}
         >
@@ -923,23 +882,28 @@ const ContentProgressModalContent: React.FC<
                     ref={scrollContainerRef}
                     className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
                   >
-                    {dialogType == DialogType.PROGRESS && (
+                    {dialogType == DialogType.PROGRESS && contentProcessData?.length > 0 && (
                       <ProgressStepper
                         content={content}
                         activeStep={activeStep}
                         setActiveStep={setActiveStep}
-                        steps={steps}
                         contentProcess={contentProcessData}
                         overdueProcess={contentProcessOverdueData}
+                        getContentProcess={getContentProcess}
+                        isLoadingContentProcess={isLoadingContentProcess}
                       />
                     )}
-                    {userType == "Creator" && creatorModalContents()}
-                    {userType == "Brand" && brandModalContents()}
-                    {userType == "Creator" && creatorModalMessages()}
-                    {userType == "Brand" && brandModalMessages()}
+                    {contentProcessData?.[contentProcessData.length - 1]?.ContentStepStatusCode?.String == content?.CurrentStepId && <>
+                      {userType == "Creator" && creatorModalContents()}
+                      {userType == "Brand" && brandModalContents()}
+                      {userType == "Creator" && creatorModalMessages()}
+                      {userType == "Brand" && brandModalMessages()}
+                    </>}
                   </div>
-                  {userType == "Creator" && creatorModalFooterActions()}
-                  {userType == "Brand" && brandModalFooterActions()}
+                  {contentProcessData?.[contentProcessData.length - 1]?.ContentStepStatusCode?.String == content?.CurrentStepId && <>
+                    {userType == "Creator" && creatorModalFooterActions()}
+                    {userType == "Brand" && brandModalFooterActions()}
+                  </>}
                 </form>
               </FormikProvider>
 
