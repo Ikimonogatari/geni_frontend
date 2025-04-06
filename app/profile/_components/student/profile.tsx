@@ -6,12 +6,10 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 
 import {
-  useListCreatorContentsQuery,
   useBecomeCreatorMutation,
   useGetStudentCoursesQuery,
 } from "@/app/services/service";
 import ContentProgress from "./ContentProgress";
-import LogoutButton from "@/components/common/LogoutButton";
 import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,19 +27,12 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   const router = useRouter();
 
   const {
-    data: listCreatorContentsData,
-    error: listCreatorContentsError,
-    isLoading: listCreatorContentsLoading,
-  } = useListCreatorContentsQuery(
-    { limit: contentsPerPage, offset },
-    { refetchOnMountOrArgChange: true }
-  );
-
-  const {
     data: studentCoursesData,
     error: studentCoursesError,
     isLoading: studentCoursesLoading,
-  } = useGetStudentCoursesQuery({});
+  } = useGetStudentCoursesQuery({
+    
+  });
 
   const [
     becomeCreator,
@@ -54,8 +45,8 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   ] = useBecomeCreatorMutation();
 
   const isLoading = useMemo(() => {
-    return listCreatorContentsLoading || studentCoursesLoading;
-  }, [listCreatorContentsLoading, studentCoursesLoading]);
+    return studentCoursesLoading ;
+  }, [studentCoursesLoading]);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -70,16 +61,16 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
   useEffect(() => {
     const contents = getCurrentContents();
     setCurrentContents(contents);
-  }, [currentPage, listCreatorContentsData]);
+  }, [currentPage, studentCoursesData]);
 
   const getCurrentContents = () => {
-    const contents = listCreatorContentsData?.Data ?? [];
+    const contents = studentCoursesData?.Data ?? [];
     return contents;
   };
 
   const getTotalPages = () => {
     let totalCount;
-    totalCount = listCreatorContentsData?.RowCount ?? [];
+    totalCount = studentCoursesData?.RowCount ?? [];
     return Math.ceil(totalCount / contentsPerPage);
   };
 
@@ -238,14 +229,16 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
 
             {/* <HomeworkUploadModal parsedUserInfo={parsedUserInfo} /> */}
-            <CoursePurchaseModal
-              buttonIconSize={""}
+            {(!studentCoursesData || (Array.isArray(studentCoursesData) && studentCoursesData.length === 0)) && (
+              <CoursePurchaseModal
+                buttonIconSize={""}
               className={
                 "flex flex-row items-center bg-geni-green text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
               }
               buttonText={"Хөтөлбөр идэвхжүүлэх"}
               userInfo={getUserInfoData}
             />
+            )}
           </div>
           {currentContents && !isLoading ? (
             renderStudentProfile()
@@ -261,7 +254,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
           )}
         </div>
 
-        {listCreatorContentsData && totalPages > 1 ? (
+        {studentCoursesData && totalPages > 1 ? (
           <Pagination
             totalPages={totalPages}
             currentPage={currentPage}

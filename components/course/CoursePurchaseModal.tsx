@@ -6,9 +6,9 @@ import Step2 from "./Step2";
 import Step3 from "./Step3";
 import {
   useBrandTermCheckMutation,
-  useCheckCouponMutation,
+  useCalculateCouponMutation,
+  useGetOnboardingCourseQuery
 } from "@/app/services/service";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useFormik } from "formik";
@@ -21,12 +21,9 @@ function CoursePurchaseModal({
   buttonText,
   userInfo,
 }) {
-  const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("qpay");
   const [selectedOption, setSelectedOption] = useState("creatorcourse");
-  const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
-  const [selectedPackageId, setSelectedPackageId] = useState(1);
   const initialStep = userInfo?.IsUsedFreeContent
     ? userInfo?.IsCheckedTerm
       ? 3
@@ -37,15 +34,21 @@ function CoursePurchaseModal({
 
   const [termCheck] = useBrandTermCheckMutation();
 
+  const {
+    data: courseData,
+    isLoading,
+    error,
+  } = useGetOnboardingCourseQuery({});
+
   const [
-    checkCoupon,
+    calculateCoupon,
     {
-      data: checkCouponData,
-      error: checkCouponError,
-      isLoading: checkCouponLoading,
-      isSuccess: checkCouponSuccess,
+      data: calculateCouponData,
+      error: calculateCouponError,
+      isLoading: calculateCouponLoading,
+      isSuccess: calculateCouponSuccess,
     },
-  ] = useCheckCouponMutation();
+  ] = useCalculateCouponMutation();
 
   const couponCodeformik = useFormik({
     initialValues: {
@@ -55,7 +58,7 @@ function CoursePurchaseModal({
     onSubmit: async (values) => {
       try {
         // @ts-ignore
-        checkCoupon({ PromoCode: values.couponCode });
+        calculateCoupon({ Amount: courseData?.coursePrice, CouponCode: values.couponCode });
       } catch (error) {
         toast.error("Алдаа гарлаа");
         console.error("Error submitting the form", error);
@@ -64,14 +67,22 @@ function CoursePurchaseModal({
   });
 
   useEffect(() => {
-    if (checkCouponSuccess) {
+    if (calculateCouponSuccess) {
       toast.success("Таны купон амжилттай идэвхжилээ");
     }
-    if (checkCouponError) {
+    if (calculateCouponError) {
       //@ts-ignore
-      toast.error(checkCouponError?.data?.error);
+      toast.error(calculateCouponError?.data?.error);
     }
-  }, [checkCouponSuccess, checkCouponError]);
+  }, [calculateCouponSuccess, calculateCouponError]);
+
+  useEffect(() => {
+    if (courseData && courseData.coursePrice) {
+      console.log("Course data loaded:", courseData);
+      // Optionally pre-calculate with an empty coupon code to get default amount
+      calculateCoupon({ Amount: courseData.coursePrice, CouponCode: "" });
+    }
+  }, [courseData]);
 
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
@@ -108,18 +119,18 @@ function CoursePurchaseModal({
     switch (currentStep) {
       case 1:
         return (
-          <Step1 handleSelect={handleSelect} selectedOption={selectedOption} />
+          <Step1 handleSelect={handleSelect} selectedOption={selectedOption} courseData={courseData} />
         );
       case 2:
         return <Step2 setIsAgreed={setIsAgreed} />;
       case 3:
         return (
           <Step3
-            selectedPackageIndex={selectedPackageIndex}
             setSelectedPayment={setSelectedPayment}
             selectedPayment={selectedPayment}
             formik={couponCodeformik}
-            couponData={checkCouponData}
+            calculateCouponData={calculateCouponData}
+            courseData={courseData}
           />
         );
 
@@ -220,7 +231,6 @@ function CoursePurchaseModal({
             </button>
           ) : (
             <CoursePaymentModal
-              selectedPackageId={selectedPackageId}
               setIsMainDialogOpen={setMainDialogOpen}
               selectedPayment={selectedPayment}
               couponCode={couponCodeformik.values.couponCode}

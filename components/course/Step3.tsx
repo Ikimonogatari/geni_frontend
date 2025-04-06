@@ -1,54 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
-import {
-  useListPaymentPlansQuery,
-  useGetOnboardingCourseQuery,
-} from "@/app/services/service";
 import PriceFormatter from "@/components/common/FormatPrice";
 import { Input } from "@/components/ui/input";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
-interface Step3Props {
-  selectedPackageIndex: number;
-  selectedPayment: string;
-  setSelectedPayment: (payment: string) => void;
-  formik: any;
-  couponData?: {
-    coupon_value: string;
-    coupon_type: string;
-  };
-}
 
 function Step3({
-  selectedPackageIndex,
   selectedPayment,
   setSelectedPayment,
   formik,
-  couponData,
-}: Step3Props) {
-  const {
-    data: listPaymentPlansData,
-    error: listPaymentPlansError,
-    isLoading: listPaymentPlansLoading,
-  } = useListPaymentPlansQuery({});
+  courseData = null,
+  calculateCouponData = null
+}) {
 
-  const {
-    data: courseData,
-    isLoading: courseLoading,
-    error: courseError,
-  } = useGetOnboardingCourseQuery({});
-
-  const selectedPackageData = listPaymentPlansData
-    ? listPaymentPlansData[selectedPackageIndex]
-    : null;
-
-  const originalPrice = courseData?.price || 480000; // Use API price with fallback
-  const discountAmount = couponData
-    ? couponData.coupon_type === "percentage"
-      ? (originalPrice * parseInt(couponData.coupon_value)) / 100
-      : parseInt(couponData.coupon_value)
-    : 0;
-  const finalPrice = originalPrice - discountAmount;
-
+  console.log("Coupon data:", calculateCouponData || "No coupon data available");
+  console.log("Course data:", courseData || "No course data available");
   return (
     <div className="flex flex-col items-start gap-2 w-full">
       <span className="text-xl sm:text-2xl xl:text-3xl font-bold">
@@ -71,13 +36,11 @@ function Step3({
             <div className="flex flex-col">
               <span className="text-sm sm:text-base">Нийт үнэ:</span>
               <span className="text-xl sm:text-2xl">
-                <PriceFormatter price={originalPrice} />
+                <PriceFormatter price={courseData?.coursePrice || 0} />
               </span>
-              <FadeInAnimation visible={couponData ? true : false}>
+              <FadeInAnimation visible={calculateCouponData ? true : false}>
                 <span className="text-geni-green">
-                  Купон хөнгөлөлт: <PriceFormatter price={-discountAmount} />
-                  {couponData?.coupon_type === "percentage" &&
-                    ` (${couponData?.coupon_value}%)`}
+                  Купон хөнгөлөлт: <PriceFormatter price={(courseData?.coursePrice || 0) - (calculateCouponData?.Amount || 0)} />
                 </span>
               </FadeInAnimation>
             </div>
@@ -85,7 +48,7 @@ function Step3({
             <div className="flex flex-col">
               <span className="text-sm sm:text-base">Төлөх дүн: </span>
               <span className="text-xl sm:text-2xl">
-                <PriceFormatter price={finalPrice} />
+                <PriceFormatter price={calculateCouponData?.Amount || courseData?.coursePrice || 0} />
               </span>
             </div>
           </div>
