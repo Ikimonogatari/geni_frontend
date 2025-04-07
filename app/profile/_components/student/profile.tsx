@@ -1,19 +1,16 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import Cookies from "js-cookie";
-
 import {
   useBecomeCreatorMutation,
   useGetStudentCoursesQuery,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
-import usePagination from "@/components/hooks/usePagination";
-import Pagination from "@/components/common/Pagination";
 import CoursePurchaseModal from "@/components/course/CoursePurchaseModal";
 import GuideModal from "@/components/common/GuideModal";
 import StudentCourses from "./StudentCourses";
@@ -41,8 +38,9 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
     return studentCoursesLoading;
   }, [studentCoursesLoading]);
 
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: userInfoData } = useGetUserInfoQuery({}, { 
+    skip: !!getUserInfoData // Skip if we already have getUserInfoData from props
+  });
 
   const instagramLink = getUserInfoData?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Instagram"
@@ -199,7 +197,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
           {studentCoursesData && !isLoading ? (
             <StudentCourses
               currentContents={studentCoursesData}
-              parsedUserInfo={parsedUserInfo}
+              parsedUserInfo={userInfoData || getUserInfoData}
             />
           ) : (
             <div className="space-y-6 mt-10">

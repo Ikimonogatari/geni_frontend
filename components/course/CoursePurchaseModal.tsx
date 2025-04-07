@@ -76,14 +76,6 @@ function CoursePurchaseModal({
     }
   }, [calculateCouponSuccess, calculateCouponError]);
 
-  useEffect(() => {
-    if (courseData && courseData.coursePrice) {
-      console.log("Course data loaded:", courseData);
-      // Optionally pre-calculate with an empty coupon code to get default amount
-      calculateCoupon({ Amount: courseData.coursePrice, CouponCode: "" });
-    }
-  }, [courseData]);
-
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
     setIsAgreed(isChecked);

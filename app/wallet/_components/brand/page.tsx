@@ -2,10 +2,10 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import {
   useGetBrandCreditHistoryQuery,
   useGetBrandCreditInfoQuery,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import ListRowLayout from "@/components/common/ListRowLayout";
@@ -13,8 +13,7 @@ import { useDateFormatter } from "@/app/hooks/useDateFormatter";
 
 function BrandWallet() {
   const router = useRouter();
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: parsedUserInfo } = useGetUserInfoQuery({});
   const { formatDate } = useDateFormatter();
 
   const {
@@ -107,7 +106,6 @@ function BrandWallet() {
                 className={
                   "text-lg flex flex-row items-center justify-center py-4 w-full"
                 }
-                userInfo={parsedUserInfo}
               />
             </div>
           </div>

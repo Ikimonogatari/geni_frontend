@@ -2,18 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { useEditCreatorProfileMutation } from "@/app/services/service";
-import Cookies from "js-cookie";
+import { useEditCreatorProfileMutation, useGetUserInfoQuery } from "@/app/services/service";
 import toast from "react-hot-toast";
 import StudentDetails from "./StudentDetails";
 import StudentDetailsSubmit from "./StudentDetailsSubmit";
 import { addStudentDetailsSchema } from "./schema";
+import Loader from "@/components/common/Loader";
 
 function StudentOnboarding() {
   const router = useRouter();
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-
+  const { data: userInfoData, isLoading: userInfoLoading } = useGetUserInfoQuery({});
   const [step, setStep] = useState(1);
 
   const handleNextStep = async () => {
@@ -45,32 +43,45 @@ function StudentOnboarding() {
 
   const formik = useFormik({
     initialValues: {
-      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
-      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
-      Location: parsedUserInfo ? parsedUserInfo?.Location : "",
-      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
+      FirstName: "",
+      LastName: "",
+      Nickname: "",
+      Bio: "",
+      PhoneNumber: "",
+      Location: "",
+      RegNo: "",
       EbarimtConsumerNo: "9876543211",
-      Birthday:
-        parsedUserInfo?.Birthday &&
-        parsedUserInfo.Birthday !== "0001-01-01T00:00:00Z"
-          ? new Date(parsedUserInfo.Birthday).toISOString().split("T")[0]
-          : "",
-      Gender: parsedUserInfo ? parsedUserInfo?.Gender : "",
+      Birthday: "",
+      Gender: "F", // Default to F for initial rendering
     },
     validationSchema: addStudentDetailsSchema,
     onSubmit: async (values) => {
-      try {
-        await editCreatorProfile(values).unwrap();
-        // @ts-ignore
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
-      }
+      console.log(values);
+      await editCreatorProfile(values).unwrap();
     },
   });
+
+  // Update formik values when userInfoData is loaded
+  useEffect(() => {
+    if (userInfoData) {
+      formik.setValues({
+        FirstName: userInfoData?.FirstName || "",
+        LastName: userInfoData?.LastName || "",
+        Nickname: userInfoData?.Nickname || "",
+        Bio: userInfoData?.Bio || "",
+        PhoneNumber: userInfoData?.PhoneNumber || "",
+        Location: userInfoData?.Location || "",
+        RegNo: userInfoData?.RegNo || "",
+        EbarimtConsumerNo: "9876543211",
+        Birthday:
+          userInfoData?.Birthday &&
+          userInfoData.Birthday !== "0001-01-01T00:00:00Z"
+            ? new Date(userInfoData.Birthday).toISOString().split("T")[0]
+            : "",
+        Gender: userInfoData?.Gender || "F",
+      });
+    }
+  }, [userInfoData]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -81,7 +92,12 @@ function StudentOnboarding() {
       // @ts-ignore
       toast.error(error?.data?.error);
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, router]);
+
+  // Show loader while fetching user data
+  if (userInfoLoading) {
+    return <Loader />;
+  }
 
   const renderStepContent = () => {
     switch (step) {
@@ -89,7 +105,7 @@ function StudentOnboarding() {
         return (
           <StudentDetails
             formik={formik}
-            parsedUserInfo={parsedUserInfo}
+            parsedUserInfo={userInfoData}
             handleNextStep={handleNextStep}
           />
         );
@@ -98,9 +114,11 @@ function StudentOnboarding() {
           <StudentDetailsSubmit
             formik={formik}
             handlePreviousStep={handlePreviousStep}
-            parsedUserInfo={parsedUserInfo}
+            parsedUserInfo={userInfoData}
           />
         );
+      default:
+        return null;
     }
   };
 

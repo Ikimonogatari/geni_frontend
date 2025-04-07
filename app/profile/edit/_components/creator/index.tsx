@@ -17,6 +17,7 @@ import {
   useSendOtpToEmailMutation,
   useChangeEmailMutation,
   geniApi,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
@@ -40,8 +41,9 @@ function EditProfileCreator() {
   const router = useRouter();
   const { setShouldRefetchUserInfo } = useUserInfo();
 
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: userInfoData } = useGetUserInfoQuery({});
+
+  const parsedUserInfo = userInfoData;
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -137,14 +139,14 @@ function EditProfileCreator() {
 
   const formik = useFormik({
     initialValues: {
-      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
-      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
-      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
+      FirstName: parsedUserInfo?.FirstName ? parsedUserInfo?.FirstName : "",
+      LastName: parsedUserInfo?.LastName ? parsedUserInfo?.LastName : "",
+      Nickname: parsedUserInfo?.Nickname ? parsedUserInfo?.Nickname : "",
+      Bio: parsedUserInfo?.Bio ? parsedUserInfo?.Bio : "",
+      RegNo: parsedUserInfo?.RegNo ? parsedUserInfo?.RegNo : "",
+      PhoneNumber: parsedUserInfo?.PhoneNumber ? parsedUserInfo?.PhoneNumber : "",
       AdditionalPhoneNum: "+12345678902",
-      Location: parsedUserInfo ? parsedUserInfo?.Location : "",
+      Location: parsedUserInfo?.Location ? parsedUserInfo?.Location : "",
       EbarimtConsumerNo: "9876543211",
       Birthday:
         parsedUserInfo?.Birthday &&
@@ -152,7 +154,7 @@ function EditProfileCreator() {
           ? parsedUserInfo.Birthday
           : new Date().toISOString().split("T")[0],
       EduId: 3,
-      Gender: "M",
+      Gender: parsedUserInfo?.Gender ? parsedUserInfo?.Gender : "F",
     },
     validationSchema: Yup.object({
       FirstName: Yup.string().required("Заавал бөглөнө үү"),
@@ -324,7 +326,6 @@ function EditProfileCreator() {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
     geniApi.util.invalidateTags(["UserInfo"]);
     setShouldRefetchUserInfo(true);
 

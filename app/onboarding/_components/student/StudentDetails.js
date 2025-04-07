@@ -33,6 +33,14 @@ function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
     },
   ] = useChangeProfilePictureMutation();
 
+  const [profileImage, setProfileImage] = useState("/dummy-student.png");
+  
+  useEffect(() => {
+    if (parsedUserInfo?.ProfileLink) {
+      setProfileImage(parsedUserInfo.ProfileLink);
+    }
+  }, [parsedUserInfo]);
+
   useEffect(() => {
     if (uploadFileError) {
       toast.error(uploadFileError?.data?.error);
@@ -47,10 +55,6 @@ function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
       toast.error(changeProfilePictureError?.data?.error);
     }
   }, [changeProfilePictureData, changeProfilePictureError]);
-
-  const [profileImage, setProfileImage] = useState(
-    parsedUserInfo?.ProfileLink || "/dummy-student.png"
-  );
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {

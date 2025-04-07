@@ -12,8 +12,8 @@ import {
   useSendOtpToEmailMutation,
   useUpdateSocialChannelMutation,
   useUploadFileMutation,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
-import { ErrorText } from "@/components/ui/error-text";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -36,9 +36,8 @@ function EditProfileBrand() {
   const { setShouldRefetchUserInfo } = useUserInfo();
   const [activeSection, setActiveSection] = useState("general");
 
-  const userInfo = Cookies.get("user-info");
-  const userType = Cookies.get("userType");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: userInfoData } = useGetUserInfoQuery({});
+  const parsedUserInfo = userInfoData;
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -307,7 +306,7 @@ function EditProfileBrand() {
   const handleSendOtp = async () => {
     sendOtpToEmail({
       To: newEmail,
-      UserType: userType, //Sys, Brand, Creator
+      UserType: parsedUserInfo?.UserType, //Sys, Brand, Creator
       Channel: "smtp", //smtp, sms
       Type: "changeemail",
     });
@@ -388,7 +387,6 @@ function EditProfileBrand() {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
     geniApi.util.invalidateTags(["UserInfo"]);
     setShouldRefetchUserInfo(true);
 

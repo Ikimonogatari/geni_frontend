@@ -303,7 +303,6 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                 }
                 buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
-                userInfo={getUserInfoData}
               />
             )}
           </div>
@@ -359,7 +358,6 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                         "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                       }
                       buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
-                      userInfo={getUserInfoData}
                     />
                   )}
                 </div>

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
 
@@ -17,13 +16,12 @@ import {
   useSendOtpToEmailMutation,
   useChangeEmailMutation,
   geniApi,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { useUserInfo } from "@/app/context/UserInfoContext";
-import { Edit } from "lucide-react";
-import { ErrorText } from "@/components/ui/error-text";
 import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
@@ -37,9 +35,9 @@ function EditProfileStudent() {
   const { setShouldRefetchUserInfo } = useUserInfo();
   const [activeSection, setActiveSection] = useState("general");
 
-  const userInfo = Cookies.get("user-info");
-  const userType = Cookies.get("userType");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: userInfoData } = useGetUserInfoQuery({});
+
+  const parsedUserInfo = userInfoData;
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -131,15 +129,15 @@ function EditProfileStudent() {
 
   const formik = useFormik({
     initialValues: {
-      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
-      Email: parsedUserInfo ? parsedUserInfo.Email : "",
-      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
-      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
+      FirstName: parsedUserInfo?.FirstName ? parsedUserInfo?.FirstName : "",
+      LastName: parsedUserInfo?.LastName ? parsedUserInfo?.LastName : "",
+      Nickname: parsedUserInfo?.Nickname ? parsedUserInfo?.Nickname : "",
+      Email: parsedUserInfo?.Email ? parsedUserInfo.Email : "",
+      Bio: parsedUserInfo?.Bio ? parsedUserInfo?.Bio : "",
+      RegNo: parsedUserInfo?.RegNo ? parsedUserInfo?.RegNo : "",
+      PhoneNumber: parsedUserInfo?.PhoneNumber ? parsedUserInfo?.PhoneNumber : "",
       AdditionalPhoneNum: "+12345678902",
-      Location: parsedUserInfo ? parsedUserInfo?.Location : "",
+      Location: parsedUserInfo?.Location ? parsedUserInfo?.Location : "",
       EbarimtConsumerNo: "9876543211",
       Birthday:
         parsedUserInfo?.Birthday &&
@@ -147,7 +145,7 @@ function EditProfileStudent() {
           ? parsedUserInfo.Birthday
           : new Date().toISOString().split("T")[0],
       EduId: 3,
-      Gender: "M",
+      Gender: parsedUserInfo?.Gender ? parsedUserInfo?.Gender : "F",
     },
     validationSchema: Yup.object({
       FirstName: Yup.string().required("Заавал бөглөнө үү"),
@@ -303,7 +301,7 @@ function EditProfileStudent() {
   const handleSendOtp = async () => {
     sendOtpToEmail({
       To: newEmail,
-      UserType: userType, //Sys, Brand, Creator
+      UserType: parsedUserInfo?.UserType, //Sys, Brand, Creator
       Channel: "smtp", //smtp, sms
       Type: "changeemail",
     });
@@ -319,7 +317,6 @@ function EditProfileStudent() {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
     geniApi.util.invalidateTags(["UserInfo"]);
     setShouldRefetchUserInfo(true);
 

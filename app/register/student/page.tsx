@@ -126,7 +126,7 @@ function StudentRegister() {
       setIsSuccessDialogOpen(true);
     } else if (studentRegisterError) {
       // @ts-ignore
-      toast.error(studentRegister?.data?.error);
+      toast.error(studentRegisterError?.data?.error);
     }
   }, [studentRegisterSuccess, studentRegisterError]);
 

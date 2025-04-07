@@ -5,6 +5,9 @@ import StatusIndicator from "@/components/StatusIndicator";
 import FeedbackModal from "@/components/FeedbackModal";
 
 function StudentCourses({ currentContents, parsedUserInfo }) {
+  // Renamed prop but keeping compatibility with both old and new implementations
+  const userInfo = parsedUserInfo;
+  
   console.log(currentContents);
   return (
     <div className="w-full overflow-x-auto">
@@ -34,7 +37,7 @@ function StudentCourses({ currentContents, parsedUserInfo }) {
             <div className="col-span-1">
               {c.Status === "ContentRejected" ? (
                 <FeedbackModal
-                  parsedUserInfo={parsedUserInfo}
+                  parsedUserInfo={userInfo}
                   contentId={c.ContentId}
                   feedbacks={c.FeedBacks}
                 />

@@ -16,11 +16,30 @@ import { formatSocialMediaUrl } from "@/utils/socialMedia";
 
 import toast from "react-hot-toast";
 
-function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
+function BrandDetailsSubmit({ formik, handlePreviousStep, userInfo }) {
   const [socials, setSocials] = useState({
     instagram: "",
     facebook: "",
   });
+  
+  // Function to validate and display errors before submitting
+  const handleSubmit = async () => {
+    // Validate all fields
+    const errors = await formik.validateForm();
+    
+    if (Object.keys(errors).length > 0) {
+      toast.error("Бүх талбарыг зөв бөглөнө үү");
+      
+      // Show specific error fields to help users
+      const errorFields = Object.keys(errors).join(", ");
+      console.log("Form errors in fields:", errorFields);
+      
+      return;
+    }
+    
+    formik.handleSubmit();
+  };
+
   const [
     createSocialChannel,
     {
@@ -49,7 +68,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   const handleSaveOrUpdateSocialChannels = async () => {
     try {
       if (socials.instagram.trim() !== "") {
-        const hasExistingInstagram = parsedUserInfo?.SocialChannels?.some(
+        const hasExistingInstagram = userInfo?.SocialChannels?.some(
           (channel) => channel.PlatformId === 2
         );
 
@@ -67,7 +86,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
       }
 
       if (socials.facebook.trim() !== "") {
-        const hasExistingFacebook = parsedUserInfo?.SocialChannels?.some(
+        const hasExistingFacebook = userInfo?.SocialChannels?.some(
           (channel) => channel.PlatformId === 1
         );
 
@@ -241,7 +260,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 <input
                   type="text"
                   placeholder={
-                    parsedUserInfo?.SocialChannels?.find(
+                    userInfo?.SocialChannels?.find(
                       (channel) => channel.PlatformId === 2
                     )?.SocialAddress || ""
                   }
@@ -277,7 +296,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 <input
                   type="text"
                   placeholder={
-                    parsedUserInfo?.SocialChannels?.find(
+                    userInfo?.SocialChannels?.find(
                       (channel) => channel.PlatformId === 1
                     )?.SocialAddress || ""
                   }
@@ -322,7 +341,8 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           Буцах
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={handleSubmit}
           className="w-full flex flex-row items-center
     justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
     border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"

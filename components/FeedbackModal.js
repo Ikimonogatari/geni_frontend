@@ -2,8 +2,18 @@ import React, { useState } from "react";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 import Image from "next/image";
+import { useGetUserInfoQuery } from "@/app/services/service";
 
 function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
+  // Use the existing parsedUserInfo prop if provided, or use the query
+  // This makes the component compatible with both old and new implementations
+  const { data: userInfoData } = useGetUserInfoQuery({}, {
+    skip: !!parsedUserInfo // Skip the query if we already have parsedUserInfo
+  });
+  
+  // Use parsedUserInfo if available, otherwise use the query result
+  const userInfo = parsedUserInfo || userInfoData;
+  
   const [resubmitting, setIsResubmitting] = useState(false);
   return (
     <Dialog>
@@ -36,7 +46,7 @@ function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
         </DialogContent>
       ) : (
         <FeedbackModalUploadModalContent
-          parsedUserInfo={parsedUserInfo}
+          parsedUserInfo={userInfo}
           contentId={contentId}
         />
       )}

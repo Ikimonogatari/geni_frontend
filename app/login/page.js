@@ -107,9 +107,9 @@ function Page() {
 
   const login = useFormik({
     initialValues: {
-      UserType: userType,
       email: "",
       password: "",
+      UserType: userType,
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -117,11 +117,9 @@ function Page() {
         .required("Заавал бөглөнө үү"),
       password: Yup.string().required("Заавал бөглөнө үү"),
     }),
-
     onSubmit: (values) => {
       Cookies.remove("auth");
       Cookies.remove("userType");
-      Cookies.remove("user-info");
       loginRequest(values);
     },
   });
@@ -156,7 +154,7 @@ function Page() {
       toast.success("Нууц үг шинэчлэгдлээ");
       setForgotPasswordState("1");
     } else if (forgotPasswordError) {
-      toast.error(forgotPassword?.data?.error);
+      toast.error(forgotPasswordError?.data?.error);
     }
   }, [forgotPasswordSuccess, forgotPasswordError]);
 

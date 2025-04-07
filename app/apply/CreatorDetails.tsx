@@ -86,7 +86,7 @@ function CreatorDetails({ formik }) {
           id="Birthday"
           name="Birthday"
           type="date"
-          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg h-5"
+          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg"
           wrapperClassName="w-full col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
