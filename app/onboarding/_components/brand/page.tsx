@@ -21,15 +21,11 @@ function BrandOnboarding() {
 
   const [step, setStep] = useState(1);
 
-  const handleNextStep = async () => {
+  const handleNextStep = () => {
     if (step === 1) {
-      await formik.validateField("Name");
-      await formik.validateField("Bio");
-      if (!formik.errors.Name && !formik.errors.Bio) {
-        setStep(2);
-      }
+      setStep(2);
     } else if (step === 2) {
-      await formik.validateForm();
+      formik.handleSubmit();
     }
   };
 
@@ -65,15 +61,9 @@ function BrandOnboarding() {
     },
     validationSchema: addBrandDetailsSchema,
     onSubmit: async (values) => {
-      try {
-        await editBrandProfile(values).unwrap();
-        // @ts-ignore
-        await requestReview();
-        setStep(3);
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
-      }
+      await editBrandProfile(values).unwrap();
+      await requestReview({}).unwrap();
+      setStep(3);
     },
   });
 
@@ -88,7 +78,7 @@ function BrandOnboarding() {
         RegNo: userInfo?.RegNo || "",
         Address: userInfo?.Address || "",
         BrandAoADescription: "temp-desc",
-        HasMarketingPersonel: false,
+        HasMarketingPersonel: userInfo?.HasMarketingPersonel || false,
         AvgProductSalesMonthly: userInfo?.AvgProductSalesMonthly || 0,
         AvgPrice: userInfo?.AvgPrice || 0,
       });
@@ -99,9 +89,13 @@ function BrandOnboarding() {
     if (isSuccess && requestReviewSuccess) {
       toast.success("Амжилттай");
     }
-    if (error || requestReviewError) {
+    if (error) {
       // @ts-ignore
-      toast.error(error?.data?.error || requestReviewError?.data?.error);
+      toast.error(error?.data?.error);
+    }
+    if(requestReviewError) {
+      // @ts-ignore
+      toast.error(requestReviewError?.data?.error);
     }
   }, [data, error, requestReviewSuccess, requestReviewError]);
 
@@ -130,6 +124,8 @@ function BrandOnboarding() {
         );
       case 3:
         return <BrandDetailsSuccess router={router} />;
+      default:
+        return null;
     }
   };
 

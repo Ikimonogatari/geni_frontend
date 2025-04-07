@@ -21,6 +21,25 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, userInfo }) {
     instagram: "",
     facebook: "",
   });
+  
+  // Function to validate and display errors before submitting
+  const handleSubmit = async () => {
+    // Validate all fields
+    const errors = await formik.validateForm();
+    
+    if (Object.keys(errors).length > 0) {
+      toast.error("Бүх талбарыг зөв бөглөнө үү");
+      
+      // Show specific error fields to help users
+      const errorFields = Object.keys(errors).join(", ");
+      console.log("Form errors in fields:", errorFields);
+      
+      return;
+    }
+    
+    formik.handleSubmit();
+  };
+
   const [
     createSocialChannel,
     {
@@ -322,7 +341,8 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, userInfo }) {
           Буцах
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={handleSubmit}
           className="w-full flex flex-row items-center
     justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
     border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"

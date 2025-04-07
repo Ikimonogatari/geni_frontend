@@ -158,6 +158,25 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
       return updatedBrandTypes;
     });
   };
+
+  // Custom handler for next step to validate and show errors
+  const validateAndProceed = async () => {
+    // Validate required fields for this step
+    await formik.validateField("Name");
+    await formik.validateField("Bio");
+    
+    if (formik.errors.Name || formik.errors.Bio) {
+      toast.error("Бүх талбарыг зөв бөглөнө үү");
+      console.log("Form errors:", {
+        Name: formik.errors.Name,
+        Bio: formik.errors.Bio
+      });
+      return;
+    }
+    
+    handleNextStep();
+  };
+
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start justify-between w-full gap-6 sm:gap-11">
@@ -315,7 +334,7 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
         </div>
       </div>
       <button
-        onClick={handleNextStep}
+        onClick={validateAndProceed}
         type="button"
         className="mt-8 sm:mt-16 w-full flex flex-row items-center
 justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
