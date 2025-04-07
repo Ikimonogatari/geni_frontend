@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Cookies from "js-cookie";
 import { useFormik } from "formik";
 
 import toast from "react-hot-toast";
@@ -9,6 +8,7 @@ import {
   useCreateProductMutation,
   useListProductDictsQuery,
   useListProductTypesQuery,
+  useGetUserInfoQuery
 } from "../services/service";
 
 import {
@@ -29,6 +29,7 @@ import { MinusIcon, PlusIcon } from "lucide-react";
 import { ErrorText } from "@/components/ui/error-text";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
+import Loader from "@/components/common/Loader";
 
 function Page() {
   const [selectedContentTypes, setSelectedContentTypes] = useState([]);
@@ -38,8 +39,7 @@ function Page() {
   const [productTypes, setProductTypes] = useState([]);
   const [availableProductTypes, setAvailableProductTypes] = useState([]);
 
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery({});
 
   // TODO product type remove add formik error fix, product edit fix
   const formik = useFormik({
@@ -277,6 +277,10 @@ function Page() {
     !formik.values.productTypes.length ||
     !formik.values.productPics.length;
 
+  if (userInfoLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="mt-32">
@@ -304,8 +308,8 @@ function Page() {
               <div className="flex flex-row items-center gap-3">
                 <Image
                   src={
-                    parsedUserInfo?.ProfileLink
-                      ? parsedUserInfo?.ProfileLink
+                    userInfo?.ProfileLink
+                      ? userInfo?.ProfileLink
                       : "/dummy-brand.png"
                   }
                   width={44}
@@ -314,7 +318,7 @@ function Page() {
                   className="border border-primary rounded-full w-11 h-11"
                 />
                 <span className="text-xl font-bold">
-                  {parsedUserInfo?.Name}
+                  {userInfo?.Name}
                 </span>
               </div>
 
@@ -651,10 +655,10 @@ function Page() {
               <div className="flex flex-col gap-2 border-primary border p-3 sm:p-4 bg-primary-bg rounded-xl">
                 <span className="font-bold">
                   Таны Geni Credit Үлдэгдэл:{" "}
-                  {parsedUserInfo?.Credit ? parsedUserInfo?.Credit : 0}
+                  {userInfo?.Credit ? userInfo?.Credit : 0}
                 </span>
                 <FadeInAnimation
-                  visible={parsedUserInfo?.Credit < formik.values.credit}
+                  visible={userInfo?.Credit < formik.values.credit}
                 >
                   <ErrorText
                     text={
@@ -669,7 +673,6 @@ function Page() {
                   className={
                     "text-lg flex flex-row items-center justify-center py-4 w-full"
                   }
-                  userInfo={parsedUserInfo}
                 />
               </div>
               <HandleButton
@@ -694,7 +697,7 @@ function Page() {
                 setCreateProductSuccess={setCreateProductSuccess}
                 createProductData={createProductData}
                 createProductSuccess={createProductSuccess}
-                parsedUserInfo={parsedUserInfo}
+                userInfo={userInfo}
               />
             </div>
           </form>

@@ -16,7 +16,7 @@ import { formatSocialMediaUrl } from "@/utils/socialMedia";
 
 import toast from "react-hot-toast";
 
-function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
+function BrandDetailsSubmit({ formik, handlePreviousStep, userInfo }) {
   const [socials, setSocials] = useState({
     instagram: "",
     facebook: "",
@@ -49,7 +49,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   const handleSaveOrUpdateSocialChannels = async () => {
     try {
       if (socials.instagram.trim() !== "") {
-        const hasExistingInstagram = parsedUserInfo?.SocialChannels?.some(
+        const hasExistingInstagram = userInfo?.SocialChannels?.some(
           (channel) => channel.PlatformId === 2
         );
 
@@ -67,7 +67,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
       }
 
       if (socials.facebook.trim() !== "") {
-        const hasExistingFacebook = parsedUserInfo?.SocialChannels?.some(
+        const hasExistingFacebook = userInfo?.SocialChannels?.some(
           (channel) => channel.PlatformId === 1
         );
 
@@ -241,7 +241,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 <input
                   type="text"
                   placeholder={
-                    parsedUserInfo?.SocialChannels?.find(
+                    userInfo?.SocialChannels?.find(
                       (channel) => channel.PlatformId === 2
                     )?.SocialAddress || ""
                   }
@@ -277,7 +277,7 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 <input
                   type="text"
                   placeholder={
-                    parsedUserInfo?.SocialChannels?.find(
+                    userInfo?.SocialChannels?.find(
                       (channel) => channel.PlatformId === 1
                     )?.SocialAddress || ""
                   }

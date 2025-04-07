@@ -28,29 +28,6 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
     facebook: "",
   });
 
-  // Initialize social values from parsedUserInfo when component mounts
-  useEffect(() => {
-    if (parsedUserInfo?.SocialChannels?.length > 0) {
-      const instagramChannel = parsedUserInfo.SocialChannels.find(
-        (channel) => channel.PlatformId === 2
-      );
-      const facebookChannel = parsedUserInfo.SocialChannels.find(
-        (channel) => channel.PlatformId === 1
-      );
-
-      const newSocials = {
-        instagram: instagramChannel?.SocialAddress || "",
-        facebook: facebookChannel?.SocialAddress || "",
-      };
-
-      setSocials(newSocials);
-      setDisplayValues({
-        instagram: extractUsername("instagram", newSocials.instagram),
-        facebook: extractUsername("facebook", newSocials.facebook),
-      });
-    }
-  }, [parsedUserInfo]);
-
   // Update display values when component mounts or socials change
   useEffect(() => {
     setDisplayValues({
