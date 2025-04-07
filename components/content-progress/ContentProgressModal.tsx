@@ -891,7 +891,7 @@ const ContentProgressModalContent: React.FC<
                         />
                       )}
                     {contentProcessData?.[contentProcessData.length - 1]
-                      ?.ContentStepId?.String == content?.CurrentStepId && (
+                      ?.ContentStepId == content?.CurrentStepId && (
                       <>
                         {userType == "Creator" && creatorModalContents()}
                         {userType == "Brand" && brandModalContents()}
