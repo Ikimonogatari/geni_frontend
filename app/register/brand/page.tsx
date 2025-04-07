@@ -105,7 +105,7 @@ function BrandRegister() {
         toast.error("Та бүх талбарыг зөв бөглөнө үү");
       }
     } catch (error) {
-      toast.error("Валидацийн алдаа гарлаа");
+      toast.error("Алдаа гарлаа");
     }
   };
 
@@ -126,7 +126,7 @@ function BrandRegister() {
       setIsSuccessDialogOpen(true);
     } else if (brandRegisterError) {
       // @ts-ignore
-      toast.error(brandRegister?.data?.error);
+      toast.error(brandRegisterError?.data?.error);
     }
   }, [brandRegisterSuccess, brandRegisterError]);
 

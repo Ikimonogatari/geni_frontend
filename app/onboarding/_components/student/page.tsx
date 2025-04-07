@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { useEditCreatorProfileMutation } from "@/app/services/service";
+import { useEditCreatorProfileMutation, useGetUserInfoQuery } from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import StudentDetails from "./StudentDetails";
@@ -11,9 +11,7 @@ import { addStudentDetailsSchema } from "./schema";
 
 function StudentOnboarding() {
   const router = useRouter();
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
-
+  const { data: userInfoData, error: userInfoError } = useGetUserInfoQuery();
   const [step, setStep] = useState(1);
 
   const handleNextStep = async () => {
@@ -45,20 +43,20 @@ function StudentOnboarding() {
 
   const formik = useFormik({
     initialValues: {
-      FirstName: parsedUserInfo ? parsedUserInfo?.FirstName : "",
-      LastName: parsedUserInfo ? parsedUserInfo?.LastName : "",
-      Nickname: parsedUserInfo ? parsedUserInfo?.Nickname : "",
-      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
-      Location: parsedUserInfo ? parsedUserInfo?.Location : "",
-      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
+      FirstName: userInfoData ? userInfoData?.FirstName : "",
+      LastName: userInfoData ? userInfoData?.LastName : "",
+      Nickname: userInfoData ? userInfoData?.Nickname : "",
+      Bio: userInfoData ? userInfoData?.Bio : "",
+      PhoneNumber: userInfoData ? userInfoData?.PhoneNumber : "",
+      Location: userInfoData ? userInfoData?.Location : "",
+      RegNo: userInfoData ? userInfoData?.RegNo : "",
       EbarimtConsumerNo: "9876543211",
       Birthday:
-        parsedUserInfo?.Birthday &&
-        parsedUserInfo.Birthday !== "0001-01-01T00:00:00Z"
-          ? new Date(parsedUserInfo.Birthday).toISOString().split("T")[0]
+        userInfoData?.Birthday &&
+        userInfoData.Birthday !== "0001-01-01T00:00:00Z"
+          ? new Date(userInfoData.Birthday).toISOString().split("T")[0]
           : "",
-      Gender: parsedUserInfo ? parsedUserInfo?.Gender : "",
+      Gender: userInfoData ? userInfoData?.Gender : "",
     },
     validationSchema: addStudentDetailsSchema,
     onSubmit: async (values) => {
@@ -89,7 +87,7 @@ function StudentOnboarding() {
         return (
           <StudentDetails
             formik={formik}
-            parsedUserInfo={parsedUserInfo}
+            parsedUserInfo={userInfoData}
             handleNextStep={handleNextStep}
           />
         );
@@ -98,7 +96,7 @@ function StudentOnboarding() {
           <StudentDetailsSubmit
             formik={formik}
             handlePreviousStep={handlePreviousStep}
-            parsedUserInfo={parsedUserInfo}
+            parsedUserInfo={userInfoData}
           />
         );
     }

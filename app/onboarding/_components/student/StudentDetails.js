@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
+  console.log(parsedUserInfo);
   const [
     uploadFile,
     {
@@ -71,7 +72,7 @@ function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
             const id = response.data.FileId;
             const profileChangeRes = await changeProfilePicture({ FileId: id });
 
-            setProfileImage(profileChangeRes?.data?.url);
+            setProfileImage(profileChangeRes?.data?.Url);
           }
         } catch (error) {
           console.error("File upload or profile picture update failed:", error);

@@ -156,7 +156,7 @@ function Page() {
       toast.success("Нууц үг шинэчлэгдлээ");
       setForgotPasswordState("1");
     } else if (forgotPasswordError) {
-      toast.error(forgotPassword?.data?.error);
+      toast.error(forgotPasswordError?.data?.error);
     }
   }, [forgotPasswordSuccess, forgotPasswordError]);
 
