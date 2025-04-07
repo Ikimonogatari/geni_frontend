@@ -106,7 +106,6 @@ function BrandWallet() {
                 className={
                   "text-lg flex flex-row items-center justify-center py-4 w-full"
                 }
-                userInfo={parsedUserInfo}
               />
             </div>
           </div>
