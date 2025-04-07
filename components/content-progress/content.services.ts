@@ -46,8 +46,8 @@ export type Content = {
   ProductId: string;
   ProductName: string;
   ProductPics: {
-    Url: string
-  }[]
+    Url: string;
+  }[];
   RequestReason: string;
   Star: number;
   LevelName: string;

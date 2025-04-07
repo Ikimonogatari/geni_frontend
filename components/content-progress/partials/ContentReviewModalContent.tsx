@@ -82,16 +82,43 @@ const ContentReviewModalContent: React.FC<ContentReviewModalContentProps> = ({
       {p?.BrandComment !== "" && (
         <div className="flex flex-col gap-4">
           <span className="text-[#6F6F6F]">Танд өгсөн сэтгэгдэл</span>
-          <span className="bg-[#F5F4F0] border-[1px] border-[#000000] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
+          <span className="border-[1px] border-[#E6E6E6] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
             {p?.BrandComment}
           </span>
         </div>
       )}
-      {p?.BrandComment !== "" && (
+      {finalContentXpData?.FeedBack?.length > 0 && (
         <div className="flex flex-col gap-4">
           <span className="text-[#6F6F6F]">Контент пост хийх хүсэлт</span>
-          <span className="bg-[#F5F4F0] border-[1px] border-[#000000] p-3 rounded-2xl min-h-[67px] overflow-y-auto">
-            {p?.BrandComment}
+          <span className="border-[1px] border-[#E6E6E6] p-3 rounded-2xl min-h-[67px] overflow-y-auto flex flex-col gap-2">
+            {finalContentXpData?.FeedBack?.map((item, index) => (
+              <label
+                key={index}
+                className="flex items-center justify-between p-2 pl-4 border rounded-xl"
+              >
+                <span>{item.Feedback}</span>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    name="BrandFeedBack"
+                    id={`BrandFeedBack-${item.FeedbackId}`}
+                    className="peer hidden"
+                    checked={true}
+                    disabled={true}
+                  />
+                  <label
+                    htmlFor={`BrandFeedBack-${item.FeedbackId}`}
+                    className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center transition-all peer-checked:border-green-300"
+                  >
+                    <span
+                      className={`text-sm sm:text-base text-green-300 text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                    >
+                      ✓
+                    </span>
+                  </label>
+                </div>
+              </label>
+            ))}
           </span>
         </div>
       )}

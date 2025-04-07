@@ -207,9 +207,6 @@ const ContentProgressModalContent: React.FC<
             refetch();
           });
         }
-        // await creatorApply({
-        //   ...values,
-        // }).unwrap();
       } catch (error) {
         toast.error("Алдаа гарлаа");
       }
@@ -256,9 +253,7 @@ const ContentProgressModalContent: React.FC<
 
   useEffect(() => {
     if (content) {
-      // setActiveStep(getStepIndex(content.Status));
       setActiveStep(content?.CurrentStepId - 1);
-      // setOpenReturnSection(false);
 
       if (content.Status === null || content.Status === "") {
         setDialogDisabled(false);
@@ -278,27 +273,7 @@ const ContentProgressModalContent: React.FC<
     }
   }, [content]);
 
-  function getCreatedAtByStatus(
-    processList: GetContentProcessResponse,
-    status: STATUS_LIST
-  ) {
-    const foundItem = processList.find(
-      (item) => item.ContentStepStatusCode?.String === status
-    );
-    return foundItem ? foundItem.CreatedAt : null;
-  }
-
-  const overdueDays = (created_date: string): number => {
-    const date = moment(created_date);
-    const now = moment();
-    return now.diff(date, "days");
-  };
-
   const showSendContentButton = (status: STATUS_LIST): boolean => {
-    // if (status === STATUS_LIST.ContentOverDue) {
-    //   return !isOverdueWeek(created_date);
-    // }
-
     return [
       STATUS_LIST.ContentPending,
       STATUS_LIST.ContentRejected,
@@ -371,10 +346,6 @@ const ContentProgressModalContent: React.FC<
     ) {
       getFinalContentXp(content?.ContentId);
     }
-
-    // if (content?.CurrentStepName?.String == STATUS_LIST.Content) {
-    //   getBrandReviewBrand(content?.ContentId);
-    // }
   };
 
   const handleClose = (currentDialogType: DialogType) => {
@@ -533,12 +504,6 @@ const ContentProgressModalContent: React.FC<
                   )}
                 </div>
               </div>
-              {/* <button
-                onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
-                className="mt-5 sm:mt-10 w-full py-2 text-white font-semibold bg-[#CA7FFE] rounded-lg"
-              >
-                Дахин илгээх
-              </button> */}
             </>
           )}
       </>
@@ -683,15 +648,6 @@ const ContentProgressModalContent: React.FC<
             </button>
           </div>
         )}
-        {/* {content.Status === "ContentRejected" &&
-          dialogType != DialogType.CONTENT_REJECTED && (
-            <button
-              onClick={() => setDialogType(DialogType.CONTENT_REJECTED)}
-              className="w-full text-center text-xs sm:text-base bg-[#F49D19] mt-2 px-5 py-2 rounded-lg text-white font-bold"
-            >
-              Дэлгэрэнгүй
-            </button>
-          )} */}
         {dialogType != DialogType.CONTENT_IN_PROGRESS &&
           showSendContentButton(status as STATUS_LIST) && (
             <div className="pt-2">
@@ -799,36 +755,6 @@ const ContentProgressModalContent: React.FC<
             </div>
           </div>
         )}
-
-        {/* {status == "ContentEditRequest" && (
-          <div className="flex flex-col gap-3 border-geni-gray border-[1px] rounded-xl p-4 pt-0">
-            <div className="flex flex-col gap-2 bg-white rounded-xl p-4">
-              <p className="text-xl font-bold mb-2">Контент пост хийх хүсэлт</p>
-              <label className="flex items-center justify-between p-2 border rounded-xl">
-                <span>Үг үсгийн алдаагаа засаарай</span>
-                <input
-                  type="checkbox"
-                  name="sharePost"
-                  checked={true}
-                  disabled={true}
-                  className="w-5 h-5"
-                />
-              </label>
-              <label className="flex items-center justify-between p-2 border rounded-xl">
-                <span>
-                  Бусад брэндийн бүтээгдэхүүнийг хэт их оруулсан байна
-                </span>
-                <input
-                  type="checkbox"
-                  name="collabPost"
-                  checked={false}
-                  disabled={true}
-                  className="w-5 h-5"
-                />
-              </label>
-            </div>
-          </div>
-        )} */}
       </>
     );
   };
@@ -851,9 +777,6 @@ const ContentProgressModalContent: React.FC<
             onClick={(e) => dialogDisabled && e.preventDefault()}
             disabled={dialogDisabled}
             className={`${dialogDisabled ? "cursor-not-allowed" : ""}`}
-            // className={`w-10 h-10 text-[#6F6F6F] border-[1px] border-[#F5F4F0] rounded-lg p-2 ${
-            //   dialogDisabled ? "cursor-not-allowed" : ""
-            // }`}
           >
             <AlignJustify />
           </button>
@@ -876,7 +799,7 @@ const ContentProgressModalContent: React.FC<
                 <form onSubmit={formik.handleSubmit} className="h-full w-full">
                   <div
                     ref={scrollContainerRef}
-                    className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
+                    className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
                   >
                     {dialogType == DialogType.PROGRESS &&
                       contentProcessData?.length > 0 && (
