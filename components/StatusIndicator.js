@@ -1,9 +1,10 @@
-import React from "react";
 import Image from "next/image";
 import {
   getCurrentStepColor,
+  getStatusName,
   STATUS_LIST_VALUE,
 } from "./content-progress/content.services";
+import Cookies from "js-cookie";
 
 const getColorClass = (status) => {
   switch (status) {
@@ -63,36 +64,8 @@ const getStatusImage = (status) => {
   }
 };
 
-// const getStatusName = (status) => {
-//   switch (status) {
-//     case "Request":
-//       return "Хүсэлт илгээгдсэн";
-//     case "ProdApproved":
-//       return "Geni-гээс зөвшөөрсөн";
-//     case "ProdRejected":
-//       return "Geni-гээс зөвшөөрөгдөөгүй";
-//     case "ProdDelivering":
-//       return "Бүтээгдэхүүн хүргэж байна";
-//     case "ContentInProgress":
-//       return "Контент хүлээгдэж байна";
-//     case "ContentInReview":
-//       return "Geni шалгаж байна";
-//     case "ContentSent":
-//       return "Контент илгээсэн";
-//     case "ContentRejected":
-//       return "Контент буцаагдсан";
-//     case "ContentApproved":
-//       return "Контент зөвшөөрөгдсөн";
-//     case "ContentReceived":
-//       return "Контент хүлээн авсан";
-//     case "ContentHold":
-//       return "Түр зогссон";
-//     default:
-//       return status;
-//   }
-// };
-
 const StatusIndicator = ({ status }) => {
+  const userType = Cookies.get("userType");
   return (
     <div
       className={`bg-${getCurrentStepColor(
@@ -107,7 +80,7 @@ const StatusIndicator = ({ status }) => {
         alt=""
         className="w-4 h-4 sm:w-6 sm:h-6"
       />
-      <span>{STATUS_LIST_VALUE?.[status] || status}</span>
+      <span>{getStatusName(status, userType)}</span>
     </div>
   );
 };

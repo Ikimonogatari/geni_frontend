@@ -287,3 +287,10 @@ export const getCurrentStepColor = (status: string): CurrentStepStatus => {
     arr[key].includes(status)
   ) as CurrentStepStatus;
 };
+
+export const getStatusName = (status: string, userType: string): string => {
+  if (userType === "Brand" && status === "BrandConfirming") {
+    return "Контент илгээгдсэн";
+  }
+  return STATUS_LIST_VALUE?.[status] || status;
+};
