@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { FormikProvider, useFormik } from "formik";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
 import {
   BrandReceiveContentParams,
   BrandReviewParams,
@@ -38,6 +37,7 @@ import {
   useGetContentProcessMutation,
   useGetFinalContentXpMutation,
   useReceivedProductMutation,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import moment from "moment";
 import FeedbackModalContent from "./partials/FeedbackModalContent";
@@ -61,9 +61,7 @@ const ContentProgressModalContent: React.FC<
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
   const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const userType = Cookies.get("userType");
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: parsedUserInfo } = useGetUserInfoQuery({});
   const [status, setStatus] = useState<STATUS_LIST>(STATUS_LIST.RequestSent);
   // console.log("getCurrentStepColor", getCurrentStepColor(status));
   // const [contentProcessData, setContentProcessData] = useState<GetContentProcessResponse | []>([]);
@@ -345,7 +343,7 @@ const ContentProgressModalContent: React.FC<
     setDialogOpen(open);
 
     getContentProcess({
-      UserType: userType,
+      UserType: parsedUserInfo?.userType,
       ContentId: content?.ContentId,
       ContentStepId: content?.CurrentStepId,
     });
@@ -360,14 +358,14 @@ const ContentProgressModalContent: React.FC<
 
     if (
       content?.CurrentStepName?.String == STATUS_LIST.ContentReSent &&
-      userType == "Brand"
+      parsedUserInfo?.userType == "Brand"
     ) {
       getBrandReviewBrand(content?.ContentId);
     }
 
     if (
       content?.CurrentStepName?.String == STATUS_LIST.ContentApproved &&
-      userType == "Creator"
+      parsedUserInfo?.userType == "Creator"
     ) {
       getFinalContentXp(content?.ContentId);
     }
@@ -378,7 +376,7 @@ const ContentProgressModalContent: React.FC<
   };
 
   const handleClose = (currentDialogType: DialogType) => {
-    if (userType == "Brand") {
+    if (parsedUserInfo?.userType == "Brand") {
       if (currentDialogType == DialogType.CONTENT) {
         setDialogType(DialogType.PROGRESS);
       } else if (currentDialogType == DialogType.EDIT_REQUEST) {
@@ -386,7 +384,7 @@ const ContentProgressModalContent: React.FC<
       } else if (currentDialogType == DialogType.ACCEPT_REQUEST) {
         setDialogType(DialogType.CONTENT);
       }
-    } else if (userType == "Creator") {
+    } else if (parsedUserInfo?.userType == "Creator") {
       setDialogType(DialogType.PROGRESS);
     }
     formik.resetForm();
@@ -893,18 +891,18 @@ const ContentProgressModalContent: React.FC<
                     {contentProcessData?.[contentProcessData.length - 1]
                       ?.ContentStepId == content?.CurrentStepId && (
                       <>
-                        {userType == "Creator" && creatorModalContents()}
-                        {userType == "Brand" && brandModalContents()}
-                        {userType == "Creator" && creatorModalMessages()}
-                        {userType == "Brand" && brandModalMessages()}
+                        {parsedUserInfo?.userType == "Creator" && creatorModalContents()}
+                        {parsedUserInfo?.userType == "Brand" && brandModalContents()}
+                        {parsedUserInfo?.userType == "Creator" && creatorModalMessages()}
+                        {parsedUserInfo?.userType == "Brand" && brandModalMessages()}
                       </>
                     )}
                   </div>
                   {contentProcessData?.[contentProcessData.length - 1]
                     ?.ContentStepId == content?.CurrentStepId && (
                     <>
-                      {userType == "Creator" && creatorModalFooterActions()}
-                      {userType == "Brand" && brandModalFooterActions()}
+                      {parsedUserInfo?.userType == "Creator" && creatorModalFooterActions()}
+                      {parsedUserInfo?.userType == "Brand" && brandModalFooterActions()}
                     </>
                   )}
                 </form>

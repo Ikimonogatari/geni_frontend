@@ -14,13 +14,12 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   useGetPublicProductByIdQuery,
   useRequestProductContentMutation,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -29,8 +28,7 @@ import HandleButton from "@/components/common/HandleButton";
 function Page() {
   const router = useRouter();
   const params = useParams();
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: parsedUserInfo } = useGetUserInfoQuery({});
   const userType = Cookies.get("userType");
   const { id } = params;
   const [productContentRequestMsg, setProductContentRequestMsg] = useState("");

@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import {
   useGetBankListQuery,
   useGetCreatorWalletHistoryQuery,
   useGetWalletInfoQuery,
+  useGetUserInfoQuery,
   useCheckBankAccountNameMutation,
   useGetConnectedBankAccountQuery,
 } from "@/app/services/service";
@@ -21,8 +21,7 @@ import PriceFormatter from "@/components/common/FormatPrice";
 
 function CreatorWallet() {
   const router = useRouter();
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: parsedUserInfo } = useGetUserInfoQuery({});
   const { formatDate } = useDateFormatter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;

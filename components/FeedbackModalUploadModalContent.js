@@ -11,12 +11,19 @@ import {
   useUploadByPresignUrlMutation,
   useUploadHomeworkMutation,
   useCreatorContentSubmitMutation,
+  useGetUserInfoQuery,
 } from "../app/services/service";
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 import useS3Upload from "./hooks/useUploadToS3";
 
 function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
+  const { data: userInfoData } = useGetUserInfoQuery({}, {
+    skip: !!parsedUserInfo
+  });
+  
+  const userInfo = parsedUserInfo || userInfoData;
+
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
@@ -272,7 +279,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
           <button
             onClick={handleContentSubmit}
             className={`mt-6 ${
-              parsedUserInfo?.UserType === "Student"
+              userInfo?.UserType === "Student"
                 ? "bg-[#4FB755]"
                 : "bg-[#CA7FFE]"
             } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
@@ -284,13 +291,13 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
       </div>
       <UploadSuccessModal
         isContentSubmitSuccess={
-          parsedUserInfo?.UserType === "Student"
+          userInfo?.UserType === "Student"
             ? isHomeworkUploadSuccess
             : isContentSuccess
         }
-        parsedUserInfo={parsedUserInfo}
+        parsedUserInfo={userInfo}
         setIsContentSubmitSuccess={
-          parsedUserInfo?.UserType === "Student"
+          userInfo?.UserType === "Student"
             ? setIsHomeworkUploadSuccess
             : setIsContentSuccess
         }

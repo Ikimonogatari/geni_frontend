@@ -3,15 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEditCreatorProfileMutation, useGetUserInfoQuery } from "@/app/services/service";
-import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import StudentDetails from "./StudentDetails";
 import StudentDetailsSubmit from "./StudentDetailsSubmit";
 import { addStudentDetailsSchema } from "./schema";
+import Loader from "@/components/common/Loader";
 
 function StudentOnboarding() {
   const router = useRouter();
-  const { data: userInfoData, error: userInfoError } = useGetUserInfoQuery();
+  const { data: userInfoData, isLoading: userInfoLoading } = useGetUserInfoQuery({});
   const [step, setStep] = useState(1);
 
   const handleNextStep = async () => {
@@ -43,32 +43,45 @@ function StudentOnboarding() {
 
   const formik = useFormik({
     initialValues: {
-      FirstName: userInfoData ? userInfoData?.FirstName : "",
-      LastName: userInfoData ? userInfoData?.LastName : "",
-      Nickname: userInfoData ? userInfoData?.Nickname : "",
-      Bio: userInfoData ? userInfoData?.Bio : "",
-      PhoneNumber: userInfoData ? userInfoData?.PhoneNumber : "",
-      Location: userInfoData ? userInfoData?.Location : "",
-      RegNo: userInfoData ? userInfoData?.RegNo : "",
+      FirstName: "",
+      LastName: "",
+      Nickname: "",
+      Bio: "",
+      PhoneNumber: "",
+      Location: "",
+      RegNo: "",
       EbarimtConsumerNo: "9876543211",
-      Birthday:
-        userInfoData?.Birthday &&
-        userInfoData.Birthday !== "0001-01-01T00:00:00Z"
-          ? new Date(userInfoData.Birthday).toISOString().split("T")[0]
-          : "",
-      Gender: userInfoData ? userInfoData?.Gender : "",
+      Birthday: "",
+      Gender: "F", // Default to F for initial rendering
     },
     validationSchema: addStudentDetailsSchema,
     onSubmit: async (values) => {
-      try {
-        await editCreatorProfile(values).unwrap();
-        // @ts-ignore
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
-      }
+      console.log(values);
+      await editCreatorProfile(values).unwrap();
     },
   });
+
+  // Update formik values when userInfoData is loaded
+  useEffect(() => {
+    if (userInfoData) {
+      formik.setValues({
+        FirstName: userInfoData?.FirstName || "",
+        LastName: userInfoData?.LastName || "",
+        Nickname: userInfoData?.Nickname || "",
+        Bio: userInfoData?.Bio || "",
+        PhoneNumber: userInfoData?.PhoneNumber || "",
+        Location: userInfoData?.Location || "",
+        RegNo: userInfoData?.RegNo || "",
+        EbarimtConsumerNo: "9876543211",
+        Birthday:
+          userInfoData?.Birthday &&
+          userInfoData.Birthday !== "0001-01-01T00:00:00Z"
+            ? new Date(userInfoData.Birthday).toISOString().split("T")[0]
+            : "",
+        Gender: userInfoData?.Gender || "F",
+      });
+    }
+  }, [userInfoData]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -79,7 +92,12 @@ function StudentOnboarding() {
       // @ts-ignore
       toast.error(error?.data?.error);
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, router]);
+
+  // Show loader while fetching user data
+  if (userInfoLoading) {
+    return <Loader />;
+  }
 
   const renderStepContent = () => {
     switch (step) {
@@ -99,6 +117,8 @@ function StudentOnboarding() {
             parsedUserInfo={userInfoData}
           />
         );
+      default:
+        return null;
     }
   };
 

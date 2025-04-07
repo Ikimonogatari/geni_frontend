@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
-  console.log(parsedUserInfo);
   const [
     uploadFile,
     {
@@ -34,6 +33,14 @@ function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
     },
   ] = useChangeProfilePictureMutation();
 
+  const [profileImage, setProfileImage] = useState("/dummy-student.png");
+  
+  useEffect(() => {
+    if (parsedUserInfo?.ProfileLink) {
+      setProfileImage(parsedUserInfo.ProfileLink);
+    }
+  }, [parsedUserInfo]);
+
   useEffect(() => {
     if (uploadFileError) {
       toast.error(uploadFileError?.data?.error);
@@ -48,10 +55,6 @@ function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
       toast.error(changeProfilePictureError?.data?.error);
     }
   }, [changeProfilePictureData, changeProfilePictureError]);
-
-  const [profileImage, setProfileImage] = useState(
-    parsedUserInfo?.ProfileLink || "/dummy-student.png"
-  );
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -72,7 +75,7 @@ function StudentDetails({ parsedUserInfo, formik, handleNextStep }) {
             const id = response.data.FileId;
             const profileChangeRes = await changeProfilePicture({ FileId: id });
 
-            setProfileImage(profileChangeRes?.data?.Url);
+            setProfileImage(profileChangeRes?.data?.url);
           }
         } catch (error) {
           console.error("File upload or profile picture update failed:", error);

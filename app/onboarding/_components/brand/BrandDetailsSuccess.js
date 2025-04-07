@@ -7,7 +7,6 @@ function BrandDetailsSuccess({ router }) {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
     geniApi.util.invalidateTags(["UserInfo"]);
     router.replace("/login");
   };

@@ -28,6 +28,29 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
     facebook: "",
   });
 
+  // Initialize social values from parsedUserInfo when component mounts
+  useEffect(() => {
+    if (parsedUserInfo?.SocialChannels?.length > 0) {
+      const instagramChannel = parsedUserInfo.SocialChannels.find(
+        (channel) => channel.PlatformId === 2
+      );
+      const facebookChannel = parsedUserInfo.SocialChannels.find(
+        (channel) => channel.PlatformId === 1
+      );
+
+      const newSocials = {
+        instagram: instagramChannel?.SocialAddress || "",
+        facebook: facebookChannel?.SocialAddress || "",
+      };
+
+      setSocials(newSocials);
+      setDisplayValues({
+        instagram: extractUsername("instagram", newSocials.instagram),
+        facebook: extractUsername("facebook", newSocials.facebook),
+      });
+    }
+  }, [parsedUserInfo]);
+
   // Update display values when component mounts or socials change
   useEffect(() => {
     setDisplayValues({
@@ -114,6 +137,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
 
     // Check if there are any formik errors
     if (Object.keys(formik.errors).length > 0) {
+      console.log(formik.errors);
       toast.error("Бүх талбарыг зөв бөглөнө үү");
       return;
     }
@@ -161,7 +185,7 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           id="Birthday"
           name="Birthday"
           type="date"
-          className="text-sm sm:text-xl w-full no-spinner h-5"
+          className="text-sm sm:text-xl w-full no-spinner"
           wrapperClassName="w-full"
           labelClassName="text-[#6F6F6F] text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full"
@@ -174,27 +198,25 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           errorText={formik.errors.Birthday}
           errorVisible={formik.touched.Birthday && formik.errors.Birthday}
         />
-        <div className="flex flex-col gap-1  w-full">
+        <div className="flex flex-col gap-1 w-full h-full">
           <label className="text-[#6F6F6F] text-lg mb-2 block">Хүйс</label>
           <Select
-            onValueChange={(value) =>
-              formik.setFieldValue("HasMarketingPersonel", value === "true")
-            }
-            value={formik.values.HasMarketingPersonel?.toString() || ""}
+            onValueChange={(value) => formik.setFieldValue("Gender", value)}
+            value={formik.values.Gender}
           >
-            <SelectTrigger className="w-full outline-none border border-[#CDCDCD] h-[50px] sm:h-[62px] text-base sm:text-xl">
+            <SelectTrigger className="w-full outline-none min-h-[70px] border border-[#CDCDCD] text-base sm:text-xl">
               <SelectValue placeholder="Сонгоно уу" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem
                 className="text-base sm:text-xl rounded-lg min-h-12 my-1 w-full text-start p-4"
-                value="true"
+                value="F"
               >
                 Эм
               </SelectItem>
               <SelectItem
                 className="text-base sm:text-xl rounded-lg min-h-12 my-1 w-full text-start p-4"
-                value="false"
+                value="M"
               >
                 Эр
               </SelectItem>

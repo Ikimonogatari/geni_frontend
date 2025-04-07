@@ -9,7 +9,8 @@ function LogoutButton() {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
+
+    // Invalidate the UserInfo tag to clear any cached user data
     geniApi.util.invalidateTags(["UserInfo"]);
     router.replace("/login");
   };

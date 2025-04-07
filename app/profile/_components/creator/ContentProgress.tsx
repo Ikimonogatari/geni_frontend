@@ -5,14 +5,12 @@ import ContentUploadModal from "@/components/ContentUploadModal";
 import DeadlineHover from "@/components/DeadlineHover";
 import FeedbackModal from "@/components/FeedbackModal";
 import StatusIndicator from "@/components/StatusIndicator";
-import Cookies from "js-cookie";
 import ContentReturnModal from "./ContentReturnModal";
 import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
+
 import {
-  getStepIndex,
-  STATUS_LIST,
-  STATUS_LIST_VALUE,
-} from "@/components/content-progress/content.services";
+  useGetUserInfoQuery,
+} from "@/app/services/service";
 
 function ContentProgress({ currentContents, refetchCreatorContents = null }) {
   // const tempContent = currentContents[0];
@@ -43,8 +41,7 @@ function ContentProgress({ currentContents, refetchCreatorContents = null }) {
   //   // },
   //   ...currentContents,
   // ];
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: parsedUserInfo } = useGetUserInfoQuery({});
 
   return (
     <div className="w-full overflow-x-auto">
