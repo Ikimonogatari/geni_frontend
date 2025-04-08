@@ -147,7 +147,7 @@ export default function CompetitionBoard() {
         </h6>
         <div className="space-y-3">
           {compInfoData?.TopParticipants?.map((ptc, index) => (
-            <div className="lg:relative flex items-center gap-3">
+            <div key={index} className="lg:relative flex items-center gap-3">
               <div className="size-14 lg:size-20 relative lg:static">
                 <Image
                   src={`/landing/common/competition/ranks/${

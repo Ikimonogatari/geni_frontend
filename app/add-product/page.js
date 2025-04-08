@@ -8,7 +8,7 @@ import {
   useCreateProductMutation,
   useListProductDictsQuery,
   useListProductTypesQuery,
-  useGetUserInfoQuery
+  useGetUserInfoQuery,
 } from "../services/service";
 
 import {
@@ -39,7 +39,9 @@ function Page() {
   const [productTypes, setProductTypes] = useState([]);
   const [availableProductTypes, setAvailableProductTypes] = useState([]);
 
-  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery({});
+  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
+    {}
+  );
 
   // TODO product type remove add formik error fix, product edit fix
   const formik = useFormik({
@@ -283,7 +285,7 @@ function Page() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-32">
+      <div className="">
         <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
           <BackButton />
           <form
@@ -317,9 +319,7 @@ function Page() {
                   alt=""
                   className="border border-primary rounded-full w-11 h-11"
                 />
-                <span className="text-xl font-bold">
-                  {userInfo?.Name}
-                </span>
+                <span className="text-xl font-bold">{userInfo?.Name}</span>
               </div>
 
               <div className="flex flex-col gap-3">

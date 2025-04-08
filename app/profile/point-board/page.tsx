@@ -18,7 +18,7 @@ function page() {
   const { data } = useCreatorXpHistoryQuery();
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="mt-20 sm:mt-32 pb-12 sm:pb-24">
+      <div className=" pb-12 sm:pb-24">
         <div className="max-w-7xl mx-auto container py-11 sm:py-20 flex flex-col gap-4 sm:gap-6">
           <BackButton />
           <span className="text-3xl sm:text-5xl font-extrabold">

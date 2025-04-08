@@ -132,7 +132,7 @@ function BrandRegister() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-20 sm:mt-32">
+      <div className="">
         <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
           <form
             onSubmit={registerForm.handleSubmit}
