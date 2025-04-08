@@ -19,14 +19,6 @@ import { ErrorText } from "@/components/ui/error-text";
 import SuccessModal from "@/components/common/SuccessModal";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import Image from "next/image";
-import {
-  useGetConnectedBankAccountQuery,
-  useConnectBankAccountMutation,
-  useUpdateBankAccountMutation,
-  useCheckBankAccountNameMutation,
-} from "@/app/services/service";
-import toast from "react-hot-toast";
-import debounce from "lodash/debounce";
 
 const bankOptions = [
   { label: "Bank of Mongolia", value: "bank_of_mongolia" },
@@ -35,24 +27,8 @@ const bankOptions = [
   { label: "Trade and Development Bank", value: "trade_dev_bank" },
 ];
 
-function AddBalance({
-  bankList,
-  onTransactionComplete,
-  accountName,
-  isCheckingName: parentIsCheckingName,
-}: AddBalanceProps) {
+function AddBalance({ walletInfo }) {
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [hasConnectedAccount, setHasConnectedAccount] = useState(false);
-  const [localIsCheckingName, setLocalIsCheckingName] = useState(false);
-  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
-  // @ts-ignore
-  const { data: connectedAccount } = useGetConnectedBankAccountQuery();
-  const [connectBankAccount, { isSuccess: isConnectSuccess }] =
-    useConnectBankAccountMutation();
-  const [updateBankAccount, { isSuccess: isUpdateSuccess }] =
-    useUpdateBankAccountMutation();
-  const [checkBankAccountName] = useCheckBankAccountNameMutation();
-
   const formik = useFormik({
     initialValues: {
       bankName: "",
@@ -61,70 +37,10 @@ function AddBalance({
     },
     validationSchema: addBankAccountSchema,
     onSubmit: async (values) => {
-      try {
-        const accountData = {
-          BankCode: values.bankName,
-          AcntNo: values.bankAccountNumber,
-        };
-
-        if (hasConnectedAccount) {
-          await updateBankAccount(accountData).unwrap();
-        } else {
-          await connectBankAccount(accountData).unwrap();
-        }
-
-        toast.success("Данс амжилттай холбогдлоо");
-        await onTransactionComplete();
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-      }
+      // @ts-ignore
+      await addBankAccount(values);
     },
   });
-
-  useEffect(() => {
-    if (connectedAccount) {
-      setHasConnectedAccount(true);
-      formik.setValues({
-        bankName: connectedAccount.BankCode,
-        bankAccountNumber: connectedAccount.AcntNo,
-        bankAccountOwner: accountName,
-      });
-    }
-  }, [connectedAccount, accountName]);
-
-  useEffect(() => {
-    if (isConnectSuccess || isUpdateSuccess) {
-      setIsSuccessDialogOpen(true);
-    }
-  }, [isConnectSuccess, isUpdateSuccess]);
-
-  const checkAccountName = useCallback(
-    debounce(async (bankCode: string, accountNumber: string) => {
-      if (accountNumber.length >= 8 && bankCode) {
-        setLocalIsCheckingName(true);
-        try {
-          const response = await checkBankAccountName({
-            BankCode: bankCode,
-            AcntNo: accountNumber,
-          }).unwrap();
-          formik.setFieldValue("bankAccountOwner", response.Name);
-        } catch (error) {
-          toast.error("Дансны нэр олдсонгүй");
-        } finally {
-          setLocalIsCheckingName(false);
-        }
-      }
-    }, 500),
-    []
-  );
-
-  const handleAccountNumberChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-    formik.setFieldValue("bankAccountNumber", value);
-    checkAccountName(formik.values.bankName, value);
-  };
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -207,8 +123,11 @@ function AddBalance({
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.bankAccountOwner}
-              readOnly
-              disabled={localIsCheckingName || parentIsCheckingName}
+              errorText={formik.errors.bankAccountOwner}
+              errorVisible={
+                !!formik.touched.bankAccountOwner &&
+                !!formik.errors.bankAccountOwner
+              }
             />
           </div>
           <FadeInAnimation
@@ -231,12 +150,11 @@ function AddBalance({
             />
           </FadeInAnimation>
           <SuccessModal
-            setIsSuccessDialogOpen={setIsSuccessDialogOpen}
+            setIsMainDialogOpen={setDialogOpen}
             modalImage="/payment-success.png"
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
             modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
-            isSuccessDialogOpen={isSuccessDialogOpen}
           />
         </form>
       </DialogContent>

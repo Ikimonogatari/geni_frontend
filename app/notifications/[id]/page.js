@@ -40,7 +40,7 @@ function page() {
 
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="pb-16 sm:pb-24">
+      <div className="pt-32 pb-16 sm:pb-24">
         <div className="container min-h-screen text-[#2D262D] max-w-7xl mx-auto px-7 py-10 sm:py-20 flex flex-col">
           <button
             onClick={() => router.back()}

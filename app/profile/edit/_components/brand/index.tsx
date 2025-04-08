@@ -12,8 +12,8 @@ import {
   useSendOtpToEmailMutation,
   useUpdateSocialChannelMutation,
   useUploadFileMutation,
-  useGetUserInfoQuery,
 } from "@/app/services/service";
+import { ErrorText } from "@/components/ui/error-text";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -22,23 +22,14 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
-import { Sidebar } from "@/components/common/Sidebar";
-import PasswordSettings from "../PasswordSettings";
-import EmailSettings from "../EmailSettings";
-import SocialsSettings from "../SocialsSettings";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import BackButton from "@/components/common/BackButton";
-import { store, useAppDispatch } from "@/app/store";
 
 function EditProfileBrand() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const { setShouldRefetchUserInfo } = useUserInfo();
 
-  const { data: userInfoData } = useGetUserInfoQuery({});
-  const parsedUserInfo = userInfoData;
+  const userInfo = Cookies.get("user-info");
+  const userType = Cookies.get("userType");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
 
   const [socials, setSocials] = useState({
     instagram: "",
@@ -163,11 +154,11 @@ function EditProfileBrand() {
       BrandAoADescription: "temp-desc",
     },
     validationSchema: Yup.object({
-      Name: Yup.string().required("Заавал бөглөнө үү"),
-      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
-      Bio: Yup.string().required("Заавал бөглөнө үү"),
-      RegNo: Yup.string().required("Заавал бөглөнө үү"),
-      Address: Yup.string().required("Заавал бөглөнө үү"),
+      Name: Yup.string().required("Required"),
+      PhoneNumber: Yup.string().required("Required"),
+      Bio: Yup.string().required("Required"),
+      RegNo: Yup.string().required("Required"),
+      Address: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       editBrandProfile(values).unwrap();
@@ -307,7 +298,7 @@ function EditProfileBrand() {
   const handleSendOtp = async () => {
     sendOtpToEmail({
       To: newEmail,
-      UserType: parsedUserInfo?.UserType, //Sys, Brand, Creator
+      UserType: userType, //Sys, Brand, Creator
       Channel: "smtp", //smtp, sms
       Type: "changeemail",
     });
@@ -388,7 +379,8 @@ function EditProfileBrand() {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    dispatch(geniApi.util.invalidateTags(["UserInfo"]));
+    Cookies.remove("user-info");
+    geniApi.util.invalidateTags(["UserInfo"]);
     setShouldRefetchUserInfo(true);
 
     router.refresh();
@@ -824,78 +816,31 @@ function EditProfileBrand() {
                 rows={4}
                 className="p-3 sm:p-4 bg-[#F5F4F0] rounded-lg border text-base sm:text-xl"
               />
-              <button
-                type="submit"
-                className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
-              >
-                Хадгалах
-              </button>
-            </form>
-          </>
-        );
-      case "email":
-        return (
-          <EmailSettings
-            newEmail={newEmail}
-            setNewEmail={setNewEmail}
-            handleSendOtp={handleSendOtp}
-            isOtpSent={isOtpSent}
-            otp={otp}
-            setOtp={setOtp}
-            handleChangeEmail={handleChangeEmail}
-          />
-        );
-      case "password":
-        return (
-          <PasswordSettings
-            showNewPassword={showNewPassword}
-            setNewPassword={setNewPassword}
-            newPassword={newPassword}
-            handleMouseDownNewPassword={handleMouseDownNewPassword}
-            handleMouseUpNewPassword={handleMouseUpNewPassword}
-            handleChangePassword={handleChangePassword}
-            showOldPassword={showOldPassword}
-            setOldPassword={setOldPassword}
-            oldPassword={oldPassword}
-            handleMouseDownOldPasswrod={handleMouseDownOldPasswrod}
-            handleMouseUpOldPassword={handleMouseUpOldPassword}
-          />
-        );
-      case "socials":
-        return (
-          <SocialsSettings
-            parsedUserInfo={parsedUserInfo}
-            socials={socials}
-            setSocials={setSocials}
-            handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
-          />
-        );
-    }
-  };
-
-  return (
-    <div className="min-h-screen w-full bg-white">
-      <div className="mb-12 py-11 container mx-auto">
-        <BackButton />
-        <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
-          <Sidebar
-            className="!text-lg md:hidden"
-            items={sidebarItems}
-            activeSection={activeSection}
-          />
-          <p className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold">
-            Хуудас тохиргоо
-          </p>
-        </div>
-        <div className="flex flex-col md:flex-row bg-white">
-          <Sidebar
-            className="!text-lg hidden md:block"
-            items={sidebarItems}
-            activeSection={activeSection}
-          />
-          <div className="w-full md:pl-10 md:border-l mt-5 sm:mt-0">
-            {renderSection()}
-          </div>
+              <ErrorText
+                text={formik.errors.Address}
+                visible={!!formik.touched.Address && !!formik.errors.Address}
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+            >
+              Хадгалах
+            </button>
+          </form>
+          <button
+            onClick={handleLogout}
+            className="flex flex-row justify-center items-center gap-2 mt-3 w-full bg-[#F5F4F0] rounded-2xl border border-[#2D262D] py-4 text-base sm:text-xl"
+          >
+            <Image
+              src={"/logout-icon.png"}
+              width={26}
+              height={26}
+              className="w-6 h-6"
+              alt=""
+            />
+            Гарах
+          </button>
         </div>
       </div>
     </div>

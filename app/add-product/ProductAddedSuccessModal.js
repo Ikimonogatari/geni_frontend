@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 function ProductAddedSuccessModal({
   setCreateProductSuccess,
-  userInfo,
+  parsedUserInfo,
   createProductData,
   createProductSuccess,
 }) {
