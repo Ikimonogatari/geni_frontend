@@ -7,7 +7,7 @@ import Step3 from "./Step3";
 import {
   useBrandTermCheckMutation,
   useCalculateCouponMutation,
-  useGetOnboardingCourseQuery
+  useGetOnboardingCourseQuery,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -58,7 +58,10 @@ function CoursePurchaseModal({
     onSubmit: async (values) => {
       try {
         // @ts-ignore
-        calculateCoupon({ Amount: courseData?.coursePrice, CouponCode: values.couponCode });
+        calculateCoupon({
+          Amount: courseData?.coursePrice,
+          CouponCode: values.couponCode,
+        });
       } catch (error) {
         toast.error("Алдаа гарлаа");
         console.error("Error submitting the form", error);
@@ -111,7 +114,11 @@ function CoursePurchaseModal({
     switch (currentStep) {
       case 1:
         return (
-          <Step1 handleSelect={handleSelect} selectedOption={selectedOption} courseData={courseData} />
+          <Step1
+            handleSelect={handleSelect}
+            selectedOption={selectedOption}
+            courseData={courseData}
+          />
         );
       case 2:
         return <Step2 setIsAgreed={setIsAgreed} />;
@@ -194,38 +201,11 @@ function CoursePurchaseModal({
               Буцах
             </button>
           ) : (
-            <></>
-          )}
-          {currentStep < 3 ? (
-            <button
-              onClick={nextStep}
-              disabled={
-                (currentStep === 1 && selectedOption === null) ||
-                (currentStep === 2 && !isAgreed)
-              }
-              className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 
-               ${
-                 (currentStep === 1 && selectedOption === null) ||
-                 (currentStep === 2 && !isAgreed)
-                   ? "opacity-70 cursor-not-allowed"
-                   : "opacity-100"
-               } 
-                bg-geni-green border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
-            >
-              Үргэлжлүүлэх
-              <Image
-                src={"/arrow-right-icon.png"}
-                width={10}
-                height={10}
-                alt="arrow"
-                className="w-[10px] h-[10px]"
-              />
-            </button>
-          ) : (
             <CoursePaymentModal
               setIsMainDialogOpen={setMainDialogOpen}
               selectedPayment={selectedPayment}
               couponCode={couponCodeformik.values.couponCode}
+              courseId={courseData?.courseId}
             />
           )}
         </div>

@@ -1,10 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DialogContent } from "./ui/dialog";
 import Image from "next/image";
-import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
-import axios from "axios";
 import {
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
@@ -16,12 +13,26 @@ import {
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 import useS3Upload from "./hooks/useUploadToS3";
+import ContentUploadProgress from "./common/ContentUploadProgress";
 
-function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
-  const { data: userInfoData } = useGetUserInfoQuery({}, {
-    skip: !!parsedUserInfo
-  });
-  
+interface FeedbackModalUploadModalContentProps {
+  parsedUserInfo: any;
+  contentId?: string;
+  courseId?: string;
+}
+
+function FeedbackModalUploadModalContent({
+  parsedUserInfo,
+  contentId,
+  courseId,
+}: FeedbackModalUploadModalContentProps) {
+  const { data: userInfoData } = useGetUserInfoQuery(
+    {},
+    {
+      skip: !!parsedUserInfo,
+    }
+  );
+
   const userInfo = parsedUserInfo || userInfoData;
 
   const [contentThumbnail, setContentThumbnail] = useState(null);
@@ -81,6 +92,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
+      //@ts-ignore
       toast.error(getImagePresignedUrlError?.data?.error);
     }
     if (getImagePresignedUrlData) {
@@ -90,6 +102,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
+      //@ts-ignore
       toast.error(getVideoPresignedUrlError?.data?.error);
     }
     if (getVideoPresignedUrlData) {
@@ -99,6 +112,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (uploadHomeworkError) {
+      //@ts-ignore
       toast.error(uploadHomeworkError?.data.error);
     }
     if (isSuccess) {
@@ -108,6 +122,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (creatorContentSubmitError) {
+      //@ts-ignore
       toast.error(creatorContentSubmitError?.data.error);
     }
     if (creatorContentSubmitSuccess) {
@@ -117,6 +132,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
 
   useEffect(() => {
     if (uploadFileError) {
+      //@ts-ignore
       toast.error(uploadFileError?.data?.error);
     }
   }, [uploadFileData, uploadFileError]);
@@ -183,12 +199,19 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
   });
 
   const handleContentSubmit = () => {
-    creatorContentSubmit({
-      ContentId: contentId,
-      Caption: caption,
-      ContentThumbnailFileId: contentThumbnailId,
-      ContentVideoFileId: contentVideoId,
-    });
+    userInfo?.UserType === "Student"
+      ? uploadHomework({
+          CourseId: courseId,
+          Caption: caption,
+          ContentThumbnailFileId: contentThumbnailId,
+          ContentVideoFileId: contentVideoId,
+        })
+      : creatorContentSubmit({
+          ContentId: contentId,
+          Caption: caption,
+          ContentThumbnailFileId: contentThumbnailId,
+          ContentVideoFileId: contentVideoId,
+        });
   };
 
   return (
@@ -269,7 +292,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
               Бүтээгдэхүүн хэрэглэсэн өөрийн сэтгэгдэлээ хуваалцаарай.
             </span>
             <textarea
-              type="text"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."
@@ -279,9 +301,7 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
           <button
             onClick={handleContentSubmit}
             className={`mt-6 ${
-              userInfo?.UserType === "Student"
-                ? "bg-[#4FB755]"
-                : "bg-[#CA7FFE]"
+              userInfo?.UserType === "Student" ? "bg-[#4FB755]" : "bg-[#CA7FFE]"
             } border-[1px] border-[#2D262D] px-5 py-2 rounded-lg text-white font-bold`}
             disabled={!contentThumbnail && !contentVideo && !caption}
           >
@@ -302,7 +322,6 @@ function FeedbackModalUploadModalContent({ parsedUserInfo, contentId }) {
             : setIsContentSuccess
         }
       />
-      {/* </DialogContent> */}
     </>
   );
 }

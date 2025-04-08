@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
-import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 import Image from "next/image";
 import { useGetUserInfoQuery } from "@/app/services/service";
+import FeedbackModalUploadModalContent from "./FeedbackModalUploadModalContent";
 
-function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
-  // Use the existing parsedUserInfo prop if provided, or use the query
-  // This makes the component compatible with both old and new implementations
-  const { data: userInfoData } = useGetUserInfoQuery({}, {
-    skip: !!parsedUserInfo // Skip the query if we already have parsedUserInfo
-  });
-  
-  // Use parsedUserInfo if available, otherwise use the query result
+interface FeedbackModalProps {
+  parsedUserInfo: any;
+  contentId?: string;
+  courseId?: string;
+  feedbacks?: any[];
+}
+
+function FeedbackModal({
+  parsedUserInfo,
+  contentId,
+  courseId,
+  feedbacks,
+}: FeedbackModalProps) {
+  const { data: userInfoData } = useGetUserInfoQuery(
+    {},
+    {
+      skip: !!parsedUserInfo, // Skip the query if we already have parsedUserInfo
+    }
+  );
+
   const userInfo = parsedUserInfo || userInfoData;
-  
+
   const [resubmitting, setIsResubmitting] = useState(false);
   return (
     <Dialog>
@@ -24,6 +36,7 @@ function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
         <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
       </DialogTrigger>
       {!resubmitting ? (
+        //@ts-ignore
         <DialogContent className="overflow-y-auto flex flex-col p-6 w-full max-h-[739px] max-w-[577px] rounded-3xl">
           <span className="text-3xl font-bold">Зөвлөгөө</span>
           <div className="mt-4 flex flex-col gap-3">
@@ -47,7 +60,7 @@ function FeedbackModal({ parsedUserInfo, contentId, feedbacks }) {
       ) : (
         <FeedbackModalUploadModalContent
           parsedUserInfo={userInfo}
-          contentId={contentId}
+          courseId={courseId}
         />
       )}
     </Dialog>

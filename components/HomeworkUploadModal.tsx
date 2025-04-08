@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { DialogContent, Dialog, DialogTrigger } from "./ui/dialog";
 import Image from "next/image";
-import { ClipLoader } from "react-spinners";
 import { useDropzone } from "react-dropzone";
-import axios from "axios";
 import {
   useGetImagePresignedUrlMutation,
   useGetVideoPresignedUrlMutation,
@@ -14,8 +12,9 @@ import {
 import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 import useS3Upload from "./hooks/useUploadToS3";
+import ContentUploadProgress from "./common/ContentUploadProgress";
 
-function HomeworkUploadModal({ parsedUserInfo }) {
+function HomeworkUploadModal({ parsedUserInfo, courseId }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
   const [contentVideo, setContentVideo] = useState(null);
   const [isHomeworkUploadSuccess, setIsHomeworkUploadSuccess] = useState(false);
@@ -62,6 +61,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (getImagePresignedUrlError) {
+      //@ts-ignore
       toast.error(getImagePresignedUrlError?.data?.error);
     }
     if (getImagePresignedUrlData) {
@@ -71,6 +71,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (getVideoPresignedUrlError) {
+      //@ts-ignore
       toast.error(getVideoPresignedUrlError?.data?.error);
     }
     if (getVideoPresignedUrlData) {
@@ -80,6 +81,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (uploadHomeworkError) {
+      //@ts-ignore
       toast.error(uploadHomeworkError?.data.error);
     }
     if (isSuccess) {
@@ -89,6 +91,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
 
   useEffect(() => {
     if (uploadFileError) {
+      //@ts-ignore
       toast.error(uploadFileError?.data?.error);
     }
   }, [uploadFileData, uploadFileError]);
@@ -154,6 +157,15 @@ function HomeworkUploadModal({ parsedUserInfo }) {
     },
   });
 
+  const handleContentSubmit = () => {
+    uploadHomework({
+      CourseId: courseId,
+      Caption: caption,
+      ContentThumbnailFileId: contentThumbnailId,
+      ContentVideoFileId: contentVideoId,
+    });
+  };
+
   return (
     <>
       <Dialog>
@@ -163,7 +175,7 @@ function HomeworkUploadModal({ parsedUserInfo }) {
         >
           Гэрийн даалгавар илгээх
         </DialogTrigger>
-
+        {/* @ts-ignore */}
         <DialogContent className="overflow-y-auto flex flex-col p-6 w-full sm:w-auto lg:w-full max-h-[739px] max-w-[1000px] rounded-3xl">
           <span className="text-3xl font-bold">Контент илгээх</span>
           <div className="w-full flex flex-col lg:flex-row gap-6">
@@ -244,7 +256,6 @@ function HomeworkUploadModal({ parsedUserInfo }) {
               <div className="flex flex-col gap-4">
                 <span className="text-lg">Тайлбар</span>
                 <textarea
-                  type="text"
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Бүтээгдэхүүн үйлчилгээний талаарх хэрэглэгчийн сэтгэгдэл болон контентоор хуваалцахыг хүссэн зүйлээ тайлбарлан бичээрэй. Таны энэхүү бичвэрийг brand контент оруулахдаа ашиглах боломжтой."

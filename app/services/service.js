@@ -448,7 +448,7 @@ export const geniApi = createApi({
     }),
     purchaseCourse: builder.mutation({
       query: (body) => ({
-        url: "/api/web/private/student/qpay",
+        url: "/api/web/private/geni-course/buy",
         method: "POST",
         body,
       }),

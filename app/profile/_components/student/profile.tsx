@@ -8,7 +8,6 @@ import {
   useGetStudentCoursesQuery,
   useGetUserInfoQuery,
 } from "@/app/services/service";
-import HomeworkUploadModal from "@/components/HomeworkUploadModal";
 import ConvertToCreatorModal from "@/components/ConvertToCreatorModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import CoursePurchaseModal from "@/components/course/CoursePurchaseModal";
@@ -183,7 +182,6 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
               ))}
             </div>
 
-            {/* <HomeworkUploadModal parsedUserInfo={parsedUserInfo} /> */}
             {(!studentCoursesData ||
               (Array.isArray(studentCoursesData) &&
                 studentCoursesData.length === 0)) && (

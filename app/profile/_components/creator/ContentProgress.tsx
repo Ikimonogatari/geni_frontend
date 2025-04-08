@@ -1,16 +1,12 @@
 import Image from "next/image";
-
 import ContentReviewModal from "@/components/ContentReviewModal";
 import ContentUploadModal from "@/components/ContentUploadModal";
 import DeadlineHover from "@/components/DeadlineHover";
-import FeedbackModal from "@/components/FeedbackModal";
 import StatusIndicator from "@/components/StatusIndicator";
 import ContentReturnModal from "./ContentReturnModal";
 import ContentProgressModalContent from "@/components/content-progress/ContentProgressModal";
-
-import {
-  useGetUserInfoQuery,
-} from "@/app/services/service";
+import { useGetUserInfoQuery } from "@/app/services/service";
+import FeedbackModal from "@/components/FeedbackModal";
 
 function ContentProgress({ currentContents, refetchCreatorContents = null }) {
   // const tempContent = currentContents[0];

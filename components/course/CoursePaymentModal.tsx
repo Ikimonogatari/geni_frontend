@@ -12,6 +12,7 @@ import {
 import {
   useCheckPaymentQuery,
   usePurchaseCourseMutation,
+  useGetStudentCoursesQuery,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
@@ -20,16 +21,21 @@ interface CoursePaymentProps {
   setIsMainDialogOpen: (open: boolean) => void;
   selectedPayment: string;
   couponCode: string;
+  courseId: string;
 }
 
 const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   setIsMainDialogOpen,
   selectedPayment,
   couponCode,
+  courseId,
 }) => {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
+
+  console.log(courseId, "COURSE ID");
+  const finalCourseId = courseId || "1"; // Default to course ID 1 if undefined
 
   const [
     purchaseCourse,
@@ -48,6 +54,14 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
     refetch: checkPayment,
   } = useCheckPaymentQuery(txId, { skip: !txId });
 
+  // Get access to the student courses query to refetch after payment
+  const { refetch: refetchStudentCourses } = useGetStudentCoursesQuery(
+    {},
+    {
+      skip: !isPaymentSuccess, // Skip on first render
+    }
+  );
+
   useEffect(() => {
     if (purchaseCourseSuccess) {
       if (selectedPayment === "qpay") {
@@ -62,25 +76,43 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   }, [purchaseCourseSuccess, purchaseCourseError]);
 
   const handleSubscription = () => {
-    console.log(couponCode, "COUPON HERE", { PromoCode: couponCode });
-    purchaseCourse({ PromoCode: couponCode });
+    if (!finalCourseId) {
+      toast.error("Курсын ID олдсонгүй. Дахин оролдоно уу.");
+      return;
+    }
+
+    purchaseCourse({
+      CourseId: finalCourseId,
+      CouponCode: couponCode,
+    });
   };
 
   const handleCheckPayment = async () => {
     if (txId) {
-      //@ts-ignore
-      const checkPaymentResponse = await checkPayment(txId);
-      if (checkPaymentResponse?.data && checkPaymentResponse?.isSuccess) {
-        if (checkPaymentResponse?.data?.IsPaid) {
+      try {
+        const checkPaymentResponse = await checkPayment();
+        if (checkPaymentResponse?.data && checkPaymentResponse.data.IsPaid) {
           setIsPaymentSuccess(true);
+          // Refetch student courses when payment is successful
+          await refetchStudentCourses();
         } else {
-          toast.error("Төлбөр төлөгдөөгүй байна");
+          toast.error(
+            "Төлбөр төлөгдөөгүй байна. Та QR кодыг уншуулж төлбөрөө төлнө үү."
+          );
         }
-      } else {
-        toast.error("Алдаа гарлаа");
+      } catch (error) {
+        console.error("Error checking payment:", error);
+        toast.error("Төлбөр шалгах үед алдаа гарлаа. Дахин оролдоно уу.");
       }
     }
   };
+
+  // Also refetch courses when payment is confirmed successful
+  useEffect(() => {
+    if (isPaymentSuccess) {
+      refetchStudentCourses();
+    }
+  }, [isPaymentSuccess, refetchStudentCourses]);
 
   const handleCloseDialog = () => {
     setPaymentDialogOpen(false);
