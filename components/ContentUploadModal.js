@@ -22,6 +22,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
+  const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const { uploadToS3, progress, isUploading } = useS3Upload();
   const [
     getImagePresignedUrl,
@@ -164,7 +165,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
         <DialogTrigger
           type="submit"
           className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
@@ -284,6 +285,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
         isContentSubmitSuccess={isContentSuccess}
         parsedUserInfo={parsedUserInfo}
         setIsContentSubmitSuccess={setIsContentSuccess}
+        setIsMainDialogOpen={setMainDialogOpen}
       />
     </>
   );

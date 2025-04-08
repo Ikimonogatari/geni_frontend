@@ -165,7 +165,7 @@ function BrandOnboarding() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-36 sm:mt-48 mb-12 px-5">
+      <div className="py-14 px-5">
         <form
           onSubmit={formik.handleSubmit}
           className="max-w-5xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"

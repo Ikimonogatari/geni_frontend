@@ -5,7 +5,16 @@ import Image from "next/image";
 function UploadSuccessModal({
   isContentSubmitSuccess,
   setIsContentSubmitSuccess,
+  setIsMainDialogOpen,
 }) {
+  const handleBayrlalaaClick = () => {
+    setIsContentSubmitSuccess(false);
+    // Close the parent dialog if the function exists
+    if (setIsMainDialogOpen) {
+      setIsMainDialogOpen(false);
+    }
+  };
+
   return (
     <Dialog
       open={isContentSubmitSuccess}
@@ -24,7 +33,7 @@ function UploadSuccessModal({
 
         <DialogClose className="w-full">
           <button
-            onClick={() => setIsContentSubmitSuccess(false)}
+            onClick={handleBayrlalaaClick}
             className="w-full py-4 text-white font-semibold bg-[#CA7FFE] text-2xl border border-[#2D262D] rounded-2xl"
           >
             Баярлалаа

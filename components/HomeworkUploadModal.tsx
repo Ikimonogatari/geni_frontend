@@ -21,6 +21,7 @@ function HomeworkUploadModal({ parsedUserInfo, courseId }) {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
+  const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const { uploadToS3, progress, isUploading } = useS3Upload();
 
   const [
@@ -168,7 +169,7 @@ function HomeworkUploadModal({ parsedUserInfo, courseId }) {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
         <DialogTrigger
           type="submit"
           className="whitespace-nowrap text-start text-xs sm:text-base bg-[#4FB755] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
@@ -279,6 +280,7 @@ function HomeworkUploadModal({ parsedUserInfo, courseId }) {
       <UploadSuccessModal
         isContentSubmitSuccess={isHomeworkUploadSuccess}
         setIsContentSubmitSuccess={setIsHomeworkUploadSuccess}
+        setIsMainDialogOpen={setMainDialogOpen}
       />
     </>
   );
