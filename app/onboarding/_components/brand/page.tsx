@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   useEditBrandProfileMutation,
   useBrandRequestReviewMutation,
-  useGetUserInfoQuery
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import BrandDetails from "./BrandDetails";
@@ -17,15 +17,30 @@ import Loader from "@/components/common/Loader";
 
 function BrandOnboarding() {
   const router = useRouter();
-  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery({});
+  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
+    {}
+  );
 
   const [step, setStep] = useState(1);
 
   const handleNextStep = () => {
     if (step === 1) {
-      setStep(2);
+      // Validate first page fields
+      formik.validateField("Name");
+      formik.validateField("Bio");
+
+      // Mark fields as touched to show validation errors
+      formik.setTouched({
+        Name: true,
+        Bio: true,
+      });
+
+      // Check if there are any errors in these fields
+      if (!formik.errors.Name && !formik.errors.Bio) {
+        setStep(2);
+      }
     } else if (step === 2) {
-      formik.handleSubmit();
+      // Form submission is handled in BrandDetailsSubmit component
     }
   };
 
@@ -87,15 +102,34 @@ function BrandOnboarding() {
 
   useEffect(() => {
     if (isSuccess && requestReviewSuccess) {
-      toast.success("Амжилттай");
+      toast.success("Бренд мэдээлэл амжилттай хадгалагдлаа");
+      setStep(3);
     }
     if (error) {
-      // @ts-ignore
-      toast.error(error?.data?.error);
+      // Handle error safely - check if it's an object with data property
+      if (typeof error === "object" && error !== null) {
+        // @ts-ignore - RTK query error types can be complex
+        const errorData = error.data;
+        if (errorData && errorData.fieldErrors) {
+          // Set field-specific errors
+          Object.keys(errorData.fieldErrors).forEach((field) => {
+            if (field in formik.values) {
+              formik.setFieldError(field, errorData.fieldErrors[field]);
+            }
+          });
+        } else if (errorData && errorData.error) {
+          toast.error(errorData.error);
+        }
+      } else {
+        toast.error("Алдаа гарлаа");
+      }
     }
-    if(requestReviewError) {
+    if (requestReviewError) {
       // @ts-ignore
-      toast.error(requestReviewError?.data?.error);
+      toast.error(
+        // @ts-ignore
+        requestReviewError?.data?.error || "Хүсэлт илгээх үед алдаа гарлаа"
+      );
     }
   }, [data, error, requestReviewSuccess, requestReviewError]);
 
