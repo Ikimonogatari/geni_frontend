@@ -133,7 +133,7 @@ function Page() {
 
   return (
     <div className="min-h-screen w-full bg-white text-[#2D262D]">
-      <div className="mt-20 sm:mt-32">
+      <div className="">
         <div className="container max-w-8xl mx-auto px-7 py-12">
           <div className="w-full whitespace-nowrap pb-3 overflow-x-auto flex flex-row sm:flex-wrap items-center gap-3 font-bold text-[10px] sm:text-xs">
             <div

@@ -93,7 +93,7 @@ function Page() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-32">
+      <div className="">
         <div className="max-w-8xl min-h-screen mx-auto px-7 py-11 container">
           <button
             onClick={() => router.back()}

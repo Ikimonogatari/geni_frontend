@@ -38,9 +38,12 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
     return studentCoursesLoading;
   }, [studentCoursesLoading]);
 
-  const { data: userInfoData } = useGetUserInfoQuery({}, { 
-    skip: !!getUserInfoData // Skip if we already have getUserInfoData from props
-  });
+  const { data: userInfoData } = useGetUserInfoQuery(
+    {},
+    {
+      skip: !!getUserInfoData, // Skip if we already have getUserInfoData from props
+    }
+  );
 
   const instagramLink = getUserInfoData?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Instagram"
@@ -70,7 +73,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
 
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="pt-32 pb-16 sm:pb-24">
+      <div className="pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
             <div className="flex flex-row items-center gap-7">

@@ -97,7 +97,7 @@ export const geniApi = createApi({
         url: "/api/web/private/user",
         method: "GET",
       }),
-      providesTags: ["UserInfo"],
+      providesTags: (_) => ["UserInfo"],
     }),
     listProductDicts: builder.query({
       query: (Type) => ({

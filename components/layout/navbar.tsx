@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import {
   Sheet,
@@ -8,24 +9,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
-import { CircuitBoard, Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { info } from "console";
-import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
+import UserButton from "./_components/user-button";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-
-  const routeToLogin = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    router.push("/login");
-  };
 
   const navItems = [
     {
@@ -95,12 +89,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex">
-          <Button
-            className="px-14 py-2 h-11 flex items-center rounded-full sm:rounded-full bg-primary text-primary-foreground text-base font-bold"
-            onClick={routeToLogin}
-          >
-            Нэвтрэх
-          </Button>
+          <UserButton />
         </div>
 
         {/* Mobile Navigation */}
@@ -127,9 +116,7 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="mt-4">
-                <Button className="w-full" onClick={routeToLogin}>
-                  Нэвтрэх
-                </Button>
+                <UserButton />
               </div>
             </nav>
           </SheetContent>

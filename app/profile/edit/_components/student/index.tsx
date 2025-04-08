@@ -29,9 +29,11 @@ import SocialsSettings from "../SocialsSettings";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import BackButton from "@/components/common/BackButton";
+import { store, useAppDispatch } from "@/app/store";
 
 function EditProfileStudent() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { setShouldRefetchUserInfo } = useUserInfo();
   const [activeSection, setActiveSection] = useState("general");
 
@@ -135,7 +137,9 @@ function EditProfileStudent() {
       Email: parsedUserInfo?.Email ? parsedUserInfo.Email : "",
       Bio: parsedUserInfo?.Bio ? parsedUserInfo?.Bio : "",
       RegNo: parsedUserInfo?.RegNo ? parsedUserInfo?.RegNo : "",
-      PhoneNumber: parsedUserInfo?.PhoneNumber ? parsedUserInfo?.PhoneNumber : "",
+      PhoneNumber: parsedUserInfo?.PhoneNumber
+        ? parsedUserInfo?.PhoneNumber
+        : "",
       AdditionalPhoneNum: "+12345678902",
       Location: parsedUserInfo?.Location ? parsedUserInfo?.Location : "",
       EbarimtConsumerNo: "9876543211",
@@ -317,7 +321,7 @@ function EditProfileStudent() {
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    geniApi.util.invalidateTags(["UserInfo"]);
+    dispatch(geniApi.util.invalidateTags(["UserInfo"]));
     setShouldRefetchUserInfo(true);
 
     router.refresh();
@@ -580,7 +584,7 @@ function EditProfileStudent() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-20 sm:mt-32 mb-12 py-11 container mx-auto">
+      <div className="mb-12 py-11 container mx-auto">
         <BackButton />
         <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
           <Sidebar
