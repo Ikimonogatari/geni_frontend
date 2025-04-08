@@ -33,7 +33,7 @@ function page() {
   );
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="pb-16 sm:pb-24">
+      <div className="pt-32 pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20 flex flex-col">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full p-6 sm:p-11 bg-[#F5F4F0] rounded-2xl border border-black">
             <div className="flex flex-row items-center gap-7">

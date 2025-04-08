@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -55,7 +56,7 @@ function BrandContentGallery({ contentsGallery }) {
           image="/no-content-image.png"
         />
       ) : (
-        <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
+        <div className="mt-7 px-3 pt-6 border-t-[1px] border-[#CDCDCD] relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
           {contentsGallery ? (
             contentsGallery?.map((content, id) => {
               const avgScore = renderAvgStar(
@@ -120,19 +121,19 @@ function BrandContentGallery({ contentsGallery }) {
                   </DialogTrigger>
                   {/* @ts-ignore */}
                   <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
-                    <div className="flex flex-col gap-4 w-full h-full">
+                    <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
                       <span className="text-lg font-semibold">Контент</span>
 
                       <video
                         controls
-                        className="aspect-[9/16] w-full h-full rounded-2xl"
+                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                       >
                         <source src={content?.ContentVideo} type="video/mp4" />
                         Your browser does not support the video tag.
                       </video>
                     </div>
 
-                    <div className="flex flex-col gap-4 w-full h-full">
+                    <div className="flex flex-col gap-4 w-full h-full sm:min-w-[272px]">
                       <span className="text-lg font-semibold">
                         Thumbnail зураг
                       </span>
@@ -140,7 +141,7 @@ function BrandContentGallery({ contentsGallery }) {
                       <img
                         src={content?.ContentThumbnail}
                         alt=""
-                        className="aspect-[9/16] w-full h-full rounded-2xl"
+                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
                       />
                     </div>
 

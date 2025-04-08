@@ -56,7 +56,7 @@ function Page() {
         .required("Заавал бөглөнө үү"),
       Password: Yup.string()
         .matches(
-          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
           "Нууц үг багадаа 8 тэмдэгттэй ба үсэг, тоо, тусгай тэмдэгт агуулсан байх шаардлагатай"
         )
         .required("Заавал бөглөнө үү"),
@@ -104,7 +104,7 @@ function Page() {
         toast.error("Та бүх талбарыг зөв бөглөнө үү");
       }
     } catch (error) {
-      toast.error("Алдаа гарлаа");
+      toast.error("Валидацийн алдаа гарлаа");
     }
   };
 
@@ -122,14 +122,13 @@ function Page() {
       toast.success("Амжилттай бүртгэгдлээ");
       setBrandRegisterFinished(true);
     } else if (brandRegisterError) {
-      // @ts-ignore
-      toast.error(brandRegisterError?.data?.error);
+      toast.error(brandRegister?.data?.error);
     }
   }, [brandRegisterSuccess, brandRegisterError]);
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="">
+      <div className="mt-20 sm:mt-32">
         <div className="max-w-7xl min-h-screen mx-auto px-7 py-11 container">
           <form
             onSubmit={registerForm.handleSubmit}
@@ -253,10 +252,10 @@ function Page() {
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
                 handleSendOtp={handleSendOtp}
-                colorTheme={"bg-geni-blue"}
                 registerForm={registerForm}
-                verificationData={brandVerificationData}
-                verificationSuccess={brandVerificationSuccess}
+                brandRegisterFinished={brandRegisterFinished}
+                brandVerificationData={brandVerificationData}
+                brandVerificationSuccess={brandVerificationSuccess}
               />
             </div>
           </form>

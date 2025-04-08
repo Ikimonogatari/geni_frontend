@@ -7,49 +7,26 @@ import { useMediaUpload } from "../hooks";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { PlusCircleIcon, XCircleIcon } from "lucide-react";
+import { PlusCircleIcon } from "lucide-react";
 
 interface MediaUploaderProps {
-  onChange?: (file: string) => void;
+  onChange: (file: string) => void;
   onDrop: ({ ids }: { ids: string[] }) => void;
-  onRemove?: (fileId: string) => void;
-  initialImageUrls?: string[];
-  initialFileIds?: string[];
+  initialImageUrls?: string[]; // Add this prop for preset values
 }
 
 const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
-  (
-    {
-      onChange,
-      onDrop,
-      onRemove,
-      initialImageUrls = [],
-      initialFileIds = [],
-      ...props
-    },
-    ref
-  ) => {
-    // Convert separate arrays of urls and fileIds into array of objects
-    const initialImages = initialImageUrls.map((url, index) => ({
-      url,
-      fileId: initialFileIds[index] || "", // Fallback in case there's no matching fileId
-    }));
+  ({ onChange, onDrop, initialImageUrls = [], ...props }, ref) => {
+    // Destructure initialImageUrls and merge with imageUrls from the hook
+    const { getRootProps, getInputProps, imageUrls, uploadFileLoading } =
+      useMediaUpload({ onDrop }); // No need to pass initialImageUrls to the hook
 
-    const {
-      getRootProps,
-      getInputProps,
-      images,
-      uploadFileLoading,
-      removeImage,
-    } = useMediaUpload({
-      onDrop,
-      onRemove,
-      initialImages,
-    });
+    // Combine the initialImageUrls and the imageUrls from the hook
+    const allImageUrls = [...initialImageUrls, ...imageUrls];
 
     return (
       <div className="flex flex-col w-full">
-        {images.length < 1 && !uploadFileLoading ? (
+        {allImageUrls.length < 1 && !uploadFileLoading ? (
           <div
             {...getRootProps()}
             className="cursor-pointer bg-[#F5F4F0] rounded-2xl min-h-[320px] sm:w-[554px] lg:h-[554px] p-5 h-full w-full flex flex-col justify-center items-center gap-4"
@@ -74,13 +51,13 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
         )}
 
         {!uploadFileLoading ? (
-          images.length > 0 && (
+          allImageUrls.length > 0 && (
             <div className="flex flex-col gap-10 w-full">
               <div className="w-full max-w-[554px]">
                 <Swiper
                   style={{
                     // @ts-ignore
-                    "--swiper-pagination-color": "#4D55F5",
+                    "--swiper-pagination-color": "#CA7FFE",
                     "--swiper-pagination-bullet-inactive-color": "#CDCDCD",
                     "--swiper-pagination-bullet-inactive-opacity": "1",
                     "--swiper-pagination-bullet-size": "10px",
@@ -91,35 +68,16 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
                   pagination={{ clickable: true }}
                   modules={[Pagination]}
                 >
-                  {images.map((image, index) => (
+                  {allImageUrls.map((url, index) => (
                     <SwiperSlide key={index}>
-                      <div className="relative">
-                        {image.isUploading ? (
-                          <div className="aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg bg-[#F5F4F0] flex items-center justify-center">
-                            <ClipLoader color="#4D55F5" size={50} />
-                          </div>
-                        ) : (
-                          <Image
-                            src={image.url}
-                            alt={`Uploaded image ${index + 1}`}
-                            layout="responsive"
-                            width={554}
-                            height={554}
-                            className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg"
-                          />
-                        )}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeImage(index);
-                          }}
-                          className="absolute top-2 right-2 bg-white rounded-full shadow-md p-1 hover:bg-gray-100 transition-colors"
-                          aria-label="Remove image"
-                        >
-                          <XCircleIcon color="#4D55F5" size={24} />
-                        </button>
-                      </div>
+                      <Image
+                        src={url}
+                        alt={`Uploaded image ${index + 1}`}
+                        layout="responsive"
+                        width={554}
+                        height={554}
+                        className="object-cover aspect-square rounded-lg max-w-[554px] max-h-[554px] border shadow-lg"
+                      />
                     </SwiperSlide>
                   ))}
                 </Swiper>
@@ -140,7 +98,6 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
         ) : (
           <div className="max-w-[554px] max-h-[554px] w-full h-full flex justify-center items-center">
             <ClipLoader
-              color="#4D55F5"
               loading={uploadFileLoading}
               aria-label="Loading Spinner"
               data-testid="loader"
@@ -152,7 +109,5 @@ const MediaUploader = forwardRef<HTMLInputElement, MediaUploaderProps>(
     );
   }
 );
-
-MediaUploader.displayName = "MediaUploader";
 
 export default MediaUploader;

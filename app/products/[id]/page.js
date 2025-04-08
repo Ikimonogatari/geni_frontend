@@ -14,12 +14,13 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   useGetPublicProductByIdQuery,
   useRequestProductContentMutation,
-  useGetUserInfoQuery,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -28,7 +29,8 @@ import HandleButton from "@/components/common/HandleButton";
 function Page() {
   const router = useRouter();
   const params = useParams();
-  const { data: parsedUserInfo } = useGetUserInfoQuery({});
+  const userInfo = Cookies.get("user-info");
+  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
   const userType = Cookies.get("userType");
   const { id } = params;
   const [productContentRequestMsg, setProductContentRequestMsg] = useState("");
@@ -57,7 +59,7 @@ function Page() {
       files: [],
     },
     validationSchema: Yup.object({
-      name: Yup.string().required("Заавал бөглөнө үү"),
+      name: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {},
   });
@@ -93,7 +95,7 @@ function Page() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="">
+      <div className="mt-32">
         <div className="max-w-8xl min-h-screen mx-auto px-7 py-11 container">
           <button
             onClick={() => router.back()}

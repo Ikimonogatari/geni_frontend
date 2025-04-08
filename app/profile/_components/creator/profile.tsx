@@ -9,6 +9,9 @@ import Link from "next/link";
 
 import ContentProgress from "./ContentProgress";
 import ContentGallery from "@/components/ContentGallery";
+import CreatorTier from "@/components/CreatorTier";
+import TierInfoModal from "@/components/TierInfoModal";
+import LogoutButton from "@/components/common/LogoutButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
@@ -30,7 +33,6 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
     data: listCreatorContentsData,
     error: listCreatorContentsError,
     isLoading: listCreatorContentsLoading,
-    refetch: refetchCreatorContents,
   } = useListCreatorContentsQuery(
     { limit: contentsPerPage, offset },
     { refetchOnMountOrArgChange: true }
@@ -92,22 +94,12 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const renderCreatorProfile = () => {
     switch (profileState) {
       case "content-progress":
-        return (
-          <ContentProgress
-            currentContents={currentContents}
-            refetchCreatorContents={refetchCreatorContents}
-          />
-        );
+        return <ContentProgress currentContents={currentContents} />;
       case "content-gallery":
         return <ContentGallery contentsGallery={currentContents} />;
 
       default:
-        return (
-          <ContentProgress
-            currentContents={currentContents}
-            refetchCreatorContents={refetchCreatorContents}
-          />
-        );
+        return <ContentProgress currentContents={currentContents} />;
     }
   };
 
@@ -124,7 +116,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   );
   return (
     <div className="min-h-screen w-full h-full bg-white">
-      <div className="pb-16 sm:pb-24">
+      <div className="pt-32 pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start justify-between w-full">
             <div className="flex flex-row items-center gap-3 sm:gap-7">
@@ -225,7 +217,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             <span className="block sm:hidden text-[#6F6F6F] text-xs sm:text-base">
               {getUserInfoData ? getUserInfoData.Bio : ""}
             </span>
-            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-end sm:flex-col gap-2 sm:gap-4">
+            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-center sm:flex-col gap-2 sm:gap-4">
               <Link
                 href={"/wallet"}
                 className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg"
@@ -264,77 +256,56 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     height={24}
                     alt="icon"
                     className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    min-
                   />
                 </Link>
+                <LogoutButton />
               </div>
             </div>
           </div>
           <div className="mt-4 sm:mt-16 w-full overflow-x-auto">
-            <Link
-              href="/products"
-              className="mb-4 sm:hidden flex whitespace-nowrap flex-row justify-center text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
-            >
-              Бүтээгдэхүүн сонгох
-              <Image src={"/add-icon.png"} width={14} height={14} alt="arrow" />
-            </Link>
-            <div className="z-50 -mb-[2px] flex flex-row items-start justify-between">
-              <div className="flex flex-row gap-2">
-                {creatorProfileButtons.map((b, i) => (
-                  <div
+            <div className="min-w-[380px] gap-2 sm:gap-0 flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center gap-2 sm:gap-3">
+                {brandProfileButtons.map((b, i) => (
+                  <button
                     key={i}
                     onClick={() => setProfileState(b.value)}
-                    className={`cursor-pointer text-center rounded-t-2xl ${
+                    className={`${
                       b.value === profileState
-                        ? "pb-3 bg-white border border-[#CDCDCD] border-b-0 font-medium"
-                        : "pb-3 text-[#6F6F6F] border-t border-x-[1px] border-transparent"
-                    }`}
+                        ? "bg-[#CA7FFE] text-white"
+                        : "text-[#6F6F6F]"
+                    } border-[1px] border-[#CDCDCD] whitespace-nowrap px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold text-sm sm:text-base`}
                   >
-                    <div
-                      className={`font-bold w-full text-center px-4 py-2 ${
-                        b.value === profileState
-                          ? ""
-                          : "border border-[#CDCDCD] rounded-lg"
-                      }`}
-                    >
-                      {b.title}
-                    </div>
-                    {b.value === profileState && (
-                      <div className="border-[#CA7FFE] border-b-[3px] w-14 mx-auto"></div>
-                    )}
-                  </div>
+                    {b.title}
+                  </button>
                 ))}
               </div>
-              <div className="flex justify-end">
-                <Link
-                  href="/products"
-                  className="hidden sm:flex whitespace-nowrap flex-row text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
-                >
-                  Бүтээгдэхүүн сонгох
-                  <Image
-                    src={"/add-icon.png"}
-                    width={14}
-                    height={14}
-                    alt="arrow"
-                  />
-                </Link>
-              </div>
-            </div>
-
-            <div className={`border-t border-[#CDCDCD] py-3 `}>
-              {currentContents && !isLoading ? (
-                renderCreatorProfile()
-              ) : (
-                <div className="space-y-6 mt-2">
-                  {[...Array(8)].map((_, index) => (
-                    <Skeleton
-                      key={index}
-                      className="h-[42px] sm:h-[66px] w-full rounded-3xl"
-                    />
-                  ))}
-                </div>
-              )}
+              <Link
+                href="/products"
+                className="flex flex-row whitespace-nowrap items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#CDCDCD] text-sm sm:text-base px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold"
+              >
+                Бүтээгдэхүүн үзэх
+                <Image
+                  src={"/arrow-right-icon.png"}
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Link>
             </div>
           </div>
+          {currentContents && !isLoading ? (
+            renderCreatorProfile()
+          ) : (
+            <div className="space-y-6 mt-10">
+              {[...Array(8)].map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="h-[42px] sm:h-[66px] w-full rounded-3xl"
+                />
+              ))}
+            </div>
+          )}
         </div>
         {listCreatorContentsData && totalPages > 1 ? (
           <Pagination
@@ -357,13 +328,13 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
 
 export default CreatorProfile;
 
-const creatorProfileButtons = [
+const brandProfileButtons = [
   {
     title: "Контент статус",
     value: "content-progress",
   },
   {
-    title: "Миний контент",
+    title: "Контент",
     value: "content-gallery",
   },
 ];
