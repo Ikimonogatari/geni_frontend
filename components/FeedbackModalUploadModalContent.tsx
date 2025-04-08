@@ -11,9 +11,9 @@ import {
   useGetUserInfoQuery,
 } from "../app/services/service";
 import toast from "react-hot-toast";
-import UploadSuccessModal from "./UploadSuccessModal";
 import useS3Upload from "./hooks/useUploadToS3";
 import ContentUploadProgress from "./common/ContentUploadProgress";
+import UploadSuccessModal from "./UploadSuccessModal";
 
 interface FeedbackModalUploadModalContentProps {
   parsedUserInfo: any;
@@ -315,7 +315,6 @@ function FeedbackModalUploadModalContent({
             ? isHomeworkUploadSuccess
             : isContentSuccess
         }
-        parsedUserInfo={userInfo}
         setIsContentSubmitSuccess={
           userInfo?.UserType === "Student"
             ? setIsHomeworkUploadSuccess

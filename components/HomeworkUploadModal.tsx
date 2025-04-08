@@ -10,9 +10,9 @@ import {
   useUploadHomeworkMutation,
 } from "../app/services/service";
 import toast from "react-hot-toast";
-import UploadSuccessModal from "./UploadSuccessModal";
 import useS3Upload from "./hooks/useUploadToS3";
 import ContentUploadProgress from "./common/ContentUploadProgress";
+import UploadSuccessModal from "./UploadSuccessModal";
 
 function HomeworkUploadModal({ parsedUserInfo, courseId }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);

@@ -2,11 +2,17 @@ import React from "react";
 import { DialogClose, DialogContent, Dialog } from "./ui/dialog";
 import Image from "next/image";
 
+type UploadSuccessModalProps = {
+  isContentSubmitSuccess: boolean;
+  setIsContentSubmitSuccess: (success: boolean) => void;
+  setIsMainDialogOpen?: (open: boolean) => void;
+};
+
 function UploadSuccessModal({
   isContentSubmitSuccess,
   setIsContentSubmitSuccess,
   setIsMainDialogOpen,
-}) {
+}: UploadSuccessModalProps) {
   const handleBayrlalaaClick = () => {
     setIsContentSubmitSuccess(false);
     // Close the parent dialog if the function exists
@@ -20,6 +26,7 @@ function UploadSuccessModal({
       open={isContentSubmitSuccess}
       onOpenChange={setIsContentSubmitSuccess}
     >
+      {/* @ts-ignore */}
       <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
         <span className="text-[#4FB755] uppercase text-4xl sm:text-5xl text-center font-bold">
           контент илгээгдлээ
