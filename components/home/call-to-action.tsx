@@ -45,7 +45,7 @@ export default function CallToAction({
       <div className="flex flex-col m-0">
         <div className="flex">
           <div className="flex flex-[8] md:flex-[9] bg-primary-bg">
-            <div className="flex-1 rounded-br-[30px] bg-background p-6 pr-4 pt-4">
+            <div className="flex-1 rounded-br-[30px] bg-white p-6 pr-4 pt-4">
               <Image
                 src={headerImgSrc}
                 alt="call-to-action"
@@ -129,7 +129,7 @@ export default function CallToAction({
         <div className="flex">
           <div className="bg-primary-bg flex-[1] rounded-br-[30px] p-4 m-0" />
           <div className="flex flex-grow bg-primary-bg  ">
-            <div className="flex-1 rounded-tl-[30px] bg-background p-6 pl-8 pb-0 pr-1">
+            <div className="flex-1 rounded-tl-[30px] bg-white p-6 pl-8 pb-0 pr-1">
               <ElevatedButton
                 className="w-full border-black/55 pl-12"
                 theme={btnColor}
