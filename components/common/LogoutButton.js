@@ -3,14 +3,17 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { geniApi } from "@/app/services/service";
+import { store, useAppDispatch } from "@/app/store";
 
 function LogoutButton() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
-    geniApi.util.invalidateTags(["UserInfo"]);
+
+    // Invalidate the UserInfo tag to clear any cached user data
+    dispatch(geniApi.util.invalidateTags(["UserInfo"]));
     router.replace("/login");
   };
   return (

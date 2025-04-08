@@ -127,7 +127,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                         loading={subscribePlanLoading}
                         aria-label="Loading Spinner"
                         data-testid="loader"
-                        className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                        className="aspect-[9/16] w-full h-full rounded-2xl"
                         size={50}
                       />
                     </div>
@@ -167,7 +167,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                       loading={subscribePlanLoading}
                       aria-label="Loading Spinner"
                       data-testid="loader"
-                      className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                      className="aspect-[9/16] w-full h-full rounded-2xl"
                       size={50}
                     />
                   </div>

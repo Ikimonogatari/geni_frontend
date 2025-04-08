@@ -8,25 +8,43 @@ import Step4 from "./Step4";
 import {
   useBrandTermCheckMutation,
   useUseFreeContentMutation,
+  useGetUserInfoQuery
 } from "@/app/services/service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import PaymentModal from "../PaymentModal";
+import SubscriptionModal from "../SubscriptionModal";
+import Loader from "@/components/common/Loader";
 
-function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
+function CreditPurchase({ className, buttonIconSize, buttonText }) {
   const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const [selectedPackageId, setSelectedPackageId] = useState(1);
-  const initialStep = userInfo?.IsUsedFreeContent
-    ? userInfo?.IsCheckedTerm
-      ? 3
-      : 2
-    : 1;
-  const [currentStep, setCurrentStep] = useState(initialStep);
-  const [isAgreed, setIsAgreed] = useState(userInfo?.IsCheckedTerm);
+  
+  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery({});
+  
+  const [currentStep, setCurrentStep] = useState(1); // Default to first step
+  const [isAgreed, setIsAgreed] = useState(false); // Default to not agreed
+
+  // Update steps and selected option when userInfo is loaded
+  useEffect(() => {
+    if (userInfo) {
+      const initialStep = userInfo.IsUsedFreeContent
+        ? userInfo.IsCheckedTerm
+          ? 3
+          : 2
+        : 1;
+      setCurrentStep(initialStep);
+      setIsAgreed(userInfo.IsCheckedTerm || false);
+      
+      // If user has already used free content, default to brandpackage option
+      if (userInfo.IsUsedFreeContent) {
+        setSelectedOption("brandpackage");
+      }
+    }
+  }, [userInfo]);
 
   const [
     brandTermCheck,
@@ -57,7 +75,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
       //@ts-ignore
       toast.error(useFreeContentError?.data?.error);
     }
-  }, [useFreeContentSuccess, useFreeContentError]);
+  }, [useFreeContentSuccess, useFreeContentError, router]);
 
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
@@ -97,10 +115,18 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
   };
 
   const renderStepContent = () => {
+    if (userInfoLoading) {
+      return <Loader />;
+    }
+    
     switch (currentStep) {
       case 1:
         return (
-          <Step1 handleSelect={handleSelect} selectedOption={selectedOption} />
+          <Step1 
+            handleSelect={handleSelect} 
+            selectedOption={selectedOption} 
+            userInfo={userInfo}
+          />
         );
       case 2:
         return <Step2 setIsAgreed={setIsAgreed} />;
@@ -118,6 +144,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText, userInfo }) {
         return null;
     }
   };
+
   return (
     <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
       <DialogTrigger

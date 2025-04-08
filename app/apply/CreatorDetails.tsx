@@ -86,14 +86,19 @@ function CreatorDetails({ formik }) {
           id="Birthday"
           name="Birthday"
           type="date"
-          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg h-5"
+          className="text-sm sm:text-xl w-full col-span-1 no-spinner bg-primary-bg"
           wrapperClassName="w-full col-span-1"
           labelClassName="text-[#6F6F6F] text-base sm:text-lg font-normal"
           layoutClassName="h-full p-4 sm:p-5 w-full bg-primary-bg"
           label="Төрсөн огноо"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.Birthday}
+          value={
+            formik.values.Birthday &&
+            formik.values.Birthday !== "0001-01-01T00:00:00Z"
+              ? formik.values.Birthday
+              : new Date().toISOString().split("T")[0]
+          }
           errorText={formik.errors.Birthday}
           errorVisible={formik.touched.Birthday && formik.errors.Birthday}
         />

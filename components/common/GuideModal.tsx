@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useBrandGuideCheckMutation } from "@/app/services/service";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import clsx from "clsx";
 
 function GuideModal({ hasSeenGuide }) {
   const [swiper, setSwiper] = useState(null);
@@ -59,6 +60,25 @@ function GuideModal({ hasSeenGuide }) {
       brandGuideCheck(null);
     }
   };
+  console.log(theme);
+  const themeClasses = {
+    student: {
+      button: "bg-geni-green",
+      border: "border-geni-green",
+      text: "text-geni-green",
+      paginationColor: "#4FB755",
+    },
+    brand: {
+      button: "bg-geni-blue",
+      border: "border-geni-blue",
+      text: "text-geni-blue",
+      paginationColor: "#4D55F5",
+    },
+  };
+  console.log(themeClasses[theme]);
+
+  const currentTheme =
+    theme && themeClasses[theme] ? themeClasses[theme] : themeClasses.brand;
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -96,7 +116,7 @@ function GuideModal({ hasSeenGuide }) {
           ))}
         </Swiper>
         <div className="relative flex justify-between items-center w-full">
-          {currentIndex > 0 && currentIndex < 4 ? (
+          {currentIndex > 0 && currentIndex < slides.length - 1 ? (
             <button
               className="z-50 flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-1 sm:gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold"
               onClick={() => swiper.slidePrev()}
@@ -110,8 +130,8 @@ function GuideModal({ hasSeenGuide }) {
               />
               Өмнөх
             </button>
-          ) : currentIndex == 4 ? (
-            <div className="z-50 flex flex-row items-center gap-2 sm:gap-3">
+          ) : currentIndex === slides.length - 1 ? (
+            <div className="z-50 flex items-center gap-2 sm:gap-3">
               <div className="relative">
                 <input
                   type="checkbox"
@@ -122,11 +142,16 @@ function GuideModal({ hasSeenGuide }) {
                 />
                 <label
                   htmlFor="checkbox"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-[#4D55F5] peer-checked:border-[#4D55F5]"
+                  className={clsx(
+                    "w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all",
+                    isChecked && `${currentTheme.button} ${currentTheme.border}`
+                  )}
                 >
-                  <span className="text-sm sm:text-base text-white text-center select-none peer-checked:inline-block w-3 h-5 border-white">
-                    ✓
-                  </span>
+                  {isChecked && (
+                    <span className="text-sm sm:text-base text-white select-none w-3 h-5 border-white">
+                      ✓
+                    </span>
+                  )}
                 </label>
               </div>
               <span className="text-xs sm:text-lg font-semibold">

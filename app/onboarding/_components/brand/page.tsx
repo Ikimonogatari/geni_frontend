@@ -6,30 +6,41 @@ import { useRouter } from "next/navigation";
 import {
   useEditBrandProfileMutation,
   useBrandRequestReviewMutation,
+  useGetUserInfoQuery,
 } from "@/app/services/service";
-import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import BrandDetails from "./BrandDetails";
 import BrandDetailsSubmit from "./BrandDetailsSubmit";
 import BrandDetailsSuccess from "./BrandDetailsSuccess";
 import { addBrandDetailsSchema } from "./schema";
+import Loader from "@/components/common/Loader";
 
 function BrandOnboarding() {
   const router = useRouter();
-  const userInfo = Cookies.get("user-info");
-  const parsedUserInfo = userInfo ? JSON.parse(userInfo) : null;
+  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
+    {}
+  );
 
   const [step, setStep] = useState(1);
 
-  const handleNextStep = async () => {
+  const handleNextStep = () => {
     if (step === 1) {
-      await formik.validateField("Name");
-      await formik.validateField("Bio");
+      // Validate first page fields
+      formik.validateField("Name");
+      formik.validateField("Bio");
+
+      // Mark fields as touched to show validation errors
+      formik.setTouched({
+        Name: true,
+        Bio: true,
+      });
+
+      // Check if there are any errors in these fields
       if (!formik.errors.Name && !formik.errors.Bio) {
         setStep(2);
       }
     } else if (step === 2) {
-      await formik.validateForm();
+      // Form submission is handled in BrandDetailsSubmit component
     }
   };
 
@@ -52,42 +63,80 @@ function BrandOnboarding() {
 
   const formik = useFormik({
     initialValues: {
-      Name: parsedUserInfo ? parsedUserInfo?.Name : "",
-      Bio: parsedUserInfo ? parsedUserInfo?.Bio : "",
-      Website: parsedUserInfo ? parsedUserInfo?.Website : "",
-      PhoneNumber: parsedUserInfo ? parsedUserInfo?.PhoneNumber : "",
-      RegNo: parsedUserInfo ? parsedUserInfo?.RegNo : "",
-      Address: parsedUserInfo ? parsedUserInfo?.Address : "",
+      Name: "",
+      Bio: "",
+      Website: "",
+      PhoneNumber: "",
+      RegNo: "",
+      Address: "",
       BrandAoADescription: "temp-desc",
       HasMarketingPersonel: false,
-      AvgProductSalesMonthly: parsedUserInfo
-        ? parsedUserInfo?.AvgProductSalesMonthly
-        : 0,
-      AvgPrice: parsedUserInfo ? parsedUserInfo?.AvgPrice : 0,
+      AvgProductSalesMonthly: 0,
+      AvgPrice: 0,
     },
     validationSchema: addBrandDetailsSchema,
     onSubmit: async (values) => {
-      try {
-        await editBrandProfile(values).unwrap();
-        // @ts-ignore
-        await requestReview();
-        setStep(3);
-      } catch (error) {
-        toast.error("Алдаа гарлаа");
-        console.error("Error submitting the form", error);
-      }
+      await editBrandProfile(values).unwrap();
+      await requestReview({}).unwrap();
+      setStep(3);
     },
   });
 
+  // Update formik values when userInfo data is loaded
+  useEffect(() => {
+    if (userInfo) {
+      formik.setValues({
+        Name: userInfo?.Name || "",
+        Bio: userInfo?.Bio || "",
+        Website: userInfo?.Website || "",
+        PhoneNumber: userInfo?.PhoneNumber || "",
+        RegNo: userInfo?.RegNo || "",
+        Address: userInfo?.Address || "",
+        BrandAoADescription: "temp-desc",
+        HasMarketingPersonel: userInfo?.HasMarketingPersonel || false,
+        AvgProductSalesMonthly: userInfo?.AvgProductSalesMonthly || 0,
+        AvgPrice: userInfo?.AvgPrice || 0,
+      });
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     if (isSuccess && requestReviewSuccess) {
-      toast.success("Амжилттай");
+      toast.success("Бренд мэдээлэл амжилттай хадгалагдлаа");
+      setStep(3);
     }
-    if (error || requestReviewError) {
+    if (error) {
+      // Handle error safely - check if it's an object with data property
+      if (typeof error === "object" && error !== null) {
+        // @ts-ignore - RTK query error types can be complex
+        const errorData = error.data;
+        if (errorData && errorData.fieldErrors) {
+          // Set field-specific errors
+          Object.keys(errorData.fieldErrors).forEach((field) => {
+            if (field in formik.values) {
+              formik.setFieldError(field, errorData.fieldErrors[field]);
+            }
+          });
+        } else if (errorData && errorData.error) {
+          toast.error(errorData.error);
+        }
+      } else {
+        toast.error("Алдаа гарлаа");
+      }
+    }
+    if (requestReviewError) {
       // @ts-ignore
-      toast.error(error?.data?.error || requestReviewError?.data?.error);
+      toast.error(
+        // @ts-ignore
+        requestReviewError?.data?.error || "Хүсэлт илгээх үед алдаа гарлаа"
+      );
     }
   }, [data, error, requestReviewSuccess, requestReviewError]);
+
+  // Show loader while fetching user data
+  if (userInfoLoading) {
+    return <Loader />;
+  }
 
   const renderStepContent = () => {
     switch (step) {
@@ -95,7 +144,7 @@ function BrandOnboarding() {
         return (
           <BrandDetails
             formik={formik}
-            parsedUserInfo={parsedUserInfo}
+            userInfo={userInfo}
             handleNextStep={handleNextStep}
           />
         );
@@ -104,17 +153,19 @@ function BrandOnboarding() {
           <BrandDetailsSubmit
             formik={formik}
             handlePreviousStep={handlePreviousStep}
-            parsedUserInfo={parsedUserInfo}
+            userInfo={userInfo}
           />
         );
       case 3:
         return <BrandDetailsSuccess router={router} />;
+      default:
+        return null;
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-36 sm:mt-48 mb-12 px-5">
+      <div className="py-14 px-5">
         <form
           onSubmit={formik.handleSubmit}
           className="max-w-5xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"

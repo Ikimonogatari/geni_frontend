@@ -2,7 +2,7 @@
 import BrandProfile from "./_components/brand/profile";
 import CreatorProfile from "./_components/creator/profile";
 import StudentProfile from "./_components/student/profile";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useGetUserInfoQuery } from "../services/service";
 import Loader from "@/components/common/Loader";
 
@@ -12,15 +12,22 @@ export default function Page() {
   if (isLoading) {
     return <Loader />;
   }
-  const router = useRouter();
 
   if (
-    userInfo?.UserType === "Brand" &&
-    userInfo?.IsVerified === false &&
-    userInfo?.OnBoardingStatus === "New"
+    (userInfo?.UserType === "Student" &&
+      (!userInfo?.Nickname ||
+        !userInfo?.LastName ||
+        !userInfo?.FirstName ||
+        !userInfo?.Bio ||
+        !userInfo?.RegNo ||
+        !userInfo?.PhoneNumber ||
+        !userInfo?.Birthday ||
+        !userInfo?.Gender)) ||
+    (userInfo?.UserType === "Brand" &&
+      userInfo?.IsVerified === false &&
+      userInfo?.OnBoardingStatus === "New")
   ) {
-    router.push("/onboarding");
-    return null;
+    redirect("/onboarding");
   }
 
   return (

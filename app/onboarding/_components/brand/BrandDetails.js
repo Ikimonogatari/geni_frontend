@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
+function BrandDetails({ userInfo, formik, handleNextStep }) {
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [brandTypes, setBrandTypes] = useState([]);
   const [availableBrandTypes, setAvailableBrandTypes] = useState([]);
@@ -78,10 +78,10 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
   }, [changeBrandTypeSuccess, changeBrandTypeError]);
 
   useEffect(() => {
-    if (parsedUserInfo && parsedUserInfo.BrandTypes) {
-      setBrandTypes(parsedUserInfo?.BrandTypes.map((p) => p));
+    if (userInfo && userInfo.BrandTypes) {
+      setBrandTypes(userInfo?.BrandTypes.map((p) => p));
     }
-  }, []);
+  }, [userInfo]);
 
   useEffect(() => {
     if (listBrandTypesData) {
@@ -90,8 +90,15 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
   }, [listBrandTypesData]);
 
   const [profileImage, setProfileImage] = useState(
-    parsedUserInfo?.ProfileLink || "/dummy-brand.png"
+    userInfo?.ProfileLink || "/dummy-brand.png"
   );
+
+  // Update profile image when userInfo changes
+  useEffect(() => {
+    if (userInfo?.ProfileLink) {
+      setProfileImage(userInfo.ProfileLink);
+    }
+  }, [userInfo]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -151,11 +158,38 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
       return updatedBrandTypes;
     });
   };
+
+  // Custom handler for next step to validate and show errors
+  const validateAndProceed = async () => {
+    // Validate required fields for this step
+    await formik.validateField("Name");
+    await formik.validateField("Bio");
+
+    // Mark fields as touched to show validation errors
+    formik.setTouched({
+      Name: true,
+      Bio: true,
+    });
+
+    if (formik.errors.Name || formik.errors.Bio) {
+      // Focus the first field with an error and scroll to it
+      const firstErrorField = formik.errors.Name ? "Name" : "Bio";
+      const element = document.getElementById(firstErrorField);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => element.focus(), 500);
+      }
+      return;
+    }
+
+    handleNextStep();
+  };
+
   return (
     <>
       <div className="flex flex-col sm:flex-row items-start justify-between w-full gap-6 sm:gap-11">
         <div className="flex flex-col items-center gap-4 sm:gap-7 w-full sm:max-w-[194px] xl:max-w-[258px]">
-          {parsedUserInfo ? (
+          {userInfo ? (
             <Image
               src={profileImage}
               width={194}
@@ -172,9 +206,7 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
             className="cursor-pointer mt-2 py-2 sm:py-3 w-full text-center bg-[#4D55F5] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
           >
             <input {...getInputProps()} />
-            {parsedUserInfo && parsedUserInfo.ProfileLink
-              ? "Лого солих"
-              : "Лого оруулах"}
+            {userInfo && userInfo.ProfileLink ? "Лого солих" : "Лого оруулах"}
           </div>
         </div>
 
@@ -183,7 +215,9 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
             id="Name"
             name="Name"
             type="text"
-            className="text-base sm:text-xl w-full"
+            className={`text-base sm:text-xl w-full ${
+              formik.errors.Name ? "border-red-500" : ""
+            }`}
             wrapperClassName="w-full"
             labelClassName="text-[#6F6F6F] text-lg font-normal"
             layoutClassName="h-full p-4 sm:p-5 w-full"
@@ -292,8 +326,11 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
           <Textarea
             id="Bio"
             name="Bio"
-            className="text-base sm:text-xl w-full"
+            className={`text-base sm:text-xl w-full ${
+              formik.errors.Bio ? "border-red-500" : ""
+            }`}
             layoutClassName="bg-white p-4 sm:p-5"
+            wrapperClassName="w-full"
             labelClassName="text-[#6F6F6F] text-lg font-normal"
             label=" Брэндийн богино танилцуулга"
             onChange={formik.handleChange}
@@ -308,7 +345,7 @@ function BrandDetails({ parsedUserInfo, formik, handleNextStep }) {
         </div>
       </div>
       <button
-        onClick={handleNextStep}
+        onClick={validateAndProceed}
         type="button"
         className="mt-8 sm:mt-16 w-full flex flex-row items-center
 justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border

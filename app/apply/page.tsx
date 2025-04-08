@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import BackButton from "@/components/common/BackButton";
 import Image from "next/image";
@@ -11,8 +10,10 @@ import CreatorQuestions from "./CreatorQuestions";
 import UploadSampleContent from "./UploadSampleContent";
 import SuccessModal from "@/components/common/SuccessModal";
 import { addCreatorDetailsSchema } from "./schema";
+import { useRouter } from "next/navigation";
 
 function CreatorOnboarding() {
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const sidebarNavs = ["Ерөнхий мэдээлэл", "Асуулт", "Контент нэмэх"];
@@ -74,7 +75,7 @@ function CreatorOnboarding() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-24 sm:mt-36 mb-12">
+      <div className="mb-12">
         <div className="max-w-5xl min-h-screen mx-auto sm:px-14 py-5 sm:py-11 container">
           <BackButton />
           <div className="flex flex-row justify-between items-center gap-5 my-7 w-full">
@@ -121,10 +122,18 @@ function CreatorOnboarding() {
         modalImage="/creator-image.png"
         modalTitle="ӨРГӨДӨЛ АМЖИЛТТАЙ ИЛГЭЭГДЛЭЭ"
         context={
-          <span className="bg-primary-bg text-base sm:text-xl rounded-2xl p-3 sm:p-4">
-            Өргөдөлийн хариу 24-48 цагын хугацаанд таны бүртгүүлсэн имэйл
-            хаягаар очих тул түр хүлээгээрэй. Амжилт хүсье!
-          </span>
+          <div className="flex flex-col gap-3">
+            <span className="bg-primary-bg text-base sm:text-xl rounded-2xl p-3 sm:p-4">
+              Өргөдөлийн хариу 24-48 цагын хугацаанд таны бүртгүүлсэн имэйл
+              хаягаар очих тул түр хүлээгээрэй. Амжилт хүсье!
+            </span>
+            <button
+              onClick={() => router.push("/creator")}
+              className="w-full py-4 text-white font-semibold bg-geni-pink text-xl sm:text-2xl border border-[#2D262D] rounded-2xl"
+            >
+              Баярлалаа
+            </button>
+          </div>
         }
         imageClassName="w-[207px] h-[216px]"
       />

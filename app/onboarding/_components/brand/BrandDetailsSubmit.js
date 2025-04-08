@@ -12,21 +12,55 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { formatSocialMediaUrl, extractUsername } from "@/utils/socialMedia";
 
 import toast from "react-hot-toast";
 
-function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
+function BrandDetailsSubmit({ formik, handlePreviousStep, userInfo }) {
   const [socials, setSocials] = useState({
     instagram: "",
     facebook: "",
   });
+
+  // Initialize display values with usernames
+  const [displayValues, setDisplayValues] = useState({
+    instagram: "",
+    facebook: "",
+  });
+
+  // Initialize socials and display values from userInfo when component mounts
+  useEffect(() => {
+    if (userInfo?.SocialChannels) {
+      const instagramChannel = userInfo.SocialChannels.find(
+        (channel) => channel.PlatformId === 2
+      );
+
+      const facebookChannel = userInfo.SocialChannels.find(
+        (channel) => channel.PlatformId === 1
+      );
+
+      // Set initial social values
+      const initialSocials = {
+        instagram: instagramChannel?.SocialAddress || "",
+        facebook: facebookChannel?.SocialAddress || "",
+      };
+
+      setSocials(initialSocials);
+
+      // Set initial display values
+      setDisplayValues({
+        instagram: extractUsername("instagram", initialSocials.instagram),
+        facebook: extractUsername("facebook", initialSocials.facebook),
+      });
+    }
+  }, [userInfo]);
+
   const [
     createSocialChannel,
     {
       data: createSocialChannelData,
       error: createSocialChannelError,
       isLoading: createSocialChannelLoading,
-      isSuccess: createSocialChannelSuccess,
     },
   ] = useCreateSocialChannelMutation();
 
@@ -36,53 +70,124 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
       data: updateSocialChannelData,
       error: updateSocialChannelError,
       isLoading: updateSocialChannelLoading,
-      isSuccess: updateSocialChannelSuccess,
     },
   ] = useUpdateSocialChannelMutation();
 
-  const handleSaveOrUpdateSocialChannels = async () => {
+  const handleSocialChange = (platform, value) => {
+    // Update display value immediately
+    setDisplayValues((prev) => ({ ...prev, [platform]: value }));
+
+    // Format URL for storage
+    const formattedUrl = formatSocialMediaUrl(platform, value);
+    setSocials((prev) => ({ ...prev, [platform]: formattedUrl }));
+  };
+
+  const updateSocialChannels = async () => {
     try {
+      // Update Instagram
       if (socials.instagram.trim() !== "") {
-        const hasExistingInstagram = parsedUserInfo?.SocialChannels?.some(
+        const hasExistingInstagram = userInfo?.SocialChannels?.some(
           (channel) => channel.PlatformId === 2
         );
 
-        if (hasExistingInstagram) {
-          await updateSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
-        } else {
-          await createSocialChannel({
-            PlatformId: 2,
-            SocialAddress: socials.instagram,
-          }).unwrap();
+        const existingInstagram = userInfo?.SocialChannels?.find(
+          (channel) => channel.PlatformId === 2
+        );
+        const instagramChanged =
+          !existingInstagram ||
+          existingInstagram.SocialAddress !== socials.instagram;
+
+        if (instagramChanged) {
+          if (hasExistingInstagram) {
+            await updateSocialChannel({
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            }).unwrap();
+          } else {
+            await createSocialChannel({
+              PlatformId: 2,
+              SocialAddress: socials.instagram,
+            }).unwrap();
+          }
         }
       }
 
+      // Update Facebook
       if (socials.facebook.trim() !== "") {
-        const hasExistingFacebook = parsedUserInfo?.SocialChannels?.some(
+        const hasExistingFacebook = userInfo?.SocialChannels?.some(
           (channel) => channel.PlatformId === 1
         );
 
-        if (hasExistingFacebook) {
-          await updateSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
-        } else {
-          await createSocialChannel({
-            PlatformId: 1,
-            SocialAddress: socials.facebook,
-          }).unwrap();
+        const existingFacebook = userInfo?.SocialChannels?.find(
+          (channel) => channel.PlatformId === 1
+        );
+        const facebookChanged =
+          !existingFacebook ||
+          existingFacebook.SocialAddress !== socials.facebook;
+
+        if (facebookChanged) {
+          if (hasExistingFacebook) {
+            await updateSocialChannel({
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            }).unwrap();
+          } else {
+            await createSocialChannel({
+              PlatformId: 1,
+              SocialAddress: socials.facebook,
+            }).unwrap();
+          }
         }
       }
-
-      toast.success("Амжилттай хадгаллаа");
     } catch (err) {
-      toast.error("Алдаа гарлаа");
+      console.error("Error updating social channels:", err);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Make sure all fields are touched to show validation errors
+    formik.setTouched({
+      Name: true,
+      Bio: true,
+      Website: true,
+      PhoneNumber: true,
+      RegNo: true,
+      Address: true,
+      HasMarketingPersonel: true,
+      AvgProductSalesMonthly: true,
+      AvgPrice: true,
+    });
+
+    // Validate all fields
+    await formik.validateForm();
+
+    // If validation passes, first update social channels, then submit the form
+    if (Object.keys(formik.errors).length === 0) {
+      // Update social channels first
+      const socialsUpdated = await updateSocialChannels();
+
+      if (socialsUpdated) {
+        // Then submit the form
+        formik.handleSubmit(e);
+      } else {
+        toast.error("Сошиал хаяг шинэчлэхэд алдаа гарлаа");
+      }
+    } else {
+      // Focus the first field with an error
+      const firstErrorField = Object.keys(formik.errors)[0];
+      const element = document.getElementById(firstErrorField);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => element.focus(), 500);
+      }
     }
   };
+
   return (
     <div className="flex flex-col items-start justify-between w-full gap-6 sm:gap-9">
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full">
@@ -222,8 +327,8 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
           <label className="text-[#6F6F6F] text-lg" htmlFor="firstName">
             Сошиал хаягууд
           </label>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 xl:gap-10 w-full items-start">
-            <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row gap-4 w-full items-start">
+            <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center gap-3">
               <div className="flex flex-row items-center gap-3 w-full">
                 <Image
                   src={"/Instagram.png"}
@@ -234,32 +339,16 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 />
                 <input
                   type="text"
-                  placeholder={
-                    parsedUserInfo?.SocialChannels?.find(
-                      (channel) => channel.PlatformId === 2
-                    )?.SocialAddress || ""
-                  }
+                  placeholder="Instagram хэрэглэгчийн нэр"
                   className="bg-transparent outline-none w-full"
-                  value={socials.instagram}
+                  value={displayValues.instagram}
                   onChange={(e) =>
                     setSocials({ ...socials, instagram: e.target.value })
                   }
                 />
               </div>
-              <div
-                onClick={handleSaveOrUpdateSocialChannels}
-                className="cursor-pointer outline-none text-xs aspect-square w-3 h-3 sm:w-4 sm:h-4"
-              >
-                <Image
-                  src={"/check-icon.png"}
-                  width={16}
-                  height={16}
-                  className="w-full"
-                  alt=""
-                />
-              </div>
             </div>
-            <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center justify-between gap-3">
+            <div className="w-full p-4 sm:p-5 bg-white rounded-lg border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center gap-3">
               <div className="flex flex-row items-center gap-3 w-full">
                 <Image
                   src={"/Facebook.png"}
@@ -270,28 +359,12 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
                 />
                 <input
                   type="text"
-                  placeholder={
-                    parsedUserInfo?.SocialChannels?.find(
-                      (channel) => channel.PlatformId === 1
-                    )?.SocialAddress || ""
-                  }
-                  value={socials.facebook}
+                  placeholder="Facebook хэрэглэгчийн нэр"
+                  value={displayValues.facebook}
                   className="bg-transparent outline-none w-full"
                   onChange={(e) =>
                     setSocials({ ...socials, facebook: e.target.value })
                   }
-                />
-              </div>
-              <div
-                onClick={handleSaveOrUpdateSocialChannels}
-                className="cursor-pointer outline-none text-xs aspect-square w-3 h-3 sm:w-4 sm:h-4"
-              >
-                <Image
-                  src={"/check-icon.png"}
-                  width={16}
-                  height={16}
-                  className="w-full"
-                  alt=""
                 />
               </div>
             </div>
@@ -317,18 +390,10 @@ function BrandDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
         </button>
         <button
           type="submit"
-          className="w-full flex flex-row items-center
-    justify-center gap-2 bg-inherit text-[#2D262D] rounded-lg sm:rounded-xl border
-    border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
+          onClick={handleSubmit}
+          className="w-full gap-2 bg-geni-blue text-white rounded-lg sm:rounded-xl border border-[#2D262D] py-3 sm:py-4 font-bold text-base sm:text-xl"
         >
-          Дараах
-          <Image
-            src={"/arrow-forward-icon.png"}
-            width={20}
-            height={20}
-            className="w-5 h-5"
-            alt=""
-          />
+          Дуусгах
         </button>
       </div>
     </div>

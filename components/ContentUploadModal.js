@@ -23,6 +23,8 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentVideoId, setContentVideoId] = useState(null);
   const [contentThumbnailId, setContentThumbnailId] = useState(null);
   const [caption, setCaption] = useState("");
+  const [isMainDialogOpen, setMainDialogOpen] = useState(false);
+  const { uploadToS3, progress, isUploading } = useS3Upload();
   const [
     getImagePresignedUrl,
     {
@@ -190,7 +192,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isMainDialogOpen} onOpenChange={setMainDialogOpen}>
         <DialogTrigger
           type="submit"
           className="text-xs sm:text-base flex flex-row items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 rounded-lg text-white font-bold"
@@ -207,7 +209,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               {contentVideo ? (
                 <video
                   controls
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 >
                   <source src={contentVideo} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -225,7 +227,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               ) : (
                 <div
                   {...getRootPropsForVideo()}
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 >
                   <input {...getInputPropsForVideo()} />
 
@@ -250,7 +252,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
                 <img
                   src={contentThumbnail}
                   alt=""
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 />
               ) : isImageUploadLoading ? (
                 <div className="bg-[#F5F4F0] aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl flex justify-center items-center">
@@ -265,7 +267,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               ) : (
                 <div
                   {...getRootPropsForImage()}
-                  className="aspect-[9/16] w-full h-full sm:w-[272px] rounded-2xl"
+                  className="aspect-[9/16] w-full h-full rounded-2xl"
                 >
                   <input {...getInputPropsForImage()} />
                   <div className="bg-[#F5F4F0] cursor-pointer w-full h-full rounded-2xl flex justify-center items-center">
@@ -313,6 +315,7 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
         isContentSubmitSuccess={isContentSuccess}
         parsedUserInfo={parsedUserInfo}
         setIsContentSubmitSuccess={setIsContentSuccess}
+        setIsMainDialogOpen={setMainDialogOpen}
       />
     </>
   );

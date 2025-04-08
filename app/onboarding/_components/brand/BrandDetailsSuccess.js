@@ -1,14 +1,17 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { geniApi } from "@/app/services/service";
+import { store, useAppDispatch } from "@/app/store";
 
 function BrandDetailsSuccess({ router }) {
+  const dispatch = useAppDispatch();
   const handleLogout = () => {
     Cookies.remove("auth");
     Cookies.remove("userType");
-    Cookies.remove("user-info");
-    geniApi.util.invalidateTags(["UserInfo"]);
+    dispatch(geniApi.util.invalidateTags(["UserInfo"]));
     router.replace("/login");
   };
   return (

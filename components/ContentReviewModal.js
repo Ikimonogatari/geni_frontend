@@ -33,9 +33,9 @@ function ContentReviewModal({ p }) {
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         type="submit"
-        className="bg-[#4D55F5] whitespace-nowrap border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
+        className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
       >
-        Сэтгэгдэл харах
+        <Image src={"/hamburger-menu-icon.png"} alt="" width={24} height={24} />
       </DialogTrigger>
       <DialogContent className="max-w-lg w-full flex flex-col rounded-3xl">
         <span className="text-3xl font-bold">Брэндийн сэтгэгдэл</span>
