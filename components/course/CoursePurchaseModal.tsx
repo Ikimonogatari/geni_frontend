@@ -185,20 +185,48 @@ function CoursePurchaseModal({
                 Хүлээн зөвшөөрч байна
               </span>
             </div>
-          ) : currentStep > 3 ||
-            (currentStep > 2 && !userInfo?.IsCheckedTerm) ? (
+          ) : (
+            currentStep > 3 ||
+            (currentStep > 2 && !userInfo?.IsCheckedTerm && (
+              <button
+                onClick={previousStep}
+                className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
+              >
+                <Image
+                  src={"/arrow-forward-icon.png"}
+                  width={10}
+                  height={10}
+                  alt="arrow"
+                  className="w-[14px] h-[14px] rotate-180"
+                />
+                Буцах
+              </button>
+            ))
+          )}
+          {currentStep < 3 ? (
             <button
-              onClick={previousStep}
-              className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
+              onClick={nextStep}
+              disabled={
+                (currentStep === 1 && selectedOption === null) ||
+                (currentStep === 2 && !isAgreed)
+              }
+              className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 
+               ${
+                 (currentStep === 1 && selectedOption === null) ||
+                 (currentStep === 2 && !isAgreed)
+                   ? "opacity-70 cursor-not-allowed"
+                   : "opacity-100"
+               } 
+                bg-geni-green border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
             >
+              Үргэлжлүүлэх
               <Image
-                src={"/arrow-forward-icon.png"}
+                src={"/arrow-right-icon.png"}
                 width={10}
                 height={10}
                 alt="arrow"
-                className="w-[14px] h-[14px] rotate-180"
+                className="w-[10px] h-[10px]"
               />
-              Буцах
             </button>
           ) : (
             <CoursePaymentModal

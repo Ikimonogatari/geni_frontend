@@ -278,7 +278,6 @@ function HomeworkUploadModal({ parsedUserInfo, courseId }) {
       </Dialog>
       <UploadSuccessModal
         isContentSubmitSuccess={isHomeworkUploadSuccess}
-        parsedUserInfo={parsedUserInfo}
         setIsContentSubmitSuccess={setIsHomeworkUploadSuccess}
       />
     </>

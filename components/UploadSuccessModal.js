@@ -4,11 +4,13 @@ import Image from "next/image";
 
 function UploadSuccessModal({
   isContentSubmitSuccess,
-  parsedUserInfo,
   setIsContentSubmitSuccess,
 }) {
   return (
-    <Dialog open={isContentSubmitSuccess}>
+    <Dialog
+      open={isContentSubmitSuccess}
+      onOpenChange={setIsContentSubmitSuccess}
+    >
       <DialogContent className="w-full max-w-lg flex flex-col items-center gap-2 rounded-3xl">
         <span className="text-[#4FB755] uppercase text-4xl sm:text-5xl text-center font-bold">
           контент илгээгдлээ
