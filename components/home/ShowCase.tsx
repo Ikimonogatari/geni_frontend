@@ -7,13 +7,92 @@ import { ArrowRight } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { useRouter } from "next/navigation";
 import Autoplay from "embla-carousel-autoplay";
+import { AspectRatio } from "../ui/aspect-ratio";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Image from "next/image";
 
-const showcaseVideos = [
-  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/1.mp4",
-  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/2.mp4",
-  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/3.mp4",
-  "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/4.mp4",
+const showcases = [
+  {
+    videoSrc:
+      "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/1.mp4",
+    brandImgSrc: "/landing/common/showcase/brand-1.png",
+    creatorImgSrc: "/landing/common/showcase/creator-1.png",
+  },
+  {
+    videoSrc:
+      "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/2.mp4",
+    brandImgSrc: "/landing/common/showcase/brand-2.png",
+    creatorImgSrc: "/landing/common/showcase/creator-2.png",
+  },
+  {
+    videoSrc:
+      "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/3.mp4",
+    brandImgSrc: "/landing/common/showcase/brand-3.png",
+    creatorImgSrc: "/landing/common/showcase/creator-3.png",
+  },
+  {
+    videoSrc:
+      "https://s3.ap-southeast-1.amazonaws.com/public.storage.geni.mn/public/4.mp4",
+    brandImgSrc: "/landing/common/showcase/brand-4.png",
+    creatorImgSrc: "/landing/common/showcase/creator-4.png",
+  },
 ];
+
+interface ShowcaseVideoProps
+  extends React.VideoHTMLAttributes<HTMLVideoElement> {
+  videoSrc: string;
+  brandImgSrc: string;
+  creatorImgSrc: string;
+}
+
+const ShowcaseVideo = ({
+  videoSrc,
+  brandImgSrc,
+  creatorImgSrc,
+  ...props
+}: ShowcaseVideoProps) => {
+  return (
+    <div className="relative">
+      <video
+        className="border-[1px] border-border-gray/60 object-cover rounded-[30px]"
+        autoPlay
+        loop
+        muted
+        {...props}
+      >
+        <source src={videoSrc} type="video/mp4" />
+      </video>
+      <div className="absolute left-3 bottom-3 rounded-full bg-background flex -space-x-2 p-2">
+        <Avatar className="size-[3.25rem]">
+          <AvatarImage asChild src={brandImgSrc}>
+            <Image
+              src={brandImgSrc}
+              width={0}
+              height={0}
+              alt="b"
+              sizes="100vw"
+              className="w-full h-auto"
+            />
+          </AvatarImage>
+          <AvatarFallback />
+        </Avatar>
+        <Avatar className="size-[3.25rem]">
+          <AvatarImage asChild src={creatorImgSrc}>
+            <Image
+              src={creatorImgSrc}
+              width={0}
+              height={0}
+              alt="b"
+              sizes="100vw"
+              className="w-full h-auto"
+            />
+          </AvatarImage>
+          <AvatarFallback />
+        </Avatar>
+      </div>
+    </div>
+  );
+};
 
 function ShowCase() {
   const router = useRouter();
@@ -60,19 +139,14 @@ function ShowCase() {
             className="-mx-5 mt-4"
           >
             <CarouselContent>
-              {showcaseVideos.map((videoSrc) => (
+              {showcases.map((showcase) => (
                 <CarouselItem
-                  key={videoSrc}
-                  className="py-4 pr-0 pl-10 basis-4/5"
+                  key={showcase.videoSrc}
+                  className="py-4 pr-0 pl-10 max-w-[290px] h-full basis-4/5"
                 >
-                  <video
-                    className="border-[1px] border-border-gray/60 w-auto h-full object-cover rounded-[30px]"
-                    autoPlay
-                    loop
-                    muted
-                  >
-                    <source src={videoSrc} type="video/mp4" />
-                  </video>
+                  <AspectRatio ratio={9 / 16}>
+                    <ShowcaseVideo {...showcase} />
+                  </AspectRatio>
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -119,19 +193,14 @@ function ShowCase() {
           plugins={[Autoplay({ stopOnMouseEnter: true, delay: 3000 })]}
         >
           <CarouselContent className="h-full">
-            {showcaseVideos.map((videoSrc) => (
+            {showcases.map((showcase) => (
               <CarouselItem
-                key={videoSrc}
-                className="py-1 basis-[40%] min-w-[250px] max-h-[500px]"
+                key={showcase.videoSrc}
+                className="py-1 basis-[40%] max-w-[290px] h-full"
               >
-                <video
-                  className="border-[1px] border-black/15 aspect-[9/16] h-full rounded-2xl object-cover w-full"
-                  autoPlay
-                  loop
-                  muted
-                >
-                  <source src={videoSrc} type="video/mp4" />
-                </video>
+                <AspectRatio ratio={9 / 16}>
+                  <ShowcaseVideo {...showcase} />
+                </AspectRatio>
               </CarouselItem>
             ))}
           </CarouselContent>

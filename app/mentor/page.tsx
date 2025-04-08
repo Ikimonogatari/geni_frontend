@@ -1,5 +1,10 @@
 import { ElevatedButton } from "@/components/common/ElevatedButton";
 import { Badge } from "@/components/ui/badge";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 import ContainerLayout from "@/components/ui/container-layout";
 import { ArrowRight, Facebook, Instagram } from "lucide-react";
 import Image from "next/image";
@@ -44,38 +49,60 @@ export default function Page() {
         <Badge className="bg-[#F75423] hover:bg-[#F75423] text-2xl lg:text-3xl px-4 lg:px-7 py-1 lg:py-2 -rotate-[5.38deg] mt-3 mx-auto">
           Тун удахгүй ...
         </Badge>
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-7 mt-10 lg:mt-6">
+
+        <Carousel
+          opts={{
+            loop: true,
+            align: "start",
+          }}
+          autoplay={true}
+          autoplayInterval={3000}
+          className="w-svw -ml-8 pl-8 lg:ml-0 lg:pl-0 md:w-full mt-10 lg:mt-6"
+        >
+          {/* <div className="grid grid-cols-1 sm:grid-cols-12 gap-7 mt-10 lg:mt-6">
           {mentors.map(({ name, description, igLink, fbLink }, index) => (
-            <div className="col-span-full sm:col-span-6 lg:col-span-3">
-              <div className="bg-primary-bg border border-border-gray/60 rounded-[30px]">
-                <div className="flex flex-col">
-                  <div className="flex flex-[3]">
-                    <Image
-                      src={`/landing/mentor/mentors/${index + 1}.png`}
-                      alt="wavex"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      className="w-full h-full md:w-full md:h-[310px] object-cover rounded-t-[30px]"
-                    />
-                  </div>
-                  <div className="flex-[1] flex flex-col gap-3.5 items-center my-4">
-                    <h2 className="text-2xl font-bold">{name}</h2>
-                    <div className="flex gap-3">
-                      <Link href={igLink}>
-                        <Instagram className="text-[#6F6F6F]" />
-                      </Link>
-                      <Link href={fbLink}>
-                        <Facebook className="text-[#6F6F6F]" />
-                      </Link>
+            
+          ))}
+        </div> */}
+
+          <CarouselContent>
+            {mentors.map(({ name, description, igLink, fbLink }, index) => (
+              <CarouselItem
+                key={name}
+                className="basis-4/5 w-full max-w-xs h-auto"
+              >
+                <div className="col-span-full sm:col-span-6 lg:col-span-3">
+                  <div className="bg-primary-bg border border-border-gray/60 rounded-[30px]">
+                    <div className="flex flex-col">
+                      <div className="flex flex-[3]">
+                        <Image
+                          src={`/landing/mentor/mentors/${index + 1}.png`}
+                          alt="wavex"
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="w-full h-full md:w-full md:h-[310px] object-cover rounded-t-[30px]"
+                        />
+                      </div>
+                      <div className="flex-[1] flex flex-col gap-3.5 items-center my-4">
+                        <h2 className="text-2xl font-bold">{name}</h2>
+                        <div className="flex gap-3">
+                          <Link href={igLink}>
+                            <Instagram className="text-[#6F6F6F]" />
+                          </Link>
+                          <Link href={fbLink}>
+                            <Facebook className="text-[#6F6F6F]" />
+                          </Link>
+                        </div>
+                        <p className="text-lg text-[#6F6F6F]">{description}</p>
+                      </div>
                     </div>
-                    <p className="text-lg text-[#6F6F6F]">{description}</p>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </ContainerLayout>
   );

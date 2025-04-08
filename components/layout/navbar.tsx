@@ -40,13 +40,22 @@ export function Navbar() {
     },
   ];
 
+  const addNavItems = [
+    {
+      name: "About",
+      href: "/about",
+    },
+    { name: "Terms & Condition", href: "/tos" },
+    { name: "Contact", href: "/contact" },
+  ];
+
   return (
     <header className="sticky top-0 z-50 w-full rounded-b-[30px] bg-primary-bg">
       <div className="container flex py-10 px-16 items-center justify-between">
-        <div className="flex items-start">
+        <div className="flex items-start gap-2">
           <Link href="/">
             <Image
-              src="/geni-logo.png"
+              src="/geni-logo.svg"
               alt="geni-logo"
               height={26}
               width={96}
@@ -100,12 +109,48 @@ export function Navbar() {
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+          <SheetContent side="top" className="w-full rounded-b-[30px]">
             <SheetHeader>
-              <SheetTitle>Navigation Menu</SheetTitle>
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             </SheetHeader>
             <nav className="mt-4 flex flex-col gap-4">
+              <Link
+                href="/"
+                onClick={() => setIsOpen(false)}
+                className="text-lg font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                Home
+              </Link>
+              <div className="ml-2 size-1 rounded-full bg-primary" />
               {navItems.map((item) => (
+                <div key={item.name} className="flex items-center gap-6">
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "text-lg font-medium text-muted-foreground transition-colors hover:text-primary flex rounded-full py-1.5",
+                      pathname.includes(item.href) &&
+                        `${item.activeClass} text-white hover:text-white px-6`
+                    )}
+                  >
+                    {item.name}
+                    {pathname.includes(item.href)
+                      ? null
+                      : item?.info && (
+                          <span
+                            className={cn(
+                              "text-nowrap transform -translate-y-4 translate-x-2 translate- rotate-[20deg] bg-red-500 text-white text-[10px] leading-[2.5] px-3 rounded-full",
+                              `bg-[${item.infoColor}]`
+                            )}
+                          >
+                            {item?.info}
+                          </span>
+                        )}
+                  </Link>
+                </div>
+              ))}
+              <div className="ml-2 size-1 rounded-full bg-primary" />
+              {addNavItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -115,6 +160,7 @@ export function Navbar() {
                   {item.name}
                 </Link>
               ))}
+
               <div className="mt-4">
                 <UserButton />
               </div>
