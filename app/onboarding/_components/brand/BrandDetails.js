@@ -128,6 +128,16 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
     },
   });
 
+  const handleBrandTypesChange = () => {
+    const brandTypeIds = brandTypes.map(
+      (brandType) => brandType.TypeId || brandType.BrandTypeId
+    );
+
+    changeBrandType({
+      BrandTypeIds: brandTypeIds,
+    });
+  };
+
   const handleAddBrandTypes = (value) => {
     setBrandTypes((prev) => {
       if (!prev.some((type) => type.TypeName === value.TypeName)) {
@@ -147,14 +157,6 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
       );
       return updatedBrandTypes;
     });
-
-    // Add the removed type back to available types
-    setAvailableBrandTypes((prev) => {
-      if (!prev.some((type) => type.TypeName === value.TypeName)) {
-        return [...prev, value];
-      }
-      return prev;
-    });
   };
 
   // Custom handler for next step to validate and show errors
@@ -169,7 +171,6 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
       Bio: true,
     });
 
-    // Check if there are validation errors
     if (formik.errors.Name || formik.errors.Bio) {
       // Focus the first field with an error and scroll to it
       const firstErrorField = formik.errors.Name ? "Name" : "Bio";
@@ -181,27 +182,7 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
       return;
     }
 
-    // If validation passed, update brand types before proceeding
-    if (brandTypes.length > 0) {
-      try {
-        const brandTypeIds = brandTypes.map(
-          (brandType) => brandType.TypeId || brandType.BrandTypeId
-        );
-
-        await changeBrandType({
-          BrandTypeIds: brandTypeIds,
-        }).unwrap();
-
-        // If brand types were updated successfully, proceed to next step
-        handleNextStep();
-      } catch (error) {
-        console.error("Error updating brand types:", error);
-        toast.error("Брэндийн төрлийг хадгалах үед алдаа гарлаа");
-      }
-    } else {
-      // If no brand types to update, just proceed to next step
-      handleNextStep();
-    }
+    handleNextStep();
   };
 
   return (
@@ -235,7 +216,7 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
             name="Name"
             type="text"
             className={`text-base sm:text-xl w-full ${
-              formik.errors.Name && formik.touched.Name ? "border-red-500" : ""
+              formik.errors.Name ? "border-red-500" : ""
             }`}
             wrapperClassName="w-full"
             labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -288,6 +269,22 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
                       alt=""
                     />
                   </div>
+                  {brandTypes.length > 0 ? (
+                    <div
+                      onClick={handleBrandTypesChange}
+                      className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
+                    >
+                      <Image
+                        src={"/check-icon.png"}
+                        width={16}
+                        height={16}
+                        className="aspect-square w-3 h-3 sm:w-4 sm:h-4"
+                        alt=""
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
 
                 <div
@@ -300,7 +297,7 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
                             brandType.TypeName === productType.TypeName
                         )
                     ).length > 0
-                      ? "top-full opacity-100 visible"
+                      ? `top-full opacity-100 visible`
                       : "top-[110%] invisible opacity-0"
                   } absolute left-0 z-40 mt-2 max-w-[300px] flex flex-row gap-2 items-center flex-wrap rounded-lg border-[.5px] border-light bg-white p-2 shadow-card transition-all text-[#273266]`}
                 >
@@ -330,7 +327,7 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
             id="Bio"
             name="Bio"
             className={`text-base sm:text-xl w-full ${
-              formik.errors.Bio && formik.touched.Bio ? "border-red-500" : ""
+              formik.errors.Bio ? "border-red-500" : ""
             }`}
             layoutClassName="bg-white p-4 sm:p-5"
             wrapperClassName="w-full"
