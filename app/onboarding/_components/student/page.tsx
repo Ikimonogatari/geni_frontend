@@ -2,7 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { useEditCreatorProfileMutation, useGetUserInfoQuery } from "@/app/services/service";
+import {
+  useEditCreatorProfileMutation,
+  useGetUserInfoQuery,
+} from "@/app/services/service";
 import toast from "react-hot-toast";
 import StudentDetails from "./StudentDetails";
 import StudentDetailsSubmit from "./StudentDetailsSubmit";
@@ -11,7 +14,8 @@ import Loader from "@/components/common/Loader";
 
 function StudentOnboarding() {
   const router = useRouter();
-  const { data: userInfoData, isLoading: userInfoLoading } = useGetUserInfoQuery({});
+  const { data: userInfoData, isLoading: userInfoLoading } =
+    useGetUserInfoQuery({});
   const [step, setStep] = useState(1);
 
   const handleNextStep = async () => {
@@ -21,16 +25,41 @@ function StudentOnboarding() {
       await formik.validateField("FirstName");
       await formik.validateField("Nickname");
       await formik.validateField("Bio");
-      if (
-        !formik.errors.LastName &&
-        !formik.errors.FirstName &&
-        !formik.errors.Nickname &&
-        !formik.errors.Bio
-      ) {
+
+      // Check if there are any errors
+      const hasErrors = !!(
+        formik.errors.LastName ||
+        formik.errors.FirstName ||
+        formik.errors.Nickname ||
+        formik.errors.Bio
+      );
+
+      // Mark fields as touched to show validation errors
+      formik.setTouched({
+        LastName: true,
+        FirstName: true,
+        Nickname: true,
+        Bio: true,
+      });
+
+      if (!hasErrors) {
         setStep(2);
       }
     } else if (step === 2) {
       await formik.validateForm();
+      // Mark all fields as touched to show validation errors
+      formik.setTouched({
+        FirstName: true,
+        LastName: true,
+        Nickname: true,
+        Bio: true,
+        PhoneNumber: true,
+        Location: true,
+        RegNo: true,
+        EbarimtConsumerNo: true,
+        Birthday: true,
+        Gender: true,
+      });
     }
   };
 
@@ -57,7 +86,28 @@ function StudentOnboarding() {
     validationSchema: addStudentDetailsSchema,
     onSubmit: async (values) => {
       console.log(values);
-      await editCreatorProfile(values).unwrap();
+      try {
+        await editCreatorProfile(values).unwrap();
+      } catch (err) {
+        // Handle specific API validation errors if there are any
+        if (typeof err === "object" && err !== null) {
+          // @ts-ignore - RTK query error types can be complex
+          const errorData = err.data;
+          if (errorData && errorData.fieldErrors) {
+            // Set field-specific errors
+            Object.keys(errorData.fieldErrors).forEach((field) => {
+              if (field in formik.values) {
+                formik.setFieldError(field, errorData.fieldErrors[field]);
+              }
+            });
+          } else if (errorData && errorData.error) {
+            // Set general form error
+            toast.error(errorData.error);
+          }
+        } else {
+          toast.error("Форм илгээх үед алдаа гарлаа");
+        }
+      }
     },
   });
 
@@ -89,8 +139,16 @@ function StudentOnboarding() {
       router.push("/profile");
     }
     if (error) {
-      // @ts-ignore
-      toast.error(error?.data?.error);
+      // Handle error safely - check if it's an object with data property
+      if (typeof error === "object" && error !== null) {
+        // @ts-ignore - RTK query error types can be complex
+        const errorData = error.data;
+        if (errorData && errorData.error && !errorData.fieldErrors) {
+          toast.error(errorData.error);
+        }
+      } else {
+        toast.error("Алдаа гарлаа");
+      }
     }
   }, [isSuccess, error, router]);
 
@@ -124,7 +182,7 @@ function StudentOnboarding() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mt-36 sm:mt-48 mb-12 px-5">
+      <div className="py-14 px-5">
         <form
           onSubmit={formik.handleSubmit}
           className="max-w-5xl min-h-screen mx-auto px-7 sm:px-14 py-5 sm:py-11 container bg-[#F5F4F0] rounded-3xl"

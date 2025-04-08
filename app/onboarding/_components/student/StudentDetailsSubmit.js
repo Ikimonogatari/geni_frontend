@@ -112,15 +112,32 @@ function StudentDetailsSubmit({ formik, handlePreviousStep, parsedUserInfo }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if there are any formik errors
-    if (Object.keys(formik.errors).length > 0) {
-      console.log(formik.errors);
-      toast.error("Бүх талбарыг зөв бөглөнө үү");
-      return;
-    }
+    // Make sure all fields are touched to show validation errors
+    formik.setTouched({
+      FirstName: true,
+      LastName: true,
+      Nickname: true,
+      Bio: true,
+      PhoneNumber: true,
+      Location: true,
+      RegNo: true,
+      EbarimtConsumerNo: true,
+      Birthday: true,
+      Gender: true,
+    });
 
-    // If no errors, proceed with form submission
-    formik.handleSubmit(e);
+    // If validation passes, submit the form
+    if (Object.keys(formik.errors).length === 0) {
+      formik.handleSubmit(e);
+    } else {
+      // Focus the first field with an error
+      const firstErrorField = Object.keys(formik.errors)[0];
+      const element = document.getElementById(firstErrorField);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => element.focus(), 500);
+      }
+    }
   };
 
   return (
