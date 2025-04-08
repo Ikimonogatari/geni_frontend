@@ -15,7 +15,15 @@ import Loader from "@/components/common/Loader";
 function StudentOnboarding() {
   const router = useRouter();
   const { data: userInfoData, isLoading: userInfoLoading } =
-    useGetUserInfoQuery({});
+    useGetUserInfoQuery(
+      {},
+      {
+        // Only refetch on mount, don't poll or refetch automatically
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: false,
+        refetchOnReconnect: false,
+      }
+    );
   const [step, setStep] = useState(1);
 
   const handleNextStep = async () => {
@@ -135,7 +143,7 @@ function StudentOnboarding() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Амжилттай");
+      toast.success("Хэрэглэгчийн мэдээлэл амжилттай хадгалагдлаа");
       router.push("/profile");
     }
     if (error) {
