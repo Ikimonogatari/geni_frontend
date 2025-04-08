@@ -65,12 +65,12 @@ function FeaturedProductList() {
   return (
     <div className="w-full pt-20">
       <div className="flex justify-between items-center">
-        <span className="text-[#6F6F6F] text-base sm:text-2xl">
+        <span className="text-[#6F6F6F] text-base sm:text-2xl mb-4 lg:mb-10">
           Эрэлттэй бүтээгдэхүүнүүд
         </span>
       </div>
       {listData && (
-        <div className="relative flex flex-row gap-3 justify-between items-center mt-4 lg:mt-10 w-full">
+        <div className="relative flex flex-row gap-3 justify-between items-center w-full">
           {!isBeginning && (
             <button onClick={goPrev} className="hidden lg:block">
               <Image
@@ -78,7 +78,7 @@ function FeaturedProductList() {
                 width={42}
                 height={42}
                 alt="swipe-button"
-                className="min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+                className="min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px] select-none"
               />
             </button>
           )}
@@ -99,14 +99,14 @@ function FeaturedProductList() {
             {listData?.Data.map((product) => {
               return (
                 <SwiperSlide key={product?.ProductId}>
-                  <div className="max-w-xs rounded-[30px] bg-primary-bg border border-border-gray/60 overflow-hidden shadow-sm">
+                  <div className="max-w-full md:max-w-xs rounded-[30px] bg-primary-bg border border-border-gray/60 overflow-hidden shadow-sm">
                     <div className="relative  p-6">
                       {/* <div className="absolute top-4 right-4">
                         <span className="bg-orange-400 text-white text-xs px-3 py-1 rounded-full">
                           {badgeText}
                         </span>
                       </div> */}
-                      <div className="flex justify-center items-center">
+                      <div className="flex justify-center items-center select-none">
                         <Image
                           src={product?.ProductPics?.[0]?.Url}
                           alt={product?.ProductName}
@@ -148,7 +148,7 @@ function FeaturedProductList() {
                 width={42}
                 height={42}
                 alt="swipe-button"
-                className="rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px]"
+                className="rotate-180 min-w-[31px] min-h-[31px] lg:min-w-[42px] lg:min-h-[42px] select-none"
               />
             </button>
           )}

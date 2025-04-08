@@ -145,7 +145,7 @@ export default function CompetitionBoard() {
         <h6 className="my-7 lg:my-4 text-base lg:text-2xl font-medium text-[#6F6F6F]">
           Энэ сарын шилдэг бүтээгчид
         </h6>
-        <div className="space-y-3">
+        <div className="space-y-5 lg:space-y-3">
           {compInfoData?.TopParticipants?.map((ptc, index) => (
             <div key={index} className="lg:relative flex items-center gap-3">
               <div className="size-14 lg:size-20 relative lg:static">
@@ -167,16 +167,19 @@ export default function CompetitionBoard() {
                 />
                 <p
                   className={cn(
-                    "absolute top-[25px] left-[25px] lg:top-[34px] lg:left-[34px] transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black leading-none tracking-tighter",
+                    "absolute top-[25px] left-[25px] lg:top-[36px] lg:left-[36px] transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black leading-none tracking-tighter",
                     ![0, 1, 2].includes(index) &&
-                      "top-[26px] left-[27px] lg:top-9 lg:left-9 font-normal"
+                      "top-[26px] left-[27px] lg:top-[38px] lg:left-[38px] font-normal"
                   )}
                 >
                   {index + 1}
                 </p>
                 {/* transform -translate-x-1/2 -translate-y-1/2 text-3xl font-black leading-none tracking-tighter */}
               </div>
-              <div className="absolute left-[5rem] lg:static w-full overflow-hidden flex items-center justify-between rounded-[30px] p-2 lg:p-4 bg-white">
+              <div
+                className="absolute left-[5rem] -right-4 overflow-x-scroll flex items-center justify-between 
+              space-x-10 lg:space-x-0 rounded-r-none md:rounded-r-[30px] rounded-[30px] p-2 pr-5 lg:p-4 bg-white"
+              >
                 <div className="flex-1 flex gap-2 lg:gap-5">
                   <Avatar className="size-12">
                     <AvatarImage
@@ -185,7 +188,7 @@ export default function CompetitionBoard() {
                     />
                     <AvatarFallback>{ptc?.Nickname}</AvatarFallback>
                   </Avatar>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 w-56 md:w-auto whitespace-nowrap">
                     <p className="text-2xl font-bold">{ptc?.Nickname}</p>
                     <Image
                       src={getImageSrc(ptc?.LvlName)}
@@ -193,20 +196,23 @@ export default function CompetitionBoard() {
                       width={0}
                       height={0}
                       sizes="100vw"
-                      className="w-full max-w-14 h-auto"
+                      className={cn(
+                        "w-14 h-auto",
+                        ptc?.LvlName === "Certified creator" && "w-6"
+                      )}
                     />
                     {/* <Badge className="border-black text-black font-black bg-[#FFC12F] hover:bg-[#FFC12F] py-1 px-2.5 text-xl !leading-[1rem] tracking-wide">
                       PRO
                     </Badge> */}
                   </div>
                 </div>
-                <div className="hidden lg:flex flex-1 justify-center">
+                <div className="flex flex-1 justify-center w-56 md:w-auto whitespace-nowrap">
                   <p className="text-lg">Нийт хамтрал: {ptc?.ContentCount}</p>
                 </div>
-                <div className="flex-1 hidden lg:flex justify-center">
+                <div className="flex-1 flex justify-center w-56 md:w-auto whitespace-nowrap">
                   <p className="text-lg">Цуглуулсан оноо: {ptc?.Xp} XP</p>
                 </div>
-                <div className="flex-1 hidden lg:flex gap-2 justify-center">
+                <div className="flex-1 flex gap-2 justify-center w-56 md:w-auto whitespace-nowrap">
                   <Image
                     src="/star.png"
                     alt="star"

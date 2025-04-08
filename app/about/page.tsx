@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import Hero from "@/components/landing/hero";
 import Statistics from "@/components/home/Statistics";
+import Link from "next/link";
 
 export default function AboutPage() {
   return (
@@ -145,13 +146,20 @@ export default function AboutPage() {
             <div className="flex-[2] md:hidden bg-primary-bg p-2 rounded-b-[30px]"></div>
             <div className="flex-[8] md:flex-[9] bg-primary-bg">
               <div className="bg-white h-full rounded-tl-[30px] pt-3 pl-3 md:pt-7 md:pl-7">
-                <ElevatedButton className="px-10 md:px-14 w-full bg-[#2D262D] shadow-[0.25rem_0.25rem_#000]">
-                  <div className="flex gap-2 items-center justify-center">
+                <ElevatedButton
+                  className="flex gap-2 items-center justify-center px-10 md:px-14 w-full bg-[#2D262D] shadow-[0.25rem_0.25rem_#000]"
+                  asChild
+                >
+                  <Link
+                    href="https://forms.gle/CbJHNqfzK8HtYGtL9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <span className="text-base md:text-2xl font-bold">
                       Geni Багт нэгдэх
                     </span>
                     <ArrowRight size={24} />
-                  </div>
+                  </Link>
                 </ElevatedButton>
               </div>
             </div>
