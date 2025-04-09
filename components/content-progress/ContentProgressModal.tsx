@@ -46,6 +46,7 @@ import ContentReturnModalContent from "./partials/ContentReturnModalContent";
 import ContentUploadModalContent from "./partials/ContentUploadModalContent";
 import InfoBox from "./partials/InfoBox";
 import _ from "lodash";
+import Cookies from "js-cookie";
 
 type ContentProgressModalContentProps = {
   content: Content;
@@ -61,7 +62,8 @@ const ContentProgressModalContent: React.FC<
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
   const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { data: parsedUserInfo } = useGetUserInfoQuery({});
+  const userType = Cookies.get("userType");
+  const parsedUserInfo = Cookies.get("user-info");
   const [status, setStatus] = useState<STATUS_LIST>(STATUS_LIST.RequestSent);
   // console.log("getCurrentStepColor", getCurrentStepColor(status));
   // const [contentProcessData, setContentProcessData] = useState<GetContentProcessResponse | []>([]);
@@ -318,7 +320,7 @@ const ContentProgressModalContent: React.FC<
     setDialogOpen(open);
 
     getContentProcess({
-      UserType: parsedUserInfo?.userType,
+      UserType: userType,
       ContentId: content?.ContentId,
       ContentStepId: content?.CurrentStepId,
     });
@@ -333,21 +335,21 @@ const ContentProgressModalContent: React.FC<
 
     if (
       content?.CurrentStepName?.String == STATUS_LIST.ContentReSent &&
-      parsedUserInfo?.userType == "Brand"
+      userType == "Brand"
     ) {
       getBrandReviewBrand(content?.ContentId);
     }
 
     if (
       content?.CurrentStepName?.String == STATUS_LIST.ContentApproved &&
-      parsedUserInfo?.userType == "Creator"
+      userType == "Creator"
     ) {
       getFinalContentXp(content?.ContentId);
     }
   };
 
   const handleClose = (currentDialogType: DialogType) => {
-    if (parsedUserInfo?.userType == "Brand") {
+    if (userType == "Brand") {
       if (currentDialogType == DialogType.CONTENT) {
         setDialogType(DialogType.PROGRESS);
       } else if (currentDialogType == DialogType.EDIT_REQUEST) {
@@ -355,7 +357,7 @@ const ContentProgressModalContent: React.FC<
       } else if (currentDialogType == DialogType.ACCEPT_REQUEST) {
         setDialogType(DialogType.CONTENT);
       }
-    } else if (parsedUserInfo?.userType == "Creator") {
+    } else if (userType == "Creator") {
       setDialogType(DialogType.PROGRESS);
     }
     formik.resetForm();
@@ -814,18 +816,18 @@ const ContentProgressModalContent: React.FC<
                     {contentProcessData?.[contentProcessData.length - 1]
                       ?.ContentStepId == content?.CurrentStepId && (
                       <>
-                        {parsedUserInfo?.userType == "Creator" && creatorModalContents()}
-                        {parsedUserInfo?.userType == "Brand" && brandModalContents()}
-                        {parsedUserInfo?.userType == "Creator" && creatorModalMessages()}
-                        {parsedUserInfo?.userType == "Brand" && brandModalMessages()}
+                        {userType == "Creator" && creatorModalContents()}
+                        {userType == "Brand" && brandModalContents()}
+                        {userType == "Creator" && creatorModalMessages()}
+                        {userType == "Brand" && brandModalMessages()}
                       </>
                     )}
                   </div>
                   {contentProcessData?.[contentProcessData.length - 1]
                     ?.ContentStepId == content?.CurrentStepId && (
                     <>
-                      {parsedUserInfo?.userType == "Creator" && creatorModalFooterActions()}
-                      {parsedUserInfo?.userType == "Brand" && brandModalFooterActions()}
+                      {userType == "Creator" && creatorModalFooterActions()}
+                      {userType == "Brand" && brandModalFooterActions()}
                     </>
                   )}
                 </form>

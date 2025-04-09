@@ -212,6 +212,7 @@ export type GetFinalContentXpResponse = {
     FeedbackId: string;
     ContentId: string;
     Feedback: string;
+    IsChecked: boolean;
     IsResolved: boolean;
     CreatedBy: number;
     CreatedAt: string;

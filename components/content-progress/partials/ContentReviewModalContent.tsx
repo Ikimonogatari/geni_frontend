@@ -103,7 +103,7 @@ const ContentReviewModalContent: React.FC<ContentReviewModalContentProps> = ({
                     name="BrandFeedBack"
                     id={`BrandFeedBack-${item.FeedbackId}`}
                     className="peer hidden"
-                    checked={true}
+                    checked={item.IsChecked}
                     disabled={true}
                   />
                   <label
@@ -111,7 +111,9 @@ const ContentReviewModalContent: React.FC<ContentReviewModalContentProps> = ({
                     className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center transition-all peer-checked:border-green-300"
                   >
                     <span
-                      className={`text-sm sm:text-base text-green-300 text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                      className={`text-sm sm:text-base ${
+                        item.IsChecked ? "text-green-300" : "text-orange-300"
+                      } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                     >
                       ✓
                     </span>

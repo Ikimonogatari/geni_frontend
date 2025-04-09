@@ -48,7 +48,9 @@ export default function UserButton() {
           <AvatarImage src={currentUser?.ProfileLink} />
           <AvatarFallback>{currentUser?.Nickname?.[0]}</AvatarFallback>
         </Avatar>
-        {currentUser?.Nickname || currentUser?.Email || "User"}
+        {(currentUser?.UserType == "Creator"
+          ? currentUser?.Nickname || currentUser?.Email
+          : currentUser?.Name || currentUser?.BusinessEmail) || "User"}
       </Link>
     </Button>
   );
