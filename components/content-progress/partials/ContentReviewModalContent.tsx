@@ -91,7 +91,9 @@ const ContentReviewModalContent: React.FC<ContentReviewModalContentProps> = ({
         <div className="flex flex-col gap-4">
           <span className="text-[#6F6F6F]">Контент пост хийх хүсэлт</span>
           <span className="border-[1px] border-[#E6E6E6] p-3 rounded-2xl min-h-[67px] overflow-y-auto flex flex-col gap-2">
-            {finalContentXpData?.FeedBack?.map((item, index) => (
+            {finalContentXpData?.FeedBack?.filter(
+              (item) => item.IsChecked
+            )?.map((item, index) => (
               <label
                 key={index}
                 className="flex items-center justify-between p-2 pl-4 border rounded-xl"
