@@ -59,7 +59,6 @@ function CreatorOnboarding() {
       }
     },
   });
-  console.log(formik.errors, "ERRORS");
   const renderStepContent = () => {
     switch (step) {
       case 0:

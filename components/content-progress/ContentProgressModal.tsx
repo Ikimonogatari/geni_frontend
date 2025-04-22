@@ -65,7 +65,6 @@ const ContentProgressModalContent: React.FC<
   const userType = Cookies.get("userType");
   const parsedUserInfo = Cookies.get("user-info");
   const [status, setStatus] = useState<STATUS_LIST>(STATUS_LIST.RequestSent);
-  // console.log("getCurrentStepColor", getCurrentStepColor(status));
   // const [contentProcessData, setContentProcessData] = useState<GetContentProcessResponse | []>([]);
   const [
     getContentProcess,

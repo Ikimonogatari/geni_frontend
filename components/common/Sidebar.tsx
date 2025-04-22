@@ -26,7 +26,6 @@ export function Sidebar({
   ...props
 }: SidebarProps) {
   const pathname = usePathname();
-  console.log(className);
   const linkStyles = (isActive: boolean) =>
     cn(
       "flex items-center gap-2 px-4 py-2 text-sm sm:text-lg font-medium transition-colors rounded-lg",

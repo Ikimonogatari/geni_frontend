@@ -53,7 +53,6 @@ const Payment = ({ content, refetch, setDialogOpen }: PaymentProps) => {
   }, [qpayDeliveryPaymentData, contentProcessOverduePaymentData]);
 
   const paymentCheck = () => {
-    console.log("data", data?.CallBackUrl);
     if (data?.CallBackUrl) {
       axios.get(data.CallBackUrl).then((res) => {
         if (res.status === 200) {

@@ -93,7 +93,6 @@ function StudentOnboarding() {
     },
     validationSchema: addStudentDetailsSchema,
     onSubmit: async (values) => {
-      console.log(values);
       try {
         await editCreatorProfile(values).unwrap();
       } catch (err) {

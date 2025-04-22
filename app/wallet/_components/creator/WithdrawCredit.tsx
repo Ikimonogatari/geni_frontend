@@ -26,7 +26,6 @@ function WithdrawCredit({
   bankList,
   connectedAccount,
 }: WithdrawCreditProps) {
-  console.log(walletInfo?.CurrBal, "WALLET INFO");
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [creatorWithdraw, { isSuccess }] = useCreatorWithdrawMutation();
 

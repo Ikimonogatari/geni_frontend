@@ -8,7 +8,6 @@ function StudentCourses({ currentContents, parsedUserInfo }) {
   // Renamed prop but keeping compatibility with both old and new implementations
   const userInfo = parsedUserInfo;
 
-  console.log(currentContents);
   return (
     <div className="w-full overflow-x-auto">
       <div className="min-w-[850px] sm:min-w-[1200px] mt-7 pt-3 px-7 border-t-[1px] border-[#CDCDCD] flex flex-col gap-3">

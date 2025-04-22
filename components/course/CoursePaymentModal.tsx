@@ -34,7 +34,6 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
-  console.log(courseId, "COURSE ID");
   const finalCourseId = courseId || "1"; // Default to course ID 1 if undefined
 
   const [

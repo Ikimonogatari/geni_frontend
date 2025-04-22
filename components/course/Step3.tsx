@@ -9,11 +9,8 @@ function Step3({
   setSelectedPayment,
   formik,
   courseData = null,
-  calculateCouponData = null
+  calculateCouponData = null,
 }) {
-
-  console.log("Coupon data:", calculateCouponData || "No coupon data available");
-  console.log("Course data:", courseData || "No course data available");
   return (
     <div className="flex flex-col items-start gap-2 w-full">
       <span className="text-xl sm:text-2xl xl:text-3xl font-bold">
@@ -40,7 +37,13 @@ function Step3({
               </span>
               <FadeInAnimation visible={calculateCouponData ? true : false}>
                 <span className="text-geni-green">
-                  Купон хөнгөлөлт: <PriceFormatter price={(courseData?.coursePrice || 0) - (calculateCouponData?.Amount || 0)} />
+                  Купон хөнгөлөлт:{" "}
+                  <PriceFormatter
+                    price={
+                      (courseData?.coursePrice || 0) -
+                      (calculateCouponData?.Amount || 0)
+                    }
+                  />
                 </span>
               </FadeInAnimation>
             </div>
@@ -48,7 +51,11 @@ function Step3({
             <div className="flex flex-col">
               <span className="text-sm sm:text-base">Төлөх дүн: </span>
               <span className="text-xl sm:text-2xl">
-                <PriceFormatter price={calculateCouponData?.Amount || courseData?.coursePrice || 0} />
+                <PriceFormatter
+                  price={
+                    calculateCouponData?.Amount || courseData?.coursePrice || 0
+                  }
+                />
               </span>
             </div>
           </div>

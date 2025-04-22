@@ -91,7 +91,6 @@ function CreatorWallet() {
     checkAccountName();
   }, [connectedAccount]);
 
-  console.log(bankList && bankList, "BANK LIST");
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="">

@@ -121,12 +121,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           <body>${cleanedHtml}</body>
         </html>
       `);
-      console.log(`
-        <html>
-          <head><meta charset="UTF-8"></head>
-          <body>${cleanedHtml}</body>
-        </html>
-      `);
+
       iframe.contentDocument?.close();
 
       // Wait for iframe content to fully load
