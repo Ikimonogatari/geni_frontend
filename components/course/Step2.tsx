@@ -11,7 +11,7 @@ function Step2({ setIsAgreed }: { setIsAgreed?: any }) {
       </span>
 
       <div className="text-xs sm:text-sm md:text-base lg:text-lg font-thin rounded-3xl border border-[#CDCDCD] py-3 sm:py-6 px-5 sm:px-8 w-full overflow-y-auto max-h-[160px] sm:max-h-[330px]">
-        Ерөнхий зүйл:  <br />
+        Ерөнхий зүйл: <br />
         <ul className="list-decimal">
           <li>
             Geni Сурагч нь Geni Платформыг ашиглан Geni сурагчын хөтөлбөрийн
@@ -34,6 +34,7 @@ function Step2({ setIsAgreed }: { setIsAgreed?: any }) {
             Сурагч нь өөрийн хурдаар хичээлүүдээ үзэн хүссэн үедээ даалгавар
             контентоо илгээх боломжтой.
           </li>
+          <li>Хөтөлбөрийн төлбөрийг буцаан төлөх боломжгүй.</li>
           <li>
             Платформоор дамжуулан хөтөлбөрийн даалгаварыг илгээх бөгөөд уг
             даалгавар дээр Geni платформын зүгээс зөвлөгөө өгөх үүрэгтэй.

@@ -399,6 +399,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
       {getUserInfoData && (
         <GuideModal
           hasSeenGuide={getUserInfoData?.HasSeenGuide}
+          hasAcceptedTerms={getUserInfoData?.HasAcceptedTerms}
           slides={guideSlides}
           theme="brand"
         />

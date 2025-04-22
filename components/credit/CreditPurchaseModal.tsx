@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Step1 from "./Step1";
-import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
 import {
-  useBrandTermCheckMutation,
   useUseFreeContentMutation,
-  useGetUserInfoQuery
+  useGetUserInfoQuery,
 } from "@/app/services/service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -23,23 +21,14 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const [selectedPackageId, setSelectedPackageId] = useState(1);
-  
-  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery({});
-  
-  const [currentStep, setCurrentStep] = useState(1); // Default to first step
-  const [isAgreed, setIsAgreed] = useState(false); // Default to not agreed
+
+  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
+    {}
+  );
 
   // Update steps and selected option when userInfo is loaded
   useEffect(() => {
     if (userInfo) {
-      const initialStep = userInfo.IsUsedFreeContent
-        ? userInfo.IsCheckedTerm
-          ? 3
-          : 2
-        : 1;
-      setCurrentStep(initialStep);
-      setIsAgreed(userInfo.IsCheckedTerm || false);
-      
       // If user has already used free content, default to brandpackage option
       if (userInfo.IsUsedFreeContent) {
         setSelectedOption("brandpackage");
@@ -47,15 +36,8 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
     }
   }, [userInfo]);
 
-  const [
-    brandTermCheck,
-    {
-      data: brandTermCheckData,
-      error: brandTermCheckError,
-      isLoading: brandTermCheckLoading,
-      isSuccess: brandTermCheckSuccess,
-    },
-  ] = useBrandTermCheckMutation();
+  // Default to first step
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [
     useFreeContent,
@@ -78,37 +60,16 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
     }
   }, [useFreeContentSuccess, useFreeContentError, router]);
 
-  const handleCheckboxChange = (e) => {
-    const isChecked = e.target.checked;
-    setIsAgreed(isChecked);
-    if (isChecked) {
-      brandTermCheck({});
-    }
-  };
-
   const nextStep = () => {
     if (selectedOption === "freecontent") {
       useFreeContent({});
     } else {
-      setCurrentStep((prevStep) => {
-        if (userInfo?.IsCheckedTerm && prevStep === 1) {
-          return 3;
-        }
-        return Math.min(prevStep + 1, 4);
-      });
+      setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
     }
   };
 
   const previousStep = () => {
-    setCurrentStep((prevStep) => {
-      if (userInfo?.IsUsedFreeContent && prevStep === 3) {
-        return 3;
-      }
-      if (userInfo?.IsCheckedTerm && prevStep === 3) {
-        return 1;
-      }
-      return Math.max(prevStep - 1, 1);
-    });
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
   const handleSelect = (option) => {
@@ -119,19 +80,17 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
     if (userInfoLoading) {
       return <Loader />;
     }
-    
+
     switch (currentStep) {
       case 1:
         return (
-          <Step1 
-            handleSelect={handleSelect} 
-            selectedOption={selectedOption} 
+          <Step1
+            handleSelect={handleSelect}
+            selectedOption={selectedOption}
             userInfo={userInfo}
           />
         );
       case 2:
-        return <Step2 setIsAgreed={setIsAgreed} />;
-      case 3:
         return (
           <Step3
             setSelectedPackageIndex={setSelectedPackageIndex}
@@ -139,7 +98,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
             setSelectedPackageId={setSelectedPackageId}
           />
         );
-      case 4:
+      case 3:
         return (
           <Step4
             selectedPackageIndex={selectedPackageIndex}
@@ -170,33 +129,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
       <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-4xl rounded-3xl">
         {renderStepContent()}
         <div className="flex flex-row items-center justify-between w-full">
-          {currentStep == 2 ? (
-            <div className="flex flex-row items-center gap-2 sm:gap-3">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  id="checkbox"
-                  className="peer hidden"
-                  checked={isAgreed}
-                  defaultChecked={userInfo?.IsCheckedTerm}
-                  onChange={handleCheckboxChange}
-                />
-                <label
-                  htmlFor="checkbox"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-[#4D55F5] peer-checked:border-[#4D55F5]"
-                >
-                  <span className="text-sm sm:text-base text-white text-center select-none peer-checked:inline-block w-3 h-5 border-white">
-                    ✓
-                  </span>
-                </label>
-              </div>
-
-              <span className="text-xs sm:text-lg font-semibold">
-                Хүлээн зөвшөөрч байна
-              </span>
-            </div>
-          ) : currentStep > 3 ||
-            (currentStep > 2 && !userInfo?.IsCheckedTerm) ? (
+          {currentStep > 1 && (
             <button
               onClick={previousStep}
               className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
@@ -210,20 +143,14 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
               />
               Буцах
             </button>
-          ) : (
-            <></>
           )}
-          {currentStep < 4 ? (
+          {currentStep < 3 ? (
             <button
               onClick={nextStep}
-              disabled={
-                (currentStep === 1 && selectedOption === null) ||
-                (currentStep === 2 && !isAgreed)
-              }
+              disabled={currentStep === 1 && selectedOption === null}
               className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 
                ${
-                 (currentStep === 1 && selectedOption === null) ||
-                 (currentStep === 2 && !isAgreed)
+                 currentStep === 1 && selectedOption === null
                    ? "opacity-70 cursor-not-allowed"
                    : "opacity-100"
                } 

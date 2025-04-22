@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Step1 from "./Step1";
-import Step2 from "./Step2";
 import Step3 from "./Step3";
 import {
-  useBrandTermCheckMutation,
   useCalculateCouponMutation,
   useGetOnboardingCourseQuery,
 } from "@/app/services/service";
@@ -24,15 +22,9 @@ function CoursePurchaseModal({
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("qpay");
   const [selectedOption, setSelectedOption] = useState("creatorcourse");
-  const initialStep = userInfo?.IsUsedFreeContent
-    ? userInfo?.IsCheckedTerm
-      ? 3
-      : 2
-    : 1;
+  // Always start with step 1 or skip to step 3 if free content was used
+  const initialStep = userInfo?.IsUsedFreeContent ? 2 : 1;
   const [currentStep, setCurrentStep] = useState(initialStep);
-  const [isAgreed, setIsAgreed] = useState(userInfo?.IsCheckedTerm);
-
-  const [termCheck] = useBrandTermCheckMutation();
 
   const {
     data: courseData,
@@ -79,31 +71,12 @@ function CoursePurchaseModal({
     }
   }, [calculateCouponSuccess, calculateCouponError]);
 
-  const handleCheckboxChange = (e) => {
-    const isChecked = e.target.checked;
-    setIsAgreed(isChecked);
-    if (isChecked) {
-      termCheck({});
-    }
-  };
-
   const nextStep = () => {
-    setCurrentStep((prevStep) => {
-      if (userInfo?.IsCheckedTerm && prevStep === 1) {
-        return 3; // Skip Step 2
-      }
-      return Math.min(prevStep + 1, 3);
-    });
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, 2));
   };
 
   const previousStep = () => {
-    setCurrentStep((prevStep) => {
-      if (userInfo?.IsCheckedTerm && prevStep === 3) {
-        return 1; // Skip Step 2 when going back
-      }
-
-      return Math.max(prevStep - 1, 1);
-    });
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
   const handleSelect = (option) => {
@@ -121,8 +94,6 @@ function CoursePurchaseModal({
           />
         );
       case 2:
-        return <Step2 setIsAgreed={setIsAgreed} />;
-      case 3:
         return (
           <Step3
             setSelectedPayment={setSelectedPayment}
@@ -132,7 +103,6 @@ function CoursePurchaseModal({
             courseData={courseData}
           />
         );
-
       default:
         return null;
     }
@@ -160,60 +130,28 @@ function CoursePurchaseModal({
       >
         {renderStepContent()}
         <div className="flex flex-row items-center justify-between w-full">
-          {currentStep == 2 ? (
-            <div className="flex flex-row items-center gap-2 sm:gap-3">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  id="checkbox"
-                  className="peer hidden"
-                  checked={isAgreed}
-                  defaultChecked={userInfo?.IsCheckedTerm}
-                  onChange={handleCheckboxChange}
-                />
-                <label
-                  htmlFor="checkbox"
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-300 flex items-center justify-center cursor-pointer transition-all peer-checked:bg-geni-green peer-checked:border-geni-green"
-                >
-                  <span className="text-sm sm:text-base text-white text-center select-none peer-checked:inline-block w-3 h-5 border-white">
-                    ✓
-                  </span>
-                </label>
-              </div>
-
-              <span className="text-xs sm:text-lg font-semibold">
-                Хүлээн зөвшөөрч байна
-              </span>
-            </div>
-          ) : (
-            currentStep > 3 ||
-            (currentStep > 2 && !userInfo?.IsCheckedTerm && (
-              <button
-                onClick={previousStep}
-                className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
-              >
-                <Image
-                  src={"/arrow-forward-icon.png"}
-                  width={10}
-                  height={10}
-                  alt="arrow"
-                  className="w-[14px] h-[14px] rotate-180"
-                />
-                Буцах
-              </button>
-            ))
+          {currentStep > 1 && (
+            <button
+              onClick={previousStep}
+              className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
+            >
+              <Image
+                src={"/arrow-forward-icon.png"}
+                width={10}
+                height={10}
+                alt="arrow"
+                className="w-[14px] h-[14px] rotate-180"
+              />
+              Буцах
+            </button>
           )}
-          {currentStep < 3 ? (
+          {currentStep < 2 ? (
             <button
               onClick={nextStep}
-              disabled={
-                (currentStep === 1 && selectedOption === null) ||
-                (currentStep === 2 && !isAgreed)
-              }
+              disabled={currentStep === 1 && selectedOption === null}
               className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 
                ${
-                 (currentStep === 1 && selectedOption === null) ||
-                 (currentStep === 2 && !isAgreed)
+                 currentStep === 1 && selectedOption === null
                    ? "opacity-70 cursor-not-allowed"
                    : "opacity-100"
                } 

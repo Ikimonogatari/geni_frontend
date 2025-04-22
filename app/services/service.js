@@ -388,7 +388,7 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
-    brandTermCheck: builder.mutation({
+    termCheck: builder.mutation({
       query: () => ({
         url: "/api/web/private/user/term-check",
         method: "POST",
@@ -407,6 +407,7 @@ export const geniApi = createApi({
       }),
       invalidatesTags: ["UserInfo"],
     }),
+
     brandRegister: builder.mutation({
       query: (body) => ({
         url: "/api/web/public/brand/signup",
@@ -659,7 +660,7 @@ export const {
   useUndoContentRequestMutation,
   useGetCompetitionInfoQuery,
   useGetWalletInfoQuery,
-  useBrandTermCheckMutation,
+  useTermCheckMutation,
   useUseFreeContentMutation,
   useGuideCheckMutation,
   useGetBrandCreditInfoQuery,
