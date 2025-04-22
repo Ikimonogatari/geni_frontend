@@ -253,7 +253,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-end sm:flex-col gap-2 sm:gap-4">
               <Link
                 href={"/wallet"}
-                className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg"
+                className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg min-w-10"
               >
                 <Image
                   src={"/wallet-icon.png"}
