@@ -45,7 +45,10 @@ export default function UserButton() {
     >
       <Link href="/profile">
         <Avatar className="size-8">
-          <AvatarImage src={currentUser?.ProfileLink} />
+          <AvatarImage
+            className="object-cover"
+            src={currentUser?.ProfileLink}
+          />
           <AvatarFallback>{currentUser?.Nickname?.[0]}</AvatarFallback>
         </Avatar>
         {(currentUser?.UserType == "Creator"

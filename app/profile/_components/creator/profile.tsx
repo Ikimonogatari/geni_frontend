@@ -262,7 +262,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                   alt=""
                   className="w-4 h-4 sm:w-6 sm:h-6"
                 />
-                <span className="text-white text-sm sm:text-base">
+                <span className="text-white text-sm sm:text-base whitespace-nowrap">
                   Geni хэтэвч
                 </span>
               </Link>
