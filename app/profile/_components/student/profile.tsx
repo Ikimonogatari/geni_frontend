@@ -143,6 +143,19 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
             <div className="flex flex-row items-center gap-2 sm:gap-4">
               <Link
+                href={"https://discord.gg/JzeZawjty5"}
+                target="_blank"
+                className="border-[#2D262D] bg-geni-pink p-2 gap-5 rounded-lg"
+              >
+                <Image
+                  src={"/discord-icon.png"}
+                  width={24}
+                  height={24}
+                  alt="icon"
+                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                />
+              </Link>
+              <Link
                 href={"/notifications"}
                 className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
               >
