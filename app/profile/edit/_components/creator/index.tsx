@@ -161,8 +161,7 @@ function EditProfileCreator() {
       Gender: parsedUserInfo?.Gender ? parsedUserInfo?.Gender : "F",
     },
     validationSchema: Yup.object({
-      FirstName: Yup.string().required("Заавал бөглөнө үү"),
-      LastName: Yup.string().required("Заавал бөглөнө үү"),
+      Nickname: Yup.string().required("Заавал бөглөнө үү"),
       PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
       Bio: Yup.string().required("Заавал бөглөнө үү"),
       Location: Yup.string().required("Заавал бөглөнө үү"),
