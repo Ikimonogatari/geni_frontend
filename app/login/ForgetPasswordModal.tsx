@@ -34,6 +34,7 @@ interface ForgetPasswordModalProps {
   onClickEmailForm: () => void;
   onClickOtpForm: () => void;
   onClickForgotPasswordForm: () => void;
+  passwordValidationMessage?: string;
 }
 
 function ForgetPasswordModal({
@@ -53,6 +54,7 @@ function ForgetPasswordModal({
   onClickEmailForm,
   onClickOtpForm,
   onClickForgotPasswordForm,
+  passwordValidationMessage,
 }: ForgetPasswordModalProps) {
   return (
     <Dialog>
@@ -214,6 +216,11 @@ function ForgetPasswordModal({
                       />
                     </button>
                   </div>
+                  {passwordValidationMessage && (
+                    <div className="text-gray-600 text-sm mt-1">
+                      {passwordValidationMessage}
+                    </div>
+                  )}
                   {forgotPasswordForm.touched.newPassword &&
                   forgotPasswordForm.errors.newPassword ? (
                     <div className="text-red-500 text-sm">

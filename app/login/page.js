@@ -8,6 +8,7 @@ import {
   useCreatorLoginMutation,
   useForgotPasswordMutation,
   useSendOtpToEmailMutation,
+  useGetPasswordPolicyQuery,
 } from "../services/service";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -22,6 +23,12 @@ function Page() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [passwordValidationMessage, setPasswordValidationMessage] =
+    useState("");
+
+  const { data: passwordPolicy, isSuccess: passwordPolicySuccess } =
+    useGetPasswordPolicyQuery({});
+
   const handleMouseDownLoginPassword = () => setShowLoginPassword(true);
   const handleMouseUpLoginPassword = () => setShowLoginPassword(false);
 
@@ -83,13 +90,136 @@ function Page() {
       setForgotPasswordState("3");
     },
   });
+
+  useEffect(() => {
+    if (passwordPolicySuccess && passwordPolicy) {
+      const {
+        MinLen,
+        MinUpper,
+        MinLower,
+        MinDigit,
+        MinSpecial,
+        AllowedSpecial,
+      } = passwordPolicy;
+
+      let message = `Нууц үг доод тал нь ${MinLen} тэмдэгт байх`;
+      if (MinUpper > 0) message += `, ${MinUpper} том үсэг`;
+      if (MinLower > 0) message += `, ${MinLower} жижиг үсэг`;
+      if (MinDigit > 0) message += `, ${MinDigit} тоо`;
+      if (MinSpecial > 0)
+        message += `, ${MinSpecial} тусгай тэмдэгт (${AllowedSpecial})`;
+
+      setPasswordValidationMessage(message);
+    }
+  }, [passwordPolicySuccess, passwordPolicy]);
+
+  const createPasswordSchema = () => {
+    if (!passwordPolicy) {
+      // Default validation if policy not loaded
+      return Yup.string().required("Заавал бөглөнө үү");
+    }
+
+    const {
+      MinLen,
+      MinUpper,
+      MinLower,
+      MinDigit,
+      MinSpecial,
+      AllowedSpecial,
+      NotUserName,
+      Prohibited,
+      MaxLen,
+    } = passwordPolicy;
+
+    let schema = Yup.string().required("Заавал бөглөнө үү");
+
+    // Length validation
+    schema = schema.min(
+      MinLen,
+      `Нууц үг доод тал нь ${MinLen} тэмдэгт байх ёстой`
+    );
+
+    if (MaxLen > 0) {
+      schema = schema.max(
+        MaxLen,
+        `Нууц үг дээд тал нь ${MaxLen} тэмдэгт байх ёстой`
+      );
+    }
+
+    // Uppercase validation
+    if (MinUpper > 0) {
+      schema = schema.test(
+        "has-uppercase",
+        `Дор хаяж ${MinUpper} том үсэг агуулсан байх ёстой`,
+        (value) =>
+          value ? (value.match(/[A-Z]/g) || []).length >= MinUpper : false
+      );
+    }
+
+    // Lowercase validation
+    if (MinLower > 0) {
+      schema = schema.test(
+        "has-lowercase",
+        `Дор хаяж ${MinLower} жижиг үсэг агуулсан байх ёстой`,
+        (value) =>
+          value ? (value.match(/[a-z]/g) || []).length >= MinLower : false
+      );
+    }
+
+    // Digit validation
+    if (MinDigit > 0) {
+      schema = schema.test(
+        "has-digit",
+        `Дор хаяж ${MinDigit} тоо агуулсан байх ёстой`,
+        (value) =>
+          value ? (value.match(/[0-9]/g) || []).length >= MinDigit : false
+      );
+    }
+
+    // Special character validation
+    if (MinSpecial > 0 && AllowedSpecial) {
+      const escapedSpecialChars = AllowedSpecial.split("")
+        .map((char) => {
+          // Escape regex special characters
+          return char.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        })
+        .join("");
+
+      const specialCharsRegex = new RegExp(`[${escapedSpecialChars}]`, "g");
+
+      schema = schema.test(
+        "has-special",
+        `Дор хаяж ${MinSpecial} тусгай тэмдэгт агуулсан байх ёстой`,
+        (value) =>
+          value
+            ? (value.match(specialCharsRegex) || []).length >= MinSpecial
+            : false
+      );
+    }
+
+    // Prohibited passwords validation
+    if (Prohibited) {
+      const prohibitedList = Prohibited.split(",").map((item) =>
+        item.trim().toLowerCase()
+      );
+      schema = schema.test(
+        "not-prohibited",
+        `Нууц үг хэт энгийн байна`,
+        (value) =>
+          value ? !prohibitedList.includes(value.toLowerCase()) : true
+      );
+    }
+
+    return schema;
+  };
+
   const forgotPasswordForm = useFormik({
     initialValues: {
       newPassword: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      newPassword: Yup.string().required("Заавал бөглөнө үү"),
+      newPassword: createPasswordSchema(),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("newPassword"), null], "Нууц үг таарч байх ёстой")
         .required("Заавал бөглөнө үү"),
@@ -325,6 +455,7 @@ function Page() {
                     emailForm={emailForm}
                     otpForm={otpForm}
                     forgotPasswordState={forgotPasswordState}
+                    passwordValidationMessage={passwordValidationMessage}
                   />
 
                   <LoginButton

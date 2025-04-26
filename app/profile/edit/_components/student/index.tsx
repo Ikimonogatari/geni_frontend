@@ -17,6 +17,7 @@ import {
   useChangeEmailMutation,
   geniApi,
   useGetUserInfoQuery,
+  useGetPasswordPolicyQuery,
 } from "@/app/services/service";
 import Cookies from "js-cookie";
 import { useDropzone } from "react-dropzone";
@@ -54,6 +55,12 @@ function EditProfileStudent() {
   const [newPassword, setNewPassword] = useState("");
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [passwordValidationMessage, setPasswordValidationMessage] =
+    useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const { data: passwordPolicy, isSuccess: passwordPolicySuccess } =
+    useGetPasswordPolicyQuery({});
 
   const handleMouseDownOldPasswrod = () => setShowOldPassword(true);
   const handleMouseUpOldPassword = () => setShowOldPassword(false);
@@ -305,13 +312,125 @@ function EditProfileStudent() {
     }
   }, [changeEmailSuccess, changeEmailError]);
 
+  useEffect(() => {
+    if (passwordPolicySuccess && passwordPolicy) {
+      const {
+        MinLen,
+        MinUpper,
+        MinLower,
+        MinDigit,
+        MinSpecial,
+        AllowedSpecial,
+      } = passwordPolicy;
+
+      let message = `Нууц үг доод тал нь ${MinLen} тэмдэгт байх`;
+      if (MinUpper > 0) message += `, ${MinUpper} том үсэг`;
+      if (MinLower > 0) message += `, ${MinLower} жижиг үсэг`;
+      if (MinDigit > 0) message += `, ${MinDigit} тоо`;
+      if (MinSpecial > 0)
+        message += `, ${MinSpecial} тусгай тэмдэгт (${AllowedSpecial})`;
+
+      setPasswordValidationMessage(message);
+    }
+  }, [passwordPolicySuccess, passwordPolicy]);
+
+  const validatePassword = (password) => {
+    if (!passwordPolicy) return true;
+
+    const {
+      MinLen,
+      MinUpper,
+      MinLower,
+      MinDigit,
+      MinSpecial,
+      AllowedSpecial,
+      NotUserName,
+      Prohibited,
+      MaxLen,
+    } = passwordPolicy;
+
+    // Check length
+    if (password.length < MinLen) {
+      setPasswordError(`Нууц үг доод тал нь ${MinLen} тэмдэгт байх ёстой`);
+      return false;
+    }
+
+    if (MaxLen > 0 && password.length > MaxLen) {
+      setPasswordError(`Нууц үг дээд тал нь ${MaxLen} тэмдэгт байх ёстой`);
+      return false;
+    }
+
+    // Check uppercase letters
+    if (MinUpper > 0 && (password.match(/[A-Z]/g) || []).length < MinUpper) {
+      setPasswordError(`Дор хаяж ${MinUpper} том үсэг агуулсан байх ёстой`);
+      return false;
+    }
+
+    // Check lowercase letters
+    if (MinLower > 0 && (password.match(/[a-z]/g) || []).length < MinLower) {
+      setPasswordError(`Дор хаяж ${MinLower} жижиг үсэг агуулсан байх ёстой`);
+      return false;
+    }
+
+    // Check digits
+    if (MinDigit > 0 && (password.match(/[0-9]/g) || []).length < MinDigit) {
+      setPasswordError(`Дор хаяж ${MinDigit} тоо агуулсан байх ёстой`);
+      return false;
+    }
+
+    // Check special characters
+    if (MinSpecial > 0 && AllowedSpecial) {
+      const escapedSpecialChars = AllowedSpecial.split("")
+        .map((char) => {
+          return char.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        })
+        .join("");
+
+      const specialCharsRegex = new RegExp(`[${escapedSpecialChars}]`, "g");
+
+      if ((password.match(specialCharsRegex) || []).length < MinSpecial) {
+        setPasswordError(
+          `Дор хаяж ${MinSpecial} тусгай тэмдэгт агуулсан байх ёстой`
+        );
+        return false;
+      }
+    }
+
+    // Check prohibited passwords
+    if (Prohibited) {
+      const prohibitedList = Prohibited.split(",").map((item) =>
+        item.trim().toLowerCase()
+      );
+      if (prohibitedList.includes(password.toLowerCase())) {
+        setPasswordError(`Нууц үг хэт энгийн байна`);
+        return false;
+      }
+    }
+
+    // All validations passed
+    setPasswordError("");
+    return true;
+  };
+
   const handleChangePassword = async () => {
+    if (!oldPassword || !newPassword) {
+      toast.error("Бүх талбарыг бөглөнө үү");
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      toast.error(passwordError);
+      return;
+    }
+
     try {
       await changePassword({
         OldPassword: oldPassword,
         NewPassword: newPassword,
       }).unwrap();
       toast.success("Нууц үг амжилттай солигдлоо");
+      setOldPassword("");
+      setNewPassword("");
     } catch (err) {
       toast.error("Нууц үг солиход алдаа гарлаа");
     }
@@ -619,19 +738,37 @@ function EditProfileStudent() {
         );
       case "password":
         return (
-          <PasswordSettings
-            showNewPassword={showNewPassword}
-            setNewPassword={setNewPassword}
-            newPassword={newPassword}
-            handleMouseDownNewPassword={handleMouseDownNewPassword}
-            handleMouseUpNewPassword={handleMouseUpNewPassword}
-            handleChangePassword={handleChangePassword}
-            showOldPassword={showOldPassword}
-            setOldPassword={setOldPassword}
-            oldPassword={oldPassword}
-            handleMouseDownOldPasswrod={handleMouseDownOldPasswrod}
-            handleMouseUpOldPassword={handleMouseUpOldPassword}
-          />
+          <>
+            <BackButton />
+            <div className="mt-4 flex flex-col">
+              <h1 className="text-3xl font-medium">Нууц үг</h1>
+              {passwordValidationMessage && (
+                <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm text-gray-600">
+                  {passwordValidationMessage}
+                </div>
+              )}
+              <div className="mt-4">
+                <PasswordSettings
+                  showNewPassword={showNewPassword}
+                  setNewPassword={setNewPassword}
+                  newPassword={newPassword}
+                  handleMouseDownNewPassword={handleMouseDownNewPassword}
+                  handleMouseUpNewPassword={handleMouseUpNewPassword}
+                  handleChangePassword={handleChangePassword}
+                  showOldPassword={showOldPassword}
+                  setOldPassword={setOldPassword}
+                  oldPassword={oldPassword}
+                  handleMouseDownOldPasswrod={handleMouseDownOldPasswrod}
+                  handleMouseUpOldPassword={handleMouseUpOldPassword}
+                />
+                {passwordError && (
+                  <div className="mt-2 text-red-500 text-sm">
+                    {passwordError}
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
         );
       case "socials":
         return (

@@ -603,10 +603,17 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    getPasswordPolicy: builder.query({
+      query: () => ({
+        url: "/api/web/public/dict/pass-policy",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
 export const {
+  useGetPasswordPolicyQuery,
   useCreatorLoginMutation,
   useBrandRegisterMutation,
   useBrandRequestReviewMutation,
