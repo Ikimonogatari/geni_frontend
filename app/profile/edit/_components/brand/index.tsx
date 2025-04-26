@@ -164,14 +164,29 @@ function EditProfileBrand() {
       BrandAoADescription: "temp-desc",
     },
     validationSchema: Yup.object({
-      Name: Yup.string().required("Заавал бөглөнө үү"),
-      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
-      Bio: Yup.string().required("Заавал бөглөнө үү"),
-      RegNo: Yup.string().required("Заавал бөглөнө үү"),
-      Address: Yup.string().required("Заавал бөглөнө үү"),
+      Name: Yup.string()
+        .min(2, "Хэт богино нэр байна")
+        .required("Брэндийн нэрээ оруулна уу"),
+      PhoneNumber: Yup.string()
+        .matches(/^[0-9]{8}$/, "Утасны дугаар 8 оронтой тоо байх ёстой")
+        .required("Утасны дугаараа оруулна уу"),
+      Bio: Yup.string()
+        .max(300, "Танилцуулга 300-аас бага тэмдэгт байх ёстой")
+        .required("Брэндийн товч танилцуулгаа оруулна уу"),
+      RegNo: Yup.string()
+        .matches(/^[0-9]{7}$/, "Регистрийн дугаар 7 оронтой тоо байх ёстой")
+        .required("Регистрийн дугаараа оруулна уу"),
+      Address: Yup.string()
+        .min(5, "Хаяг хэт богино байна")
+        .required("Байршлаа оруулна уу"),
     }),
     onSubmit: async (values) => {
-      editBrandProfile(values).unwrap();
+      // Create a copy of values to submit
+      const valuesToSubmit = { ...values };
+
+      // Add any additional processing if needed
+
+      editBrandProfile(valuesToSubmit).unwrap();
     },
   });
 
