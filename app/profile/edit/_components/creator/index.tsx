@@ -69,7 +69,7 @@ function EditProfileCreator() {
   const handleMouseDownNewPassword = () => setShowNewPassword(true);
   const handleMouseUpNewPassword = () => setShowNewPassword(false);
 
-  const [editCreatorProfile, { data, error, isLoading }] =
+  const [editCreatorProfile, { data, error, isLoading, isSuccess }] =
     useEditCreatorProfileMutation();
 
   const [
@@ -161,15 +161,49 @@ function EditProfileCreator() {
       Gender: parsedUserInfo?.Gender ? parsedUserInfo?.Gender : "F",
     },
     validationSchema: Yup.object({
-      Nickname: Yup.string().required("Заавал бөглөнө үү"),
-      PhoneNumber: Yup.string().required("Заавал бөглөнө үү"),
-      Bio: Yup.string().required("Заавал бөглөнө үү"),
-      Location: Yup.string().required("Заавал бөглөнө үү"),
-      RegNo: Yup.string().required("Заавал бөглөнө үү"),
+      FirstName: !parsedUserInfo?.FirstName
+        ? Yup.string()
+            .matches(
+              /^[\u0400-\u04FF]+$/,
+              "Нэрээ зөвхөн Кирилл үсгээр оруулна уу"
+            )
+            .required("Заавал бөглөнө үү")
+        : Yup.string(),
+      LastName: !parsedUserInfo?.LastName
+        ? Yup.string()
+            .matches(
+              /^[\u0400-\u04FF]+$/,
+              "Овогоо зөвхөн Кирилл үсгээр оруулна уу"
+            )
+            .required("Заавал бөглөнө үү")
+        : Yup.string(),
+      Nickname: Yup.string()
+        .min(2, "Хэрэглэгчийн нэр 2-оос дээш тэмдэгт байх ёстой")
+        .required("Заавал бөглөнө үү"),
+      PhoneNumber: Yup.string()
+        .matches(/^[0-9]{8}$/, "Утасны дугаар 8 оронтой тоо байх ёстой")
+        .required("Заавал бөглөнө үү"),
+      Bio: Yup.string()
+        .max(600, "Танилцуулга 600-аас бага тэмдэгт байх ёстой")
+        .required("Заавал бөглөнө үү"),
+      Location: Yup.string()
+        .min(5, "Хаяг хэт богино байна")
+        .required("Заавал бөглөнө үү"),
+      RegNo: Yup.string()
+        .matches(
+          /^[А-ЯӨҮЁ]{2}[0-9]{8}$/,
+          "Регистр ҮҮ12345678 форматтай байх ёстой"
+        )
+        .required("Заавал бөглөнө үү"),
     }),
     onSubmit: async (values) => {
       console.log(formik.errors, "ERRORS");
-      editCreatorProfile(values).unwrap();
+      const valuesToSubmit = { ...values };
+
+      if (parsedUserInfo?.FirstName) delete valuesToSubmit.FirstName;
+      if (parsedUserInfo?.LastName) delete valuesToSubmit.LastName;
+
+      editCreatorProfile(valuesToSubmit).unwrap();
     },
   });
 
@@ -199,14 +233,14 @@ function EditProfileCreator() {
   });
 
   useEffect(() => {
-    if (data) {
+    if (isSuccess) {
       toast.success("Амжилттай хадгаллаа");
     }
     if (error) {
       //@ts-ignore
       toast.error(error?.data?.error);
     }
-  }, [data, error]);
+  }, [isSuccess, error]);
 
   useEffect(() => {
     if (uploadFileError) {
@@ -427,7 +461,10 @@ function EditProfileCreator() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-4 mt-4">
+            <form
+              onSubmit={formik.handleSubmit}
+              className="flex flex-col gap-4 mt-4"
+            >
               <div className="flex flex-col sm:flex-row items-start gap-4 w-full">
                 <Input
                   id="FirstName"
@@ -443,9 +480,11 @@ function EditProfileCreator() {
                   }
                   labelClassName="text-[#6F6F6F] text-lg font-normal"
                   wrapperClassName="w-full sm:auto"
-                  className="bg-[#F5F4F0] text-base sm:text-xl cursor-not-allowed"
+                  className={`bg-[#F5F4F0] text-base sm:text-xl ${
+                    !!parsedUserInfo?.FirstName ? "cursor-not-allowed" : ""
+                  }`}
                   layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
-                  disabled={true}
+                  disabled={!!parsedUserInfo?.FirstName}
                 />
                 <Input
                   id="LastName"
@@ -461,9 +500,11 @@ function EditProfileCreator() {
                   }
                   labelClassName="text-[#6F6F6F] text-lg font-normal"
                   wrapperClassName="w-full sm:auto"
-                  className="bg-[#F5F4F0] text-base sm:text-xl cursor-not-allowed"
+                  className={`bg-[#F5F4F0] text-base sm:text-xl ${
+                    !!parsedUserInfo?.LastName ? "cursor-not-allowed" : ""
+                  }`}
                   layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
-                  disabled={true}
+                  disabled={!!parsedUserInfo?.LastName}
                 />
               </div>
               <Input
@@ -552,7 +593,7 @@ function EditProfileCreator() {
               >
                 Хадгалах
               </button>
-            </div>
+            </form>
           </>
         );
       case "email":
