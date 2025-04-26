@@ -223,6 +223,31 @@ function EditProfileStudent() {
     },
   });
 
+  // Update formik values when user data loads or changes
+  useEffect(() => {
+    if (parsedUserInfo) {
+      formik.setValues({
+        FirstName: parsedUserInfo?.FirstName || "",
+        LastName: parsedUserInfo?.LastName || "",
+        Nickname: parsedUserInfo?.Nickname || "",
+        Email: parsedUserInfo?.Email || "",
+        Bio: parsedUserInfo?.Bio || "",
+        RegNo: parsedUserInfo?.RegNo || "",
+        PhoneNumber: parsedUserInfo?.PhoneNumber || "",
+        AdditionalPhoneNum: "+12345678902",
+        Location: parsedUserInfo?.Location || "",
+        EbarimtConsumerNo: "9876543211",
+        Birthday:
+          parsedUserInfo?.Birthday &&
+          parsedUserInfo.Birthday !== "0001-01-01T00:00:00Z"
+            ? parsedUserInfo.Birthday
+            : new Date().toISOString().split("T")[0],
+        EduId: 3,
+        Gender: parsedUserInfo?.Gender || "F",
+      });
+    }
+  }, [parsedUserInfo]);
+
   useEffect(() => {
     if (isSuccess) {
       toast.success("Амжилттай хадгаллаа");

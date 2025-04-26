@@ -217,6 +217,21 @@ function EditProfileBrand() {
     },
   });
 
+  // Update formik values when user data loads or changes
+  useEffect(() => {
+    if (parsedUserInfo) {
+      formik.setValues({
+        Name: parsedUserInfo?.Name || "",
+        Bio: parsedUserInfo?.Bio || "",
+        Website: "temp-web",
+        PhoneNumber: parsedUserInfo?.PhoneNumber || "",
+        RegNo: parsedUserInfo?.RegNo || "",
+        Address: parsedUserInfo?.Address || "",
+        BrandAoADescription: "temp-desc",
+      });
+    }
+  }, [parsedUserInfo]);
+
   useEffect(() => {
     if (isSuccess) {
       toast.success("Амжилттай");
