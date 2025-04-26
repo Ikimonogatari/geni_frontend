@@ -49,11 +49,17 @@ export default function UserButton() {
             className="object-cover"
             src={currentUser?.ProfileLink}
           />
-          <AvatarFallback>{currentUser?.Nickname?.[0]}</AvatarFallback>
+          <AvatarFallback>
+            {currentUser?.UserType === "Creator"
+              ? "/dummy-creator.png"
+              : currentUser?.UserType === "Brand"
+              ? "/dummy-brand.png"
+              : currentUser?.UserType === "Student" && "/dummy-student.png"}
+          </AvatarFallback>
+          {(currentUser?.UserType == "Creator"
+            ? currentUser?.Nickname || currentUser?.Email
+            : currentUser?.Name || currentUser?.BusinessEmail) || "User"}
         </Avatar>
-        {(currentUser?.UserType == "Creator"
-          ? currentUser?.Nickname || currentUser?.Email
-          : currentUser?.Name || currentUser?.BusinessEmail) || "User"}
       </Link>
     </Button>
   );
