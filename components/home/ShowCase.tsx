@@ -10,6 +10,8 @@ import Autoplay from "embla-carousel-autoplay";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Image from "next/image";
+import { useState, useEffect, Suspense } from "react";
+import { ClipLoader } from "react-spinners";
 
 const showcases = [
   {
@@ -38,6 +40,21 @@ const showcases = [
   },
 ];
 
+// Video loading fallback component
+const VideoLoadingFallback = () => {
+  return (
+    <div className="flex justify-center items-center bg-[#F5F4F0] rounded-[30px] h-full w-full">
+      <ClipLoader
+        loading={true}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+        size={50}
+        color="#CA7FFE"
+      />
+    </div>
+  );
+};
+
 interface ShowcaseVideoProps
   extends React.VideoHTMLAttributes<HTMLVideoElement> {
   videoSrc: string;
@@ -58,6 +75,7 @@ const ShowcaseVideo = ({
         autoPlay
         loop
         muted
+        playsInline
         {...props}
       >
         <source src={videoSrc} type="video/mp4" />
@@ -145,7 +163,9 @@ function ShowCase() {
                   className="py-4 pr-0 pl-10 max-w-[290px] h-full basis-4/5"
                 >
                   <AspectRatio ratio={9 / 16}>
-                    <ShowcaseVideo {...showcase} />
+                    <Suspense fallback={<VideoLoadingFallback />}>
+                      <ShowcaseVideo {...showcase} />
+                    </Suspense>
                   </AspectRatio>
                 </CarouselItem>
               ))}
@@ -199,7 +219,9 @@ function ShowCase() {
                 className="py-1 basis-[40%] max-w-[290px] h-full"
               >
                 <AspectRatio ratio={9 / 16}>
-                  <ShowcaseVideo {...showcase} />
+                  <Suspense fallback={<VideoLoadingFallback />}>
+                    <ShowcaseVideo {...showcase} />
+                  </Suspense>
                 </AspectRatio>
               </CarouselItem>
             ))}

@@ -199,7 +199,7 @@ function BrandProducts({ brandProducts, brandData, isLoading }) {
 
                   <button
                     onClick={() => openProductModal(p)}
-                    className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg"
+                    className="col-span-1 border-[1px] border-[#F5F4F0] p-2 rounded-lg w-11"
                   >
                     <Image
                       src={"/hamburger-menu-icon.png"}

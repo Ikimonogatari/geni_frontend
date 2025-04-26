@@ -552,7 +552,7 @@ function EditProfileBrand() {
                       </div>
                     ))}
 
-                    <div className="flex flex-row items-center">
+                    <div className="flex flex-row items-center gap-2">
                       <div
                         onClick={() => setdropdownOpen(!dropdownOpen)}
                         className="cursor-pointer outline-none bg-[#F5F4F0] text-xs rounded-lg w-7 h-7 sm:w-11 sm:h-11 flex items-center justify-center"
