@@ -303,7 +303,7 @@ function EditProfileBrand() {
     if (parsedUserInfo && parsedUserInfo.BrandTypes) {
       setBrandTypes(parsedUserInfo?.BrandTypes.map((p) => p));
     }
-  }, []);
+  }, [parsedUserInfo]);
 
   useEffect(() => {
     if (listBrandTypesData) {
