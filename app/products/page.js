@@ -135,7 +135,7 @@ function Page() {
     <div className="min-h-screen w-full bg-white text-[#2D262D]">
       <div className="">
         <div className="container max-w-8xl mx-auto px-7 py-12">
-          <div className="w-full whitespace-nowrap pb-3 overflow-x-auto flex flex-row sm:flex-wrap items-center gap-3 font-bold text-[10px] sm:text-xs">
+          <div className="w-full whitespace-nowrap pb-3 overflow-x-auto flex flex-row items-center gap-3 font-bold text-[10px] sm:text-xs">
             <div
               onClick={() => setSelectedCategory("")}
               className={`cursor-pointer rounded-full px-4 py-2 ${
@@ -160,7 +160,7 @@ function Page() {
               </div>
             ))}
           </div>
-          <div className="w-full bg-primary-bg rounded-2xl whitespace-nowrap  overflow-x-auto flex flex-row sm:flex-wrap p-4 items-center gap-4 font-bold text-[10px] sm:text-xs">
+          <div className="w-full bg-primary-bg rounded-2xl whitespace-nowrap  overflow-x-auto flex flex-row p-4 items-center gap-4 font-bold text-[10px] sm:text-xs">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
