@@ -15,6 +15,7 @@ import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { useCreatorWithdrawMutation } from "@/app/services/service";
 import { toast } from "react-hot-toast";
 import Button from "@/components/ui/button";
+import WithdrawDaysModal from "./WithdrawDaysModal";
 
 interface WithdrawCreditProps {
   walletInfo: any;
@@ -31,6 +32,7 @@ function WithdrawCredit({
 }: WithdrawCreditProps) {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
+  const [withdrawDaysModalOpen, setWithdrawDaysModalOpen] = useState(true);
   const [creatorWithdraw, { data, error, isSuccess, isLoading }] =
     useCreatorWithdrawMutation();
 
@@ -90,6 +92,10 @@ function WithdrawCredit({
         <DialogTitle className="text-2xl sm:text-3xl xl:text-4xl font-bold">
           Шилжүүлэг хийх
         </DialogTitle>
+        <WithdrawDaysModal
+          dialogOpen={withdrawDaysModalOpen}
+          setDialogOpen={setWithdrawDaysModalOpen}
+        />
         <form
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-4 w-full"

@@ -46,6 +46,7 @@ module.exports = {
         "geni-pink": "#CA7FFE",
         "geni-green": "#4FB755",
         "geni-orange": "#F49D19",
+        "geni-yellow": "#C8F423",
         "geni-gray": "#CDCDCD",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
