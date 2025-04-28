@@ -27,6 +27,7 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import debounce from "lodash/debounce";
+import Button from "@/components/ui/button";
 
 interface AddBalanceProps {
   walletInfo: any;
@@ -95,7 +96,7 @@ function AddBalance({
 
   useEffect(() => {
     if (isConnectSuccess || isUpdateSuccess) {
-      setIsSuccessDialogOpen(true);
+      // setIsSuccessDialogOpen(true);
     }
   }, [isConnectSuccess, isUpdateSuccess]);
 
@@ -237,11 +238,16 @@ function AddBalance({
               }
             />
           </FadeInAnimation>
+          <Button
+            type="submit"
+            className={`w-full py-4 text-white text-lg sm:text-xl font-bold rounded-lg border border-[#2D262D] bg-[#CA7FFE]`}
+          >
+            Холбох
+          </Button>
           <SuccessModal
             setIsSuccessDialogOpen={setIsSuccessDialogOpen}
             modalImage="/payment-success.png"
             modalTitle="ДАНС АМЖИЛТТАЙ ХОЛБОГДЛОО"
-            modalTriggerText="Холбох"
             imageClassName="w-[342px] h-[261px]"
             isSuccessDialogOpen={isSuccessDialogOpen}
           />
