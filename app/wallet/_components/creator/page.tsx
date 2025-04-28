@@ -171,17 +171,17 @@ function CreatorWallet() {
                     </span>
                     <span
                       className={`col-span-1 max-w-min rounded-lg sm:rounded-xl text-white py-1 px-2 sm:px-4 text-center text-[10px] sm:text-lg ${
-                        history.Type ? "bg-geni-green" : "bg-geni-red"
+                        history.IsAdd ? "bg-geni-green" : "bg-geni-red"
                       }`}
                     >
-                      {history.Type ? "Нэмэгдсэн" : "Хасагдсан"}
+                      {history.IsAdd ? "Нэмэгдсэн" : "Хасагдсан"}
                     </span>{" "}
                     <span
                       className={`col-span-1 ${
-                        history.Type ? "text-geni-green" : "text-geni-red"
+                        history.IsAdd ? "text-geni-green" : "text-geni-red"
                       }`}
                     >
-                      {history.Type ? "+" : "-"}
+                      {history.IsAdd ? "+" : "-"}
                       <PriceFormatter price={history.TxnAmt} />
                     </span>
                   </ListRowLayout>

@@ -130,20 +130,16 @@ function WithdrawCredit({
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.amount}
-              errorText={formik.errors.amount}
-              errorVisible={!!formik.touched.amount && !!formik.errors.amount}
             />
-            <div className="ml-auto text-geni-blue text-sm sm:text-base">
-              Шилжүүлэг хийх доод дүн ₮50'000
-            </div>
+
             <FadeInAnimation
               className="w-full flex justify-center"
-              visible={!!errorMessage}
+              visible={!!formik.errors.amount && formik.touched.amount}
             >
-              {errorMessage && (
+              {formik.errors.amount && (
                 <ErrorText
                   className="text-white bg-geni-red text-sm inline-flex items-center justify-center gap-3 rounded-lg p-2"
-                  text={errorMessage}
+                  text={formik.errors.amount}
                   visible={true}
                   leftSection={
                     <Image
