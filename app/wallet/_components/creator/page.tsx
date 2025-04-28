@@ -18,6 +18,7 @@ import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import PriceFormatter from "@/components/common/FormatPrice";
+import EmptyList from "@/components/common/EmptyList";
 
 function CreatorWallet() {
   const router = useRouter();
@@ -39,11 +40,14 @@ function CreatorWallet() {
   // @ts-ignore
   const { data: bankList } = useGetBankListQuery();
   // @ts-ignore
-  const { data: getCreatorWalletHistoryData, refetch: refetchWalletHistory } =
-    useGetCreatorWalletHistoryQuery(
-      { limit: itemsPerPage, offset },
-      { refetchOnMountOrArgChange: true }
-    );
+  const {
+    data: getCreatorWalletHistoryData,
+    refetch: refetchWalletHistory,
+    isLoading: isWalletHistoryLoading,
+  } = useGetCreatorWalletHistoryQuery(
+    { limit: itemsPerPage, offset },
+    { refetchOnMountOrArgChange: true }
+  );
   // @ts-ignore
   const { data: connectedAccount } = useGetConnectedBankAccountQuery();
   const [checkBankAccountName] = useCheckBankAccountNameMutation();
@@ -139,13 +143,14 @@ function CreatorWallet() {
                 walletInfo={getWalletInfoData}
                 bankList={bankList}
                 connectedAccount={connectedAccount}
+                onTransactionComplete={handleTransactionComplete}
               />
             </div>
           </div>
           <div className="w-full overflow-x-auto pt-3 mt-7 border-t-[1px] border-[#F5F4F0] flex flex-col gap-3">
             <span className="text-2xl font-bold">Дансны түүх</span>
             <div className="mt-6 w-full min-w-[540px] flex flex-col gap-4">
-              {!getCreatorWalletHistoryData?.Data?.length ? (
+              {isWalletHistoryLoading ? (
                 <div className="space-y-4">
                   {[...Array(itemsPerPage)].map((_, index) => (
                     <Skeleton
@@ -154,8 +159,8 @@ function CreatorWallet() {
                     />
                   ))}
                 </div>
-              ) : (
-                getCreatorWalletHistoryData?.Data?.map((history, i) => (
+              ) : getCreatorWalletHistoryData?.Data?.length ? (
+                getCreatorWalletHistoryData.Data.map((history, i) => (
                   <ListRowLayout
                     key={i}
                     layout="grid grid-cols-[3fr,2fr,2fr,1fr] sm:grid-cols-[3fr,2fr,2fr,1fr]"
@@ -181,6 +186,13 @@ function CreatorWallet() {
                     </span>
                   </ListRowLayout>
                 ))
+              ) : (
+                <EmptyList
+                  text="Дансны түүх үүсээгүй байна"
+                  imageClassName="w-[149px] h-[153px]"
+                  image="/no-content-image.png"
+                  className="!mt-10"
+                />
               )}
             </div>
             {getCreatorWalletHistoryData && totalPages > 1 ? (

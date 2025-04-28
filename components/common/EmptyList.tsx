@@ -1,19 +1,27 @@
 import React from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface EmptyListProps {
   image: string;
   text: string;
   imageClassName: string;
+  className?: string;
 }
 
 const EmptyList: React.FC<EmptyListProps> = ({
   image,
   text,
   imageClassName,
+  className,
 }) => {
   return (
-    <div className="flex flex-col items-center w-full gap-4 mt-11 sm:mt-20">
+    <div
+      className={cn(
+        "flex flex-col items-center w-full gap-4 mt-11 sm:mt-20",
+        className
+      )}
+    >
       <Image
         src={image}
         width={155}

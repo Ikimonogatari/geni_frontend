@@ -150,9 +150,11 @@ function AddBalance({
               </span>
               <Select
                 value={formik.values.bankName}
-                onValueChange={(value) =>
-                  formik.setFieldValue("bankName", value)
-                }
+                onValueChange={(value) => {
+                  formik.setFieldValue("bankName", value);
+                  formik.setFieldValue("bankAccountNumber", "");
+                  formik.setFieldValue("bankAccountOwner", "");
+                }}
               >
                 {/* @ts-ignore */}
                 <SelectTrigger className="bg-primary-bg rounded-xl h-12 border-none px-3 w-full text-base sm:text-lg">
@@ -191,7 +193,7 @@ function AddBalance({
               name="bankAccountNumber"
               type="number"
               min={0}
-              className="no-spinner bg-primary-bg text-lg sm:text-xl"
+              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-primary-bg text-lg sm:text-xl"
               label="Дансны дугаар"
               labelClassName="font-normal text-base sm:text-lg"
               layoutClassName="bg-primary-bg rounded-xl border-none px-3"
