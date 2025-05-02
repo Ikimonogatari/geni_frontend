@@ -649,7 +649,7 @@ const ContentProgressModalContent: React.FC<
         )}
         {dialogType != DialogType.CONTENT_IN_PROGRESS &&
           showSendContentButton(status as STATUS_LIST) && (
-            <div className="pt-2">
+            <div className="border-t-2 pt-2">
               <button
                 type="button"
                 onClick={() => setDialogType(DialogType.CONTENT_IN_PROGRESS)}
