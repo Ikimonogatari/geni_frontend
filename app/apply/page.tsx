@@ -51,6 +51,12 @@ function CreatorOnboarding() {
     validationSchema: addCreatorDetailsSchema,
     onSubmit: async (values) => {
       try {
+        // Check if either ContentLink or ContentFileId is provided
+        if (!values.ContentLink && !values.ContentFileId) {
+          toast.error("Контент линк эсвэл файл оруулна уу");
+          return;
+        }
+
         await creatorApply({
           ...values,
         }).unwrap();
