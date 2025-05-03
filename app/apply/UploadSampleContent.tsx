@@ -50,6 +50,18 @@ function UploadSampleContent({ formik }) {
     }
   }, [uploadFileData, uploadFileError]);
 
+  useEffect(() => {
+    console.log("ContentLink:", formik.values.ContentLink);
+    console.log("ContentFileId:", formik.values.ContentFileId);
+    console.log("Form valid:", formik.isValid);
+    console.log("Form errors:", formik.errors);
+  }, [
+    formik.values.ContentLink,
+    formik.values.ContentFileId,
+    formik.isValid,
+    formik.errors,
+  ]);
+
   const {
     getRootProps: getRootPropsForVideo,
     getInputProps: getInputPropsForVideo,
@@ -81,6 +93,13 @@ function UploadSampleContent({ formik }) {
     },
   });
 
+  // Function to check if content submission is valid
+  const isContentValid = () => {
+    return (
+      Boolean(formik.values.ContentLink) || Boolean(formik.values.ContentFileId)
+    );
+  };
+
   return (
     <div onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full">
       <div className="flex flex-col gap-3 text-lg">
@@ -110,7 +129,10 @@ function UploadSampleContent({ formik }) {
         errorVisible={formik.touched.ContentLink && formik.errors.ContentLink}
       />
       {contentVideo ? (
-        <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
+        <video
+          controls
+          className="aspect-[9/16] w-full h-full rounded-2xl border border-primary"
+        >
           <source src={contentVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
@@ -139,7 +161,11 @@ function UploadSampleContent({ formik }) {
           </div>
         </div>
       )}
-      <Button type="submit" className="w-full bg-secondary text-white">
+      <Button
+        type="submit"
+        className="w-full bg-secondary text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={formik.isSubmitting || !isContentValid()}
+      >
         Өргөдөл илгээх
       </Button>
     </div>

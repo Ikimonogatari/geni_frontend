@@ -243,7 +243,7 @@ function Page() {
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email("Invalid email address")
+        .email("Зөв имэйл хаяг оруулна уу")
         .required("Заавал бөглөнө үү"),
       password: Yup.string().required("Заавал бөглөнө үү"),
     }),
