@@ -60,13 +60,15 @@ const ViewContent: React.FC<ViewContentProps> = ({
                 Контент засах хүсэлт илгээх
               </button>
             )}
-            <button
-              type="button"
-              className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
-              onClick={() => setDialogType(DialogType.ACCEPT_REQUEST)}
-            >
-              Контент хүлээж авах
-            </button>
+            {content?.CurrentStepName?.String != STATUS_LIST.ContentFixRequest &&
+              <button
+                type="button"
+                className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
+                onClick={() => setDialogType(DialogType.ACCEPT_REQUEST)}
+              >
+                Контент хүлээж авах
+              </button>
+            }
           </div>
         </div>
       </div>
