@@ -15,6 +15,8 @@ interface SuccessModalProps {
   modalTriggerText?: string;
   context?: React.ReactNode;
   imageClassName: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
@@ -25,6 +27,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   modalTriggerText,
   context,
   imageClassName,
+  imageWidth = 342,
+  imageHeight = 264,
 }) => {
   return (
     <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
@@ -49,8 +53,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 
         <Image
           src={modalImage}
-          width={342}
-          height={264}
+          width={imageWidth}
+          height={imageHeight}
           alt=""
           className={`${imageClassName}`}
         />
