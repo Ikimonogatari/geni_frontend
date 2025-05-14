@@ -141,7 +141,7 @@ function Page() {
           ],
           productTypes: initialProductTypes.map((type) => type.ProductTypeId),
           productPics:
-            getPublicProductByIdData?.ProductPics?.map((pic) => pic.FileId) ||
+            getPublicProductByIdData?.ProductPics?.map((pic) => pic.PicId) ||
             [],
         },
         true
