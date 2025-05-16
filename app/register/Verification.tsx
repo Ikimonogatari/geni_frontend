@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import OtpTimeLeft from "@/components/OtpTimeLeft";
 
@@ -11,6 +11,13 @@ function Verification({
   handleSendOtp,
   colorTheme,
 }) {
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
+
+  // Memoize the callback function to prevent infinite loops
+  const handleTimeUpdate = useCallback((time) => {
+    setTimeLeft(time);
+  }, []);
+
   return (
     <div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -48,13 +55,20 @@ function Verification({
               {verificationSuccess && (
                 <OtpTimeLeft
                   otpDuration={verificationData?.otpDuration}
-                  onTimeUpdate={() => {}}
+                  onTimeUpdate={handleTimeUpdate}
                 />
               )}
               <button
                 type="button"
                 onClick={handleSendOtp}
-                className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
+                disabled={
+                  timeLeft && (timeLeft.minutes > 0 || timeLeft.seconds > 0)
+                }
+                className={`text-center text-xs sm:text-sm cursor-pointer ${
+                  timeLeft && (timeLeft.minutes > 0 || timeLeft.seconds > 0)
+                    ? "text-gray-400"
+                    : "text-[#4D55F5]"
+                } font-semibold`}
               >
                 Нууц код дахин авах
               </button>
