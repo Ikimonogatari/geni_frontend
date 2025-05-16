@@ -46,7 +46,10 @@ function Verification({
                 ) : null}
               </div>
               {verificationSuccess && (
-                <OtpTimeLeft otpDuration={verificationData?.otpDuration} />
+                <OtpTimeLeft
+                  otpDuration={verificationData?.otpDuration}
+                  onTimeUpdate={() => {}}
+                />
               )}
               <button
                 type="button"

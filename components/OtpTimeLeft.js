@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function OtpTimeLeft({ otpDuration }) {
+function OtpTimeLeft({ otpDuration, onTimeUpdate }) {
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -15,15 +15,21 @@ function OtpTimeLeft({ otpDuration }) {
         );
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
         setTimeLeft({ minutes, seconds });
+        if (onTimeUpdate) {
+          onTimeUpdate({ minutes, seconds });
+        }
       } else {
         setTimeLeft({ minutes: 0, seconds: 0 });
+        if (onTimeUpdate) {
+          onTimeUpdate({ minutes: 0, seconds: 0 });
+        }
         clearInterval(intervalId);
       }
     };
     const intervalId = setInterval(updateCountdown, 1000);
     updateCountdown();
     return () => clearInterval(intervalId);
-  }, [otpDuration]);
+  }, [otpDuration, onTimeUpdate]);
 
   return (
     <span className="text-[#2D262D] text-center text-xs sm:text-sm">

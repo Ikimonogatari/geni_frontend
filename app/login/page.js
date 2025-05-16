@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -25,6 +25,7 @@ function Page() {
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [passwordValidationMessage, setPasswordValidationMessage] =
     useState("");
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
 
   const { data: passwordPolicy, isSuccess: passwordPolicySuccess } =
     useGetPasswordPolicyQuery({});
@@ -69,12 +70,18 @@ function Page() {
         .required("Заавал бөглөнө үү"),
     }),
     onSubmit: (value) => {
-      sendOtpToEmail({
-        To: value.forgotEmail,
-        UserType: userType, //Student, Brand, Creator
-        Channel: "smtp", //smtp, sms
-        Type: "forgotpassword",
-      });
+      // Only send a new OTP if there's no active timer or if the user is in the first step
+      if (
+        forgotPasswordState === "1" ||
+        (timeLeft && timeLeft.minutes === 0 && timeLeft.seconds === 0)
+      ) {
+        sendOtpToEmail({
+          To: value.forgotEmail,
+          UserType: userType, //Student, Brand, Creator
+          Channel: "smtp", //smtp, sms
+          Type: "forgotpassword",
+        });
+      }
     },
   });
   const otpForm = useFormik({
@@ -293,6 +300,11 @@ function Page() {
     login.setFieldValue("UserType", value);
   };
 
+  // Memoize the callback function to prevent infinite loops
+  const handleTimeUpdate = useCallback((time) => {
+    setTimeLeft(time);
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-white">
       <div className="">
@@ -437,7 +449,7 @@ function Page() {
                     </div>
                   ) : null}
                   <ForgetPasswordModal
-                    forgotPasswordForm={forgotPasswordForm}
+                    forgotPasswordState={forgotPasswordState}
                     setForgotPasswordState={setForgotPasswordState}
                     showNewPassword={showNewPassword}
                     showConfirmPassword={showConfirmPassword}
@@ -447,15 +459,17 @@ function Page() {
                       handleMouseDownConfirmPassword
                     }
                     handleMouseUpConfirmPassword={handleMouseUpConfirmPassword}
+                    emailForm={emailForm}
+                    otpForm={otpForm}
+                    forgotPasswordForm={forgotPasswordForm}
                     sendOtpToEmailSuccess={sendOtpToEmailSuccess}
                     sendOtpToEmailData={sendOtpToEmailData}
                     onClickEmailForm={emailForm.handleSubmit}
                     onClickOtpForm={otpForm.handleSubmit}
                     onClickForgotPasswordForm={forgotPasswordForm.handleSubmit}
-                    emailForm={emailForm}
-                    otpForm={otpForm}
-                    forgotPasswordState={forgotPasswordState}
                     passwordValidationMessage={passwordValidationMessage}
+                    timeLeft={timeLeft}
+                    onTimeUpdate={handleTimeUpdate}
                   />
 
                   <LoginButton

@@ -35,6 +35,8 @@ interface ForgetPasswordModalProps {
   onClickOtpForm: () => void;
   onClickForgotPasswordForm: () => void;
   passwordValidationMessage?: string;
+  timeLeft?: { minutes: number; seconds: number };
+  onTimeUpdate: (time: { minutes: number; seconds: number }) => void;
 }
 
 function ForgetPasswordModal({
@@ -55,6 +57,8 @@ function ForgetPasswordModal({
   onClickOtpForm,
   onClickForgotPasswordForm,
   passwordValidationMessage,
+  timeLeft,
+  onTimeUpdate,
 }: ForgetPasswordModalProps) {
   return (
     <Dialog>
@@ -146,13 +150,23 @@ function ForgetPasswordModal({
                 ) : null}
               </div>
               {sendOtpToEmailSuccess && (
-                <OtpTimeLeft otpDuration={sendOtpToEmailData?.otpDuration} />
+                <OtpTimeLeft
+                  otpDuration={sendOtpToEmailData?.otpDuration}
+                  onTimeUpdate={onTimeUpdate}
+                />
               )}
 
               <button
                 //   @ts-ignore
                 onClick={emailForm.handleSubmit}
-                className="text-center text-xs sm:text-sm cursor-pointer text-[#4D55F5] font-semibold"
+                disabled={
+                  timeLeft && (timeLeft.minutes > 0 || timeLeft.seconds > 0)
+                }
+                className={`text-center text-xs sm:text-sm cursor-pointer ${
+                  timeLeft && (timeLeft.minutes > 0 || timeLeft.seconds > 0)
+                    ? "text-gray-400"
+                    : "text-[#4D55F5]"
+                } font-semibold`}
               >
                 Нууц код дахин авах
               </button>
