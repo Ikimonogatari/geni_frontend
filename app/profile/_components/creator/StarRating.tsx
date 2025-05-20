@@ -14,7 +14,7 @@ function StarRating({
 }: StarRatingProps) {
   return (
     <div
-      className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 ${className}`}
+      className={`flex flex-row items-center justify-center gap-1 sm:gap-3 ${className}`}
     >
       <div className="flex flex-row items-center justify-center gap-2 sm:gap-3">
         <Image
@@ -22,7 +22,7 @@ function StarRating({
           width={24}
           height={24}
           alt=""
-          className="w-4 h-4 sm:w-6 sm:h-6"
+          className="w-4 h-4 sm:w-6 sm:h-6 mb-[2px] sm:mb-[3px]"
         />
         <span className="text-[#2D262D] text-xs sm:text-base">
           {averageRating}
