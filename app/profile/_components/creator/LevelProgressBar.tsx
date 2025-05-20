@@ -1,4 +1,10 @@
 import React from "react";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface LevelProgressBarProps {
   level: number;
@@ -8,13 +14,25 @@ interface LevelProgressBarProps {
 
 function LevelProgressBar({ level, progress, total }: LevelProgressBarProps) {
   return (
-    <div className="relative z-0 gap-2 bg-primary-bg border border-primary rounded-full w-full md:max-w-[166px] h-6">
-      <div
-        className="absolute left-0 top-0 h-6 bg-geni-green text-white text-sm font-bold rounded-full flex items-center justify-center py-[2px]"
-        style={{ width: `${(progress / total) * 100}%` }}
-      ></div>
-      <span className="block z-10 w-full text-center h-6">{progress}xp</span>
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="relative z-0 gap-2 bg-primary-bg border border-primary rounded-full w-full h-6 sm:h-8">
+          <div
+            className="absolute left-0 top-0 h-6 bg-geni-green text-white font-bold rounded-full flex items-center justify-center py-[2px]"
+            style={{ width: `${(progress / total) * 100}%` }}
+          ></div>
+          <span className="z-10 w-full flex justify-center items-center sm:h-6 h-full text-xs sm:text-sm">
+            {progress}xp
+          </span>
+        </TooltipTrigger>
+        {/* @ts-ignore */}
+        <TooltipContent>
+          <span className="text-xs sm:text-sm">
+            Дараагын түвшин хүртэл: <b>626xp</b>
+          </span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 

@@ -134,7 +134,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between w-full">
+          <div className="relative flex flex-row gap-4 items-start sm:items-center justify-between w-full">
             <div className="flex flex-row items-center gap-3 sm:gap-7">
               {getUserInfoData ? (
                 <Image
@@ -180,7 +180,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                 ) : (
                   <></>
                 )}
-                <span className="hidden sm:block text-[#6F6F6F] text-xs sm:text-base">
+                <span className="text-[#6F6F6F] text-xs sm:text-base">
                   {getUserInfoData ? getUserInfoData.Bio : ""}
                 </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
@@ -219,34 +219,33 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                 </div>
               </div>
             </div>
-            <span className="block sm:hidden text-[#6F6F6F] text-xs sm:text-base">
-              {getUserInfoData ? getUserInfoData.Bio : ""}
-            </span>
-            <div className="w-full sm:w-auto flex flex-row items-center gap-2 sm:gap-4">
-              <Link
-                href={"/notifications"}
-                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
-              >
-                <Image
-                  src={"/notification-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="icon"
-                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                />
-              </Link>
-              <Link
-                href="/profile/edit"
-                className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
-              >
-                <Image
-                  src={"/edit-profile-icon.png"}
-                  width={24}
-                  height={24}
-                  alt="icon"
-                  className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
-                />
-              </Link>
+            <div className="absolute top-0 right-0 sm:block">
+              <div className="flex flex-row items-center gap-2 sm:gap-4">
+                <Link
+                  href={"/notifications"}
+                  className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
+                >
+                  <Image
+                    src={"/notification-icon.png"}
+                    width={24}
+                    height={24}
+                    alt="icon"
+                    className="min-w-4 sm:min-w-6 min-h-4 h-4 w-4 sm:min-h-6 sm:h-6 sm:w-6"
+                  />
+                </Link>
+                <Link
+                  href="/profile/edit"
+                  className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
+                >
+                  <Image
+                    src={"/edit-profile-icon.png"}
+                    width={24}
+                    height={24}
+                    alt="icon"
+                    className="min-w-4 sm:min-w-6 min-h-4 h-4 w-4 sm:min-h-6 sm:h-6 sm:w-6"
+                  />
+                </Link>
+              </div>
             </div>
           </div>
           <CreatorProfileHeader userInfoData={getUserInfoData} />
