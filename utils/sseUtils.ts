@@ -68,6 +68,9 @@ export const createPaymentStatusMonitor = (
           // Decode chunk and add to buffer
           buffer += decoder.decode(value, { stream: true });
 
+          // Log raw buffer for debugging
+          console.log("Raw SSE data received:", buffer);
+
           // Process complete events in buffer
           const lines = buffer.split("\n\n");
           buffer = lines.pop() || ""; // Keep the unfinished part
@@ -79,10 +82,46 @@ export const createPaymentStatusMonitor = (
             const dataMatch = eventText.match(/data: (.+)$/m);
             if (dataMatch && dataMatch[1]) {
               try {
-                const data = JSON.parse(dataMatch[1]);
+                // Trim the data to remove any whitespace
+                const trimmedData = dataMatch[1].trim();
+                console.log("Attempting to parse:", trimmedData);
+
+                // Handle different data formats
+                let data;
+                try {
+                  // Try standard JSON parse
+                  data = JSON.parse(trimmedData);
+                } catch (jsonError) {
+                  console.log(
+                    "Standard JSON parse failed, trying alternative approaches"
+                  );
+
+                  // Check if it's a boolean string "true" or "false"
+                  if (trimmedData === "true") {
+                    data = { isPaid: true };
+                  } else if (trimmedData === "false") {
+                    data = { isPaid: false };
+                  } else {
+                    // Try to extract a valid JSON part if any
+                    const possibleJsonMatch = trimmedData.match(/\{.*\}/);
+                    if (possibleJsonMatch) {
+                      try {
+                        data = JSON.parse(possibleJsonMatch[0]);
+                      } catch (e) {
+                        // Still failed, log the error
+                        console.error("Could not extract valid JSON:", e);
+                        throw jsonError; // throw the original error
+                      }
+                    } else {
+                      throw jsonError; // throw the original error
+                    }
+                  }
+                }
+
                 console.log("Received payment data:", data);
 
-                if (data && data.isPaid === true) {
+                // Check both possible property names: isPaid and IsPaid
+                if (data && (data.isPaid === true || data.IsPaid === true)) {
                   console.log("Payment successful!");
                   onPaymentSuccess();
                   isActive = false;
@@ -90,6 +129,7 @@ export const createPaymentStatusMonitor = (
                 }
               } catch (err) {
                 console.error("Error parsing SSE data:", err);
+                console.error("Raw data that failed to parse:", dataMatch[1]);
               }
             }
           }
