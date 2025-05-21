@@ -30,6 +30,7 @@ export const createPaymentStatusMonitor = (
 
   let isActive = true;
   let controller = new AbortController();
+  let lastStatus = false; // Track last payment status
 
   const startMonitoring = async () => {
     const baseUrl = process.env.NEXT_PUBLIC_AWS_URL || "";
@@ -72,64 +73,77 @@ export const createPaymentStatusMonitor = (
           console.log("Raw SSE data received:", buffer);
 
           // Process complete events in buffer
-          const lines = buffer.split("\n\n");
-          buffer = lines.pop() || ""; // Keep the unfinished part
+          const events = buffer.split("\n\n");
+          buffer = events.pop() || ""; // Keep the unfinished part
 
-          for (const eventText of lines) {
+          for (const eventText of events) {
             if (!eventText.trim()) continue;
 
-            // Extract and parse data
-            const dataMatch = eventText.match(/data: (.+)$/m);
-            if (dataMatch && dataMatch[1]) {
-              try {
-                // Trim the data to remove any whitespace
-                const trimmedData = dataMatch[1].trim();
-                console.log("Attempting to parse:", trimmedData);
+            // Process each line of the event
+            const lines = eventText.split("\n");
+            let currentData = {};
 
-                // Handle different data formats
-                let data;
+            for (const line of lines) {
+              if (line.startsWith("data:")) {
+                const dataContent = line.substring(5).trim();
+
                 try {
-                  // Try standard JSON parse
-                  data = JSON.parse(trimmedData);
-                } catch (jsonError) {
-                  console.log(
-                    "Standard JSON parse failed, trying alternative approaches"
-                  );
-
-                  // Check if it's a boolean string "true" or "false"
-                  if (trimmedData === "true") {
-                    data = { isPaid: true };
-                  } else if (trimmedData === "false") {
-                    data = { isPaid: false };
-                  } else {
-                    // Try to extract a valid JSON part if any
-                    const possibleJsonMatch = trimmedData.match(/\{.*\}/);
-                    if (possibleJsonMatch) {
-                      try {
-                        data = JSON.parse(possibleJsonMatch[0]);
-                      } catch (e) {
-                        // Still failed, log the error
-                        console.error("Could not extract valid JSON:", e);
-                        throw jsonError; // throw the original error
-                      }
+                  // Try to parse as JSON first
+                  try {
+                    currentData = JSON.parse(dataContent);
+                  } catch (jsonError) {
+                    // Handle "status: true/false" format
+                    if (dataContent.includes("status:")) {
+                      const statusValue = dataContent.includes("true");
+                      currentData = {
+                        status: statusValue,
+                        isPaid: statusValue,
+                      };
+                      console.log("Parsed status value:", statusValue);
+                    }
+                    // Handle plain boolean values
+                    else if (dataContent === "true") {
+                      currentData = { isPaid: true, status: true };
+                    } else if (dataContent === "false") {
+                      currentData = { isPaid: false, status: false };
                     } else {
-                      throw jsonError; // throw the original error
+                      // Try to extract JSON from a mixed format
+                      const jsonMatch = dataContent.match(/\{.*\}/);
+                      if (jsonMatch) {
+                        try {
+                          currentData = JSON.parse(jsonMatch[0]);
+                        } catch (e) {
+                          console.error("Failed to extract JSON:", e);
+                        }
+                      }
                     }
                   }
-                }
 
-                console.log("Received payment data:", data);
+                  console.log("Received payment data:", currentData);
 
-                // Check both possible property names: isPaid and IsPaid
-                if (data && (data.isPaid === true || data.IsPaid === true)) {
-                  console.log("Payment successful!");
-                  onPaymentSuccess();
-                  isActive = false;
-                  return;
+                  // Check if status changed from previous state
+                  const isPaid = !!(
+                    currentData["isPaid"] ||
+                    currentData["IsPaid"] ||
+                    currentData["status"]
+                  );
+
+                  if (isPaid !== lastStatus) {
+                    console.log(
+                      `Payment status changed: ${lastStatus} -> ${isPaid}`
+                    );
+                    lastStatus = isPaid;
+
+                    if (isPaid) {
+                      console.log("Payment successful!");
+                      onPaymentSuccess();
+                      isActive = false;
+                      return;
+                    }
+                  }
+                } catch (err) {
+                  console.error("Error processing SSE data:", err);
                 }
-              } catch (err) {
-                console.error("Error parsing SSE data:", err);
-                console.error("Raw data that failed to parse:", dataMatch[1]);
               }
             }
           }
