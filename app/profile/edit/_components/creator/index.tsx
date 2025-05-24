@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
+import { Mail, User, Lock, Share2, LogOut, HomeIcon } from "lucide-react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/tooltip";
 import BackButton from "@/components/common/BackButton";
 import { store, useAppDispatch } from "@/app/store";
+import AddressSettings from "../AddressSettings";
 
 function EditProfileCreator() {
   const router = useRouter();
@@ -211,6 +212,32 @@ function EditProfileCreator() {
       if (parsedUserInfo?.LastName) delete valuesToSubmit.LastName;
 
       editCreatorProfile(valuesToSubmit).unwrap();
+    },
+  });
+
+  const addressFormik = useFormik({
+    initialValues: {
+      city: "",
+      district: "",
+      street: "",
+      addressType: "",
+      gate: "",
+      floor: "",
+      houseNumber: "",
+      additionalInfo: "",
+    },
+    validationSchema: Yup.object({
+      city: Yup.string().required("Заавал бөглөнө үү"),
+      district: Yup.string().required("Заавал бөглөнө үү"),
+      street: Yup.string().required("Заавал бөглөнө үү"),
+      addressType: Yup.string().required("Заавал бөглөнө үү"),
+      gate: Yup.string().required("Заавал бөглөнө үү"),
+      floor: Yup.string().required("Заавал бөглөнө үү"),
+      houseNumber: Yup.string().required("Заавал бөглөнө үү"),
+      additionalInfo: Yup.string().required("Заавал бөглөнө үү"),
+    }),
+    onSubmit: async (values) => {
+      console.log(values, "VALUES");
     },
   });
 
@@ -540,6 +567,12 @@ function EditProfileCreator() {
       onClick: () => setActiveSection("socials"),
     },
     {
+      title: "Гэрийн хаяг",
+      href: "#address",
+      icon: <HomeIcon className="h-4 w-4" />,
+      onClick: () => setActiveSection("address"),
+    },
+    {
       title: "Гарах",
       href: "#",
       icon: <LogOut className="h-4 w-4" />,
@@ -794,12 +827,14 @@ function EditProfileCreator() {
             handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
           />
         );
+      case "address":
+        return <AddressSettings addressFormik={addressFormik} />;
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mb-12 py-11 container mx-auto">
+      <div className="mb-12 py-11 container max-w-6xl mx-auto">
         <BackButton />
         <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
           <Sidebar

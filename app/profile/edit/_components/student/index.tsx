@@ -784,7 +784,7 @@ function EditProfileStudent() {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mb-12 py-11 container mx-auto">
+      <div className="mb-12 py-11 container max-w-6xl mx-auto">
         <BackButton />
         <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
           <Sidebar
