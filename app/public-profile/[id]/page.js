@@ -6,9 +6,9 @@ import {
   useGetPublicCreatorByIdQuery,
 } from "@/app/services/service";
 import Link from "next/link";
-import ContentGallery from "@/components/ContentGallery";
 import { useParams } from "next/navigation";
 import CreatorTier from "@/components/CreatorTier";
+import PublicContentGallery from "@/components/PublicContentGallery";
 
 function page() {
   const params = useParams();
@@ -155,7 +155,9 @@ function page() {
               </span>
             )}
           {listContentGalleryData && listContentGalleryData?.Data != null ? (
-            <ContentGallery contentsGallery={listContentGalleryData?.Data} />
+            <PublicContentGallery
+              contentsGallery={listContentGalleryData?.Data}
+            />
           ) : (
             <></>
           )}
