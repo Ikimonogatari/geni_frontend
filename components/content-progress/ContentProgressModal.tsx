@@ -62,7 +62,8 @@ const ContentProgressModalContent: React.FC<
   const [activeStep, setActiveStep] = useState<number>(0);
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
   const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
-  const [openFixRequestSuccess, setOpenFixRequestSuccess] = useState<boolean>(false);
+  const [openFixRequestSuccess, setOpenFixRequestSuccess] =
+    useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const userType = Cookies.get("userType");
   const parsedUserInfo = Cookies.get("user-info");
@@ -173,7 +174,7 @@ const ContentProgressModalContent: React.FC<
             FixReason: values.reasons,
           };
           brandReview(data).then(() => {
-            setDialogOpen(false);
+            setDialogType(DialogType.CONTENT);
             refetch();
             setOpenFixRequestSuccess(true);
           });
@@ -482,12 +483,13 @@ const ContentProgressModalContent: React.FC<
                             className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
                           >
                             <span
-                              className={`text-sm sm:text-base ${formik.values.BrandReviewResendFeedback.includes(
-                                feedback.BrandReviewId
-                              )
-                                ? "text-green-500"
-                                : "hidden"
-                                } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                              className={`text-sm sm:text-base ${
+                                formik.values.BrandReviewResendFeedback.includes(
+                                  feedback.BrandReviewId
+                                )
+                                  ? "text-green-500"
+                                  : "hidden"
+                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                             >
                               ✓
                             </span>
@@ -557,8 +559,9 @@ const ContentProgressModalContent: React.FC<
                           className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center transition-all peer-checked:border-green-500"
                         >
                           <span
-                            className={`text-sm sm:text-base ${item.CreatorChecked ? "text-green-500" : "hidden"
-                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                            className={`text-sm sm:text-base ${
+                              item.CreatorChecked ? "text-green-500" : "hidden"
+                            } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                           >
                             ✓
                           </span>
@@ -629,8 +632,9 @@ const ContentProgressModalContent: React.FC<
                   : handleOpenReturnSection()
               }
               disabled={isLoadingContentProcessRefund}
-              className={`w-full text-center text-xs sm:text-base ${isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
-                } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
+              className={`w-full text-center text-xs sm:text-base ${
+                isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
+              } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
             >
               Бүтээгдэхүүн буцаах
             </button>
@@ -659,7 +663,7 @@ const ContentProgressModalContent: React.FC<
                 className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
               >
                 {status === STATUS_LIST.ContentRejected ||
-                  status === STATUS_LIST.ContentFixRequest
+                status === STATUS_LIST.ContentFixRequest
                   ? "Дахин илгээх"
                   : "Контент илгээх"}
               </button>
@@ -817,21 +821,21 @@ const ContentProgressModalContent: React.FC<
                       )}
                     {contentProcessData?.[contentProcessData.length - 1]
                       ?.ContentStepId == content?.CurrentStepId && (
-                        <>
-                          {userType == "Creator" && creatorModalContents()}
-                          {userType == "Brand" && brandModalContents()}
-                          {userType == "Creator" && creatorModalMessages()}
-                          {userType == "Brand" && brandModalMessages()}
-                        </>
-                      )}
+                      <>
+                        {userType == "Creator" && creatorModalContents()}
+                        {userType == "Brand" && brandModalContents()}
+                        {userType == "Creator" && creatorModalMessages()}
+                        {userType == "Brand" && brandModalMessages()}
+                      </>
+                    )}
                   </div>
                   {contentProcessData?.[contentProcessData.length - 1]
                     ?.ContentStepId == content?.CurrentStepId && (
-                      <>
-                        {userType == "Creator" && creatorModalFooterActions()}
-                        {userType == "Brand" && brandModalFooterActions()}
-                      </>
-                    )}
+                    <>
+                      {userType == "Creator" && creatorModalFooterActions()}
+                      {userType == "Brand" && brandModalFooterActions()}
+                    </>
+                  )}
                 </form>
               </FormikProvider>
 
