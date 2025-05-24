@@ -737,7 +737,7 @@ const ContentProgressModalContent: React.FC<
         )}
 
         {status == STATUS_LIST.ContentApproved && (
-          <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
+          <div className="h-[calc(700px-40px)] lg:h-[calc(580px-40px)] w-full flex flex-col p-4">
             <div>
               Танд контент бүтээгчид өгсөн дундаж оноо:
               <Image
@@ -805,7 +805,7 @@ const ContentProgressModalContent: React.FC<
                 <form onSubmit={formik.handleSubmit} className="h-full w-full">
                   <div
                     ref={scrollContainerRef}
-                    className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
+                    className="h-[calc(580px-40px)] lg:h-[calc(580px-40px)] overflow-y-auto [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
                   >
                     {dialogType == DialogType.PROGRESS &&
                       contentProcessData?.length > 0 && (
