@@ -51,7 +51,9 @@ const ViewContent: React.FC<ViewContentProps> = ({
             </caption>
           </div>
           <div className="flex flex-col justify-between gap-2">
-            {content?.CurrentStepName?.String != STATUS_LIST.ContentReSent && (
+            {[STATUS_LIST.BrandConfirming].includes(
+              content?.CurrentStepName?.String as STATUS_LIST
+            ) && (
               <button
                 type="button"
                 className="bg-[#F49D19] text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
@@ -60,7 +62,9 @@ const ViewContent: React.FC<ViewContentProps> = ({
                 Контент засах хүсэлт илгээх
               </button>
             )}
-            {content?.CurrentStepName?.String != STATUS_LIST.ContentFixRequest &&
+            {[STATUS_LIST.BrandConfirming, STATUS_LIST.ContentReSent].includes(
+              content?.CurrentStepName?.String as STATUS_LIST
+            ) && (
               <button
                 type="button"
                 className="bg-secondary text-white py-1 sm:py-2 font-bold rounded-lg sm:rounded-lg transition-all"
@@ -68,7 +72,7 @@ const ViewContent: React.FC<ViewContentProps> = ({
               >
                 Контент хүлээж авах
               </button>
-            }
+            )}
           </div>
         </div>
       </div>
