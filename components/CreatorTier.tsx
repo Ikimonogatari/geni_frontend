@@ -16,7 +16,7 @@ export default function CreatorTier({
   const proTierSwiperClassName = "aspect-[58/22] w-[44px]";
   const proTierClassName = "w-[29px] h-[11px] sm:w-[58px] sm:h-[22px]";
   const certifiedSwiperClassName = "w-[20px] h-[20px]";
-  const certifiedClassName = "w-[16px] h-[16px] sm:w-[24px] sm:h-[24px]";
+  const certifiedClassName = "w-5 h-5 sm:w-[24px] sm:h-[24px]";
 
   const getImageSrc = (tier) => {
     switch (tier) {

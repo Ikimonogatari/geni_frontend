@@ -19,7 +19,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CreatorTier from "@/components/CreatorTier";
-import { useRouter } from "next/navigation";
+import CreatorProfileHeader from "./CreatorProfileHeader";
 
 function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const router = useRouter();
@@ -135,7 +135,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
-          <div className="flex flex-col sm:flex-row gap-4 items-start justify-between w-full">
+          <div className="relative flex flex-row gap-4 items-start sm:items-center justify-between w-full">
             <div className="flex flex-row items-center gap-3 sm:gap-7">
               {getUserInfoData ? (
                 <Image
@@ -161,35 +161,6 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                         ? ""
                         : getUserInfoData?.Nickname || "Geni бүтээгч"}
                     </span>
-
-                    <CreatorTier
-                      tier={getUserInfoData?.LevelName}
-                      isSwiper={false}
-                    />
-                  </div>
-                  <div className="flex flex-row items-center gap-1 sm:gap-2">
-                    <span className="text-sm sm:text-lg">
-                      {getUserInfoData && <>{getUserInfoData.Point} xp</>}
-                    </span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Link href="/profile/point-board">
-                            <Image
-                              src={"/info-icon.png"}
-                              width={24}
-                              height={24}
-                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
-                              alt=""
-                            />
-                          </Link>
-                        </TooltipTrigger>
-                        {/* @ts-ignore */}
-                        <TooltipContent>
-                          <span>Таны онооны самбар</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
                   </div>
                 </div>
                 {getUserInfoData?.AverageRating &&
@@ -210,6 +181,9 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                 ) : (
                   <></>
                 )}
+                <span className="text-[#6F6F6F] text-xs sm:text-base">
+                  {getUserInfoData ? getUserInfoData.Bio : ""}
+                </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink ? (
                     <a
@@ -244,30 +218,9 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     <></>
                   )}
                 </div>
-                <span className="hidden sm:block text-[#6F6F6F] text-xs sm:text-base">
-                  {getUserInfoData ? getUserInfoData.Bio : ""}
-                </span>
               </div>
             </div>
-            <span className="block sm:hidden text-[#6F6F6F] text-xs sm:text-base">
-              {getUserInfoData ? getUserInfoData.Bio : ""}
-            </span>
-            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-end sm:flex-col gap-2 sm:gap-4">
-              <Link
-                href={"/wallet"}
-                className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg min-w-10"
-              >
-                <Image
-                  src={"/wallet-icon.png"}
-                  height={24}
-                  width={24}
-                  alt=""
-                  className="w-4 h-4 sm:w-6 sm:h-6"
-                />
-                <span className="text-white text-sm sm:text-base whitespace-nowrap">
-                  Geni хэтэвч
-                </span>
-              </Link>
+            <div className="absolute top-0 right-0 sm:block">
               <div className="flex flex-row items-center gap-2 sm:gap-4">
                 <Link
                   href={"/notifications"}
@@ -278,7 +231,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     width={24}
                     height={24}
                     alt="icon"
-                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    className="min-w-4 sm:min-w-6 min-h-4 h-4 w-4 sm:min-h-6 sm:h-6 sm:w-6"
                   />
                 </Link>
                 <Link
@@ -290,120 +243,14 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     width={24}
                     height={24}
                     alt="icon"
-                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    className="min-w-4 sm:min-w-6 min-h-4 h-4 w-4 sm:min-h-6 sm:h-6 sm:w-6"
                   />
                 </Link>
               </div>
             </div>
           </div>
-          <div className="mt-8">
-            <div className="flex flex-col sm:flex-row gap-4 w-full">
-              {/* Level/XP Progress */}
-              <div className="flex-1 flex flex-col">
-                <span className="text-sm text-[#6F6F6F]">Түвшин:</span>
-                <div className="flex-1 flex flex-col items-start justify-center border border-[#EDEDED] rounded-2xl px-4 py-2 min-w-[220px] h-full">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="bg-[#E28A6E] text-white font-bold rounded-full px-3 py-1 text-xs">
-                      PRO
-                    </span>
-                    <div className="flex-1 flex items-center">
-                      <div className="relative w-32 h-6 mx-2">
-                        <div className="absolute top-0 left-0 w-full h-full bg-[#F5F4F0] rounded-full"></div>
-                        <div
-                          className="absolute top-0 left-0 h-full bg-[#4FB755] rounded-full transition-all"
-                          style={{
-                            width: `${Math.min(
-                              (getUserInfoData?.Point ?? 0) /
-                                ((getUserInfoData?.NextLevelPoint ?? 1000) /
-                                  100),
-                              100
-                            )}%`,
-                          }}
-                        ></div>
-                        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-bold text-white">
-                          {getUserInfoData?.Point ?? 0}
-                        </span>
-                      </div>
-                      <span className="font-bold text-base text-[#2D262D] ml-2">
-                        xp
-                      </span>
-                    </div>
-                    <Link href="/profile/point-board">
-                      <Image
-                        src="/info-icon.png"
-                        width={20}
-                        height={20}
-                        alt="info"
-                      />
-                    </Link>
-                  </div>
-                  <span className="text-xs text-[#6F6F6F]">
-                    Дараагийн түвшинд гарахад{" "}
-                    <span className="font-bold text-[#2D262D]">
-                      {(getUserInfoData?.NextLevelPoint ?? 1000) -
-                        (getUserInfoData?.Point ?? 0)}{" "}
-                      XP
-                    </span>{" "}
-                    дутуу
-                  </span>
-                </div>
-              </div>
-              {/* Rating */}
-              <div className="flex-1 flex flex-col">
-                <span className="text-sm text-[#6F6F6F]">Үнэлгээ:</span>
-                <div className="flex-1 flex flex-col items-center justify-center border border-[#EDEDED] rounded-2xl px-4 py-2 min-w-[180px] h-full">
-                  <div className="flex items-center gap-2">
-                    <Image src="/star.png" width={24} height={24} alt="star" />
-                    <span className="font-bold text-lg">
-                      {getUserInfoData?.AverageRating ?? "-"}
-                    </span>
-                    <span className="text-[#6F6F6F] text-sm">
-                      ({getUserInfoData?.ContentCount ?? 0} contents)
-                    </span>
-                  </div>
-                </div>
-              </div>
-              {/* Geni Point */}
-              <div className="flex-1 flex flex-col">
-                <span className="text-sm text-[#6F6F6F]">Geni хэтэвч:</span>
-                <div className="flex-1 flex flex-col items-center justify-center border border-[#EDEDED] rounded-2xl px-4 py-2 min-w-[180px] h-full">
-                  <span className="text-[#6F6F6F] text-sm">Geni Point:</span>
-                  <span className="font-bold text-2xl text-[#2D262D]">
-                    {getUserInfoData?.GeniPoint?.toLocaleString() ?? "0"}
-                  </span>
-                </div>
-              </div>
-              {/* Badges */}
-              <div className="flex-1 flex flex-col">
-                <span className="text-sm text-[#6F6F6F]">Цол:</span>
-                <div
-                  className="flex-1 flex flex-row items-center justify-center border border-[#EDEDED] rounded-2xl px-4 py-2 min-w-[120px] gap-2 h-full cursor-pointer hover:bg-geni-gray transition-all duration-300 ease-in-out"
-                  onClick={() => router.push("/profile/achievements")}
-                >
-                  {/* Replace with actual badge icons and logic */}
-                  <Image
-                    src="/badge1.png"
-                    width={40}
-                    height={40}
-                    alt="badge1"
-                  />
-                  <Image
-                    src="/badge2.png"
-                    width={40}
-                    height={40}
-                    alt="badge2"
-                  />
-                  <Image
-                    src="/badge3.png"
-                    width={40}
-                    height={40}
-                    alt="badge3"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 sm:mt-8 w-full overflow-x-auto">
+          <CreatorProfileHeader userInfoData={getUserInfoData} />
+          <div className="mt-4 sm:mt-16 w-full overflow-x-auto">
             <Link
               href="/products"
               className="mb-4 sm:hidden flex whitespace-nowrap flex-row justify-center text-base items-center gap-2 bg-[#CA7FFE] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold"
@@ -470,6 +317,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
           </div>
         </div>
+
         {listCreatorContentsData && totalPages > 1 ? (
           <Pagination
             totalPages={totalPages}
