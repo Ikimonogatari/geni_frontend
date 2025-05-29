@@ -2,17 +2,27 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useListPaymentPlansQuery } from "@/app/services/service";
 import PriceFormatter from "@/components/common/FormatPrice";
+import { Input } from "@/components/ui/input";
+import FadeInAnimation from "@/components/common/FadeInAnimation";
 
-function Step4({ selectedPackageIndex, selectedPayment, setSelectedPayment }) {
+function Step4({
+  selectedPackageIndex,
+  selectedPayment,
+  setSelectedPayment,
+  formik = null,
+  calculateCouponData = null,
+  selectedPackageData = null,
+}) {
   const {
     data: listPaymentPlansData,
     error: listPaymentPlansError,
     isLoading: listPaymentPlansLoading,
   } = useListPaymentPlansQuery({});
 
-  const selectedPackageData = listPaymentPlansData
-    ? listPaymentPlansData[selectedPackageIndex]
-    : null;
+  // Use provided selectedPackageData or fallback to local data
+  const packageData =
+    selectedPackageData ||
+    (listPaymentPlansData ? listPaymentPlansData[selectedPackageIndex] : null);
 
   return (
     <div className="flex flex-col items-start gap-2 w-full">
@@ -20,33 +30,83 @@ function Step4({ selectedPackageIndex, selectedPayment, setSelectedPayment }) {
         Идэвхжүүлэх багцын мэдээлэл
       </span>
 
-      <div className="mt-2 sm:mt-4 bg-[#F5F4F0] rounded-3xl p-3 sm:p-8 flex flex-row items-center gap-4 sm:gap-20">
+      <div className="w-full mt-2 sm:mt-4 bg-[#F5F4F0] rounded-3xl p-3 sm:p-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-14 lg:gap-20">
         <Image
           src={`/brand-bundle-${selectedPackageIndex + 1}.png`}
           width={200}
           height={200}
           alt=""
-          className="w-1/2 sm:w-[200px] h-auto sm:h-[200px]"
+          className="w-auto lg:w-[200px] lg:h-[200px]"
         />
-        <div className="flex flex-col gap-[3px] sm:gap-3">
-          <div className="flex flex-col text-[#6F6F6F]">
-            <span>Geni кредит:</span>
-            <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
-              {selectedPackageData?.Credit}
-            </span>
+        <div className="w-auto md:w-full grid grid-cols-1 lg:grid-cols-2 items-start md:items-center gap-4 sm:gap-5">
+          <div className="w-full flex flex-col items-start gap-2 col-span-1">
+            <div className="flex flex-col text-[#6F6F6F]">
+              <span>Geni кредит:</span>
+              <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
+                {packageData?.Credit}
+              </span>
+            </div>
+            <div className="flex flex-col text-[#6F6F6F]">
+              <span>Контентийн үнэ: </span>
+              <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
+                <PriceFormatter price={packageData?.ContentPrice} />
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm sm:text-base">Нийт үнэ:</span>
+              <span className="text-xl sm:text-2xl">
+                <PriceFormatter price={packageData?.Price || 0} />
+              </span>
+              <FadeInAnimation visible={calculateCouponData ? true : false}>
+                <span className="text-geni-green">
+                  Купон хөнгөлөлт:{" "}
+                  <PriceFormatter
+                    price={
+                      (packageData?.Price || 0) -
+                      (calculateCouponData?.Amount || 0)
+                    }
+                  />
+                </span>
+              </FadeInAnimation>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-sm sm:text-base">Төлөх дүн: </span>
+              <span className="text-xl sm:text-2xl">
+                <PriceFormatter
+                  price={calculateCouponData?.Amount || packageData?.Price || 0}
+                />
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col text-[#6F6F6F]">
-            <span>Контентийн үнэ: </span>
-            <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
-              <PriceFormatter price={selectedPackageData?.ContentPrice} />
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <span>Нийт үнэ: </span>
-            <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
-              <PriceFormatter price={selectedPackageData?.Price} />
-            </span>
-          </div>
+          {formik && (
+            <Input
+              id="couponCode"
+              name="couponCode"
+              type="text"
+              className="text-base sm:text-xl w-full"
+              wrapperClassName="w-full max-w-[262px] col-span-1"
+              labelClassName="text-lg font-normal"
+              layoutClassName="h-full p-2 w-full"
+              label="Купон код оруулах"
+              rightSection={
+                <button
+                  onClick={() => formik.handleSubmit()}
+                  type="button"
+                  className="bg-geni-green rounded-lg border-primary border text-white text-sm px-2 py-2"
+                >
+                  Идэвхжүүлэх
+                </button>
+              }
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.couponCode}
+              errorText={formik.errors.couponCode}
+              errorVisible={
+                formik.touched.couponCode && formik.errors.couponCode
+              }
+            />
+          )}
         </div>
       </div>
       <div className="flex flex-col sm:flex-row justify-between w-full sm:items-center">

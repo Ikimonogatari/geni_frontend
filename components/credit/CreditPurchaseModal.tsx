@@ -7,12 +7,16 @@ import Step4 from "./Step4";
 import {
   useUseFreeContentMutation,
   useGetUserInfoQuery,
+  useCalculateCouponMutation,
+  useListPaymentPlansQuery,
 } from "@/app/services/service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SubscriptionModal from "../SubscriptionModal";
 import Loader from "@/components/common/Loader";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function CreditPurchase({ className, buttonIconSize, buttonText }) {
   const router = useRouter();
@@ -25,6 +29,54 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
   const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
     {}
   );
+
+  const [
+    calculateCoupon,
+    {
+      data: calculateCouponData,
+      error: calculateCouponError,
+      isLoading: calculateCouponLoading,
+      isSuccess: calculateCouponSuccess,
+    },
+  ] = useCalculateCouponMutation();
+
+  const {
+    data: listPaymentPlansData,
+    error: listPaymentPlansError,
+    isLoading: listPaymentPlansLoading,
+  } = useListPaymentPlansQuery({});
+
+  const selectedPackageData = listPaymentPlansData
+    ? listPaymentPlansData[selectedPackageIndex]
+    : null;
+
+  const couponCodeformik = useFormik({
+    initialValues: {
+      couponCode: "",
+    },
+    validationSchema: Yup.object({}),
+    onSubmit: async (values) => {
+      try {
+        calculateCoupon({
+          Amount: selectedPackageData?.Price || 0,
+          CouponCode: values.couponCode,
+        });
+      } catch (error) {
+        toast.error("Алдаа гарлаа");
+        console.error("Error submitting the form", error);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (calculateCouponSuccess) {
+      toast.success("Таны купон амжилттай идэвхжилээ");
+    }
+    if (calculateCouponError) {
+      //@ts-ignore
+      toast.error(calculateCouponError?.data?.error);
+    }
+  }, [calculateCouponSuccess, calculateCouponError]);
 
   // Update steps and selected option when userInfo is loaded
   useEffect(() => {
@@ -104,6 +156,9 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
             selectedPackageIndex={selectedPackageIndex}
             selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
+            formik={couponCodeformik}
+            calculateCouponData={calculateCouponData}
+            selectedPackageData={selectedPackageData}
           />
         );
       default:
@@ -170,6 +225,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
               selectedPackageId={selectedPackageId}
               setIsMainDialogOpen={setMainDialogOpen}
               selectedPayment={selectedPayment}
+              couponCode={couponCodeformik.values.couponCode}
             />
           )}
         </div>
