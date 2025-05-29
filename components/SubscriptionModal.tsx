@@ -22,12 +22,14 @@ interface SubscriptionModalProps {
   selectedPackageId: number;
   setIsMainDialogOpen: (open: boolean) => void;
   selectedPayment: string;
+  couponCode?: string;
 }
 
 const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   selectedPackageId,
   setIsMainDialogOpen,
   selectedPayment,
+  couponCode,
 }) => {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
@@ -71,7 +73,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   }, [subscribePlanSuccess, subscribePlanError]);
 
   const handleSubscription = () => {
-    subscribePlan({ planId: selectedPackageId });
+    subscribePlan({
+      planId: selectedPackageId,
+      ...(couponCode && { CouponCode: couponCode }),
+    });
   };
 
   const handleCheckPayment = async () => {
