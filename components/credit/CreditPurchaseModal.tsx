@@ -181,7 +181,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
         />
       </DialogTrigger>
       {/* @ts-ignore */}
-      <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-4xl rounded-3xl">
+      <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-5xl rounded-3xl">
         {renderStepContent()}
         <div className="flex flex-row items-center justify-between w-full">
           {currentStep > 1 && (

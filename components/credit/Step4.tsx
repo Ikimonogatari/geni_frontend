@@ -30,7 +30,7 @@ function Step4({
         Идэвхжүүлэх багцын мэдээлэл
       </span>
 
-      <div className="w-full mt-2 sm:mt-4 bg-[#F5F4F0] rounded-3xl p-3 sm:p-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-14 lg:gap-20">
+      <div className="w-full mt-2 sm:mt-4 bg-[#F5F4F0] rounded-3xl p-3 sm:p-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-14">
         <Image
           src={`/brand-bundle-${selectedPackageIndex + 1}.png`}
           width={200}
@@ -38,27 +38,27 @@ function Step4({
           alt=""
           className="w-auto lg:w-[200px] lg:h-[200px]"
         />
-        <div className="w-auto md:w-full grid grid-cols-1 lg:grid-cols-2 items-start md:items-center gap-4 sm:gap-5">
-          <div className="w-full flex flex-col items-start gap-2 col-span-1">
-            <div className="flex flex-col text-[#6F6F6F]">
+        <div className="w-auto md:w-full flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-5">
+          <div className="w-full grid grid-cols-2 items-start gap-2">
+            <div className="flex flex-col text-[#6F6F6F] col-span-1">
               <span>Geni кредит:</span>
               <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
                 {packageData?.Credit}
               </span>
             </div>
-            <div className="flex flex-col text-[#6F6F6F]">
+            <div className="flex flex-col text-[#6F6F6F] col-span-1">
               <span>Контентийн үнэ: </span>
               <span className="text-base sm:text-lg md:text-xl lg:text-2xl">
                 <PriceFormatter price={packageData?.ContentPrice} />
               </span>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col col-span-1">
               <span className="text-sm sm:text-base">Нийт үнэ:</span>
               <span className="text-xl sm:text-2xl">
                 <PriceFormatter price={packageData?.Price || 0} />
               </span>
               <FadeInAnimation visible={calculateCouponData ? true : false}>
-                <span className="text-geni-green">
+                <span className="text-geni-green text-sm">
                   Купон хөнгөлөлт:{" "}
                   <PriceFormatter
                     price={
@@ -70,7 +70,7 @@ function Step4({
               </FadeInAnimation>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col col-span-1">
               <span className="text-sm sm:text-base">Төлөх дүн: </span>
               <span className="text-xl sm:text-2xl">
                 <PriceFormatter
@@ -85,7 +85,7 @@ function Step4({
               name="couponCode"
               type="text"
               className="text-base sm:text-xl w-full"
-              wrapperClassName="w-full max-w-[262px] col-span-1"
+              wrapperClassName="w-full md:max-w-[262px] col-span-1"
               labelClassName="text-lg font-normal"
               layoutClassName="h-full p-2 w-full"
               label="Купон код оруулах"
