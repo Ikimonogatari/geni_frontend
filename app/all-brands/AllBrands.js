@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useGetPublicBrandListQuery } from "../services/service";
 import { Skeleton } from "@/components/ui/skeleton";
+import PublicBrandCard from "@/components/PublicBrandCard";
 
 function AllBrands() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,66 +50,15 @@ function AllBrands() {
             )?.SocialAddress;
 
             return (
-              <div
+              <PublicBrandCard
                 key={id}
-                className="bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-[#000000] flex flex-col items-center gap-2 h-full"
-              >
-                <Image
-                  src={
-                    brand?.ProfileLink ? brand?.ProfileLink : "/dummy-brand.png"
-                  }
-                  width={194}
-                  height={194}
-                  alt=""
-                  className="aspect-square w-[115px] sm:w-[194px] h-[115px] sm:h-[194px] rounded-full border border-[#000000] object-cover"
-                />
-                <span className="hover:underline hover:underline-offset-3 text-base sm:text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden">
-                  {brand?.Name ? brand?.Name : "Geni Брэнд"}
-                </span>
-                {brand?.BrandTypes && (
-                  <div className="bg-[#CA7FFE] text-white rounded-full px-4 py-2">
-                    {brand?.BrandTypes?.[0]?.TypeName}
-                  </div>
-                )}
-                <div className="flex flex-row gap-2">
-                  {instagramLink ? (
-                    <a
-                      href={instagramLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:opacity-75"
-                    >
-                      <Image
-                        src="/Instagram.png"
-                        width={24}
-                        height={24}
-                        alt=""
-                        className="h-5 w-5 sm:w-6 sm:h-6"
-                      />
-                    </a>
-                  ) : (
-                    <></>
-                  )}
-                  {facebookLink ? (
-                    <a
-                      href={facebookLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:opacity-75"
-                    >
-                      <Image
-                        src="/Facebook.png"
-                        width={24}
-                        height={24}
-                        alt=""
-                        className="h-5 w-5 sm:w-6 sm:h-6"
-                      />
-                    </a>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
+                id={id}
+                brand={brand}
+                instagramLink={instagramLink}
+                facebookLink={facebookLink}
+                isSwiper={false}
+                size=""
+              />
             );
           })
         ) : (
