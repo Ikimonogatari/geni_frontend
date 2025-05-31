@@ -161,7 +161,7 @@ function PublicContentGallery({
                   <img
                     src={content?.ContentThumbnail}
                     alt=""
-                    className="aspect-[9/16] w-full h-full rounded-2xl border"
+                    className="aspect-[9/16] w-full h-full rounded-2xl border object-cover"
                   />
                 </div>
 
