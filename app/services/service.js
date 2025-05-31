@@ -159,8 +159,12 @@ export const geniApi = createApi({
       }),
     }),
     listPublicProducts: builder.query({
-      query: () => ({
-        url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
+      query: ({ searchKey, limit, offset, category, brand }) => ({
+        url: `/api/web/public/product?searchKey=${
+          searchKey || ""
+        }&limit=${limit}&offset=${offset}${
+          category ? `&category=${category}` : ""
+        }${brand ? `&brand=${brand}` : ""}`,
         method: "GET",
       }),
     }),
