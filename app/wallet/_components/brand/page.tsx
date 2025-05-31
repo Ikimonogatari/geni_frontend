@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -10,11 +10,17 @@ import {
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import ListRowLayout from "@/components/common/ListRowLayout";
 import { useDateFormatter } from "@/app/hooks/useDateFormatter";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
+import toast from "react-hot-toast";
 
 function BrandWallet() {
   const router = useRouter();
   const { data: parsedUserInfo } = useGetUserInfoQuery({});
   const { formatDate } = useDateFormatter();
+  const paymentMonitorRef = useRef(null);
 
   const {
     data: getBrandCreditInfoData,
@@ -33,6 +39,34 @@ function BrandWallet() {
     { limit: 10, offset: 0 },
     { refetchOnMountOrArgChange: true }
   );
+
+  // Cleanup function to close the payment monitor when unmounting
+  useEffect(() => {
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, []);
+
+  const handleCreditPurchase = () => {
+    // Start payment status monitoring via SSE
+    if (parsedUserInfo?.UserTxnId) {
+      paymentMonitorRef.current = createPaymentStatusMonitor(
+        parsedUserInfo.UserTxnId,
+        () => {
+          // On payment success
+          toast.success("Төлбөр амжилттай төлөгдлөө");
+          // Refetch credit info and history
+          refetchBrandCreditInfo();
+          refetchBrandCreditHistory();
+        },
+        (error) => {
+          // On error
+          console.error("Payment monitoring error:", error);
+          toast.error("Төлбөр шалгахад алдаа гарлаа");
+        }
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-white">
@@ -108,11 +142,7 @@ function BrandWallet() {
                 className={
                   "text-lg flex flex-row items-center justify-center py-4 w-full"
                 }
-                onCreditPurchase={() => {
-                  // Refetch credit info and history
-                  refetchBrandCreditInfo();
-                  refetchBrandCreditHistory();
-                }}
+                onCreditPurchase={handleCreditPurchase}
               />
             </div>
           </div>

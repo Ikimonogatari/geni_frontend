@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import Image from "next/image";
 import ContentProgress from "./ContentProgress";
 import BrandProducts from "./BrandProducts";
@@ -16,6 +16,11 @@ import OnBoardRequestStateModal from "@/components/common/OnBoardRequestStateMod
 import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
+import toast from "react-hot-toast";
 
 function BrandProfile({
   getUserInfoData,
@@ -27,6 +32,7 @@ function BrandProfile({
   const contentsPerPage = 16;
   const [currentContents, setCurrentContents] = useState([]);
   const offset = (currentPage - 1) * contentsPerPage;
+  const paymentMonitorRef = useRef(null);
 
   const {
     data: listBrandContentsData,
@@ -166,6 +172,33 @@ function BrandProfile({
   const facebookLink = getUserInfoData?.SocialChannels?.find(
     (channel) => channel.PlatformName === "Facebook"
   );
+
+  // Cleanup function to close the payment monitor when unmounting
+  useEffect(() => {
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, []);
+
+  const handleCreditPurchase = () => {
+    // Start payment status monitoring via SSE
+    if (getUserInfoData?.UserTxnId) {
+      paymentMonitorRef.current = createPaymentStatusMonitor(
+        getUserInfoData.UserTxnId,
+        () => {
+          // On payment success
+          toast.success("Төлбөр амжилттай төлөгдлөө");
+          refetchUserInfo();
+        },
+        (error) => {
+          // On error
+          console.error("Payment monitoring error:", error);
+          toast.error("Төлбөр шалгахад алдаа гарлаа");
+        }
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pb-16 sm:pb-24">
@@ -307,10 +340,7 @@ function BrandProfile({
                   "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                 }
                 buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
-                onCreditPurchase={() => {
-                  // Refetch user info and other necessary data
-                  refetchUserInfo();
-                }}
+                onCreditPurchase={handleCreditPurchase}
               />
             )}
           </div>
@@ -366,10 +396,7 @@ function BrandProfile({
                         "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                       }
                       buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
-                      onCreditPurchase={() => {
-                        // Refetch user info and other necessary data
-                        refetchUserInfo();
-                      }}
+                      onCreditPurchase={handleCreditPurchase}
                     />
                   )}
                 </div>
