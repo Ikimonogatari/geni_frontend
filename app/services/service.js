@@ -351,6 +351,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getPublicBrandById: builder.query({
+      query: (id) => ({
+        url: `/api/web/public/brand/${id}`,
+        method: "GET",
+      }),
+    }),
     listPublicCreatorContentGallery: builder.query({
       query: (id) => ({
         url: `/api/web/public/content/user/${id}?limit=1000&offset=0`,
@@ -659,6 +665,7 @@ export const {
   useGetPublicBrandListQuery,
   useGetPublicCreatorListQuery,
   useGetPublicCreatorByIdQuery,
+  useGetPublicBrandByIdQuery,
   useListPublicCreatorContentGalleryQuery,
   useDeleteProductMutation,
   useDisableProductMutation,
