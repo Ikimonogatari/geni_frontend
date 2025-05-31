@@ -23,6 +23,7 @@ interface SubscriptionModalProps {
   setIsMainDialogOpen: (open: boolean) => void;
   selectedPayment: string;
   couponCode?: string;
+  onCreditPurchase?: () => void;
 }
 
 const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
@@ -30,6 +31,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   setIsMainDialogOpen,
   selectedPayment,
   couponCode,
+  onCreditPurchase,
 }) => {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
@@ -99,6 +101,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     setPaymentDialogOpen(false);
     setIsMainDialogOpen(false);
     setIsPaymentSuccess(false);
+    if (onCreditPurchase) {
+      onCreditPurchase();
+    }
   };
 
   const generatePDF = async (htmlString: string) => {

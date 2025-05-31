@@ -15,23 +15,27 @@ function page() {
   const params = useParams();
   const { id } = params;
   const [profileType, setProfileType] = useState("Creator"); // Default to creator profile
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   const {
     data: listContentGalleryData,
     error: listContentGalleryError,
     isLoading: listContentGalleryLoading,
+    refetch: refetchContentGallery,
   } = useListPublicCreatorContentGalleryQuery(id);
 
   const {
     data: getUserInfoData,
     error: getUserInfoError,
     isLoading: getUserInfoLoading,
+    refetch: refetchCreatorInfo,
   } = useGetPublicCreatorByIdQuery(id);
 
   const {
     data: getBrandInfoData,
     error: getBrandInfoError,
     isLoading: getBrandInfoLoading,
+    refetch: refetchBrandInfo,
   } = useGetPublicBrandByIdQuery(id);
 
   // Determine if this is a creator or brand profile
@@ -42,6 +46,24 @@ function page() {
       setProfileType("Brand");
     }
   }, [getUserInfoData, getBrandInfoData, getUserInfoError, getBrandInfoError]);
+
+  // Refetch data when credits are purchased
+  useEffect(() => {
+    if (refetchTrigger > 0) {
+      refetchContentGallery();
+      if (profileType === "Creator") {
+        refetchCreatorInfo();
+      } else {
+        refetchBrandInfo();
+      }
+    }
+  }, [
+    refetchTrigger,
+    profileType,
+    refetchContentGallery,
+    refetchCreatorInfo,
+    refetchBrandInfo,
+  ]);
 
   // Get social links based on profile type
   const getSocialLinks = () => {
@@ -279,6 +301,7 @@ function page() {
             <PublicContentGallery
               contentsGallery={listContentGalleryData?.Data}
               profileType={profileType}
+              onCreditPurchase={() => setRefetchTrigger((prev) => prev + 1)}
             />
           ) : null}
         </div>

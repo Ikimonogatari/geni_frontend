@@ -17,7 +17,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import usePagination from "@/components/hooks/usePagination";
 import Pagination from "@/components/common/Pagination";
 
-function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
+function BrandProfile({
+  getUserInfoData,
+  getUserInfoLoading,
+  refetchUserInfo,
+}) {
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 16;
@@ -303,6 +307,10 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   "flex md:hidden flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                 }
                 buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
+                onCreditPurchase={() => {
+                  // Refetch user info and other necessary data
+                  refetchUserInfo();
+                }}
               />
             )}
           </div>
@@ -358,6 +366,10 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                         "hidden md:flex flex-row items-center text-xs sm:text-base px-3 sm:px-5 py-2 sm:py-3"
                       }
                       buttonText={"Шинэ бүтээгдэхүүн нэмэх "}
+                      onCreditPurchase={() => {
+                        // Refetch user info and other necessary data
+                        refetchUserInfo();
+                      }}
                     />
                   )}
                 </div>

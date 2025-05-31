@@ -18,6 +18,7 @@ function RestockProductModal({
   decrement,
   increment,
   addSupply,
+  refetchBrandData,
 }) {
   return (
     <Dialog>
@@ -89,6 +90,9 @@ function RestockProductModal({
             className={
               "text-lg flex flex-row items-center justify-center py-4 w-full"
             }
+            onCreditPurchase={() => {
+              refetchBrandData();
+            }}
           />
         </div>
         <button

@@ -21,12 +21,14 @@ function BrandWallet() {
     error: getBrandCreditInfoError,
     isLoading: getBrandCreditInfoLoading,
     //@ts-ignore
-  } = useGetBrandCreditInfoQuery();
+    refetch: refetchBrandCreditInfo,
+  } = useGetBrandCreditInfoQuery({ refetchOnMountOrArgChange: true });
   const {
     data: getBrandCreditHistoryData,
     error: getBrandCreditHistoryError,
     isLoading: getBrandCreditHistoryLoading,
     //@ts-ignore
+    refetch: refetchBrandCreditHistory,
   } = useGetBrandCreditHistoryQuery(
     { limit: 10, offset: 0 },
     { refetchOnMountOrArgChange: true }
@@ -106,6 +108,11 @@ function BrandWallet() {
                 className={
                   "text-lg flex flex-row items-center justify-center py-4 w-full"
                 }
+                onCreditPurchase={() => {
+                  // Refetch credit info and history
+                  refetchBrandCreditInfo();
+                  refetchBrandCreditHistory();
+                }}
               />
             </div>
           </div>
@@ -141,8 +148,8 @@ function BrandWallet() {
                     </span>
                     <span className="col-span-1">
                       {formatDate(h.CreatedAt)}
-                      <span className="col-span-1">{h.Description}</span>
                     </span>
+                    <span className="col-span-1">{h.Description}</span>
                   </ListRowLayout>
                 ))}
             </div>

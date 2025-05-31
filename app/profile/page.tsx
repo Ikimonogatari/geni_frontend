@@ -8,7 +8,12 @@ import Loader from "@/components/common/Loader";
 
 export default function Page() {
   // @ts-ignore
-  const { data: userInfo, isLoading, error } = useGetUserInfoQuery();
+  const {
+    data: userInfo,
+    isLoading,
+    error,
+    refetch: refetchUserInfo,
+  } = useGetUserInfoQuery({ refetchOnMountOrArgChange: true });
   if (isLoading) {
     return <Loader />;
   }
@@ -48,6 +53,7 @@ export default function Page() {
         <BrandProfile
           getUserInfoData={userInfo}
           getUserInfoLoading={isLoading}
+          refetchUserInfo={refetchUserInfo}
         />
       )}
     </>

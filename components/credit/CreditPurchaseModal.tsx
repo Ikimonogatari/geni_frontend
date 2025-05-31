@@ -18,7 +18,12 @@ import Loader from "@/components/common/Loader";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-function CreditPurchase({ className, buttonIconSize, buttonText }) {
+function CreditPurchase({
+  className,
+  buttonIconSize,
+  buttonText,
+  onCreditPurchase,
+}) {
   const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("qpay");
@@ -226,6 +231,7 @@ function CreditPurchase({ className, buttonIconSize, buttonText }) {
               setIsMainDialogOpen={setMainDialogOpen}
               selectedPayment={selectedPayment}
               couponCode={couponCodeformik.values.couponCode}
+              onCreditPurchase={onCreditPurchase}
             />
           )}
         </div>

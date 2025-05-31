@@ -5,14 +5,17 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useGetPublicProfileContentGalleryByIdQuery } from "@/app/services/service";
 import { useDateFormatter } from "@/app/hooks/useDateFormatter";
 import { ClipLoader } from "react-spinners";
+
 interface PublicContentGalleryProps {
   contentsGallery: any[];
   profileType: string;
+  onCreditPurchase?: () => void;
 }
 
 function PublicContentGallery({
   contentsGallery,
   profileType,
+  onCreditPurchase,
 }: PublicContentGalleryProps) {
   const [selectedContentId, setSelectedContentId] = useState<string | null>(
     null
@@ -68,6 +71,13 @@ function PublicContentGallery({
     contentData.CreatorReviewedAt = null;
   };
 
+  // Handle credit purchase
+  const handleCreditPurchase = () => {
+    if (onCreditPurchase) {
+      onCreditPurchase();
+    }
+  };
+
   return (
     <>
       <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
@@ -110,28 +120,22 @@ function PublicContentGallery({
                         <div className="flex flex-row items-center gap-2">
                           <Image
                             src={
-                              profileType === "Creator"
-                                ? content?.BrandProfileLink
-                                  ? content?.BrandProfileLink
-                                  : "/dummy-creator.png"
-                                : content?.CreatorProfileLink
+                              content?.CreatorProfileLink
                                 ? content?.CreatorProfileLink
-                                : "/dummy-brand.png"
+                                : "/dummy-creator.png"
                             }
                             width={20}
                             height={20}
-                            className="rounded-full min-w-6 min-h-6 sm:min-w-9 sm:min-h-9 object-cover aspect-square"
+                            className="rounded-full min-w-6 min-h-6 sm:min-w-8 sm:min-h-8 object-cover aspect-square"
                             alt=""
                           />
-                          <div className="flex flex-col items-start">
-                            <span className="text-sm sm:text-base font-semibold">
-                              {profileType === "Creator"
-                                ? content?.BrandName
-                                : content?.CreatorName}
-                            </span>
-                            <span>{content?.ProductName}</span>
-                          </div>
+                          <span className="text-sm sm:text-base font-semibold text-start">
+                            {content?.CreatorName
+                              ? content?.CreatorName
+                              : "Geni Бүтээгч"}
+                          </span>
                         </div>
+                        <span>{content?.ProductName}</span>
                       </div>
                     </div>
                   </div>
