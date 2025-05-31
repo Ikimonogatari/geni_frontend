@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import {
   Dialog,
@@ -16,6 +16,10 @@ import {
 } from "@/app/services/service";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
 
 interface CoursePaymentProps {
   setIsMainDialogOpen: (open: boolean) => void;
@@ -33,6 +37,7 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const paymentMonitorRef = useRef(null);
 
   const finalCourseId = courseId || "1"; // Default to course ID 1 if undefined
 
@@ -64,15 +69,47 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   useEffect(() => {
     if (purchaseCourseSuccess) {
       if (selectedPayment === "qpay") {
-        setTxId(purchaseCourseData?.UserTxnId || null);
+        const newTxId = purchaseCourseData?.UserTxnId || null;
+        setTxId(newTxId);
         setPaymentDialogOpen(true);
+
+        // Start payment status monitoring via SSE
+        if (newTxId) {
+          paymentMonitorRef.current = createPaymentStatusMonitor(
+            newTxId,
+            async () => {
+              // On payment success
+              setIsPaymentSuccess(true);
+              toast.success("Төлбөр амжилттай төлөгдлөө");
+              // Refetch student courses when payment is successful
+              await refetchStudentCourses();
+            },
+            (error) => {
+              // On error
+              console.error("Payment monitoring error:", error);
+              toast.error("Төлбөр шалгахад алдаа гарлаа");
+            }
+          );
+        }
       }
     }
     if (purchaseCourseError) {
       //@ts-ignore
       toast.error(purchaseCourseError?.data?.error);
     }
-  }, [purchaseCourseSuccess, purchaseCourseError]);
+
+    // Cleanup function to close the payment monitor when unmounting
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, [purchaseCourseSuccess, purchaseCourseError, refetchStudentCourses]);
+
+  // Close payment monitor when the dialog is closed or payment succeeds
+  useEffect(() => {
+    if (!isPaymentDialogOpen || isPaymentSuccess) {
+      closePaymentMonitor(paymentMonitorRef.current);
+    }
+  }, [isPaymentDialogOpen, isPaymentSuccess]);
 
   const handleSubscription = () => {
     if (!finalCourseId) {
@@ -114,6 +151,7 @@ const CoursePaymentModal: React.FC<CoursePaymentProps> = ({
   }, [isPaymentSuccess, refetchStudentCourses]);
 
   const handleCloseDialog = () => {
+    closePaymentMonitor(paymentMonitorRef.current);
     setPaymentDialogOpen(false);
     setIsMainDialogOpen(false);
     setIsPaymentSuccess(false);
