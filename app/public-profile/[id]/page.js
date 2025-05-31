@@ -150,7 +150,7 @@ function page() {
           )}
           {listContentGalleryData?.Data &&
             listContentGalleryData?.Data?.length > 0 && (
-              <span className="mt-5 text-lg sm:text-2xl text-[#6F6F6F]">
+              <span className="my-5 text-lg sm:text-2xl text-[#6F6F6F]">
                 Хийсэн контентууд / {listContentGalleryData?.Data?.length}
               </span>
             )}

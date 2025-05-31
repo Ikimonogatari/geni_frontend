@@ -2,12 +2,26 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
+import { useGetPublicProfileContentGalleryByIdQuery } from "@/app/services/service";
+import { useDateFormatter } from "@/app/hooks/useDateFormatter";
 interface PublicContentGalleryProps {
   contentsGallery: any[];
 }
 
 function PublicContentGallery({ contentsGallery }: PublicContentGalleryProps) {
+  const [selectedContentId, setSelectedContentId] = useState<string | null>(
+    null
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const dateFormatter = useDateFormatter();
+  const {
+    data: contentData,
+    isLoading: contentLoading,
+    error: contentError,
+  } = useGetPublicProfileContentGalleryByIdQuery(selectedContentId, {
+    skip: !isDialogOpen || !selectedContentId,
+  });
+
   const renderAvgStar = (
     instruction: number,
     context: number,
@@ -23,6 +37,7 @@ function PublicContentGallery({ contentsGallery }: PublicContentGalleryProps) {
       validScores.reduce((sum, score) => sum + score, 0) / validScores.length
     ).toFixed(1);
   };
+
   function renderStars(score) {
     return [1, 2, 3, 4, 5].map((star, index) => (
       <span key={index} className="">
@@ -36,9 +51,19 @@ function PublicContentGallery({ contentsGallery }: PublicContentGalleryProps) {
     ));
   }
 
+  const handleOpenDialog = (contentId: string) => {
+    setSelectedContentId(contentId);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedContentId(null);
+  };
+
   return (
     <>
-      <div className="px-3 relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
+      <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
         {contentsGallery ? (
           contentsGallery?.map((content, id) => {
             const avgScore = renderAvgStar(
@@ -47,7 +72,17 @@ function PublicContentGallery({ contentsGallery }: PublicContentGalleryProps) {
               content?.CreationPnt || 0
             );
             return (
-              <Dialog key={id}>
+              <Dialog
+                key={id}
+                onOpenChange={(open) => {
+                  if (open) {
+                    handleOpenDialog(content?.ContentId);
+                  } else {
+                    handleCloseDialog();
+                  }
+                }}
+                open={isDialogOpen && selectedContentId === content?.ContentId}
+              >
                 <DialogTrigger>
                   <div className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl border">
                     <video
@@ -80,10 +115,10 @@ function PublicContentGallery({ contentsGallery }: PublicContentGalleryProps) {
                               }
                               width={20}
                               height={20}
-                              className="rounded-full w-4 h-4 sm:w-5 sm:h-5"
+                              className="rounded-full min-w-6 min-h-6 sm:min-w-8 sm:min-h-8 object-cover aspect-square"
                               alt=""
                             />
-                            <span className="text-base sm:text-lg font-semibold">
+                            <span className="text-sm sm:text-base font-semibold text-start">
                               {content?.BrandName
                                 ? content?.BrandName
                                 : "Geni Бүтээгч"}
@@ -97,90 +132,122 @@ function PublicContentGallery({ contentsGallery }: PublicContentGalleryProps) {
                 </DialogTrigger>
                 {/* @ts-ignore */}
                 <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
-                  <div className="flex flex-col gap-4 w-full h-full">
-                    <span className="text-lg font-semibold">Контент</span>
-
-                    <video
-                      controls
-                      className="aspect-[9/16] w-full h-full rounded-2xl"
-                    >
-                      <source src={content?.ContentVideo} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-
-                  <div className="flex flex-col gap-4 w-full h-full">
-                    <span className="text-lg font-semibold">
-                      Thumbnail зураг
-                    </span>
-
-                    <img
-                      src={content?.ContentThumbnail}
-                      alt=""
-                      className="aspect-[9/16] w-full h-full rounded-2xl border"
-                    />
-                  </div>
-
-                  <div className="h-full justify-between w-full lg:mt-10">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex flex-col gap-2 sm:gap-5 border rounded-2xl bg-[#F5F4F0] p-5">
-                        <div className="flex flex-col gap-2">
-                          <span className="font-bold">
-                            Брэндийн өгсөн оноо:
-                          </span>
-                          <div className="flex flex-row gap-[6px] items-center">
-                            {renderStars(avgScore)}
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <span className="font-bold">Брэндийн сэтгэгдэл:</span>
-                          <span className="text-sm sm:text-base">
-                            {content.BrandComment} Wadada яасан хөөрхөнийн
-                            😍😍😍😍 үнэхээр гоё болсон байна 💛🧡🤎
-                          </span>
-                        </div>
-                        <div className="flex flex-row gap-2 items-center">
-                          <Image
-                            src={content?.BrandProfileLink}
-                            alt=""
-                            width={46}
-                            height={46}
-                            className="rounded-full border"
-                          />
-                          <div className="flex flex-col text-[#6F6F6F]">
-                            <span className="text-base">
-                              {content?.BrandName}
-                            </span>
-                            <span className="text-[11px]">12.04.2025</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2 sm:gap-5 border rounded-2xl bg-[#F5F4F0] p-5">
-                        <div className="flex flex-col gap-2">
-                          <span className="font-bold">
-                            Контент бүтээгчийн сэтгэгдэл::
-                          </span>
-                          <span className="text-sm sm:text-base">
-                            {content.BrandComment} Wadada яасан хөөрхөнийн
-                            😍😍😍😍 үнэхээр гоё болсон байна 💛🧡🤎
-                          </span>
-                        </div>
-                        <div className="flex flex-row gap-2 items-center">
-                          <Image
-                            src={content?.BrandProfileLink}
-                            alt=""
-                            width={46}
-                            height={46}
-                            className="rounded-full border"
-                          />
-                          <div className="flex flex-col text-[#6F6F6F]">
-                            <span className="text-base">Anudelger</span>
-                            <span className="text-[11px]">12.04.2025</span>
-                          </div>
-                        </div>
-                      </div>
+                  {contentLoading ? (
+                    <div className="w-full text-center">
+                      Loading content details...
                     </div>
-                  </div>
+                  ) : contentError ? (
+                    <div className="w-full text-center">
+                      Failed to load content details
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex flex-col gap-4 w-full h-full">
+                        <span className="text-lg font-semibold">Контент</span>
+
+                        <video
+                          controls
+                          className="aspect-[9/16] w-full h-full rounded-2xl"
+                        >
+                          <source
+                            src={content?.ContentVideo}
+                            type="video/mp4"
+                          />
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+
+                      <div className="flex flex-col gap-4 w-full h-full">
+                        <span className="text-lg font-semibold">
+                          Thumbnail зураг
+                        </span>
+
+                        <img
+                          src={content?.ContentThumbnail}
+                          alt=""
+                          className="aspect-[9/16] w-full h-full rounded-2xl border"
+                        />
+                      </div>
+
+                      <div className="h-full justify-between w-full lg:mt-10">
+                        <div className="flex flex-col gap-3">
+                          <div className="flex flex-col gap-2 sm:gap-5 border rounded-2xl bg-[#F5F4F0] p-5">
+                            <div className="flex flex-col gap-2">
+                              <span className="font-bold">
+                                Брэндийн өгсөн оноо:
+                              </span>
+                              <div className="flex flex-row gap-[6px] items-center">
+                                {renderStars(avgScore)}
+                              </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <span className="font-bold">
+                                Брэндийн сэтгэгдэл:
+                              </span>
+                              <span className="text-sm sm:text-base">
+                                {contentData?.BrandComment}
+                              </span>
+                            </div>
+                            <div className="flex flex-row gap-2 items-center">
+                              <Image
+                                src={
+                                  contentData?.BrandProfileLink ||
+                                  content?.BrandProfileLink
+                                }
+                                alt=""
+                                width={46}
+                                height={46}
+                                className="rounded-full border object-cover"
+                              />
+                              <div className="flex flex-col text-[#6F6F6F]">
+                                <span className="text-base">
+                                  {contentData?.BrandName || content?.BrandName}
+                                </span>
+                                <span className="text-[11px]">
+                                  {dateFormatter.formatDate(
+                                    contentData?.BrandCommentedAt
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2 sm:gap-5 border rounded-2xl bg-[#F5F4F0] p-5">
+                            <div className="flex flex-col gap-2">
+                              <span className="font-bold">
+                                Контент бүтээгчийн сэтгэгдэл:
+                              </span>
+                              <span className="text-sm sm:text-base">
+                                {contentData?.CreatorReview}
+                              </span>
+                            </div>
+                            <div className="flex flex-row gap-2 items-center">
+                              <Image
+                                src={
+                                  contentData?.CreatorProfileLink ||
+                                  content?.CreatorProfileLink ||
+                                  "/dummy-creator.png"
+                                }
+                                alt=""
+                                width={46}
+                                height={46}
+                                className="rounded-full border aspect-square object-cover"
+                              />
+                              <div className="flex flex-col text-[#6F6F6F]">
+                                <span className="text-base">
+                                  {contentData?.CreatorName || "Anudelger"}
+                                </span>
+                                <span className="text-[11px]">
+                                  {dateFormatter.formatDate(
+                                    contentData?.CreatorReviewedAt
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </DialogContent>
               </Dialog>
             );

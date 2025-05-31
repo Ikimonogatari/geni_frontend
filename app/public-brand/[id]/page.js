@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import ContentGallery from "@/components/ContentGallery";
 import { useParams } from "next/navigation";
+import PublicContentGallery from "@/components/PublicContentGallery";
 
 function page() {
   const params = useParams();
@@ -117,13 +118,15 @@ function page() {
           </div>
           {listContentGalleryData?.Data &&
             listContentGalleryData?.Data?.length > 0 && (
-              <span className="mt-5 text-lg sm:text-2xl text-[#6F6F6F]">
+              <span className="my-5 text-lg sm:text-2xl text-[#6F6F6F]">
                 Хамтран ажилласан контентууд /{" "}
                 {listContentGalleryData?.Data?.length}
               </span>
             )}
           {listContentGalleryData && listContentGalleryData?.Data != null ? (
-            <ContentGallery contentsGallery={listContentGalleryData?.Data} />
+            <PublicContentGallery
+              contentsGallery={listContentGalleryData?.Data}
+            />
           ) : (
             <></>
           )}
