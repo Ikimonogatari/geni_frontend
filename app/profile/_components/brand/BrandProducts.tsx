@@ -238,6 +238,12 @@ function BrandProducts({ brandProducts, brandData, isLoading }) {
         decrement={decrement}
         addSupply={addSupply}
         count={count}
+        refetchBrandData={() => {
+          // Refetch brand data after credit purchase
+          if (addProductSupplySuccess) {
+            window.location.reload();
+          }
+        }}
       />
     </div>
   );
