@@ -363,6 +363,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getPublicProfileContentGalleryById: builder.query({
+      query: (id) => ({
+        url: `/api/web/public/content/${id}`,
+        method: "GET",
+      }),
+    }),
     undoContentRequest: builder.mutation({
       query: (id) => ({
         url: `/api/web/private/content/${id}`,
@@ -667,6 +673,7 @@ export const {
   useGetPublicCreatorByIdQuery,
   useGetPublicBrandByIdQuery,
   useListPublicCreatorContentGalleryQuery,
+  useGetPublicProfileContentGalleryByIdQuery,
   useDeleteProductMutation,
   useDisableProductMutation,
   useEditProductMutation,

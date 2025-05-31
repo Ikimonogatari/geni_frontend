@@ -14,7 +14,7 @@ function PublicBrandCard({
       key={id}
       className={`${size} bg-[#F5F4F0] rounded-2xl p-4 text-[#2D262D] border border-border-gray/60 flex flex-col items-center gap-1 sm:gap-2 h-full`}
     >
-      <a href={`/public-brand/${brand.BrandId}`}>
+      <a href={`/public-profile/${brand.BrandId}`}>
         <Image
           src={brand?.ProfileLink ? brand?.ProfileLink : "/dummy-brand.png"}
           width={194}
@@ -35,7 +35,7 @@ function PublicBrandCard({
         }`}
       >
         <a
-          href={`/public-brand/${brand.BrandId}`}
+          href={`/public-profile/${brand.BrandId}`}
           className={`${
             isSwiper
               ? "text-lg max-w-[150px]"
@@ -50,7 +50,7 @@ function PublicBrandCard({
           {brand.BrandTypes.slice(0, 2).map((brandType, index) => (
             <span
               key={index}
-              className={`bg-[#CA7FFE] text-white rounded-full px-2 py-1 ${
+              className={`bg-geni-blue text-white rounded-full px-2 py-1 ${
                 isSwiper ? "text-xs" : "text-[8px] sm:text-xs"
               }`}
             >
