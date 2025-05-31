@@ -327,7 +327,7 @@ function Page() {
                 Нэвтрэх
               </span>
 
-              <div className="z-50 -mb-[1px] flex flex-row text-sm sm:text-base w-full">
+              <div className="z-40 -mb-[1px] flex flex-row text-sm sm:text-base w-full">
                 <div
                   onClick={() => handleUserType("Student")}
                   className={`w-full p-2 cursor-pointer text-center rounded-t-[30px] ${
