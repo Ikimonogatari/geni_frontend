@@ -120,7 +120,7 @@ function PublicContentGallery({
                             }
                             width={20}
                             height={20}
-                            className="rounded-full min-w-7 min-h-7 sm:min-w-9 sm:min-h-9 object-cover aspect-square"
+                            className="rounded-full min-w-6 min-h-6 sm:min-w-9 sm:min-h-9 object-cover aspect-square"
                             alt=""
                           />
                           <div className="flex flex-col items-start">
