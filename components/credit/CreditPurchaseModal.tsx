@@ -4,11 +4,13 @@ import Image from "next/image";
 import Step1 from "./Step1";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
+import Step5 from "./Step5";
 import {
   useUseFreeContentMutation,
   useGetUserInfoQuery,
   useCalculateCouponMutation,
   useListPaymentPlansQuery,
+  useSubscribePlanMutation,
 } from "@/app/services/service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -27,9 +29,12 @@ function CreditPurchase({
   const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("qpay");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [shouldShowQR, setShouldShowQR] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(0);
   const [selectedPackageId, setSelectedPackageId] = useState(1);
+  const [subscribeData, setSubscribeData] = useState(null);
 
   const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
     {}
@@ -44,6 +49,16 @@ function CreditPurchase({
       isSuccess: calculateCouponSuccess,
     },
   ] = useCalculateCouponMutation();
+
+  const [
+    subscribePlan,
+    {
+      data: subscribePlanData,
+      error: subscribePlanError,
+      isLoading: subscribePlanLoading,
+      isSuccess: subscribePlanSuccess,
+    },
+  ] = useSubscribePlanMutation();
 
   const {
     data: listPaymentPlansData,
@@ -83,6 +98,18 @@ function CreditPurchase({
     }
   }, [calculateCouponSuccess, calculateCouponError]);
 
+  // Handle subscribe plan success to get payment data
+  useEffect(() => {
+    if (subscribePlanSuccess && subscribePlanData) {
+      setSubscribeData(subscribePlanData);
+      setCurrentStep(4); // Move to Step5 (payment selection)
+    }
+    if (subscribePlanError) {
+      //@ts-ignore
+      toast.error(subscribePlanError?.data?.error);
+    }
+  }, [subscribePlanSuccess, subscribePlanError, subscribePlanData]);
+
   // Update steps and selected option when userInfo is loaded
   useEffect(() => {
     if (userInfo) {
@@ -120,8 +147,24 @@ function CreditPurchase({
   const nextStep = () => {
     if (selectedOption === "freecontent") {
       useFreeContent({});
+    } else if (currentStep === 3) {
+      // When proceeding from Step4, call subscribe API
+      subscribePlan({
+        planId: selectedPackageId,
+        ...(couponCodeformik.values.couponCode && {
+          CouponCode: couponCodeformik.values.couponCode,
+        }),
+      });
+    } else if (currentStep === 4) {
+      // Handle Step5 continue button
+      if (selectedPayment === "qpay" && selectedPaymentMethod) {
+        setShouldShowQR(true);
+      } else if (selectedPayment === "invoice") {
+        setMainDialogOpen(false);
+        onCreditPurchase();
+      }
     } else {
-      setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
+      setCurrentStep((prevStep) => Math.min(prevStep + 1, 4));
     }
   };
 
@@ -166,6 +209,23 @@ function CreditPurchase({
             selectedPackageData={selectedPackageData}
           />
         );
+      case 4:
+        return (
+          <Step5
+            selectedPayment={selectedPayment}
+            setSelectedPayment={setSelectedPayment}
+            subscribeData={subscribeData}
+            onPaymentMethodSelect={setSelectedPaymentMethod}
+            shouldShowQR={shouldShowQR}
+            setShouldShowQR={setShouldShowQR}
+            onContinue={() => {
+              if (selectedPayment === "invoice") {
+                setMainDialogOpen(false);
+                onCreditPurchase();
+              }
+            }}
+          />
+        );
       default:
         return null;
     }
@@ -186,13 +246,17 @@ function CreditPurchase({
         />
       </DialogTrigger>
       {/* @ts-ignore */}
-      <DialogContent className="overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full max-w-5xl rounded-3xl">
+      <DialogContent
+        className={`overflow-y-auto flex flex-col items-center lg:items-start gap-6 max-h-[739px] w-full lg:w-full ${
+          currentStep == 4 ? "max-w-6xl" : "max-w-5xl"
+        } rounded-3xl`}
+      >
         {renderStepContent()}
         <div className="flex flex-row items-center justify-between w-full">
           {currentStep > 1 && (
             <button
               onClick={previousStep}
-              className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg font-bold`}
+              className={`flex whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-[#F5F4F0] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-full font-bold`}
             >
               <Image
                 src={"/arrow-forward-icon.png"}
@@ -214,7 +278,7 @@ function CreditPurchase({
                    ? "opacity-70 cursor-not-allowed"
                    : "opacity-100"
                } 
-                bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-lg text-white font-bold`}
+                bg-[#4D55F5] border-[1px] border-[#2D262D] px-3 sm:px-5 py-2 sm:py-3 rounded-full text-white font-bold`}
             >
               Үргэлжлүүлэх
               <Image
@@ -225,14 +289,40 @@ function CreditPurchase({
                 className="w-[10px] h-[10px]"
               />
             </button>
+          ) : currentStep === 3 ? (
+            <button
+              onClick={nextStep}
+              disabled={subscribePlanLoading}
+              className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-black px-3 sm:px-5 py-2 sm:py-3 rounded-full text-white font-bold`}
+            >
+              {subscribePlanLoading ? "..." : "Төлбөр төлөх"}
+              <Image
+                src={"/arrow-right-icon.png"}
+                width={10}
+                height={10}
+                alt="arrow"
+                className="w-[10px] h-[10px]"
+              />
+            </button>
           ) : (
-            <SubscriptionModal
-              selectedPackageId={selectedPackageId}
-              setIsMainDialogOpen={setMainDialogOpen}
-              selectedPayment={selectedPayment}
-              couponCode={couponCodeformik.values.couponCode}
-              onCreditPurchase={onCreditPurchase}
-            />
+            <button
+              onClick={nextStep}
+              disabled={selectedPayment === "qpay" && !selectedPaymentMethod}
+              className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 ${
+                selectedPayment === "qpay" && !selectedPaymentMethod
+                  ? "opacity-70 cursor-not-allowed"
+                  : "opacity-100"
+              } bg-black px-3 sm:px-5 py-2 sm:py-3 rounded-full text-white font-bold`}
+            >
+              Үргэлжлүүлэх
+              <Image
+                src={"/arrow-right-icon.png"}
+                width={10}
+                height={10}
+                alt="arrow"
+                className="w-[10px] h-[10px]"
+              />
+            </button>
           )}
         </div>
       </DialogContent>
