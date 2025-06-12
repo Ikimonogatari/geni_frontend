@@ -4,13 +4,7 @@ import PriceFormatter from "@/components/common/FormatPrice";
 import { Input } from "@/components/ui/input";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 
-function Step3({
-  selectedPayment,
-  setSelectedPayment,
-  formik,
-  courseData = null,
-  calculateCouponData = null,
-}) {
+function Step3({ formik, courseData = null, calculateCouponData = null }) {
   return (
     <div className="flex flex-col items-start gap-2 w-full">
       <span className="text-xl sm:text-2xl xl:text-3xl font-bold">
@@ -83,29 +77,6 @@ function Step3({
             errorText={formik.errors.couponCode}
             errorVisible={formik.touched.couponCode && formik.errors.couponCode}
           />
-        </div>
-      </div>
-      <div className="flex flex-col sm:flex-row justify-between w-full sm:items-center">
-        <div className="flex flex-col gap-2">
-          <span className="text-[#6F6F6F] text-base sm:text-xl font-bold">
-            Та төлбөр төлөх нөхцөлөө сонгоно уу
-          </span>
-          <button
-            onClick={() => setSelectedPayment("qpay")}
-            className={`w-[172px] h-[72px] border-[2px] transition-all duration-150 ${
-              selectedPayment === "qpay"
-                ? "border-[#4D55F5]"
-                : "border-[#F5F4F0]"
-            } flex justify-center items-center rounded-3xl bg-[#F5F4F0]`}
-          >
-            <Image
-              src={"/qpay.png"}
-              width={96}
-              height={36}
-              alt="payment"
-              className="w-[64px] h-[24px] sm:w-[96px] sm:h-[36px]"
-            />
-          </button>
         </div>
       </div>
     </div>
