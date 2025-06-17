@@ -609,6 +609,12 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    rejectSelfContent: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/reject-self/${id}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -701,4 +707,5 @@ export const {
   useGetFinalContentXpMutation,
   useGetContentProcessMutation,
   useGetFeaturedProductListQuery,
+  useRejectSelfContentMutation,
 } = geniApi;

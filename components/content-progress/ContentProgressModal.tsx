@@ -403,7 +403,11 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {dialogType == DialogType.REQUEST ? (
-          <ContentReturnModalContent requestId={content?.ContentId} />
+          <ContentReturnModalContent
+            requestId={content?.ContentId}
+            setDialogOpen={setDialogOpen}
+            refetch={refetch}
+          />
         ) : (
           <></>
         )}
@@ -610,7 +614,8 @@ const ContentProgressModalContent: React.FC<
   const creatorModalFooterActions = () => {
     return (
       <>
-        {/* {status === STATUS_LIST.RequestSent &&
+        {(status === STATUS_LIST.RequestSent ||
+          status === STATUS_LIST.DeliveryPaymentPending) &&
           dialogType != DialogType.REQUEST && (
             <div className="pt-2">
               <button
@@ -621,7 +626,7 @@ const ContentProgressModalContent: React.FC<
                 Хүсэлт буцаах
               </button>
             </div>
-          )} */}
+          )}
         {status === STATUS_LIST.DeliverySuccess && (
           <div className="flex flex-col gap-2 border-t pt-2">
             <button
