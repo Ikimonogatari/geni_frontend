@@ -1,31 +1,32 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useUndoContentRequestMutation } from "@/app/services/service";
+import { useRejectSelfContentMutation } from "@/app/services/service";
 
-function ContentReturnModalContent({ requestId }) {
+function ContentReturnModalContent({ requestId, setDialogOpen, refetch }) {
   const [
-    undoContentRequest,
+    rejectSelfContent,
     {
-      data: undoContentRequestData,
-      error: undoContentRequestError,
-      isLoading: undoContentRequestLoading,
-      isSuccess: undoContentRequestSuccess,
+      error: rejectSelfContentError,
+      isLoading: rejectSelfContentLoading,
+      isSuccess: rejectSelfContentSuccess,
     },
-  ] = useUndoContentRequestMutation();
+  ] = useRejectSelfContentMutation();
 
   useEffect(() => {
-    if (undoContentRequestError) {
+    if (rejectSelfContentError) {
       //@ts-ignore
-      toast.error(undoContentRequestError?.data?.error);
+      toast.error(rejectSelfContentError?.data?.error);
     }
-    if (undoContentRequestSuccess) {
+    if (rejectSelfContentSuccess) {
       toast.success("Амжилттай");
+      setDialogOpen(false);
+      refetch();
     }
-  }, [undoContentRequestSuccess, undoContentRequestError]);
+  }, [rejectSelfContentSuccess, rejectSelfContentError]);
 
-  const handleUndoContentRequest = () => {
-    undoContentRequest(requestId);
+  const handleRejectSelfContent = () => {
+    rejectSelfContent(requestId);
   };
 
   return (
@@ -44,7 +45,8 @@ function ContentReturnModalContent({ requestId }) {
 
       <button
         type="button"
-        onClick={handleUndoContentRequest}
+        onClick={handleRejectSelfContent}
+        disabled={rejectSelfContentLoading}
         className="w-full py-3 text-white font-semibold bg-[#CA7FFE] text-2xl rounded-2xl"
       >
         Тийм
