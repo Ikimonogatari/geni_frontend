@@ -17,7 +17,7 @@ export const geniApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["UserInfo"],
+  tagTypes: ["UserInfo", "Address"],
   endpoints: (builder) => ({
     creatorLogin: builder.mutation({
       query: (body) => ({
@@ -631,6 +631,48 @@ export const geniApi = createApi({
         method: "POST",
       }),
     }),
+    // Address-related endpoints
+    getCityList: builder.query({
+      query: () => ({
+        url: "/api/web/private/user/address-dict/city",
+        method: "GET",
+      }),
+    }),
+    getDistrictList: builder.query({
+      query: (cityId) => ({
+        url: `/api/web/private/user/address-dict/dist/${cityId}`,
+        method: "GET",
+      }),
+    }),
+    getSubDistrictList: builder.query({
+      query: (distId) => ({
+        url: `/api/web/private/user/address-dict/subdist/${distId}`,
+        method: "GET",
+      }),
+    }),
+    getUserAddress: builder.query({
+      query: () => ({
+        url: "/api/web/private/user/address",
+        method: "GET",
+      }),
+      providesTags: ["Address"],
+    }),
+    createAddress: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/address",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Address"],
+    }),
+    updateAddress: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/address",
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Address"],
+    }),
   }),
 });
 
@@ -726,4 +768,10 @@ export const {
   useGetContentProcessMutation,
   useGetFeaturedProductListQuery,
   useRejectSelfContentMutation,
+  useGetCityListQuery,
+  useGetDistrictListQuery,
+  useGetSubDistrictListQuery,
+  useGetUserAddressQuery,
+  useCreateAddressMutation,
+  useUpdateAddressMutation,
 } = geniApi;

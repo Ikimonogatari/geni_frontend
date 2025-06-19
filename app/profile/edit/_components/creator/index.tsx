@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
+import { Mail, User, Lock, Share2, LogOut, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -28,6 +28,7 @@ import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
+import AddressSelection from "../AddressSelection";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
@@ -540,6 +541,12 @@ function EditProfileCreator() {
       onClick: () => setActiveSection("socials"),
     },
     {
+      title: "Хаяг",
+      href: "#address",
+      icon: <MapPin className="h-4 w-4" />,
+      onClick: () => setActiveSection("address"),
+    },
+    {
       title: "Гарах",
       href: "#",
       icon: <LogOut className="h-4 w-4" />,
@@ -794,6 +801,8 @@ function EditProfileCreator() {
             handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
           />
         );
+      case "address":
+        return <AddressSelection />;
     }
   };
 
