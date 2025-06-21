@@ -19,6 +19,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CreatorTier from "@/components/CreatorTier";
+import CreatorProfileHeader from "./CreatorProfileHeader";
 
 function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
   const [profileState, setProfileState] = useState("content-progress");
@@ -133,7 +134,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
     <div className="min-h-screen w-full h-full bg-white">
       <div className="pb-16 sm:pb-24">
         <div className="container text-[#2D262D] max-w-7xl min-h-screen mx-auto px-7 py-10 sm:py-20">
-          <div className="flex flex-col sm:flex-row gap-4 items-start justify-between w-full">
+          <div className="relative flex flex-row gap-4 items-start sm:items-center justify-between w-full">
             <div className="flex flex-row items-center gap-3 sm:gap-7">
               {getUserInfoData ? (
                 <Image
@@ -159,59 +160,16 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                         ? ""
                         : getUserInfoData?.Nickname || "Geni бүтээгч"}
                     </span>
-
-                    <CreatorTier
-                      tier={getUserInfoData?.LevelName}
-                      isSwiper={false}
-                    />
-                  </div>
-                  <div className="flex flex-row items-center gap-1 sm:gap-2">
-                    <span className="text-sm sm:text-lg">
-                      {getUserInfoData && <>{getUserInfoData.Point} xp</>}
-                    </span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Link href="/profile/point-board">
-                            <Image
-                              src={"/info-icon.png"}
-                              width={24}
-                              height={24}
-                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full"
-                              alt=""
-                            />
-                          </Link>
-                        </TooltipTrigger>
-                        {/* @ts-ignore */}
-                        <TooltipContent>
-                          <span>Таны онооны самбар</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
                   </div>
                 </div>
-                {getUserInfoData?.AverageRating &&
-                getUserInfoData?.ContentCount ? (
-                  <div className="flex flex-row items-center gap-2 sm:gap-3">
-                    <Image
-                      src={"/star.png"}
-                      width={24}
-                      height={24}
-                      alt=""
-                      className="w-4 h-4 sm:w-6 sm:h-6"
-                    />
-                    <span className="text-[#2D262D] text-xs sm:text-base">
-                      {getUserInfoData?.AverageRating} дундаж үнэлгээ (
-                      {getUserInfoData?.ContentCount} контент)
-                    </span>
-                  </div>
-                ) : (
-                  <></>
-                )}
+                <span className="text-[#6F6F6F] text-xs sm:text-base">
+                  {getUserInfoData ? getUserInfoData.Bio : ""}
+                </span>
                 <div className="flex flex-row items-center gap-2 sm:gap-3">
                   {instagramLink ? (
                     <a
                       target="_blank"
+                      className="rounded-3xl border p-2 bg-transparent hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
                       href={`${instagramLink?.SocialAddress || ""}`}
                     >
                       <Image
@@ -228,6 +186,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                   {facebookLink ? (
                     <a
                       target="_blank"
+                      className="rounded-3xl border p-2 bg-transparent hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
                       href={`${facebookLink?.SocialAddress || ""}`}
                     >
                       <Image
@@ -242,30 +201,9 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     <></>
                   )}
                 </div>
-                <span className="hidden sm:block text-[#6F6F6F] text-xs sm:text-base">
-                  {getUserInfoData ? getUserInfoData.Bio : ""}
-                </span>
               </div>
             </div>
-            <span className="block sm:hidden text-[#6F6F6F] text-xs sm:text-base">
-              {getUserInfoData ? getUserInfoData.Bio : ""}
-            </span>
-            <div className="w-full sm:w-auto flex flex-row items-center justify-between sm:justify-normal sm:items-end sm:flex-col gap-2 sm:gap-4">
-              <Link
-                href={"/wallet"}
-                className="flex flex-row items-center gap-2 p-2 sm:px-4 sm:py-2 bg-[#4FB755] rounded-lg min-w-10"
-              >
-                <Image
-                  src={"/wallet-icon.png"}
-                  height={24}
-                  width={24}
-                  alt=""
-                  className="w-4 h-4 sm:w-6 sm:h-6"
-                />
-                <span className="text-white text-sm sm:text-base whitespace-nowrap">
-                  Geni хэтэвч
-                </span>
-              </Link>
+            <div className="absolute top-0 right-0 sm:block">
               <div className="flex flex-row items-center gap-2 sm:gap-4">
                 <Link
                   href={"/notifications"}
@@ -276,7 +214,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     width={24}
                     height={24}
                     alt="icon"
-                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    className="min-w-4 sm:min-w-6 min-h-4 h-4 w-4 sm:min-h-6 sm:h-6 sm:w-6"
                   />
                 </Link>
                 <Link
@@ -288,12 +226,13 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     width={24}
                     height={24}
                     alt="icon"
-                    className="min-w-5 sm:min-w-6 min-h-5 h-5 w-5 sm:min-h-6 sm:h-6 sm:w-6"
+                    className="min-w-4 sm:min-w-6 min-h-4 h-4 w-4 sm:min-h-6 sm:h-6 sm:w-6"
                   />
                 </Link>
               </div>
             </div>
           </div>
+          <CreatorProfileHeader userInfoData={getUserInfoData} />
           <div className="mt-4 sm:mt-16 w-full overflow-x-auto">
             <Link
               href="/products"
@@ -361,6 +300,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
           </div>
         </div>
+
         {listCreatorContentsData && totalPages > 1 ? (
           <Pagination
             totalPages={totalPages}
