@@ -673,6 +673,12 @@ export const geniApi = createApi({
       }),
       invalidatesTags: ["Address"],
     }),
+    getBannedTime: builder.query({
+      query: () => ({
+        url: "/api/web/private/user/banned-time",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -774,4 +780,5 @@ export const {
   useGetUserAddressQuery,
   useCreateAddressMutation,
   useUpdateAddressMutation,
+  useGetBannedTimeQuery,
 } = geniApi;

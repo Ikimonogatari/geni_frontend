@@ -28,7 +28,7 @@ function LevelProgressBar({
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger className="relative z-0 gap-2 bg-primary-bg border border-primary rounded-full w-full h-6 sm:h-8">
+        <TooltipTrigger className="relative z-0 gap-2 bg-primary-bg border rounded-full w-full h-6 sm:h-8">
           <div
             className="absolute left-0 top-0 h-6 sm:h-8 bg-geni-green rounded-full"
             style={{ width: `${progressPercentage}%` }}

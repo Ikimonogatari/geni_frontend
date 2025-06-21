@@ -24,32 +24,59 @@ function page() {
           <span className="text-3xl sm:text-5xl font-extrabold">
             Таны онооны самбар
           </span>
-          <div className="bg-primary-bg rounded-2xl w-full p-8 flex flex-col md:flex-row sm:items-center justify-between gap-5 md:gap-0">
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-14 md:gap-20">
-              <div className="flex flex-col">
-                <span>Таны түвшин:</span>
-                <span className="flex flex-row items-center gap-2 text-xl sm:text-3xl font-bold">
-                  {userInfoData?.LevelName}
-                  <CreatorTier
-                    tier={userInfoData?.LevelName}
-                    className={
-                      userInfoData?.LevelName?.startsWith("Pro")
-                        ? "max-h-[18px] sm:min-h-[28px] max-w-[52px] sm:min-w-[72px]"
-                        : "min-h-[24px] min-w-[24px]"
-                    }
-                  />
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span>Нийт оноо:</span>
-                {userInfoData?.Point && (
-                  <span className="text-xl sm:text-3xl font-bold">
-                    {userInfoData?.Point} XP
+          <div className="bg-primary-bg rounded-2xl w-full p-8 flex flex-col md:flex-row justify-between items-start gap-5 md:gap-0">
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-14 md:gap-20 sm:border-b sm:pb-4">
+                <div className="flex flex-col">
+                  <span className="text-[#6F6F6F]">Таны түвшин:</span>
+                  <span className="flex flex-row items-center gap-2 text-xl sm:text-3xl font-bold">
+                    {userInfoData?.LevelName}
+                    <CreatorTier
+                      tier={userInfoData?.LevelName}
+                      className={
+                        userInfoData?.LevelName?.startsWith("Pro")
+                          ? "max-h-[18px] sm:min-h-[28px] max-w-[52px] sm:min-w-[72px]"
+                          : "min-h-[24px] min-w-[24px]"
+                      }
+                    />
                   </span>
-                )}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[#6F6F6F]">Нийт оноо:</span>
+                  {userInfoData?.Point && (
+                    <span className="text-xl sm:text-3xl font-bold">
+                      {userInfoData?.Point} XP
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-14 md:gap-20">
+                <div className="flex flex-col">
+                  <span className="text-[#6F6F6F]">
+                    Таны дараагын хүрэх түвшин :
+                  </span>
+                  <span className="flex flex-row items-center gap-2 text-base font-bold">
+                    {userInfoData?.LevelName}
+                    <CreatorTier
+                      tier={userInfoData?.LevelName}
+                      className={
+                        userInfoData?.LevelName?.startsWith("Pro")
+                          ? "max-h-[18px] sm:min-h-[28px] max-w-[52px] sm:min-w-[72px]"
+                          : "min-h-[24px] min-w-[24px]"
+                      }
+                    />
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[#6F6F6F]">Дутуу оноо:</span>
+                  {userInfoData?.Point && (
+                    <span className="text-base font-bold text-geni-red">
+                      {userInfoData?.Point} XP
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
-
             <TierInfoModal />
           </div>
           <div className="w-full overflow-x-auto flex flex-col gap-4">

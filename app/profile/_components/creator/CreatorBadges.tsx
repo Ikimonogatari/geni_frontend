@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 function CreatorBadges() {
   return (
-    <div className="flex flex-row items-center gap-2 overflow-x-auto border border-primary rounded-2xl p-2 sm:p-4 h-full">
+    <div className="flex flex-row items-center gap-2 overflow-x-auto border rounded-2xl p-2 sm:p-4 h-full">
       <Image
         src={"/verified-icon.png"}
         width={47}
