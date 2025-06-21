@@ -617,7 +617,7 @@ function EditProfileBrand() {
                   </div>
                   <div
                     {...getRootProps()}
-                    className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#4D55F5] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
+                    className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-primary border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                   >
                     <input {...getInputProps()} />
                     {parsedUserInfo && parsedUserInfo.ProfileLink
@@ -802,7 +802,7 @@ function EditProfileBrand() {
               />
               <button
                 type="submit"
-                className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+                className="bg-primary rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
               >
                 Хадгалах
               </button>
@@ -824,14 +824,7 @@ function EditProfileBrand() {
       case "password":
         return (
           <>
-            <BackButton />
             <div className="mt-4 flex flex-col">
-              <h1 className="text-3xl font-medium">Нууц үг</h1>
-              {passwordValidationMessage && (
-                <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm text-gray-600">
-                  {passwordValidationMessage}
-                </div>
-              )}
               <div className="mt-4">
                 <PasswordSettings
                   showNewPassword={showNewPassword}
@@ -852,6 +845,11 @@ function EditProfileBrand() {
                   </div>
                 )}
               </div>
+              {passwordValidationMessage && (
+                <div className="mt-4 p-4 bg-geni-orange w-auto sm:w-1/2 rounded-lg text-sm text-white">
+                  {passwordValidationMessage}
+                </div>
+              )}
             </div>
           </>
         );

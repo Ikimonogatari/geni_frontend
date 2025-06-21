@@ -344,7 +344,7 @@ const AddressSelection: React.FC = () => {
         <button
           type="submit"
           disabled={createLoading || updateLoading}
-          className="w-full bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl disabled:opacity-50"
+          className="w-full bg-primary rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl disabled:opacity-50"
         >
           {createLoading || updateLoading
             ? "Хадгалж байна..."
