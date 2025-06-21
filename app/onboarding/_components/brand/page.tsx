@@ -85,18 +85,23 @@ function BrandOnboarding() {
   // Update formik values when userInfo data is loaded
   useEffect(() => {
     if (userInfo) {
-      formik.setValues({
-        Name: userInfo?.Name || "",
-        Bio: userInfo?.Bio || "",
-        Website: userInfo?.Website || "",
-        PhoneNumber: userInfo?.PhoneNumber || "",
-        RegNo: userInfo?.RegNo || "",
-        Address: userInfo?.Address || "",
-        BrandAoADescription: "temp-desc",
-        HasMarketingPersonel: userInfo?.HasMarketingPersonel || false,
-        AvgProductSalesMonthly: userInfo?.AvgProductSalesMonthly || 0,
-        AvgPrice: userInfo?.AvgPrice || 0,
-      });
+      // Only update form values if they haven't been set yet or if they're empty
+      const shouldUpdate = !formik.values.Name || !formik.values.Bio;
+
+      if (shouldUpdate) {
+        formik.setValues({
+          Name: userInfo?.Name || "",
+          Bio: userInfo?.Bio || "",
+          Website: userInfo?.Website || "",
+          PhoneNumber: userInfo?.PhoneNumber || "",
+          RegNo: userInfo?.RegNo || "",
+          Address: userInfo?.Address || "",
+          BrandAoADescription: "temp-desc",
+          HasMarketingPersonel: userInfo?.HasMarketingPersonel || false,
+          AvgProductSalesMonthly: userInfo?.AvgProductSalesMonthly || 0,
+          AvgPrice: userInfo?.AvgPrice || 0,
+        });
+      }
     }
   }, [userInfo]);
 

@@ -17,7 +17,7 @@ export const geniApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["UserInfo"],
+  tagTypes: ["UserInfo", "Address"],
   endpoints: (builder) => ({
     creatorLogin: builder.mutation({
       query: (body) => ({
@@ -159,8 +159,12 @@ export const geniApi = createApi({
       }),
     }),
     listPublicProducts: builder.query({
-      query: () => ({
-        url: `/api/web/public/product?searchKey=&limit=1000&offset=0`,
+      query: ({ searchKey, limit, offset, category, brand }) => ({
+        url: `/api/web/public/product?searchKey=${
+          searchKey || ""
+        }&limit=${limit}&offset=${offset}${
+          category ? `&category=${category}` : ""
+        }${brand ? `&brand=${brand}` : ""}`,
         method: "GET",
       }),
     }),
@@ -351,9 +355,21 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getPublicBrandById: builder.query({
+      query: (id) => ({
+        url: `/api/web/public/brand/${id}`,
+        method: "GET",
+      }),
+    }),
     listPublicCreatorContentGallery: builder.query({
       query: (id) => ({
         url: `/api/web/public/content/user/${id}?limit=1000&offset=0`,
+        method: "GET",
+      }),
+    }),
+    getPublicProfileContentGalleryById: builder.query({
+      query: (id) => ({
+        url: `/api/web/public/content/${id}`,
         method: "GET",
       }),
     }),
@@ -609,6 +625,54 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    rejectSelfContent: builder.mutation({
+      query: (id) => ({
+        url: `/api/web/private/content/reject-self/${id}`,
+        method: "POST",
+      }),
+    }),
+    // Address-related endpoints
+    getCityList: builder.query({
+      query: () => ({
+        url: "/api/web/private/user/address-dict/city",
+        method: "GET",
+      }),
+    }),
+    getDistrictList: builder.query({
+      query: (cityId) => ({
+        url: `/api/web/private/user/address-dict/dist/${cityId}`,
+        method: "GET",
+      }),
+    }),
+    getSubDistrictList: builder.query({
+      query: (distId) => ({
+        url: `/api/web/private/user/address-dict/subdist/${distId}`,
+        method: "GET",
+      }),
+    }),
+    getUserAddress: builder.query({
+      query: () => ({
+        url: "/api/web/private/user/address",
+        method: "GET",
+      }),
+      providesTags: ["Address"],
+    }),
+    createAddress: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/address",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Address"],
+    }),
+    updateAddress: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/user/address",
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Address"],
+    }),
   }),
 });
 
@@ -659,7 +723,9 @@ export const {
   useGetPublicBrandListQuery,
   useGetPublicCreatorListQuery,
   useGetPublicCreatorByIdQuery,
+  useGetPublicBrandByIdQuery,
   useListPublicCreatorContentGalleryQuery,
+  useGetPublicProfileContentGalleryByIdQuery,
   useDeleteProductMutation,
   useDisableProductMutation,
   useEditProductMutation,
@@ -701,4 +767,11 @@ export const {
   useGetFinalContentXpMutation,
   useGetContentProcessMutation,
   useGetFeaturedProductListQuery,
+  useRejectSelfContentMutation,
+  useGetCityListQuery,
+  useGetDistrictListQuery,
+  useGetSubDistrictListQuery,
+  useGetUserAddressQuery,
+  useCreateAddressMutation,
+  useUpdateAddressMutation,
 } = geniApi;

@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
 import { useGetPublicBrandListQuery } from "../services/service";
+import PublicBrandCard from "@/components/PublicBrandCard";
 
 function Brands() {
   const [isBeginning, setIsBeginning] = useState(true);
@@ -108,66 +109,14 @@ function Brands() {
               )?.SocialAddress;
               return (
                 <SwiperSlide key={id} className="">
-                  <div className="bg-[#F5F4F0] min-h-[300px] rounded-2xl p-4 text-[#2D262D] border border-border-gray/60 flex flex-col items-center justify-center gap-2 h-full">
-                    <Image
-                      src={
-                        brand?.ProfileLink
-                          ? brand?.ProfileLink
-                          : "/dummy-brand.png"
-                      }
-                      width={194}
-                      height={194}
-                      alt=""
-                      className="aspect-square w-[194px] h-[194px] rounded-full border border-border-gray/60 object-cover"
-                    />
-                    <span className="hover:underline hover:underline-offset-3 text-lg font-semibold max-w-[150px] whitespace-nowrap overflow-hidden">
-                      {brand?.Name ? brand?.Name : "Geni Брэнд"}
-                    </span>
-                    {brand?.BrandTypes && (
-                      <div className="bg-[#CA7FFE] text-white rounded-full px-4 py-2">
-                        {brand?.BrandTypes?.[0]?.TypeName}
-                      </div>
-                    )}
-
-                    <div className="flex flex-row gap-2">
-                      {instagramLink ? (
-                        <a
-                          href={instagramLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:opacity-75"
-                        >
-                          <Image
-                            src="/Instagram.png"
-                            width={24}
-                            height={24}
-                            alt=""
-                            className="w-6 h-6"
-                          />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                      {facebookLink ? (
-                        <a
-                          href={facebookLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:opacity-75"
-                        >
-                          <Image
-                            src="/Facebook.png"
-                            width={24}
-                            height={24}
-                            alt=""
-                            className="w-6 h-6"
-                          />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
+                  <PublicBrandCard
+                    id={id}
+                    brand={brand}
+                    instagramLink={instagramLink}
+                    facebookLink={facebookLink}
+                    isSwiper={true}
+                    size="h-[332px] sm:h-auto"
+                  />
                 </SwiperSlide>
               );
             })}

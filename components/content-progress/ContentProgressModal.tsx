@@ -62,7 +62,8 @@ const ContentProgressModalContent: React.FC<
   const [activeStep, setActiveStep] = useState<number>(0);
   const [dialogType, setDialogType] = useState<DialogType>(DialogType.PROGRESS);
   const [openReturnSection, setOpenReturnSection] = useState<boolean>(false);
-  const [openFixRequestSuccess, setOpenFixRequestSuccess] = useState<boolean>(false);
+  const [openFixRequestSuccess, setOpenFixRequestSuccess] =
+    useState<boolean>(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const userType = Cookies.get("userType");
   const parsedUserInfo = Cookies.get("user-info");
@@ -173,7 +174,7 @@ const ContentProgressModalContent: React.FC<
             FixReason: values.reasons,
           };
           brandReview(data).then(() => {
-            setDialogOpen(false);
+            setDialogType(DialogType.CONTENT);
             refetch();
             setOpenFixRequestSuccess(true);
           });
@@ -402,7 +403,11 @@ const ContentProgressModalContent: React.FC<
     return (
       <>
         {dialogType == DialogType.REQUEST ? (
-          <ContentReturnModalContent requestId={content?.ContentId} />
+          <ContentReturnModalContent
+            requestId={content?.ContentId}
+            setDialogOpen={setDialogOpen}
+            refetch={refetch}
+          />
         ) : (
           <></>
         )}
@@ -482,12 +487,13 @@ const ContentProgressModalContent: React.FC<
                             className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center cursor-pointer transition-all peer-checked:border-green-500"
                           >
                             <span
-                              className={`text-sm sm:text-base ${formik.values.BrandReviewResendFeedback.includes(
-                                feedback.BrandReviewId
-                              )
-                                ? "text-green-500"
-                                : "hidden"
-                                } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                              className={`text-sm sm:text-base ${
+                                formik.values.BrandReviewResendFeedback.includes(
+                                  feedback.BrandReviewId
+                                )
+                                  ? "text-green-500"
+                                  : "hidden"
+                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                             >
                               ✓
                             </span>
@@ -557,8 +563,9 @@ const ContentProgressModalContent: React.FC<
                           className="w-6 h-6 rounded-lg border-2 border-orange-300 flex items-center justify-center transition-all peer-checked:border-green-500"
                         >
                           <span
-                            className={`text-sm sm:text-base ${item.CreatorChecked ? "text-green-500" : "hidden"
-                              } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
+                            className={`text-sm sm:text-base ${
+                              item.CreatorChecked ? "text-green-500" : "hidden"
+                            } text-center select-none peer-checked:inline-block w-3 h-5 border-white`}
                           >
                             ✓
                           </span>
@@ -607,7 +614,8 @@ const ContentProgressModalContent: React.FC<
   const creatorModalFooterActions = () => {
     return (
       <>
-        {/* {status === STATUS_LIST.RequestSent &&
+        {(status === STATUS_LIST.RequestSent ||
+          status === STATUS_LIST.DeliveryPaymentPending) &&
           dialogType != DialogType.REQUEST && (
             <div className="pt-2">
               <button
@@ -618,7 +626,7 @@ const ContentProgressModalContent: React.FC<
                 Хүсэлт буцаах
               </button>
             </div>
-          )} */}
+          )}
         {status === STATUS_LIST.DeliverySuccess && (
           <div className="flex flex-col gap-2 border-t pt-2">
             <button
@@ -629,8 +637,9 @@ const ContentProgressModalContent: React.FC<
                   : handleOpenReturnSection()
               }
               disabled={isLoadingContentProcessRefund}
-              className={`w-full text-center text-xs sm:text-base ${isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
-                } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
+              className={`w-full text-center text-xs sm:text-base ${
+                isDictListSuccess ? "bg-secondary" : "bg-geni-gray"
+              } px-3 sm:px-5 py-2 rounded-lg text-white font-bold`}
             >
               Бүтээгдэхүүн буцаах
             </button>
@@ -659,7 +668,7 @@ const ContentProgressModalContent: React.FC<
                 className="w-full text-center text-xs sm:text-base bg-[#CA7FFE] mt-2 px-5 py-2 rounded-lg text-white font-bold"
               >
                 {status === STATUS_LIST.ContentRejected ||
-                  status === STATUS_LIST.ContentFixRequest
+                status === STATUS_LIST.ContentFixRequest
                   ? "Дахин илгээх"
                   : "Контент илгээх"}
               </button>
@@ -733,7 +742,7 @@ const ContentProgressModalContent: React.FC<
         )}
 
         {status == STATUS_LIST.ContentApproved && (
-          <div className="h-[calc(700px-40px)] lg:h-[calc(539px-40px)] w-full flex flex-col p-4">
+          <div className="h-[calc(700px-40px)] lg:h-[calc(580px-40px)] w-full flex flex-col p-4">
             <div>
               Танд контент бүтээгчид өгсөн дундаж оноо:
               <Image
@@ -801,7 +810,7 @@ const ContentProgressModalContent: React.FC<
                 <form onSubmit={formik.handleSubmit} className="h-full w-full">
                   <div
                     ref={scrollContainerRef}
-                    className="h-[calc(539px-40px)] lg:h-[calc(539px-40px)] overflow-y-auto [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
+                    className="h-[calc(580px-40px)] lg:h-[calc(580px-40px)] overflow-y-auto [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 flex flex-col gap-2 p-1"
                   >
                     {dialogType == DialogType.PROGRESS &&
                       contentProcessData?.length > 0 && (
@@ -817,21 +826,21 @@ const ContentProgressModalContent: React.FC<
                       )}
                     {contentProcessData?.[contentProcessData.length - 1]
                       ?.ContentStepId == content?.CurrentStepId && (
-                        <>
-                          {userType == "Creator" && creatorModalContents()}
-                          {userType == "Brand" && brandModalContents()}
-                          {userType == "Creator" && creatorModalMessages()}
-                          {userType == "Brand" && brandModalMessages()}
-                        </>
-                      )}
+                      <>
+                        {userType == "Creator" && creatorModalContents()}
+                        {userType == "Brand" && brandModalContents()}
+                        {userType == "Creator" && creatorModalMessages()}
+                        {userType == "Brand" && brandModalMessages()}
+                      </>
+                    )}
                   </div>
                   {contentProcessData?.[contentProcessData.length - 1]
                     ?.ContentStepId == content?.CurrentStepId && (
-                      <>
-                        {userType == "Creator" && creatorModalFooterActions()}
-                        {userType == "Brand" && brandModalFooterActions()}
-                      </>
-                    )}
+                    <>
+                      {userType == "Creator" && creatorModalFooterActions()}
+                      {userType == "Brand" && brandModalFooterActions()}
+                    </>
+                  )}
                 </form>
               </FormikProvider>
 

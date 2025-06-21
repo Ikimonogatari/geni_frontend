@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,11 @@ import Image from "next/image";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { ErrorText } from "@/components/ui/error-text";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
+import toast from "react-hot-toast";
 
 function RestockProductModal({
   brandData,
@@ -18,10 +23,39 @@ function RestockProductModal({
   decrement,
   increment,
   addSupply,
+  refetchBrandData,
 }) {
+  const paymentMonitorRef = useRef(null);
+
+  // Cleanup function to close the payment monitor when unmounting
+  useEffect(() => {
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, []);
+
+  const handleCreditPurchase = () => {
+    // Start payment status monitoring via SSE
+    if (brandData?.UserTxnId) {
+      paymentMonitorRef.current = createPaymentStatusMonitor(
+        brandData.UserTxnId,
+        () => {
+          // On payment success
+          toast.success("Төлбөр амжилттай төлөгдлөө");
+          refetchBrandData();
+        },
+        (error) => {
+          // On error
+          console.error("Payment monitoring error:", error);
+          toast.error("Төлбөр шалгахад алдаа гарлаа");
+        }
+      );
+    }
+  };
+
   return (
     <Dialog>
-      <DialogTrigger className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6">
+      <DialogTrigger className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6 whitespace-nowrap">
         <Image
           src={"/add-supply-icon.png"}
           width={24}
@@ -29,7 +63,7 @@ function RestockProductModal({
           alt=""
           className="w-6 h-6 aspect-square"
         />
-        Нэмэх
+        Нэмэх/Хасах
       </DialogTrigger>
       {/*@ts-ignore*/}
       <DialogContent className="w-full max-w-xl flex flex-col gap-4 rounded-3xl">
@@ -37,7 +71,7 @@ function RestockProductModal({
         <DialogHeader>
           {/*@ts-ignore*/}
           <DialogTitle className="text-3xl">
-            Контент бүтээгчидтэй хамтрах хүсэлт нэмэх
+            Контент бүтээгчидтэй хамтрах хүсэлт нэмэх/хасах
           </DialogTitle>
           {/*@ts-ignore*/}
         </DialogHeader>
@@ -89,13 +123,14 @@ function RestockProductModal({
             className={
               "text-lg flex flex-row items-center justify-center py-4 w-full"
             }
+            onCreditPurchase={handleCreditPurchase}
           />
         </div>
         <button
           onClick={() => addSupply(p?.ProductId)}
           className="bg-geni-blue text-white font-bold border-[1px] border-[#2D262D] rounded-lg w-full text-center py-4"
         >
-          Нэмэх
+          Нэмэх/Хасах
         </button>
       </DialogContent>
     </Dialog>

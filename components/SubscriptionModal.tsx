@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import {
   Dialog,
@@ -17,22 +17,31 @@ import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
 
 interface SubscriptionModalProps {
   selectedPackageId: number;
   setIsMainDialogOpen: (open: boolean) => void;
   selectedPayment: string;
+  couponCode?: string;
+  onCreditPurchase?: () => void;
 }
 
 const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   selectedPackageId,
   setIsMainDialogOpen,
   selectedPayment,
+  couponCode,
+  onCreditPurchase,
 }) => {
   const [txId, setTxId] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [invoiceHtml, setInvoiceHtml] = useState<string | null>(null);
+  const paymentMonitorRef = useRef(null);
 
   const [
     subscribePlan,
@@ -54,13 +63,31 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   useEffect(() => {
     if (subscribePlanSuccess) {
       if (selectedPayment === "qpay") {
-        setTxId(subscribePlanData?.UserTxnId || null);
+        const newTxId = subscribePlanData?.UserTxnId || null;
+        setTxId(newTxId);
         setPaymentDialogOpen(true);
+
+        // Start payment status monitoring via SSE
+        if (newTxId) {
+          paymentMonitorRef.current = createPaymentStatusMonitor(
+            newTxId,
+            () => {
+              // On payment success
+              setIsPaymentSuccess(true);
+              toast.success("Төлбөр амжилттай төлөгдлөө");
+            },
+            (error) => {
+              // On error
+              console.error("Payment monitoring error:", error);
+              toast.error("Төлбөр шалгахад алдаа гарлаа");
+            }
+          );
+        }
       } else if (
         selectedPayment === "invoice" &&
         subscribePlanData?.InvoiceHtml
       ) {
-        setInvoiceHtml(subscribePlanData.InvoiceHtml); // Decode base64 HTML
+        setInvoiceHtml(subscribePlanData.InvoiceHtml);
         generatePDF(subscribePlanData.InvoiceHtml);
       }
     }
@@ -68,10 +95,25 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       //@ts-ignore
       toast.error(subscribePlanError?.data?.error);
     }
+
+    // Cleanup function to close the payment monitor when unmounting
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
   }, [subscribePlanSuccess, subscribePlanError]);
 
+  // Close payment monitor when the dialog is closed or payment succeeds
+  useEffect(() => {
+    if (!isPaymentDialogOpen || isPaymentSuccess) {
+      closePaymentMonitor(paymentMonitorRef.current);
+    }
+  }, [isPaymentDialogOpen, isPaymentSuccess]);
+
   const handleSubscription = () => {
-    subscribePlan({ planId: selectedPackageId });
+    subscribePlan({
+      planId: selectedPackageId,
+      ...(couponCode && { CouponCode: couponCode }),
+    });
   };
 
   const handleCheckPayment = async () => {
@@ -91,9 +133,13 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   };
 
   const handleCloseDialog = () => {
+    closePaymentMonitor(paymentMonitorRef.current);
     setPaymentDialogOpen(false);
     setIsMainDialogOpen(false);
     setIsPaymentSuccess(false);
+    if (onCreditPurchase) {
+      onCreditPurchase();
+    }
   };
 
   const generatePDF = async (htmlString: string) => {

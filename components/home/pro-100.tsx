@@ -15,13 +15,17 @@ import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { SlidingNumber } from "../motion-primitives/sliding-number";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
 
 import Step1Pic from "../../public/pro100/step-1.png";
 import Step2Pic from "../../public/pro100/step-2.png";
@@ -168,11 +172,13 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
     email: "",
     phoneNumber: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [qpayImage, setQpayImage] = useState("");
-  const [qpayUrls, setQpayUrls] = useState([]);
   const [callBackUrl, setCallBackUrl] = useState("");
+  const [qpayUrls, setQpayUrls] = useState([]);
+  const [txId, setTxId] = useState<string | null>(null);
+  const paymentMonitorRef = useRef(null);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -252,15 +258,31 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
         const data = await response.json();
         setQpayImage(data.QrImage ?? "");
         setCallBackUrl(data.CallBackUrl ?? "");
-        setQpayUrls(data.Urls ?? "");
+        setQpayUrls(data.Urls ?? []);
+
+        // Extract transaction ID if available
+        if (data.UserTxnId) {
+          setTxId(data.UserTxnId);
+
+          // Start payment status monitoring via SSE
+          paymentMonitorRef.current = createPaymentStatusMonitor(
+            data.UserTxnId,
+            () => {
+              // On payment success
+              setCurrentStep("success");
+              toast.success("Төлбөр амжилттай төлөгдлөө");
+            },
+            (error) => {
+              // On error
+              console.error("Payment monitoring error:", error);
+              toast.error("Төлбөр шалгахад алдаа гарлаа");
+            }
+          );
+        }
+
         setCurrentStep("payment");
       } catch (error) {
         console.error("Failed to submit application:", error);
-
-        // setErrors(prev => ({
-        //   ...prev,
-        //   submit: 'Уучлаарай, алдаа гарлаа. Дахин оролдоно уу.'
-        // }));
       }
     }
   };
@@ -296,9 +318,21 @@ function OrderModal({ open, onOpenChange }: OrderModalProps) {
     setCurrentStep("order");
   };
 
+  // Cleanup payment monitor when dialog closes or step changes
+  useEffect(() => {
+    if (currentStep !== "payment") {
+      closePaymentMonitor(paymentMonitorRef.current);
+    }
+
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, [currentStep]);
+
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      // Reset form when dialog is closed
+      // Close payment monitor and reset form when dialog is closed
+      closePaymentMonitor(paymentMonitorRef.current);
       setTimeout(() => {
         resetForm();
       }, 300); // Wait for dialog close animation

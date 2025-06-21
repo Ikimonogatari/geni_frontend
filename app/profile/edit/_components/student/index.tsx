@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
+import { Mail, User, Lock, Share2, LogOut, MapPin } from "lucide-react";
 
 import {
   useChangeProfilePictureMutation,
@@ -27,6 +27,7 @@ import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
+import AddressSelection from "../AddressSelection";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import BackButton from "@/components/common/BackButton";
@@ -532,6 +533,12 @@ function EditProfileStudent() {
       onClick: () => setActiveSection("socials"),
     },
     {
+      title: "Хаяг",
+      href: "#address",
+      icon: <MapPin className="h-4 w-4" />,
+      onClick: () => setActiveSection("address"),
+    },
+    {
       title: "Гарах",
       href: "#",
       icon: <LogOut className="h-4 w-4" />,
@@ -779,6 +786,8 @@ function EditProfileStudent() {
             handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
           />
         );
+      case "address":
+        return <AddressSelection />;
     }
   };
 

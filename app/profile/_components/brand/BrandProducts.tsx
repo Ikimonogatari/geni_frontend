@@ -20,7 +20,7 @@ function BrandProducts({ brandProducts, brandData, isLoading }) {
   const [requestStatus, setRequestStatus] = useState("");
 
   const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count > 0 ? count - 1 : 0);
+  const decrement = () => setCount(count - 1);
 
   const [
     deleteProduct,
@@ -238,6 +238,12 @@ function BrandProducts({ brandProducts, brandData, isLoading }) {
         decrement={decrement}
         addSupply={addSupply}
         count={count}
+        refetchBrandData={() => {
+          // Refetch brand data after credit purchase
+          if (addProductSupplySuccess) {
+            window.location.reload();
+          }
+        }}
       />
     </div>
   );
