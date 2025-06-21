@@ -23,11 +23,12 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
+import { Mail, User, Lock, Share2, LogOut, MapPin } from "lucide-react";
 import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
+import AddressSelection from "../AddressSelection";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import BackButton from "@/components/common/BackButton";
@@ -183,9 +184,6 @@ function EditProfileBrand() {
       RegNo: Yup.string()
         .matches(/^[0-9]{7}$/, "Регистрийн дугаар 7 оронтой тоо байх ёстой")
         .required("Регистрийн дугаараа оруулна уу"),
-      Address: Yup.string()
-        .min(5, "Хаяг хэт богино байна")
-        .required("Байршлаа оруулна уу"),
     }),
     onSubmit: async (values) => {
       // Create a copy of values to submit
@@ -572,6 +570,12 @@ function EditProfileBrand() {
       onClick: () => setActiveSection("socials"),
     },
     {
+      title: "Хаяг",
+      href: "#address",
+      icon: <MapPin className="h-4 w-4" />,
+      onClick: () => setActiveSection("address"),
+    },
+    {
       title: "Гарах",
       href: "#",
       icon: <LogOut className="h-4 w-4" />,
@@ -783,23 +787,6 @@ function EditProfileBrand() {
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
                 className="bg-[#F5F4F0] text-base sm:text-xl"
               />
-              <Textarea
-                id="Address"
-                name="Address"
-                placeholder="Хаяг"
-                label="Хаяг"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.Address}
-                rows={4}
-                errorText={formik.errors.Address?.toString()}
-                errorVisible={
-                  !!formik.touched.Address && !!formik.errors.Address
-                }
-                labelClassName="text-[#6F6F6F] text-lg font-normal"
-                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
-                className="bg-[#F5F4F0] text-base sm:text-xl"
-              />
               <button
                 type="submit"
                 className="bg-primary rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
@@ -862,6 +849,8 @@ function EditProfileBrand() {
             handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
           />
         );
+      case "address":
+        return <AddressSelection />;
     }
   };
 

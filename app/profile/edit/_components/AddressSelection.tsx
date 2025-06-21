@@ -97,7 +97,7 @@ const AddressSelection: React.FC = () => {
   const [updateAddress, { isLoading: updateLoading }] =
     useUpdateAddressMutation();
 
-  // Load existing address data
+  // Load existing address data and determine if we're editing or creating
   useEffect(() => {
     if (userAddress && userAddress.length > 0) {
       const address = userAddress[0]; // Assuming single address for now
@@ -105,14 +105,27 @@ const AddressSelection: React.FC = () => {
       setIsEditing(true);
       // You might need to set the selected IDs based on the existing address
       // This would require reverse lookup from SubDistId to find DistId and CityId
+    } else {
+      // userAddress is null, empty array, or undefined - we should create new address
+      setIsEditing(false);
+      setAddressForm({
+        SubDistId: 0,
+        ComplexBuilding: "",
+        Entrance: "",
+        Floor: 0,
+        ApartmentNumber: 0,
+        Detail: "",
+        IsDefault: true,
+      });
     }
   }, [userAddress]);
 
   // Debug logging for API responses
   useEffect(() => {
-    console.log("City list:", cityList);
+    console.log("User address:", userAddress);
+    console.log("Is editing:", isEditing);
     if (cityError) console.error("City error:", cityError);
-  }, [cityList, cityError]);
+  }, [userAddress, isEditing, cityError]);
 
   useEffect(() => {
     console.log("Selected city ID:", selectedCityId);
@@ -182,10 +195,12 @@ const AddressSelection: React.FC = () => {
     }
 
     try {
-      if (isEditing) {
+      if (isEditing && userAddress && userAddress.length > 0) {
+        // Update existing address using PUT
         await updateAddress(addressForm).unwrap();
         toast.success("Хаяг амжилттай шинэчлэгдлээ");
       } else {
+        // Create new address using POST  
         await createAddress(addressForm).unwrap();
         toast.success("Хаяг амжилттай хадгалагдлаа");
         setIsEditing(true);
