@@ -205,16 +205,17 @@ const AddressSelection: React.FC = () => {
           {/* City Selection */}
           <div className="flex flex-col gap-3">
             <label className="block text-[#6F6F6F] text-lg font-normal">
-              Аймаг/Хот
+              Хот/Аймаг (заавал)
             </label>
             <Select
               value={selectedCityId?.toString() || ""}
               onValueChange={handleCityChange}
               disabled={cityLoading}
+              required
             >
               {/* @ts-ignore */}
               <SelectTrigger className="w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#CDCDCD] text-base sm:text-xl h-auto outline-none ring-0 focus:outline-none focus-visible:outline-none">
-                <SelectValue placeholder="Аймаг/Хот сонгоно уу" />
+                <SelectValue placeholder="Хот/Аймаг сонгоно уу" />
               </SelectTrigger>
               {/* @ts-ignore */}
               <SelectContent>
@@ -231,12 +232,13 @@ const AddressSelection: React.FC = () => {
           {/* District Selection */}
           <div className="flex flex-col gap-3">
             <label className="block text-[#6F6F6F] text-lg font-normal">
-              Сум/Дүүрэг
+              Дүүрэг/Сум (заавал)
             </label>
             <Select
               value={selectedDistrictId?.toString() || ""}
               onValueChange={handleDistrictChange}
               disabled={!selectedCityId || districtLoading}
+              required
             >
               {/* @ts-ignore */}
               <SelectTrigger
@@ -249,10 +251,10 @@ const AddressSelection: React.FC = () => {
                 <SelectValue
                   placeholder={
                     !selectedCityId
-                      ? "Эхлээд аймаг/хот сонгоно уу"
+                      ? "Эхлээд хот/аймаг сонгоно уу"
                       : districtLoading
                       ? "Ачааллаж байна..."
-                      : "Сум/Дүүрэг сонгоно уу"
+                      : "Дүүрэг/Сум сонгоно уу"
                   }
                 />
               </SelectTrigger>
@@ -286,12 +288,13 @@ const AddressSelection: React.FC = () => {
           {/* Sub-District Selection */}
           <div className="flex flex-col gap-3">
             <label className="block text-[#6F6F6F] text-lg font-normal">
-              Баг/Хороо
+              Хороо/Баг (заавал)
             </label>
             <Select
               value={selectedSubDistrictId?.toString() || ""}
               onValueChange={handleSubDistrictChange}
               disabled={!selectedDistrictId || subDistrictLoading}
+              required
             >
               {/* @ts-ignore */}
               <SelectTrigger
@@ -304,12 +307,12 @@ const AddressSelection: React.FC = () => {
                 <SelectValue
                   placeholder={
                     !selectedCityId
-                      ? "Эхлээд аймаг/хот сонгоно уу"
+                      ? "Эхлээд хот/аймаг сонгоно уу"
                       : !selectedDistrictId
-                      ? "Эхлээд сум/дүүрэг сонгоно уу"
+                      ? "Эхлээд дүүрэг/сум сонгоно уу"
                       : subDistrictLoading
                       ? "Ачааллаж байна..."
-                      : "Баг/Хороо сонгоно уу"
+                      : "Хороо/Баг сонгоно уу"
                   }
                 />
               </SelectTrigger>
@@ -343,7 +346,7 @@ const AddressSelection: React.FC = () => {
           <Input
             name="ComplexBuilding"
             type="text"
-            label="Барилга/Байшин"
+            label="Хотхон/Барилга (заавал биш)"
             value={addressForm.ComplexBuilding}
             onChange={handleInputChange}
             labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -357,7 +360,7 @@ const AddressSelection: React.FC = () => {
           <Input
             name="Entrance"
             type="text"
-            label="Орц"
+            label="Орц (заавал биш)"
             value={addressForm.Entrance}
             onChange={handleInputChange}
             labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -367,7 +370,7 @@ const AddressSelection: React.FC = () => {
           <Input
             name="Floor"
             type="number"
-            label="Давхар"
+            label="Давхар (заавал биш)"
             value={addressForm.Floor.toString()}
             onChange={handleInputChange}
             labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -377,7 +380,7 @@ const AddressSelection: React.FC = () => {
           <Input
             name="ApartmentNumber"
             type="number"
-            label="Орон сууц дугаар"
+            label="Тоот (заавал биш)"
             value={addressForm.ApartmentNumber.toString()}
             onChange={handleInputChange}
             labelClassName="text-[#6F6F6F] text-lg font-normal"
@@ -389,13 +392,14 @@ const AddressSelection: React.FC = () => {
         {/* Details input full width */}
         <Textarea
           name="Detail"
-          label="Нэмэлт мэдээлэл"
+          label="Нэмэлт мэдээлэл (заавал)"
           value={addressForm.Detail}
           onChange={handleInputChange}
           rows={3}
           labelClassName="text-[#6F6F6F] text-lg font-normal"
           layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
           className="bg-[#F5F4F0] text-base sm:text-xl"
+          required
         />
 
         <button
