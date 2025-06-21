@@ -95,7 +95,11 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                       {userInfoData && (
                         <PriceFormatter
                           noSymbol={true}
-                          price={userInfoData?.Point ? userInfoData?.Point : 0}
+                          price={
+                            userInfoData?.CreditPoint
+                              ? userInfoData?.CreditPoint
+                              : 0
+                          }
                         />
                       )}
                     </span>
@@ -188,7 +192,11 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                     {userInfoData && (
                       <PriceFormatter
                         noSymbol={true}
-                        price={userInfoData?.Point ? userInfoData?.Point : 0}
+                        price={
+                          userInfoData?.CreditPoint
+                            ? userInfoData?.CreditPoint
+                            : 0
+                        }
                       />
                     )}
                   </span>
