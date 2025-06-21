@@ -12,7 +12,6 @@ import Link from "next/link";
 import StarRating from "./StarRating";
 import CreatorBadges from "./CreatorBadges";
 import PriceFormatter from "@/components/common/FormatPrice";
-
 interface CreatorProfileHeaderProps {
   userInfoData: any;
 }
@@ -24,9 +23,9 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
         <span className="text-[#6F6F6F] text-[11px] sm:text-base">Түвшин:</span>
         <div className="flex flex-row justify-center items-center gap-1 sm:gap-2 border border-primary rounded-2xl sm:p-4 p-2 h-full">
           <LevelProgressBar
-            level={userInfoData?.Level}
-            progress={userInfoData?.Point}
-            total={userInfoData?.TotalPoints}
+            level={userInfoData?.LvlId}
+            progress={userInfoData?.XP}
+            nextLvlXp={userInfoData?.NextLvlXP}
           />
           <TooltipProvider>
             <Tooltip>
@@ -64,24 +63,19 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
           <Tooltip>
             <TooltipTrigger className="h-full">
               <Link
-                className="border border-primary rounded-2xl p-2 sm:p-4 flex flex-col sm:flex-row sm:gap-2 justify-center items-center h-full"
+                className="border border-primary rounded-2xl p-2 sm:p-4 flex flex-wrap sm:flex-row gap-1 sm:gap-2 justify-center items-center h-full"
                 href="/wallet"
               >
+                <span className="text-[#6F6F6F] text-[10px] sm:text-base">
+                  Geni Оноо:
+                </span>
                 <span className="text-base sm:text-2xl font-extrabold flex gap-1">
                   {userInfoData && (
                     <PriceFormatter
-                      price={
-                        userInfoData?.Credit ? userInfoData?.Credit : 999999
-                      }
+                      noSymbol={true}
+                      price={userInfoData?.Point ? userInfoData?.Point : 0}
                     />
                   )}
-                  <Image
-                    src={"/rating-geni.png"}
-                    width={24}
-                    height={24}
-                    alt=""
-                    className="w-4 h-4 sm:w-6 sm:h-6 mt-[2px] sm:mt-[3px]"
-                  />
                 </span>
               </Link>
             </TooltipTrigger>

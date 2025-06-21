@@ -3,7 +3,6 @@ import Image from "next/image";
 import PriceFormatter from "../common/FormatPrice";
 
 function Step1({ handleSelect, selectedOption, courseData }) {
-
   const coursePrice = courseData?.coursePrice; // Fallback to default price if API fails
 
   return (

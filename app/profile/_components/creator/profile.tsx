@@ -162,24 +162,6 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                     </span>
                   </div>
                 </div>
-                {getUserInfoData?.AverageRating &&
-                getUserInfoData?.ContentCount ? (
-                  <div className="flex flex-row items-center gap-2 sm:gap-3">
-                    <Image
-                      src={"/star.png"}
-                      width={24}
-                      height={24}
-                      alt=""
-                      className="w-4 h-4 sm:w-6 sm:h-6"
-                    />
-                    <span className="text-[#2D262D] text-xs sm:text-base">
-                      {getUserInfoData?.AverageRating} дундаж үнэлгээ (
-                      {getUserInfoData?.ContentCount} контент)
-                    </span>
-                  </div>
-                ) : (
-                  <></>
-                )}
                 <span className="text-[#6F6F6F] text-xs sm:text-base">
                   {getUserInfoData ? getUserInfoData.Bio : ""}
                 </span>
@@ -187,6 +169,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                   {instagramLink ? (
                     <a
                       target="_blank"
+                      className="rounded-3xl border p-2 bg-transparent hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
                       href={`${instagramLink?.SocialAddress || ""}`}
                     >
                       <Image
@@ -203,6 +186,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
                   {facebookLink ? (
                     <a
                       target="_blank"
+                      className="rounded-3xl border p-2 bg-transparent hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
                       href={`${facebookLink?.SocialAddress || ""}`}
                     >
                       <Image

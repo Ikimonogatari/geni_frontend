@@ -193,6 +193,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   {instagramLink ? (
                     <a
                       target="_blank"
+                      className="rounded-3xl border p-2 bg-transparent hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
                       href={`${instagramLink?.SocialAddress || ""}`}
                     >
                       <Image
@@ -209,6 +210,7 @@ function BrandProfile({ getUserInfoData, getUserInfoLoading }) {
                   {facebookLink ? (
                     <a
                       target="_blank"
+                      className="rounded-3xl border p-2 bg-transparent hover:scale-110 hover:shadow-lg transition-all duration-300 ease-in-out"
                       href={`${facebookLink?.SocialAddress || ""}`}
                     >
                       <Image
