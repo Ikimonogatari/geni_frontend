@@ -35,9 +35,8 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                 className="min-w-max"
               />
               <LevelProgressBar
-                level={userInfoData?.LvlId}
                 progress={userInfoData?.XP}
-                nextLvlXp={userInfoData?.NextLvlXP}
+                nextLvlXpThreshold={userInfoData?.NextLvlXP}
               />
               <TooltipProvider>
                 <Tooltip>
@@ -45,10 +44,10 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                     <Link href="/profile/point-board">
                       <Image
                         src={"/info-icon.png"}
-                        width={28}
-                        height={28}
+                        width={24}
+                        height={24}
                         alt=""
-                        className="min-w-7 sm:min-h-7"
+                        className="min-w-6 sm:min-h-6"
                       />
                     </Link>
                   </TooltipTrigger>
@@ -60,7 +59,8 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
               </TooltipProvider>
             </div>
             <span className="text-[11px] flex gap-1">
-              Дараагын түвшинд гарахад <b>{userInfoData?.NextLvlXP}</b> XP дутуу
+              Дараагын түвшинд гарахад
+              <b>{userInfoData?.NextLvlXP - userInfoData?.XP} XP</b> дутуу
             </span>
           </div>
         </div>
@@ -119,7 +119,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
 
       {/* Desktop layout - original grid */}
       <div className="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-2 items-stretch">
-        <div className="flex flex-col gap-1 sm:gap-2 mb-4">
+        <div className="flex flex-col gap-1 sm:gap-2">
           <span className="text-[#6F6F6F] text-[11px] sm:text-base">
             Түвшин:
           </span>
@@ -131,9 +131,8 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                 className="min-w-max"
               />
               <LevelProgressBar
-                level={userInfoData?.LvlId}
                 progress={userInfoData?.XP}
-                nextLvlXp={userInfoData?.NextLvlXP}
+                nextLvlXpThreshold={userInfoData?.NextLvlXP}
               />
               <TooltipProvider>
                 <Tooltip>
@@ -141,10 +140,10 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                     <Link href="/profile/point-board">
                       <Image
                         src={"/info-icon.png"}
-                        width={28}
-                        height={28}
+                        width={24}
+                        height={24}
                         alt=""
-                        className="min-w-7 sm:min-h-7"
+                        className="min-w-6 sm:min-h-6"
                       />
                     </Link>
                   </TooltipTrigger>
@@ -156,7 +155,8 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
               </TooltipProvider>
             </div>
             <span className="text-xs">
-              Дараагын түвшинд гарахад <b>{userInfoData?.NextLvlXP}</b> XP дутуу
+              Дараагын түвшинд гарахад{" "}
+              <b>{userInfoData?.NextLvlXP - userInfoData?.XP} XP</b> дутуу
             </span>
           </div>
         </div>
