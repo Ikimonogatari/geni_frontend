@@ -184,8 +184,8 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
             </div>
           </div>
           <div className="mt-4 sm:mt-16 w-full flex flex-row items-center justify-between gap-4">
-            <div className="flex flex-row items-center gap-3">
-              {brandProfileButtons.map((b, i) => (
+            <div className="flex flex-row items-center gap-3 text-xs sm:text-base">
+              {studentProfileButtons.map((b, i) => (
                 <a
                   target="_blank"
                   // href={b.link}
@@ -245,7 +245,7 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
 
 export default StudentProfile;
 
-const brandProfileButtons = [
+const studentProfileButtons = [
   {
     title: "Онлайн хичээл",
     value: "content-progress",

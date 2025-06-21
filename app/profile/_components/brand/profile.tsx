@@ -350,7 +350,7 @@ function BrandProfile({
           <div className="overflow-x-auto pl-7 md:px-7 mt-4 md:mt-16 w-full">
             <div className="">
               <div className="z-50 -mb-[1px] overflow-x-auto flex flex-row justify-between text-sm sm:text-base">
-                <div className="min-w-[540px] flex flex-row gap-2 items-end">
+                <div className="min-w-[540px] flex flex-row gap-2 items-end text-xs sm:text-base">
                   {brandProfileButtons.map((b, i) => (
                     <div
                       key={i}

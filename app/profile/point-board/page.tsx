@@ -43,9 +43,9 @@ function page() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[#6F6F6F]">Нийт оноо:</span>
-                  {userInfoData?.Point && (
+                  {userInfoData?.XP && (
                     <span className="text-xl sm:text-3xl font-bold">
-                      {userInfoData?.Point} XP
+                      {userInfoData?.XP} XP
                     </span>
                   )}
                 </div>
@@ -56,11 +56,11 @@ function page() {
                     Таны дараагын хүрэх түвшин :
                   </span>
                   <span className="flex flex-row items-center gap-2 text-base font-bold">
-                    {userInfoData?.LevelName}
+                    {userInfoData?.NextLvlName}
                     <CreatorTier
-                      tier={userInfoData?.LevelName}
+                      tier={userInfoData?.NextLvlName}
                       className={
-                        userInfoData?.LevelName?.startsWith("Pro")
+                        userInfoData?.NextLvlName?.startsWith("Pro")
                           ? "max-h-[18px] sm:min-h-[28px] max-w-[52px] sm:min-w-[72px]"
                           : "min-h-[24px] min-w-[24px]"
                       }
@@ -69,9 +69,9 @@ function page() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[#6F6F6F]">Дутуу оноо:</span>
-                  {userInfoData?.Point && (
+                  {userInfoData?.NextLvlXP && (
                     <span className="text-base font-bold text-geni-red">
-                      {userInfoData?.Point} XP
+                      {userInfoData?.NextLvlXP} XP
                     </span>
                   )}
                 </div>

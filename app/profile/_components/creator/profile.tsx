@@ -257,7 +257,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
               </div>
             </div>
             <div className="absolute top-0 right-0 sm:block">
-              <div className="flex flex-row items-center gap-2 sm:gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
                 <Link
                   href={"/notifications"}
                   className="border-[#2D262D] bg-[#F5F4F0] p-2 gap-5 rounded-lg"
@@ -288,7 +288,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
           <CreatorProfileHeader userInfoData={getUserInfoData} />
           <div className="mt-4 sm:mt-16 w-full overflow-x-auto">
             {bannedStatus.isBanned ? (
-              <div className="mb-4 sm:hidden flex whitespace-nowrap flex-row justify-center text-base items-center gap-2 bg-[#F75423] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold cursor-not-allowed">
+              <div className="mb-4 sm:hidden flex whitespace-nowrap text-xs flex-row justify-center items-center gap-2 bg-[#F75423] border-[1px] border-[#2D262D] px-4 py-2 rounded-lg text-white font-bold cursor-not-allowed">
                 Таны блок гарахад: {bannedStatus.remainingTime}
               </div>
             ) : (
@@ -306,7 +306,7 @@ function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
               </Link>
             )}
             <div className="z-50 -mb-[2px] flex flex-row items-start justify-between">
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-2 text-xs sm:text-base">
                 {creatorProfileButtons.map((b, i) => (
                   <div
                     key={i}
