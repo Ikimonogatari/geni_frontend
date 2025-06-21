@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import VideoPlayer from "@/components/common/VideoPlayer";
 
 function ContentGallery({ contentsGallery }) {
   const userType = Cookies.get("userType");
@@ -34,17 +35,15 @@ function ContentGallery({ contentsGallery }) {
               key={id}
               className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl"
             >
-              <video
+              <VideoPlayer
+                src={content?.ContentVideo}
+                poster={content?.ContentThumbnail}
                 preload="metadata"
                 className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-                muted
-                loop
-                // onMouseEnter={handleMouseEnter}
-                // onMouseLeave={handleMouseLeave}
-                poster={content?.ContentThumbnail}
-              >
-                <source type="video/mp4" src={content?.ContentVideo} />
-              </video>
+                muted={true}
+                loop={true}
+                controls={false}
+              />
               <button className="z-50 absolute top-3 right-3 p-2 rounded-lg bg-[#F5F4F0]">
                 <Image
                   src={"/expand-icon.png"}
@@ -98,15 +97,11 @@ function ContentGallery({ contentsGallery }) {
                 />
               </button>
 
-              <video
-                className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] rounded-2xl"
-                autoPlay
-                loop
-                preload="metadata"
-                controls="controls"
-              >
-                <source src={selectedReel} type="video/mp4" />
-              </video>
+              <VideoPlayer
+                src={selectedReel}
+                controls={true}
+                className="aspect-[9/16] w-full h-full rounded-2xl"
+              />
             </div>
           </motion.div>
         </div>

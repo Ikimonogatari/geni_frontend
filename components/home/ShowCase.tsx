@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Image from "next/image";
 import { useState, useEffect, Suspense } from "react";
 import { ClipLoader } from "react-spinners";
+import VideoPlayer from "@/components/common/VideoPlayer";
 
 const showcases = [
   {
@@ -70,16 +71,15 @@ const ShowcaseVideo = ({
 }: ShowcaseVideoProps) => {
   return (
     <div className="relative">
-      <video
-        className="border-[1px] border-border-gray/60 object-cover rounded-[30px]"
-        autoPlay
-        loop
-        muted
-        playsInline
-        {...props}
-      >
-        <source src={videoSrc} type="video/mp4" />
-      </video>
+      <VideoPlayer
+        src={videoSrc}
+        autoplay={true}
+        loop={true}
+        muted={true}
+        playsinline={true}
+        controls={false}
+        className="border-[1px] border-border-gray/60 object-cover rounded-[30px] w-full h-full"
+      />
       <div className="absolute left-3 bottom-3 rounded-full bg-background flex -space-x-2 p-2">
         <Avatar className="size-[3.25rem]">
           <AvatarImage asChild src={brandImgSrc}>

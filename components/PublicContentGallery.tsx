@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useGetPublicProfileContentGalleryByIdQuery } from "@/app/services/service";
 import { useDateFormatter } from "@/app/hooks/useDateFormatter";
 import { ClipLoader } from "react-spinners";
+import VideoPlayer from "@/components/common/VideoPlayer";
 
 interface PublicContentGalleryProps {
   contentsGallery: any[];
@@ -96,15 +97,15 @@ function PublicContentGallery({
             >
               <DialogTrigger>
                 <div className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl border">
-                  <video
+                  <VideoPlayer
+                    src={content?.ContentVideo}
+                    poster={content?.ContentThumbnail}
                     preload="metadata"
                     className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-                    muted
-                    loop
-                    poster={content?.ContentThumbnail}
-                  >
-                    <source type="video/mp4" src={content?.ContentVideo} />
-                  </video>
+                    muted={true}
+                    loop={true}
+                    controls={false}
+                  />
                   <div className="absolute z-10 w-full h-full top-0">
                     <button className="z-20 absolute top-3 right-3 p-2 rounded-lg bg-[#F5F4F0]">
                       <Image
@@ -146,13 +147,11 @@ function PublicContentGallery({
                 <div className="flex flex-col gap-4 w-full h-full">
                   <span className="text-lg font-semibold">Контент</span>
 
-                  <video
-                    controls
+                  <VideoPlayer
+                    src={content?.ContentVideo}
+                    controls={true}
                     className="aspect-[9/16] w-full h-full rounded-2xl"
-                  >
-                    <source src={content?.ContentVideo} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  />
                 </div>
 
                 <div className="flex flex-col gap-4 w-full h-full">

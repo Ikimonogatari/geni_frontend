@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Image from "next/image";
+import VideoPlayer from "@/components/common/VideoPlayer";
 
 interface ContentReceiveModalProps {
   contentVideoFileId: string;
@@ -117,14 +118,11 @@ function ContentReceiveModal({
             </div>
             {contentVideo ? (
               <div className="relative">
-                <video
-                  controls
-                  controlsList="nodownload"
+                <VideoPlayer
+                  src={contentVideo}
+                  controls={true}
                   className="aspect-[9/16] w-full h-full rounded-2xl"
-                >
-                  <source src={contentVideo} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                />
               </div>
             ) : (
               <></>

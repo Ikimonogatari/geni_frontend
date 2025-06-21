@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import useS3Upload from "./hooks/useUploadToS3";
 import ContentUploadProgress from "./common/ContentUploadProgress";
 import UploadSuccessModal from "./UploadSuccessModal";
+import VideoPlayer from "@/components/common/VideoPlayer";
 
 interface FeedbackModalUploadModalContentProps {
   parsedUserInfo: any;
@@ -222,10 +223,11 @@ function FeedbackModalUploadModalContent({
         <div className="w-full flex flex-col gap-4">
           <span className="text-lg">Контент</span>
           {contentVideo ? (
-            <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
-              <source src={contentVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <VideoPlayer
+              src={contentVideo}
+              controls={true}
+              className="aspect-[9/16] w-full h-full rounded-2xl"
+            />
           ) : isUploading.video ? (
             <ContentUploadProgress
               isLoading={isUploading.video}
