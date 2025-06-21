@@ -71,7 +71,7 @@ function page() {
                   <span className="text-[#6F6F6F]">Дутуу оноо:</span>
                   {userInfoData?.NextLvlXP && (
                     <span className="text-base font-bold text-geni-red">
-                      {userInfoData?.NextLvlXP} XP
+                      {userInfoData?.NextLvlXP - userInfoData?.XP} XP
                     </span>
                   )}
                 </div>
