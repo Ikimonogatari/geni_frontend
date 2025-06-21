@@ -2,6 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import toast from "react-hot-toast";
 import {
   useGetCityListQuery,
@@ -134,8 +141,8 @@ const AddressSelection: React.FC = () => {
     }
   }, [selectedSubDistrictId]);
 
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const cityId = parseInt(e.target.value);
+  const handleCityChange = (value: string) => {
+    const cityId = parseInt(value);
     setSelectedCityId(cityId || null);
     setSelectedDistrictId(null);
     setSelectedSubDistrictId(null);
@@ -143,16 +150,16 @@ const AddressSelection: React.FC = () => {
     setAddressForm((prev) => ({ ...prev, SubDistId: 0 }));
   };
 
-  const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const districtId = parseInt(e.target.value);
+  const handleDistrictChange = (value: string) => {
+    const districtId = parseInt(value);
     setSelectedDistrictId(districtId || null);
     setSelectedSubDistrictId(null);
     // Reset SubDistId in form when district changes
     setAddressForm((prev) => ({ ...prev, SubDistId: 0 }));
   };
 
-  const handleSubDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const subDistrictId = parseInt(e.target.value);
+  const handleSubDistrictChange = (value: string) => {
+    const subDistrictId = parseInt(value);
     setSelectedSubDistrictId(subDistrictId || null);
   };
 
@@ -193,98 +200,146 @@ const AddressSelection: React.FC = () => {
       <h3 className="text-xl font-semibold">Хаяг</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* City Selection */}
-        <div>
-          <label className="block text-[#6F6F6F] text-lg font-normal mb-2">
-            Аймаг/Хот
-          </label>
-          <select
-            value={selectedCityId || ""}
-            onChange={handleCityChange}
-            className="w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#2D262D] text-base sm:text-xl"
-            disabled={cityLoading}
-          >
-            <option value="">Аймаг/Хот сонгоно уу</option>
-            {cityList?.map((city: City) => (
-              <option key={city.CityId} value={city.CityId}>
-                {city.Name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* District Selection */}
-        <div>
-          <label className="block text-[#6F6F6F] text-lg font-normal mb-2">
-            Сум/Дүүрэг
-          </label>
-          <select
-            value={selectedDistrictId || ""}
-            onChange={handleDistrictChange}
-            className="w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#2D262D] text-base sm:text-xl"
-            disabled={!selectedCityId || districtLoading}
-          >
-            <option value="">
-              {districtLoading ? "Ачааллаж байна..." : "Сум/Дүүрэг сонгоно уу"}
-            </option>
-            {districtList?.map((district: District) => (
-              <option key={district.DistId} value={district.DistId}>
-                {district.Name}
-              </option>
-            ))}
-          </select>
-          {selectedCityId &&
-            !districtLoading &&
-            (!districtList || districtList.length === 0) && (
-              <p className="text-sm text-gray-500 mt-1">
-                Энэ хотод дүүрэг олдсонгүй
-              </p>
-            )}
-          {districtError && (
-            <p className="text-sm text-red-500 mt-1">
-              Дүүрэг ачааллахад алдаа гарлаа
-            </p>
-          )}
-        </div>
-
-        {/* Sub-District Selection */}
-        <div>
-          <label className="block text-[#6F6F6F] text-lg font-normal mb-2">
-            Баг/Хороо
-          </label>
-          <select
-            value={selectedSubDistrictId || ""}
-            onChange={handleSubDistrictChange}
-            className="w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#2D262D] text-base sm:text-xl"
-            disabled={!selectedDistrictId || subDistrictLoading}
-          >
-            <option value="">
-              {subDistrictLoading
-                ? "Ачааллаж байна..."
-                : "Баг/Хороо сонгоно уу"}
-            </option>
-            {subDistrictList?.map((subDistrict: SubDistrict) => (
-              <option key={subDistrict.SubDistId} value={subDistrict.SubDistId}>
-                {subDistrict.Name}
-              </option>
-            ))}
-          </select>
-          {selectedDistrictId &&
-            !subDistrictLoading &&
-            (!subDistrictList || subDistrictList.length === 0) && (
-              <p className="text-sm text-gray-500 mt-1">
-                Энэ дүүрэгт хороо олдсонгүй
-              </p>
-            )}
-          {subDistrictError && (
-            <p className="text-sm text-red-500 mt-1">
-              Хороо ачааллахад алдаа гарлаа
-            </p>
-          )}
-        </div>
-
-        {/* Address Details */}
+        {/* First 4 inputs in 2 columns for desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* City Selection */}
+          <div className="flex flex-col gap-3">
+            <label className="block text-[#6F6F6F] text-lg font-normal">
+              Аймаг/Хот
+            </label>
+            <Select
+              value={selectedCityId?.toString() || ""}
+              onValueChange={handleCityChange}
+              disabled={cityLoading}
+            >
+              {/* @ts-ignore */}
+              <SelectTrigger className="w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#CDCDCD] text-base sm:text-xl h-auto outline-none ring-0 focus:outline-none focus-visible:outline-none">
+                <SelectValue placeholder="Аймаг/Хот сонгоно уу" />
+              </SelectTrigger>
+              {/* @ts-ignore */}
+              <SelectContent>
+                {cityList?.map((city: City) => (
+                  // @ts-ignore
+                  <SelectItem key={city.CityId} value={city.CityId.toString()}>
+                    {city.Name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* District Selection */}
+          <div className="flex flex-col gap-3">
+            <label className="block text-[#6F6F6F] text-lg font-normal">
+              Сум/Дүүрэг
+            </label>
+            <Select
+              value={selectedDistrictId?.toString() || ""}
+              onValueChange={handleDistrictChange}
+              disabled={!selectedCityId || districtLoading}
+            >
+              {/* @ts-ignore */}
+              <SelectTrigger
+                className={`w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#CDCDCD] text-base sm:text-xl h-auto outline-none ring-0 focus:outline-none focus-visible:outline-none ${
+                  !selectedCityId || districtLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "opacity-100"
+                }`}
+              >
+                <SelectValue
+                  placeholder={
+                    !selectedCityId
+                      ? "Эхлээд аймаг/хот сонгоно уу"
+                      : districtLoading
+                      ? "Ачааллаж байна..."
+                      : "Сум/Дүүрэг сонгоно уу"
+                  }
+                />
+              </SelectTrigger>
+              {/* @ts-ignore */}
+              <SelectContent>
+                {districtList?.map((district: District) => (
+                  // @ts-ignore
+                  <SelectItem
+                    key={district.DistId}
+                    value={district.DistId.toString()}
+                  >
+                    {district.Name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {selectedCityId &&
+              !districtLoading &&
+              (!districtList || districtList.length === 0) && (
+                <p className="text-sm text-amber-600 mt-1">
+                  Энэ хотод дүүрэг олдсонгүй
+                </p>
+              )}
+            {districtError && (
+              <p className="text-sm text-red-500 mt-1">
+                Дүүрэг ачааллахад алдаа гарлаа
+              </p>
+            )}
+          </div>
+
+          {/* Sub-District Selection */}
+          <div className="flex flex-col gap-3">
+            <label className="block text-[#6F6F6F] text-lg font-normal">
+              Баг/Хороо
+            </label>
+            <Select
+              value={selectedSubDistrictId?.toString() || ""}
+              onValueChange={handleSubDistrictChange}
+              disabled={!selectedDistrictId || subDistrictLoading}
+            >
+              {/* @ts-ignore */}
+              <SelectTrigger
+                className={`w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#CDCDCD] text-base sm:text-xl h-auto outline-none ring-0 focus:outline-none focus-visible:outline-none ${
+                  !selectedDistrictId || subDistrictLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "opacity-100"
+                }`}
+              >
+                <SelectValue
+                  placeholder={
+                    !selectedCityId
+                      ? "Эхлээд аймаг/хот сонгоно уу"
+                      : !selectedDistrictId
+                      ? "Эхлээд сум/дүүрэг сонгоно уу"
+                      : subDistrictLoading
+                      ? "Ачааллаж байна..."
+                      : "Баг/Хороо сонгоно уу"
+                  }
+                />
+              </SelectTrigger>
+              {/* @ts-ignore */}
+              <SelectContent>
+                {subDistrictList?.map((subDistrict: SubDistrict) => (
+                  // @ts-ignore
+                  <SelectItem
+                    key={subDistrict.SubDistId}
+                    value={subDistrict.SubDistId.toString()}
+                  >
+                    {subDistrict.Name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {selectedDistrictId &&
+              !subDistrictLoading &&
+              (!subDistrictList || subDistrictList.length === 0) && (
+                <p className="text-sm text-amber-600 mt-1">
+                  Энэ дүүрэгт хороо олдсонгүй
+                </p>
+              )}
+            {subDistrictError && (
+              <p className="text-sm text-red-500 mt-1">
+                Хороо ачааллахад алдаа гарлаа
+              </p>
+            )}
+          </div>
+
           <Input
             name="ComplexBuilding"
             type="text"
@@ -295,6 +350,10 @@ const AddressSelection: React.FC = () => {
             className="bg-[#F5F4F0] text-base sm:text-xl"
             layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
           />
+        </div>
+
+        {/* Next 3 inputs in 3 columns for desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Input
             name="Entrance"
             type="text"
@@ -305,9 +364,6 @@ const AddressSelection: React.FC = () => {
             className="bg-[#F5F4F0] text-base sm:text-xl"
             layoutClassName="bg-[#F5F4F0] p-3 sm:p-4 h-auto"
           />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             name="Floor"
             type="number"
@@ -330,6 +386,7 @@ const AddressSelection: React.FC = () => {
           />
         </div>
 
+        {/* Details input full width */}
         <Textarea
           name="Detail"
           label="Нэмэлт мэдээлэл"
