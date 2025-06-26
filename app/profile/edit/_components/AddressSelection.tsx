@@ -67,6 +67,11 @@ const AddressSelection: React.FC = () => {
     IsDefault: true,
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [currentAddressInfo, setCurrentAddressInfo] = useState<{
+    cityName?: string;
+    districtName?: string;
+    subDistrictName?: string;
+  }>({});
 
   // API hooks
   const {
@@ -97,14 +102,74 @@ const AddressSelection: React.FC = () => {
   const [updateAddress, { isLoading: updateLoading }] =
     useUpdateAddressMutation();
 
+  // Function to get current address names for placeholders
+  const getCurrentAddressNames = async (existingSubDistId: number) => {
+    if (!cityList || cityList.length === 0) return;
+
+    try {
+      // Get all districts for all cities to find the one that contains our SubDistId
+      for (const city of cityList) {
+        const districtResponse = await fetch(
+          `/api/web/private/user/address-dict/dist/${city.CityId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${
+                document.cookie.split("authToken=")[1]?.split(";")[0]
+              }`,
+            },
+          }
+        );
+
+        if (districtResponse.ok) {
+          const districts = await districtResponse.json();
+
+          for (const district of districts) {
+            const subDistResponse = await fetch(
+              `/api/web/private/user/address-dict/subdist/${district.DistId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${
+                    document.cookie.split("authToken=")[1]?.split(";")[0]
+                  }`,
+                },
+              }
+            );
+
+            if (subDistResponse.ok) {
+              const subDistricts = await subDistResponse.json();
+              const foundSubDist = subDistricts.find(
+                (sd: SubDistrict) => sd.SubDistId === existingSubDistId
+              );
+
+              if (foundSubDist) {
+                // Found the hierarchy! Set the names for placeholders
+                setCurrentAddressInfo({
+                  cityName: city.Name,
+                  districtName: district.Name,
+                  subDistrictName: foundSubDist.Name,
+                });
+                return;
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error getting current address names:", error);
+    }
+  };
+
   // Load existing address data and determine if we're editing or creating
   useEffect(() => {
     if (userAddress && userAddress.length > 0) {
       const address = userAddress[0]; // Assuming single address for now
       setAddressForm(address);
       setIsEditing(true);
-      // You might need to set the selected IDs based on the existing address
-      // This would require reverse lookup from SubDistId to find DistId and CityId
+
+      // Get current address names for placeholders
+      if (address.SubDistId && cityList && cityList.length > 0) {
+        getCurrentAddressNames(address.SubDistId);
+      }
     } else {
       // userAddress is null, empty array, or undefined - we should create new address
       setIsEditing(false);
@@ -117,8 +182,9 @@ const AddressSelection: React.FC = () => {
         Detail: "",
         IsDefault: true,
       });
+      setCurrentAddressInfo({});
     }
-  }, [userAddress]);
+  }, [userAddress, cityList]);
 
   // Debug logging for API responses
   useEffect(() => {
@@ -195,18 +261,41 @@ const AddressSelection: React.FC = () => {
     }
 
     try {
+      let result;
       if (isEditing && userAddress && userAddress.length > 0) {
         // Update existing address using PUT
-        await updateAddress(addressForm).unwrap();
+        result = await updateAddress(addressForm).unwrap();
         toast.success("Хаяг амжилттай шинэчлэгдлээ");
       } else {
-        // Create new address using POST  
-        await createAddress(addressForm).unwrap();
+        // Create new address using POST
+        result = await createAddress(addressForm).unwrap();
         toast.success("Хаяг амжилттай хадгалагдлаа");
         setIsEditing(true);
       }
+
+      // Log the result for debugging
+      console.log("Address operation result:", result);
     } catch (error: any) {
-      toast.error(error?.data?.error || "Алдаа гарлаа");
+      console.error("Address operation error:", error);
+
+      // Better error handling - check if it's actually an error or just empty response
+      if (error?.status === 200 || error?.originalStatus === 200) {
+        // If status is 200, it's actually successful despite the error
+        if (isEditing) {
+          toast.success("Хаяг амжилттай шинэчлэгдлээ");
+        } else {
+          toast.success("Хаяг амжилттай хадгалагдлаа");
+          setIsEditing(true);
+        }
+      } else {
+        // Only show error if it's actually an error
+        const errorMessage = error?.data?.error || error?.message;
+        if (errorMessage) {
+          toast.error(errorMessage);
+        } else {
+          toast.error("Алдаа гарлаа");
+        }
+      }
     }
   };
 
@@ -230,7 +319,11 @@ const AddressSelection: React.FC = () => {
             >
               {/* @ts-ignore */}
               <SelectTrigger className="w-full bg-[#F5F4F0] p-3 sm:p-4 rounded-lg border border-[#CDCDCD] text-base sm:text-xl h-auto outline-none ring-0 focus:outline-none focus-visible:outline-none">
-                <SelectValue placeholder="Хот/Аймаг сонгоно уу" />
+                <SelectValue
+                  placeholder={
+                    currentAddressInfo.cityName || "Хот/Аймаг сонгоно уу"
+                  }
+                />
               </SelectTrigger>
               {/* @ts-ignore */}
               <SelectContent>
@@ -265,7 +358,9 @@ const AddressSelection: React.FC = () => {
               >
                 <SelectValue
                   placeholder={
-                    !selectedCityId
+                    currentAddressInfo.districtName && !selectedCityId
+                      ? currentAddressInfo.districtName
+                      : !selectedCityId
                       ? "Эхлээд хот/аймаг сонгоно уу"
                       : districtLoading
                       ? "Ачааллаж байна..."
@@ -321,7 +416,9 @@ const AddressSelection: React.FC = () => {
               >
                 <SelectValue
                   placeholder={
-                    !selectedCityId
+                    currentAddressInfo.subDistrictName && !selectedDistrictId
+                      ? currentAddressInfo.subDistrictName
+                      : !selectedCityId
                       ? "Эхлээд хот/аймаг сонгоно уу"
                       : !selectedDistrictId
                       ? "Эхлээд дүүрэг/сум сонгоно уу"
