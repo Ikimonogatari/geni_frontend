@@ -20,8 +20,10 @@ export const createPaymentStatusMonitor = (
     return { close: () => {} };
   }
 
-  // Get auth token from cookies
-  const authToken = Cookies.get("auth");
+  // Get auth token from cookies - use 'authToken' which is the correct cookie name
+  const authToken =
+    Cookies.get("authToken") ||
+    document.cookie.split("authToken=")[1]?.split(";")[0];
 
   if (!authToken) {
     onError(new Error("Not authenticated"));
@@ -30,11 +32,11 @@ export const createPaymentStatusMonitor = (
 
   let isActive = true;
   let controller = new AbortController();
-  let lastStatus = false; // Track last payment status
+  let lastStatus = false;
 
   const startMonitoring = async () => {
     const baseUrl = process.env.NEXT_PUBLIC_AWS_URL || "";
-    const apiUrl = `${baseUrl}/api/web/private/payment/${txId}`;
+    const apiUrl = `${baseUrl}api/web/private/payment/${txId}`;
 
     console.log(`Starting payment monitor for: ${apiUrl}`);
 
@@ -44,6 +46,7 @@ export const createPaymentStatusMonitor = (
         headers: {
           Authorization: `Bearer ${authToken}`,
           Accept: "text/event-stream",
+          "Cache-Control": "no-cache",
         },
         signal: controller.signal,
       });
