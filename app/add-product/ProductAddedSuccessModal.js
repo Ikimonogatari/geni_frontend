@@ -36,11 +36,10 @@ function ProductAddedSuccessModal({
             болно. Баярлалаа.
           </div>
           <span className="bg-primary-bg rounded-2xl p-4 text-black text-xs sm:text-sm">
-            Хаяг: Суис баруун талд 47б байр 4 давхар 402тоот Do Good Hub
+            Хаяг: ХУД, 6-р хороо, Нүхт 32-615 тоот
           </span>
-
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2673.496594784477!2d106.9123614!3d47.926777200000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5d969365ea2ebe85%3A0x1f9e6c4b2cb9d733!2sdo%20good%20volunteer%20hub!5e0!3m2!1sen!2smn!4v1744810149329!5m2!1sen!2smn"
+            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d669.1539190453369!2d106.80754826969235!3d47.86640599820094!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNDfCsDUxJzU5LjEiTiAxMDbCsDQ4JzI5LjUiRQ!5e0!3m2!1sen!2smn!4v1751005165899!5m2!1sen!2smn"
             width="100%"
             className="rounded-2xl max-h-[200px]"
             height="400"
