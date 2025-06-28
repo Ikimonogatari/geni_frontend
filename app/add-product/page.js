@@ -39,6 +39,12 @@ function Page() {
   const [productTypes, setProductTypes] = useState([]);
   const [availableProductTypes, setAvailableProductTypes] = useState([]);
 
+  // Add state for "Бусад" (Other) options
+  const [useOtherContentType, setUseOtherContentType] = useState(false);
+  const [otherContentTypeText, setOtherContentTypeText] = useState("");
+  const [useOtherContentOutcome, setUseOtherContentOutcome] = useState(false);
+  const [otherContentOutcomeText, setOtherContentOutcomeText] = useState("");
+
   const {
     data: userInfo,
     isLoading: userInfoLoading,
@@ -184,6 +190,57 @@ function Page() {
     }
   };
 
+  // Add handler for "Бусад" content type option
+  const handleOtherContentType = () => {
+    setUseOtherContentType(true);
+    // Clear other selections when "Other" is selected
+    setSelectedContentTypes([]);
+    // Remove existing Type entries from contentInfo
+    formik.setFieldValue(
+      "contentInfo",
+      formik.values.contentInfo.filter((item) => item.Type !== "Type")
+    );
+  };
+
+  const handleOtherContentTypeTextChange = (e) => {
+    const text = e.target.value;
+    setOtherContentTypeText(text);
+
+    if (text.trim()) {
+      // Add the custom text to contentInfo
+      const customContentInfo = {
+        Type: "Type",
+        Name: text.trim(),
+      };
+
+      // Remove existing "Other" Type entries and add the new one
+      const filteredContentInfo = formik.values.contentInfo.filter(
+        (item) =>
+          !(
+            item.Type === "Type" &&
+            !listProductDictsTypeData?.find((d) => d.Name === item.Name)
+          )
+      );
+
+      formik.setFieldValue("contentInfo", [
+        ...filteredContentInfo,
+        customContentInfo,
+      ]);
+    } else {
+      // Remove custom Type entries when text is empty
+      formik.setFieldValue(
+        "contentInfo",
+        formik.values.contentInfo.filter(
+          (item) =>
+            !(
+              item.Type === "Type" &&
+              !listProductDictsTypeData?.find((d) => d.Name === item.Name)
+            )
+        )
+      );
+    }
+  };
+
   const handleContentOutcomeOption = (value) => {
     const selectedItem = listProductDictsResultData.find(
       (c) => c.Val === value
@@ -215,6 +272,57 @@ function Page() {
           newContentInfoItem,
         ]);
       }
+    }
+  };
+
+  // Add handler for "Бусад" content outcome option
+  const handleOtherContentOutcome = () => {
+    setUseOtherContentOutcome(true);
+    // Clear other selections when "Other" is selected
+    setSelectedContentOutcomes([]);
+    // Remove existing Result entries from contentInfo
+    formik.setFieldValue(
+      "contentInfo",
+      formik.values.contentInfo.filter((item) => item.Type !== "Result")
+    );
+  };
+
+  const handleOtherContentOutcomeTextChange = (e) => {
+    const text = e.target.value;
+    setOtherContentOutcomeText(text);
+
+    if (text.trim()) {
+      // Add the custom text to contentInfo
+      const customContentInfo = {
+        Type: "Result",
+        Name: text.trim(),
+      };
+
+      // Remove existing "Other" Result entries and add the new one
+      const filteredContentInfo = formik.values.contentInfo.filter(
+        (item) =>
+          !(
+            item.Type === "Result" &&
+            !listProductDictsResultData?.find((d) => d.Name === item.Name)
+          )
+      );
+
+      formik.setFieldValue("contentInfo", [
+        ...filteredContentInfo,
+        customContentInfo,
+      ]);
+    } else {
+      // Remove custom Result entries when text is empty
+      formik.setFieldValue(
+        "contentInfo",
+        formik.values.contentInfo.filter(
+          (item) =>
+            !(
+              item.Type === "Result" &&
+              !listProductDictsResultData?.find((d) => d.Name === item.Name)
+            )
+        )
+      );
     }
   };
 
@@ -439,47 +547,146 @@ function Page() {
                     }
                   />
                 </label>
-                <Select
-                  name="contentType"
-                  value={selectedContentTypes}
-                  onValueChange={(value) => handleContentTypeOption(value)}
-                >
-                  <SelectTrigger>Сонгох</SelectTrigger>
-                  <SelectContent>
-                    {listProductDictsTypeData
-                      ? listProductDictsTypeData
-                          .filter(
-                            (c) =>
-                              c.Type === "Type" &&
-                              selectedContentTypes.indexOf(c.Name) === -1
+
+                {/* Radio button options */}
+                <div className="space-y-2">
+                  {/* Predefined options */}
+                  <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="contentTypeChoice"
+                      className="hidden peer"
+                      checked={!useOtherContentType}
+                      onChange={() => {
+                        setUseOtherContentType(false);
+                        setOtherContentTypeText("");
+                        // Remove custom Type entries
+                        formik.setFieldValue(
+                          "contentInfo",
+                          formik.values.contentInfo.filter(
+                            (item) =>
+                              !(
+                                item.Type === "Type" &&
+                                !listProductDictsTypeData?.find(
+                                  (d) => d.Name === item.Name
+                                )
+                              )
                           )
-                          .map((c) => (
-                            <SelectItem
-                              key={c.Val}
-                              value={c.Val}
-                              className="border border-geni-gray rounded-lg min-h-12 my-1 w-full text-start p-4"
-                            >
-                              {c.Name}
-                            </SelectItem>
-                          ))
-                      : null}
-                  </SelectContent>
-                </Select>
-                {selectedContentTypes.map((selected) => (
-                  <div
-                    key={selected}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
+                        );
+                      }}
+                    />
+                    <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                      <span className="text-[#F5F4F0] font-bold text-xl select-none peer-checked:inline hidden">
+                        ✓
+                      </span>
+                    </div>
+                    <span className="text-base">Жагсаалтаас сонгох</span>
+                  </label>
+
+                  {/* "Бусад" (Other) option */}
+                  <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="contentTypeChoice"
+                      className="hidden peer"
+                      checked={useOtherContentType}
+                      onChange={handleOtherContentType}
+                    />
+                    <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                      <span className="text-[#F5F4F0] font-bold text-xl select-none peer-checked:inline hidden">
+                        ✓
+                      </span>
+                    </div>
+                    <span className="text-base">Бусад</span>
+                  </label>
+                </div>
+
+                {/* Dropdown for predefined options */}
+                {!useOtherContentType && (
+                  <Select
+                    name="contentType"
+                    value={selectedContentTypes}
+                    onValueChange={(value) => handleContentTypeOption(value)}
                   >
-                    {selected}
+                    <SelectTrigger>Сонгох</SelectTrigger>
+                    <SelectContent>
+                      {listProductDictsTypeData
+                        ? listProductDictsTypeData
+                            .filter(
+                              (c) =>
+                                c.Type === "Type" &&
+                                selectedContentTypes.indexOf(c.Name) === -1
+                            )
+                            .map((c) => (
+                              <SelectItem
+                                key={c.Val}
+                                value={c.Val}
+                                className="border border-geni-gray rounded-lg min-h-12 my-1 w-full text-start p-4"
+                              >
+                                {c.Name}
+                              </SelectItem>
+                            ))
+                        : null}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                {/* Textarea for custom content type */}
+                {useOtherContentType && (
+                  <textarea
+                    value={otherContentTypeText}
+                    onChange={handleOtherContentTypeTextChange}
+                    placeholder="Контентийн төрлөө энд бичнэ үү"
+                    className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
+                  />
+                )}
+
+                {/* Show selected content types */}
+                {!useOtherContentType &&
+                  selectedContentTypes.map((selected) => (
+                    <div
+                      key={selected}
+                      className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
+                    >
+                      {selected}
+                      <button
+                        type="button"
+                        className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
+                        onClick={() => removeContentItem(selected)}
+                      >
+                        <MinusIcon color="white" />
+                      </button>
+                    </div>
+                  ))}
+
+                {/* Show custom content type */}
+                {useOtherContentType && otherContentTypeText.trim() && (
+                  <div className="px-3 py-2 text-sm ring-offset-white min-h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between">
+                    {otherContentTypeText.trim()}
                     <button
                       type="button"
                       className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
-                      onClick={() => removeContentItem(selected)}
+                      onClick={() => {
+                        setOtherContentTypeText("");
+                        formik.setFieldValue(
+                          "contentInfo",
+                          formik.values.contentInfo.filter(
+                            (item) =>
+                              !(
+                                item.Type === "Type" &&
+                                !listProductDictsTypeData?.find(
+                                  (d) => d.Name === item.Name
+                                )
+                              )
+                          )
+                        );
+                      }}
                     >
                       <MinusIcon color="white" />
                     </button>
                   </div>
-                ))}
+                )}
+
                 <ErrorText
                   text={
                     typeof formik.errors.contentInfo === "string"
@@ -523,47 +730,146 @@ function Page() {
                     }
                   />
                 </label>
-                <Select
-                  name="contentOutcome"
-                  value={selectedContentOutcomes}
-                  onValueChange={(value) => handleContentOutcomeOption(value)}
-                >
-                  <SelectTrigger>Сонгох</SelectTrigger>
-                  <SelectContent>
-                    {listProductDictsResultData
-                      ? listProductDictsResultData
-                          .filter(
-                            (c) =>
-                              c.Type === "Result" &&
-                              selectedContentOutcomes.indexOf(c.Name) === -1
+
+                {/* Radio button options */}
+                <div className="space-y-2">
+                  {/* Predefined options */}
+                  <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="contentOutcomeChoice"
+                      className="hidden peer"
+                      checked={!useOtherContentOutcome}
+                      onChange={() => {
+                        setUseOtherContentOutcome(false);
+                        setOtherContentOutcomeText("");
+                        // Remove custom Result entries
+                        formik.setFieldValue(
+                          "contentInfo",
+                          formik.values.contentInfo.filter(
+                            (item) =>
+                              !(
+                                item.Type === "Result" &&
+                                !listProductDictsResultData?.find(
+                                  (d) => d.Name === item.Name
+                                )
+                              )
                           )
-                          .map((c) => (
-                            <SelectItem
-                              key={c.Val}
-                              value={c.Val}
-                              className="border-geni-gray border rounded-lg min-h-12 my-1 w-full text-start p-4"
-                            >
-                              {c.Name}
-                            </SelectItem>
-                          ))
-                      : null}
-                  </SelectContent>
-                </Select>
-                {selectedContentOutcomes.map((selected) => (
-                  <div
-                    key={selected}
-                    className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
+                        );
+                      }}
+                    />
+                    <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                      <span className="text-[#F5F4F0] font-bold text-xl select-none peer-checked:inline hidden">
+                        ✓
+                      </span>
+                    </div>
+                    <span className="text-base">Жагсаалтаас сонгох</span>
+                  </label>
+
+                  {/* "Бусад" (Other) option */}
+                  <label className="bg-[#F5F4F0] rounded-lg w-full p-4 flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="contentOutcomeChoice"
+                      className="hidden peer"
+                      checked={useOtherContentOutcome}
+                      onChange={handleOtherContentOutcome}
+                    />
+                    <div className="w-5 h-5 bg-[#F5F4F0] border-2 border-[#CA7FFE] rounded flex items-center justify-center peer-checked:bg-[#CA7FFE] peer-checked:border-[#CA7FFE]">
+                      <span className="text-[#F5F4F0] font-bold text-xl select-none peer-checked:inline hidden">
+                        ✓
+                      </span>
+                    </div>
+                    <span className="text-base">Бусад</span>
+                  </label>
+                </div>
+
+                {/* Dropdown for predefined options */}
+                {!useOtherContentOutcome && (
+                  <Select
+                    name="contentOutcome"
+                    value={selectedContentOutcomes}
+                    onValueChange={(value) => handleContentOutcomeOption(value)}
                   >
-                    {selected}
+                    <SelectTrigger>Сонгох</SelectTrigger>
+                    <SelectContent>
+                      {listProductDictsResultData
+                        ? listProductDictsResultData
+                            .filter(
+                              (c) =>
+                                c.Type === "Result" &&
+                                selectedContentOutcomes.indexOf(c.Name) === -1
+                            )
+                            .map((c) => (
+                              <SelectItem
+                                key={c.Val}
+                                value={c.Val}
+                                className="border-geni-gray border rounded-lg min-h-12 my-1 w-full text-start p-4"
+                              >
+                                {c.Name}
+                              </SelectItem>
+                            ))
+                        : null}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                {/* Textarea for custom content outcome */}
+                {useOtherContentOutcome && (
+                  <textarea
+                    value={otherContentOutcomeText}
+                    onChange={handleOtherContentOutcomeTextChange}
+                    placeholder="Контентоос хүлээж буй үр дүнгээ энд бичнэ үү"
+                    className="bg-[#F5F4F0] rounded-lg w-full p-4 min-h-[100px]"
+                  />
+                )}
+
+                {/* Show selected content outcomes */}
+                {!useOtherContentOutcome &&
+                  selectedContentOutcomes.map((selected) => (
+                    <div
+                      key={selected}
+                      className="px-3 py-2 text-sm ring-offset-white h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
+                    >
+                      {selected}
+                      <button
+                        type="button"
+                        className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
+                        onClick={() => removeContentItem(selected)}
+                      >
+                        <MinusIcon color="white" />
+                      </button>
+                    </div>
+                  ))}
+
+                {/* Show custom content outcome */}
+                {useOtherContentOutcome && otherContentOutcomeText.trim() && (
+                  <div className="px-3 py-2 text-sm ring-offset-white min-h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between">
+                    {otherContentOutcomeText.trim()}
                     <button
                       type="button"
                       className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
-                      onClick={() => removeContentItem(selected)}
+                      onClick={() => {
+                        setOtherContentOutcomeText("");
+                        formik.setFieldValue(
+                          "contentInfo",
+                          formik.values.contentInfo.filter(
+                            (item) =>
+                              !(
+                                item.Type === "Result" &&
+                                !listProductDictsResultData?.find(
+                                  (d) => d.Name === item.Name
+                                )
+                              )
+                          )
+                        );
+                      }}
                     >
                       <MinusIcon color="white" />
                     </button>
                   </div>
-                ))}
+                )}
+
                 <ErrorText
                   text={formik.errors.contentInfo}
                   visible={
