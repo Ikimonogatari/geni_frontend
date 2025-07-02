@@ -198,9 +198,12 @@ const ContentProgressModalContent: React.FC<
             ReasonDesc: values.returnReasonDescription,
             StatusId: 7,
           };
-          contentProcessRefund(data).then(() => {
+          contentProcessRefund(data).then((res) => {
             setDialogOpen(false);
             refetch();
+            if ((res.error as any)?.data?.error) {
+              toast.error((res.error as any).data.error);
+            }
           });
         }
       } catch (error) {
