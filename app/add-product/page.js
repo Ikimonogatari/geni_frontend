@@ -39,9 +39,11 @@ function Page() {
   const [productTypes, setProductTypes] = useState([]);
   const [availableProductTypes, setAvailableProductTypes] = useState([]);
 
-  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
-    {}
-  );
+  const {
+    data: userInfo,
+    isLoading: userInfoLoading,
+    refetch: refetchUserInfo,
+  } = useGetUserInfoQuery({});
 
   // TODO product type remove add formik error fix, product edit fix
   const formik = useFormik({
@@ -673,6 +675,10 @@ function Page() {
                   className={
                     "text-lg flex flex-row items-center justify-center py-4 w-full"
                   }
+                  onCreditPurchase={() => {
+                    // Refetch user info
+                    refetchUserInfo();
+                  }}
                 />
               </div>
               <HandleButton

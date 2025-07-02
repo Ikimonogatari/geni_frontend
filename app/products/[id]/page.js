@@ -339,7 +339,7 @@ function Page() {
                 <span className="font-bold">Бүтээгдэхүүний тоо</span>
                 <span className="p-4 border border-[#CDCDCD] rounded-lg">
                   {getPublicProductByIdData ? (
-                    <>{getPublicProductByIdData.Quantity}</>
+                    <>{getPublicProductByIdData.CreditUsage}</>
                   ) : (
                     <></>
                   )}

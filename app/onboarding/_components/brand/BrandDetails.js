@@ -119,7 +119,10 @@ function BrandDetails({ userInfo, formik, handleNextStep }) {
             const id = response.data.FileId;
             const profileChangeRes = await changeProfilePicture({ FileId: id });
 
-            setProfileImage(profileChangeRes?.data?.url);
+            // Only update the profile image state, don't trigger a full user info refetch
+            if (profileChangeRes?.data?.url) {
+              setProfileImage(profileChangeRes.data.url);
+            }
           }
         } catch (error) {
           console.error("File upload or profile picture update failed:", error);

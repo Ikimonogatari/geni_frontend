@@ -20,12 +20,10 @@ import ProductCard from "./ProductCard";
 
 function Page() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(null);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [filteredBrands, setFilteredBrands] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 16;
+  const productsPerPage = 18;
   const offset = (currentPage - 1) * productsPerPage;
 
   const {
@@ -33,7 +31,11 @@ function Page() {
     error: listProductsError,
     isLoading: listProductsLoading,
   } = useListPublicProductsQuery(
-    { searchKey: searchQuery, limit: productsPerPage, offset },
+    {
+      searchKey: searchQuery,
+      limit: productsPerPage,
+      offset,
+    },
     { refetchOnMountOrArgChange: true }
   );
 
@@ -49,87 +51,89 @@ function Page() {
     isLoading: listBrandsLoading,
   } = useGetPublicBrandListQuery();
 
-  useEffect(() => {
-    if (listProductsData) {
-      let filtered = [...listProductsData.Data];
+  // Filter brands based on selected category
+  const filteredBrands = React.useMemo(() => {
+    if (!listBrandsData?.Data || !selectedCategory)
+      return listBrandsData?.Data || [];
 
-      // Filter by selected category
-      if (selectedCategory) {
-        filtered = filtered.filter((product) =>
+    // Get all products for the current page
+    const currentProducts = listProductsData?.Data || [];
+
+    // Get unique brand IDs that have products in the selected category
+    const brandIdsInCategory = new Set(
+      currentProducts
+        .filter((product) =>
           product.ProductTypes?.some(
             (type) => type.TypeName === selectedCategory
           )
+        )
+        .map((product) => product.BrandId)
+    );
+
+    // Filter brands to only include those with products in the selected category
+    return listBrandsData.Data.filter((brand) =>
+      brandIdsInCategory.has(brand.BrandId)
+    );
+  }, [listBrandsData?.Data, listProductsData?.Data, selectedCategory]);
+
+  // Filter products based on selected category and brand
+  const filteredProducts = React.useMemo(() => {
+    if (!listProductsData?.Data) return [];
+
+    return listProductsData.Data.filter((product) => {
+      const matchesCategory =
+        !selectedCategory ||
+        product.ProductTypes?.some(
+          (type) => type.TypeName === selectedCategory
         );
-      }
+      const matchesBrand =
+        !selectedBrand || product.BrandName === selectedBrand;
 
-      // Filter by selected brand
-      if (selectedBrand) {
-        filtered = filtered.filter(
-          (product) => product.BrandName === selectedBrand
-        );
-      }
+      return matchesCategory && matchesBrand;
+    });
+  }, [listProductsData?.Data, selectedCategory, selectedBrand]);
 
-      // Sort by the ratio
-      filtered.sort((a, b) => {
-        const ratioA = a.ContentLeft / a.ContentLimit;
-        const ratioB = b.ContentLeft / b.ContentLimit;
-        return ratioB - ratioA; // Descending order
-      });
+  // Calculate total pages based on filtered products
+  const getTotalPages = () => {
+    if (!listProductsData?.Data) return 0;
 
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts([]);
+    // If no filters are applied, use the total count from API
+    if (!selectedCategory && !selectedBrand) {
+      return Math.ceil((listProductsData.RowCount || 0) / productsPerPage);
     }
-  }, [searchQuery, selectedCategory, selectedBrand, listProductsData]);
 
+    // If filters are applied, calculate based on filtered products
+    const totalFiltered = listProductsData.Data.filter((product) => {
+      const matchesCategory =
+        !selectedCategory ||
+        product.ProductTypes?.some(
+          (type) => type.TypeName === selectedCategory
+        );
+      const matchesBrand =
+        !selectedBrand || product.BrandName === selectedBrand;
+      return matchesCategory && matchesBrand;
+    }).length;
+
+    return Math.ceil(totalFiltered / productsPerPage);
+  };
+
+  const totalPages = getTotalPages();
+  const pageNumbers = usePagination(totalPages, currentPage);
+
+  // Reset to first page when filters change
   useEffect(() => {
-    if (listProductsData && listBrandsData?.Data) {
-      // Get all brands that have products matching the selected category
-      const brandsWithMatchingProducts = listBrandsData.Data.filter((brand) => {
-        // If no category is selected, show all brands
-        if (!selectedCategory) return true;
-
-        // Check if this brand has any products matching the selected category
-        return listProductsData.Data.some(
-          (product) =>
-            product.BrandName === brand.Name &&
-            product.ProductTypes?.some(
-              (type) => type.TypeName === selectedCategory
-            )
-        );
-      });
-
-      // If no brands found for the selected category, show all brands
-      if (brandsWithMatchingProducts.length === 0) {
-        setFilteredBrands(listBrandsData.Data);
-      } else {
-        setFilteredBrands(brandsWithMatchingProducts);
-      }
-    } else {
-      setFilteredBrands([]);
-    }
-  }, [selectedCategory, listProductsData, listBrandsData]);
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, selectedBrand]);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, getTotalPages()));
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
-  const getTotalPages = () => {
-    let totalCount;
-    totalCount = listProductsData?.RowCount ?? null;
-
-    return Math.ceil(totalCount / productsPerPage);
-  };
-
-  const totalPages = getTotalPages();
-
-  const pageNumbers = usePagination(totalPages, currentPage);
 
   return (
     <div className="min-h-screen w-full bg-white text-[#2D262D]">
@@ -179,7 +183,7 @@ function Page() {
                   <p>Бүх брэнд</p>
                 </TooltipContent>
               </Tooltip>
-              {filteredBrands?.map((brand, i) => (
+              {filteredBrands.map((brand, i) => (
                 <Tooltip key={i}>
                   <TooltipTrigger asChild>
                     <div
@@ -232,7 +236,7 @@ function Page() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-11">
             {!listProductsLoading
-              ? filteredProducts?.map((product) => (
+              ? filteredProducts.map((product) => (
                   <ProductCard key={product.ProductId} product={product} />
                 ))
               : [...Array(productsPerPage)].map((_, index) => (
@@ -242,7 +246,7 @@ function Page() {
                   />
                 ))}
           </div>
-          {listProductsData && totalPages > 1 ? (
+          {!listProductsLoading && totalPages > 0 && (
             <Pagination
               totalPages={totalPages}
               currentPage={currentPage}
@@ -253,8 +257,6 @@ function Page() {
               bg={"bg-[#4D55F5]"}
               border={"border-[#4D55F5]"}
             />
-          ) : (
-            <></>
           )}
         </div>
       </div>

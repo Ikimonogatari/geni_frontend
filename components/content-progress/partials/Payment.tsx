@@ -1,6 +1,6 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
 import { Content, STATUS_LIST } from "../content.services";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,6 +10,10 @@ import {
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
 
 type PaymentProps = {
   content: Content;
@@ -19,6 +23,7 @@ type PaymentProps = {
 
 const Payment = ({ content, refetch, setDialogOpen }: PaymentProps) => {
   const [data, setData] = useState<any>(null);
+  const paymentMonitorRef = useRef(null);
 
   const [
     qpayDeliveryPayment,
@@ -46,11 +51,54 @@ const Payment = ({ content, refetch, setDialogOpen }: PaymentProps) => {
   useEffect(() => {
     if (qpayDeliveryPaymentData) {
       setData(qpayDeliveryPaymentData);
+
+      // Start payment status monitoring via SSE if we have a transaction ID
+      if (qpayDeliveryPaymentData.UserTxnId) {
+        paymentMonitorRef.current = createPaymentStatusMonitor(
+          qpayDeliveryPaymentData.UserTxnId,
+          () => {
+            // On payment success
+            toast.success("Төлбөр амжилттай төлөгдлөө");
+            setDialogOpen && setDialogOpen(false);
+            refetch && refetch();
+          },
+          (error) => {
+            // On error
+            console.error("Payment monitoring error:", error);
+            toast.error("Төлбөр шалгахад алдаа гарлаа");
+          }
+        );
+      }
     }
     if (contentProcessOverduePaymentData) {
       setData(contentProcessOverduePaymentData);
+
+      // Start payment status monitoring via SSE if we have a transaction ID
+      if (contentProcessOverduePaymentData.UserTxnId) {
+        paymentMonitorRef.current = createPaymentStatusMonitor(
+          contentProcessOverduePaymentData.UserTxnId,
+          () => {
+            // On payment success
+            toast.success("Төлбөр амжилттай төлөгдлөө");
+            setDialogOpen && setDialogOpen(false);
+            refetch && refetch();
+          },
+          (error) => {
+            // On error
+            console.error("Payment monitoring error:", error);
+            toast.error("Төлбөр шалгахад алдаа гарлаа");
+          }
+        );
+      }
     }
   }, [qpayDeliveryPaymentData, contentProcessOverduePaymentData]);
+
+  // Cleanup function to close the payment monitor when unmounting
+  useEffect(() => {
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, []);
 
   const paymentCheck = () => {
     if (data?.CallBackUrl) {
@@ -58,7 +106,7 @@ const Payment = ({ content, refetch, setDialogOpen }: PaymentProps) => {
         if (res.status === 200) {
           if (res.data.IsPaid) {
             toast.success("Төлбөр төлөгдсөн байна.");
-            setDialogOpen(false);
+            setDialogOpen && setDialogOpen(false);
             refetch && refetch();
           } else {
             toast.error("Төлбөр төлөгдөөгүй байна.");
