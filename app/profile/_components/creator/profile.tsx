@@ -22,7 +22,6 @@ import CreatorTier from "@/components/CreatorTier";
 import CreatorProfileHeader from "./CreatorProfileHeader";
 
 function CreatorProfile({ getUserInfoData, getUserInfoLoading }) {
-  const router = useRouter();
   const [profileState, setProfileState] = useState("content-progress");
   const [currentPage, setCurrentPage] = useState(1);
   const contentsPerPage = 12;
