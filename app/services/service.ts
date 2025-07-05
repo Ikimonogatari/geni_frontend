@@ -2,6 +2,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 import StudentRegister from "../register/student/page";
+import {
+  GetBadgeListResponse,
+  BadgeDetail,
+} from "../profile/_components/creator/badge.services";
 
 // Define a service using a base URL and expected endpoints
 
@@ -17,7 +21,7 @@ export const geniApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["UserInfo", "Address"],
+  tagTypes: ["UserInfo", "Address", "Badge"],
   endpoints: (builder) => ({
     creatorLogin: builder.mutation({
       query: (body) => ({
@@ -679,6 +683,19 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    getCreatorBadges: builder.query<GetBadgeListResponse, void>({
+      query: () => ({
+        url: "api/web/private/badge",
+        method: "GET",
+      }),
+      providesTags: ["Badge"],
+    }),
+    getCreatorBadgeById: builder.query<BadgeDetail, string>({
+      query: (id) => ({
+        url: `/api/web/private/badge/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -781,4 +798,6 @@ export const {
   useCreateAddressMutation,
   useUpdateAddressMutation,
   useGetBannedTimeQuery,
+  useGetCreatorBadgesQuery,
+  useGetCreatorBadgeByIdQuery,
 } = geniApi;
