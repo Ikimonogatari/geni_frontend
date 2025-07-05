@@ -2,7 +2,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 import StudentRegister from "../register/student/page";
-import { GetBadgeListResponse, Badge } from "../profile/_components/creator/badge.services";
+import {
+  GetBadgeListResponse,
+  BadgeDetail,
+} from "../profile/_components/creator/badge.services";
 
 // Define a service using a base URL and expected endpoints
 
@@ -639,7 +642,7 @@ export const geniApi = createApi({
       }),
       providesTags: ["Badge"],
     }),
-    getCreatorBadgeById: builder.query<Badge, string>({
+    getCreatorBadgeById: builder.query<BadgeDetail, string>({
       query: (id) => ({
         url: `/api/web/private/badge/${id}`,
         method: "GET",
