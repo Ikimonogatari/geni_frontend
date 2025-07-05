@@ -101,9 +101,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
           <div className="flex items-center justify-center">
             <Progress
               value={progress}
-              className={`h-4 w-3/4 border border-black border-solid mt-2 ${
-                isEarned || big ? "bg-geni-green" : "bg-[#E0E0E0]"
-              }`}
+              className={`h-4 w-3/4 border border-black border-solid mt-2`}
               bgcolor={isEarned || big ? "bg-geni-green" : "bg-[#E0E0E0]"}
             />
           </div>
