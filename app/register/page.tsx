@@ -1,17 +1,13 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
-  geniApi,
-  useCreatorLoginMutation,
-  useForgotPasswordMutation,
   useSendOtpToEmailMutation,
   useGetPasswordPolicyQuery,
   useBrandRegisterMutation,
 } from "../services/service";
-import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,32 +18,19 @@ function Page() {
   const router = useRouter();
   const [userType, setUserType] = useState("Student");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [forgotPasswordState, setForgotPasswordState] = useState("1");
-  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [passwordValidationMessage, setPasswordValidationMessage] =
     useState("");
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
 
   const { data: passwordPolicy, isSuccess: passwordPolicySuccess } =
     useGetPasswordPolicyQuery({});
-
-  const handleMouseDownLoginPassword = () => setShowLoginPassword(true);
-  const handleMouseUpLoginPassword = () => setShowLoginPassword(false);
-
-  const handleMouseDownNewPassword = () => setShowNewPassword(true);
-  const handleMouseUpNewPassword = () => setShowNewPassword(false);
-
-  const handleMouseDownConfirmPassword = () => setShowConfirmPassword(true);
-  const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
   const [
     sendOtpToEmail,
     {
       data: sendOtpToEmailData,
       error: sendOtpToEmailError,
-      isLoading: sendOtpToEmailLoading,
       isSuccess: sendOtpToEmailSuccess,
     },
   ] = useSendOtpToEmailMutation();
@@ -57,7 +40,6 @@ function Page() {
     {
       data: brandRegisterData,
       error: brandRegisterError,
-      isLoading: brandRegisterLoading,
       isSuccess: brandRegisterSuccess,
     },
   ] = useBrandRegisterMutation();
@@ -294,7 +276,7 @@ function Page() {
                   onClick={() => {
                     window.location.href =
                       process.env.NEXT_PUBLIC_AWS_URL +
-                      "/api/web/public/oauthlogin";
+                      "/api/web/public/oauthregister";
                   }}
                 >
                   <svg
@@ -352,7 +334,7 @@ function Page() {
                     <input
                       name="Password"
                       id="Password"
-                      type={showLoginPassword ? "text" : "password"}
+                      type={showPassword ? "text" : "password"}
                       placeholder=""
                       className="w-full outline-none text-sm sm:text-base bg-inherit"
                       onChange={registerForm.handleChange}
@@ -360,11 +342,7 @@ function Page() {
                     />
                     <button
                       type="button"
-                      onMouseDown={handleMouseDownLoginPassword}
-                      onMouseUp={handleMouseUpLoginPassword}
-                      onMouseLeave={handleMouseUpLoginPassword}
-                      onTouchStart={handleMouseDownLoginPassword}
-                      onTouchEnd={handleMouseUpLoginPassword}
+                      onClick={() => setShowPassword(!showPassword)}
                       className={`${
                         registerForm.values.Password === "" ? "hidden" : "block"
                       } text-sm opacity-90`}
@@ -402,11 +380,9 @@ function Page() {
                     />
                     <button
                       type="button"
-                      onMouseDown={handleMouseDownConfirmPassword}
-                      onMouseUp={handleMouseUpConfirmPassword}
-                      onMouseLeave={handleMouseUpConfirmPassword}
-                      onTouchStart={handleMouseDownConfirmPassword}
-                      onTouchEnd={handleMouseUpConfirmPassword}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       className={`${
                         registerForm.values.ConfirmPassword === ""
                           ? "hidden"
