@@ -9,7 +9,11 @@ export default function Page() {
 
   const handleUserType = (type: string) => {
     Cookies.set("userType", type, { expires: 1 / 24 });
-    router.push("/register");
+    if (type === "Brand") {
+      router.push("/onboarding/brand");
+    } else {
+      router.push("/register");
+    }
   };
 
   return (
