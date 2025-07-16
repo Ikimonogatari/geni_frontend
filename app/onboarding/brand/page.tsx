@@ -186,16 +186,56 @@ export default function BrandOnboarding() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-6 h-6 rounded-full border-2 border-[#4D55F5] flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-[#4D55F5]" />
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
+                  <h3 className="font-medium">
+                    Өөрийн гэсэн бүтээгдэхүүн байгаа юу?
+                  </h3>
+                  <div className="flex items-center gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="hasProduct"
+                        className="w-5 h-5 text-[#4D55F5] border-2 border-gray-300 focus:ring-[#4D55F5]"
+                      />
+                      <span>Тийм</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="hasProduct"
+                        className="w-5 h-5 text-[#4D55F5] border-2 border-gray-300 focus:ring-[#4D55F5]"
+                      />
+                      <span>Үгүй</span>
+                    </label>
                   </div>
-                  <span>Тийм</span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
-                  <span>Үгүй</span>
+
+                <div className="flex flex-col gap-4">
+                  <h3 className="font-medium">Бүтээгдэхүүний төрөл</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Бүтээгдэхүүний нэр"
+                      layoutClassName="rounded-full"
+                    />
+                    <Input
+                      placeholder="Бүтээгдэхүүний төрөл"
+                      layoutClassName="rounded-full"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <h3 className="font-medium">
+                    Маркетинг сурталчилгааны төсөв
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input placeholder="Төсөв" layoutClassName="rounded-full" />
+                    <Input
+                      placeholder="Төсөв (₮)"
+                      layoutClassName="rounded-full"
+                    />
+                  </div>
                 </div>
               </div>
 
