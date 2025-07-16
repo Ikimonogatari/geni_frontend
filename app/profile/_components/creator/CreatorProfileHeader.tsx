@@ -110,7 +110,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <div className="flex flex-col gap-1 sm:gap-2 min-w-[200px]">
+          <div className="flex flex-col gap-1 sm:gap-2 min-w-[100px]">
             <span className="text-[#6F6F6F] text-[11px] sm:text-base">
               Амжилтууд:
             </span>
@@ -156,7 +156,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <span className="text-xs">
+            <span className="text-[11px]">
               Дараагын түвшинд гарахад{" "}
               <b>{userInfoData?.NextLvlXP - userInfoData?.XP} XP</b> дутуу
             </span>
