@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import LoginButton from "./LoginButton";
 import ForgetPasswordModal from "./ForgetPasswordModal";
+import Link from "next/link";
 
 function Page() {
   const router = useRouter();
@@ -398,7 +399,7 @@ function Page() {
               >
                 <div className="flex flex-col gap-4">
                   <span className="">Имэйл хаяг</span>
-                  <div className="flex flex-row items-center justify-between bg-[#F5F4F0] rounded-lg h-14 p-4">
+                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
                     <input
                       id="email"
                       name="email"
@@ -415,8 +416,38 @@ function Page() {
                       {login.errors.email}
                     </div>
                   ) : null}
-                  <span className="">Нууц үг</span>
-                  <div className="flex flex-row items-center justify-between bg-[#F5F4F0] rounded-lg h-14 p-4">
+                  <div className="flex flex-row w-full justify-between items-center">
+                    <span className="">Нууц үг</span>
+
+                    <ForgetPasswordModal
+                      forgotPasswordState={forgotPasswordState}
+                      setForgotPasswordState={setForgotPasswordState}
+                      showNewPassword={showNewPassword}
+                      showConfirmPassword={showConfirmPassword}
+                      handleMouseDownNewPassword={handleMouseDownNewPassword}
+                      handleMouseUpNewPassword={handleMouseUpNewPassword}
+                      handleMouseDownConfirmPassword={
+                        handleMouseDownConfirmPassword
+                      }
+                      handleMouseUpConfirmPassword={
+                        handleMouseUpConfirmPassword
+                      }
+                      emailForm={emailForm}
+                      otpForm={otpForm}
+                      forgotPasswordForm={forgotPasswordForm}
+                      sendOtpToEmailSuccess={sendOtpToEmailSuccess}
+                      sendOtpToEmailData={sendOtpToEmailData}
+                      onClickEmailForm={emailForm.handleSubmit}
+                      onClickOtpForm={otpForm.handleSubmit}
+                      onClickForgotPasswordForm={
+                        forgotPasswordForm.handleSubmit
+                      }
+                      passwordValidationMessage={passwordValidationMessage}
+                      timeLeft={timeLeft}
+                      onTimeUpdate={handleTimeUpdate}
+                    />
+                  </div>
+                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
                     <input
                       name="password"
                       id="password"
@@ -451,29 +482,6 @@ function Page() {
                       {login.errors.password}
                     </div>
                   ) : null}
-                  <ForgetPasswordModal
-                    forgotPasswordState={forgotPasswordState}
-                    setForgotPasswordState={setForgotPasswordState}
-                    showNewPassword={showNewPassword}
-                    showConfirmPassword={showConfirmPassword}
-                    handleMouseDownNewPassword={handleMouseDownNewPassword}
-                    handleMouseUpNewPassword={handleMouseUpNewPassword}
-                    handleMouseDownConfirmPassword={
-                      handleMouseDownConfirmPassword
-                    }
-                    handleMouseUpConfirmPassword={handleMouseUpConfirmPassword}
-                    emailForm={emailForm}
-                    otpForm={otpForm}
-                    forgotPasswordForm={forgotPasswordForm}
-                    sendOtpToEmailSuccess={sendOtpToEmailSuccess}
-                    sendOtpToEmailData={sendOtpToEmailData}
-                    onClickEmailForm={emailForm.handleSubmit}
-                    onClickOtpForm={otpForm.handleSubmit}
-                    onClickForgotPasswordForm={forgotPasswordForm.handleSubmit}
-                    passwordValidationMessage={passwordValidationMessage}
-                    timeLeft={timeLeft}
-                    onTimeUpdate={handleTimeUpdate}
-                  />
 
                   <LoginButton
                     width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
@@ -494,12 +502,15 @@ function Page() {
                     }
                   />
                 </div>
+                <div className="flex flex-row items-center gap-4 my-4">
+                  <div className="h-[1px] w-full bg-[#CDCDCD]"></div>
+                  <span className="">Эсвэл</span>
+                  <div className="h-[1px] w-full bg-[#CDCDCD]"></div>
+                </div>
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2 w-full max-w-sm sm:max-w-md mx-auto mt-4 py-2 px-4 border border-gray-300 rounded-xl shadow-sm bg-white hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-center gap-4 w-full max-w-sm sm:max-w-md aspect-[448/90] mx-auto bg-[#F5F4F0] border-[1px] border-black rounded-[30px] shadow-[0.25rem_0.25rem_#B0B0B0] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-bold text-lg"
                   onClick={() => {
-                    // TODO: Implement Google login logic here
-                    // For example, redirect to your backend's Google OAuth endpoint
                     window.location.href =
                       process.env.NEXT_PUBLIC_AWS_URL +
                       "/api/web/public/oauthlogin";
@@ -507,10 +518,9 @@ function Page() {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    height="1em"
-                    style={{ flex: "none", lineHeight: "1" }}
+                    height="24"
+                    width="24"
                     viewBox="0 0 24 24"
-                    width="1em"
                   >
                     <title>Google</title>
                     <path
@@ -530,11 +540,15 @@ function Page() {
                       fill="#EB4335"
                     />
                   </svg>
-                  <span className="font-medium text-gray-700">
-                    Google-ээр нэвтрэх
-                  </span>
+                  <span>Google-ээр нэвтрэх</span>
                 </button>
               </div>
+              <p className="text-center mt-4">
+                Та шинээр &nbsp;
+                <Link href="/register" className="font-semibold underline">
+                  Бүртгүүлэх үү?
+                </Link>
+              </p>
             </div>
           </form>
         </div>

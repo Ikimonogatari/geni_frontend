@@ -62,8 +62,8 @@ function ForgetPasswordModal({
 }: ForgetPasswordModalProps) {
   return (
     <Dialog>
-      <DialogTrigger className="text-black font-semibold underline">
-        Нууц үг сэргээх
+      <DialogTrigger className="text-geni-blue underline">
+        Нууц үг мартсан?
       </DialogTrigger>
       {/* @ts-ignore */}
       <DialogContent className="rounded-3xl max-w-lg w-full flex flex-col items-center gap-2">
