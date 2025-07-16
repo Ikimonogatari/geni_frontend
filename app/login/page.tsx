@@ -16,29 +16,21 @@ import { useRouter } from "next/navigation";
 import LoginButton from "./LoginButton";
 import ForgetPasswordModal from "./ForgetPasswordModal";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 function Page() {
   const router = useRouter();
   const [userType, setUserType] = useState("Student");
   const [forgotPasswordState, setForgotPasswordState] = useState("1");
-  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [passwordValidationMessage, setPasswordValidationMessage] =
     useState("");
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
 
   const { data: passwordPolicy, isSuccess: passwordPolicySuccess } =
     useGetPasswordPolicyQuery({});
-
-  const handleMouseDownLoginPassword = () => setShowLoginPassword(true);
-  const handleMouseUpLoginPassword = () => setShowLoginPassword(false);
-
-  const handleMouseDownNewPassword = () => setShowNewPassword(true);
-  const handleMouseUpNewPassword = () => setShowNewPassword(false);
-
-  const handleMouseDownConfirmPassword = () => setShowConfirmPassword(true);
-  const handleMouseUpConfirmPassword = () => setShowConfirmPassword(false);
 
   const [loginRequest, { data, error, isLoading }] = useCreatorLoginMutation();
   const [
@@ -398,39 +390,36 @@ function Page() {
                 } p-4`}
               >
                 <div className="flex flex-col gap-4">
-                  <span className="">Имэйл хаяг</span>
-                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder=""
-                      className="w-full outline-none text-sm sm:text-base bg-inherit"
-                      onChange={login.handleChange}
-                      value={login.values.email}
-                    />
-                  </div>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder=""
+                    label="Имэйл хаяг"
+                    layoutClassName="rounded-full"
+                    className="bg-inherit"
+                    onChange={login.handleChange}
+                    value={login.values.email}
+                    errorText={login.errors.email}
+                    errorVisible={login.touched.email && !!login.errors.email}
+                  />
 
-                  {login.touched.email && login.errors.email ? (
-                    <div className="text-red-500 text-sm">
-                      {login.errors.email}
-                    </div>
-                  ) : null}
                   <div className="flex flex-row w-full justify-between items-center">
-                    <span className="">Нууц үг</span>
-
+                    <span className="font-bold">Нууц үг</span>
                     <ForgetPasswordModal
                       forgotPasswordState={forgotPasswordState}
                       setForgotPasswordState={setForgotPasswordState}
                       showNewPassword={showNewPassword}
                       showConfirmPassword={showConfirmPassword}
-                      handleMouseDownNewPassword={handleMouseDownNewPassword}
-                      handleMouseUpNewPassword={handleMouseUpNewPassword}
-                      handleMouseDownConfirmPassword={
-                        handleMouseDownConfirmPassword
+                      handleMouseDownNewPassword={() =>
+                        setShowNewPassword(true)
                       }
-                      handleMouseUpConfirmPassword={
-                        handleMouseUpConfirmPassword
+                      handleMouseUpNewPassword={() => setShowNewPassword(false)}
+                      handleMouseDownConfirmPassword={() =>
+                        setShowConfirmPassword(true)
+                      }
+                      handleMouseUpConfirmPassword={() =>
+                        setShowConfirmPassword(false)
                       }
                       emailForm={emailForm}
                       otpForm={otpForm}
@@ -447,41 +436,38 @@ function Page() {
                       onTimeUpdate={handleTimeUpdate}
                     />
                   </div>
-                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
-                    <input
-                      name="password"
-                      id="password"
-                      type={showLoginPassword ? "text" : "password"}
-                      placeholder=""
-                      className="w-full outline-none text-sm sm:text-base bg-inherit"
-                      onChange={login.handleChange}
-                      value={login.values.password}
-                    />
-                    <button
-                      type="button"
-                      onMouseDown={handleMouseDownLoginPassword}
-                      onMouseUp={handleMouseUpLoginPassword}
-                      onMouseLeave={handleMouseUpLoginPassword}
-                      onTouchStart={handleMouseDownLoginPassword}
-                      onTouchEnd={handleMouseUpLoginPassword}
-                      className={`${
-                        login.values.password === "" ? "hidden" : "block"
-                      } text-sm opacity-90`}
-                    >
-                      <Image
-                        src={"/show-pwd.png"}
-                        width={24}
-                        height={24}
-                        alt=""
-                        className="w-6 h-6"
-                      />
-                    </button>
-                  </div>
-                  {login.touched.password && login.errors.password ? (
-                    <div className="text-red-500 text-sm">
-                      {login.errors.password}
-                    </div>
-                  ) : null}
+
+                  <Input
+                    name="password"
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder=""
+                    className="bg-inherit"
+                    layoutClassName="rounded-full"
+                    onChange={login.handleChange}
+                    value={login.values.password}
+                    errorText={login.errors.password}
+                    errorVisible={
+                      login.touched.password && !!login.errors.password
+                    }
+                    rightSection={
+                      login.values.password !== "" && (
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="text-sm opacity-90"
+                        >
+                          <Image
+                            src={"/show-pwd.png"}
+                            width={24}
+                            height={24}
+                            alt=""
+                            className="w-6 h-6"
+                          />
+                        </button>
+                      )
+                    }
+                  />
 
                   <LoginButton
                     width={`mx-auto w-full max-w-sm sm:max-w-md aspect-[448/90] mt-2`}
