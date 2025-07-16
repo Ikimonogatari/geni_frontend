@@ -256,13 +256,13 @@ function Page() {
             onSubmit={registerForm.handleSubmit}
             className="sm:mt-11 flex flex-col xl:flex-row items-center gap-6 sm:gap-16"
           >
-            <div className="bg-[#F5F4F0] rounded-2xl px-12 py-16 lg:px-10 lg:py-32 max-w-3xl w-full">
+            <div className="bg-[#F5F4F0] rounded-2xl px-12 py-16 lg:px-10 lg:py-32 max-w-3xl aspect-square w-full">
               <Image
                 src={"/login-image.svg"}
                 width={584}
                 height={378}
                 alt="login"
-                className="w-full h-full lg:min-h-[378px]"
+                className="w-full h-full"
               />
             </div>
             <div className="flex flex-col w-full max-w-3xl xl:max-w-md">
@@ -307,8 +307,8 @@ function Page() {
                   <span>Google-ээр бүртгүүлэх</span>
                 </button>
                 <div className="flex flex-row items-center gap-4 my-4">
-                  <div className="h-[1px] w-full bg-[#CDCDCD]"></div>
                   <span className="">Эсвэл</span>
+                  <div className="h-[1px] w-full bg-[#CDCDCD]"></div>
                   <div className="h-[1px] w-full bg-[#CDCDCD]"></div>
                 </div>
                 <div className="flex flex-col gap-4">
