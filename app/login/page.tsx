@@ -273,6 +273,7 @@ function Page() {
       // Ensure navigation only after cookies are set
       router.push("/profile");
     } else if (error) {
+      // @ts-ignore
       toast.error(error?.data?.error);
     }
   }, [data, error]);
@@ -282,6 +283,7 @@ function Page() {
       toast.success("Таны мэйл рүү нэг удаагийн код илгээгдлээ");
       setForgotPasswordState("2");
     } else if (sendOtpToEmailError) {
+      // @ts-ignore
       toast.error(sendOtpToEmailError?.data?.error);
     }
   }, [sendOtpToEmailSuccess, sendOtpToEmailError]);
@@ -291,6 +293,7 @@ function Page() {
       toast.success("Нууц үг шинэчлэгдлээ");
       setForgotPasswordState("1");
     } else if (forgotPasswordError) {
+      // @ts-ignore
       toast.error(forgotPasswordError?.data?.error);
     }
   }, [forgotPasswordSuccess, forgotPasswordError]);
