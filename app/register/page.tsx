@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Button from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Verification from "./Verification";
 
 function Page() {
@@ -311,99 +312,97 @@ function Page() {
                   <div className="h-[1px] w-full bg-[#CDCDCD]"></div>
                 </div>
                 <div className="flex flex-col gap-4">
-                  <span className="">Имэйл хаяг</span>
-                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
-                    <input
-                      id="Email"
-                      name="Email"
-                      type="email"
-                      placeholder=""
-                      className="w-full outline-none text-sm sm:text-base bg-inherit"
-                      onChange={registerForm.handleChange}
-                      value={registerForm.values.Email}
-                    />
-                  </div>
+                  <Input
+                    id="Email"
+                    name="Email"
+                    type="email"
+                    placeholder=""
+                    label="Имэйл хаяг"
+                    layoutClassName="rounded-full"
+                    className="bg-inherit"
+                    onChange={registerForm.handleChange}
+                    value={registerForm.values.Email}
+                    errorText={registerForm.errors.Email}
+                    errorVisible={
+                      registerForm.touched.Email && !!registerForm.errors.Email
+                    }
+                  />
 
-                  {registerForm.touched.Email && registerForm.errors.Email ? (
-                    <div className="text-red-500 text-sm">
-                      {registerForm.errors.Email}
-                    </div>
-                  ) : null}
-                  <span className="">Нууц үг</span>
-                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
-                    <input
-                      name="Password"
-                      id="Password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder=""
-                      className="w-full outline-none text-sm sm:text-base bg-inherit"
-                      onChange={registerForm.handleChange}
-                      value={registerForm.values.Password}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className={`${
-                        registerForm.values.Password === "" ? "hidden" : "block"
-                      } text-sm opacity-90`}
-                    >
-                      <Image
-                        src={"/show-pwd.png"}
-                        width={24}
-                        height={24}
-                        alt=""
-                        className="w-6 h-6"
-                      />
-                    </button>
-                  </div>
-                  {registerForm.touched.Password &&
-                  registerForm.errors.Password ? (
-                    <div className="text-red-500 text-sm">
-                      {registerForm.errors.Password}
-                    </div>
-                  ) : null}
+                  <Input
+                    name="Password"
+                    id="Password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder=""
+                    label="Нууц үг"
+                    layoutClassName="rounded-full"
+                    className="bg-inherit"
+                    onChange={registerForm.handleChange}
+                    value={registerForm.values.Password}
+                    errorText={registerForm.errors.Password}
+                    errorVisible={
+                      registerForm.touched.Password &&
+                      !!registerForm.errors.Password
+                    }
+                    rightSection={
+                      registerForm.values.Password !== "" && (
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="text-sm opacity-90"
+                        >
+                          <Image
+                            src={"/show-pwd.png"}
+                            width={24}
+                            height={24}
+                            alt=""
+                            className="w-6 h-6"
+                          />
+                        </button>
+                      )
+                    }
+                  />
+
                   <span className="text-sm text-red-500">
                     Нууц үг доод тал нь 8 тэмдэгт байх, 1 том үсэг, 1 жижиг
                     үсэг, 1 тоо, 1 тусгай тэмдэгт{" "}
                     {"(!#$%&()*+,-./:;<=>?@[]^_{|})"}
                   </span>
-                  <span className="">Нууц үг давтах</span>
-                  <div className="flex flex-row items-center justify-between border-[1px] border-[#CDCDCD] rounded-full h-14 p-4">
-                    <input
-                      name="ConfirmPassword"
-                      id="ConfirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder=""
-                      className="w-full outline-none text-sm sm:text-base bg-inherit"
-                      onChange={registerForm.handleChange}
-                      value={registerForm.values.ConfirmPassword}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className={`${
-                        registerForm.values.ConfirmPassword === ""
-                          ? "hidden"
-                          : "block"
-                      } text-sm opacity-90`}
-                    >
-                      <Image
-                        src={"/show-pwd.png"}
-                        width={24}
-                        height={24}
-                        alt=""
-                        className="w-6 h-6"
-                      />
-                    </button>
-                  </div>
-                  {registerForm.touched.ConfirmPassword &&
-                  registerForm.errors.ConfirmPassword ? (
-                    <div className="text-red-500 text-sm">
-                      {registerForm.errors.ConfirmPassword}
-                    </div>
-                  ) : null}
+
+                  <Input
+                    name="ConfirmPassword"
+                    id="ConfirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder=""
+                    label="Нууц үг давтах"
+                    layoutClassName="rounded-full"
+                    className="bg-inherit"
+                    onChange={registerForm.handleChange}
+                    value={registerForm.values.ConfirmPassword}
+                    errorText={registerForm.errors.ConfirmPassword}
+                    errorVisible={
+                      registerForm.touched.ConfirmPassword &&
+                      !!registerForm.errors.ConfirmPassword
+                    }
+                    rightSection={
+                      registerForm.values.ConfirmPassword !== "" && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="text-sm opacity-90"
+                        >
+                          <Image
+                            src={"/show-pwd.png"}
+                            width={24}
+                            height={24}
+                            alt=""
+                            className="w-6 h-6"
+                          />
+                        </button>
+                      )
+                    }
+                  />
                   <Button
                     type="button"
                     className="w-full max-w-sm sm:max-w-md aspect-[448/90] mx-auto bg-primary border-[1px] border-black !rounded-[30px] shadow-[0.25rem_0.25rem_#B0B0B0] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-bold text-white !text-lg"
