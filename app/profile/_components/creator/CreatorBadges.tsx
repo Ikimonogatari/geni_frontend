@@ -7,7 +7,7 @@ function CreatorBadges() {
   const badgesData = badges?.flatMap((badge) => badge.BadgeProcess);
 
   const earnedAchievements = badgesData?.filter(
-    (v) => v.CurrentTarget == v.NextTarget || v.CurrentTarget > 1
+    (v) => v.CurrentTarget == v.NextTarget || v.CurrentLvl > 1
   ).slice(0, 3);
 
   return (

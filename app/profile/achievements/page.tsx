@@ -12,7 +12,7 @@ const AchievementsPage = () => {
   const badgesData = badges?.flatMap((badge) => badge.BadgeProcess);
 
   const earnedAchievements = badgesData?.filter(
-    (v) => v.CurrentTarget == v.NextTarget || v.CurrentTarget > 1
+    (v) => v.CurrentTarget == v.NextTarget || v.CurrentLvl > 1
   );
   const unearnedAchievements = _.differenceBy(badgesData, earnedAchievements, 'BadgeId');
 
@@ -49,7 +49,7 @@ const AchievementsPage = () => {
       </button>
       <h1 className="text-3xl font-bold mb-6">Таны цол</h1>
       <div className="mb-2 text-lg">Авсан цолнууд</div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 gap-4 mb-8">
         {earnedAchievements.map((ach, idx) => (
           <AchievementCard key={idx} achievement={ach} />
         ))}
