@@ -4,43 +4,22 @@ import { useGetCreatorBadgesQuery } from "@/app/services/service";
 import AchievementCard from "@/components/AchievementCard";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import _ from "lodash";
 
 const AchievementsPage = () => {
   const router = useRouter();
   const { data: badges, isLoading, error } = useGetCreatorBadgesQuery();
-  console.log("achievements", badges);
+  const badgesData = badges?.flatMap((badge) => badge.BadgeProcess);
 
-  // Get earned achievements from backend data
-  // const earnedAchievements =
-  //   badges?.flatMap((badge) =>
-  //     badge.BadgeProcess.filter(
-  //       (v) => v.CurrentTarget != 0 && v.CurrentLvl != 1
-  //     )
-  //   ) || [];
-  const earnedAchievements = badges?.[badges.length - 1].BadgeProcess;
-
-  const unearnedAchievements =
-    badges?.flatMap((v) =>
-      v.BadgeProcess.filter((v) => v.CurrentTarget == 0 && v.CurrentLvl == 1)
-    ) || [];
-
-  // Create unearned achievements (placeholder for now)
-  // const unearnedAchievements = Array(5).fill({
-  //   BadgeImageUrl: "/verified-icon.png",
-  //   BadgeName: "Certified creator",
-  //   CurrentLvlName: "Level 1",
-  //   CurrentLvl: 0,
-  //   CurrentTarget: 0,
-  //   NextLvl: 1,
-  //   NextTarget: 10,
-  //   BadgeColorCode: "#BDBDBD",
-  //   locked: true,
-  // });
+  const earnedAchievements = badgesData?.filter(
+    (v) => v.CurrentTarget == v.NextTarget || v.CurrentTarget > 1
+  );
+  const unearnedAchievements = _.differenceBy(badgesData, earnedAchievements, 'BadgeId');
 
   if (isLoading) {
     return (
       <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
-        <div className="text-center">Loading achievements...</div>
+        <div className="text-center">Цолуудыг авч байна...</div>
       </div>
     );
   }
@@ -49,14 +28,13 @@ const AchievementsPage = () => {
     return (
       <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
         <div className="text-center text-red-500">
-          Error loading achievements
+          Цол авч байхад алдаа гарлаа
         </div>
       </div>
     );
   }
 
   return (
-    // <div className="min-h-screen bg-[#FCFCFC] px-6 pt-4 pb-10">
     <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
       <button
         onClick={() => router.back()}
