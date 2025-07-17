@@ -67,7 +67,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
 
         {/* Remaining sections - horizontal scroll on mobile */}
         <div className="flex flex-row gap-2 overflow-x-auto w-full">
-          <div className="flex flex-col gap-1 sm:gap-2 min-w-[200px]">
+          <div className="flex flex-col gap-1 sm:gap-2 min-w-[100px]">
             <span className="text-[#6F6F6F] text-[11px] sm:text-base">
               Дундаж үнэлгээ:
             </span>
@@ -77,7 +77,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
               className="border rounded-2xl p-2 sm:p-4 h-full"
             />
           </div>
-          <div className="flex flex-col gap-1 sm:gap-2 min-w-[150px]">
+          <div className="flex flex-col gap-1 sm:gap-2 min-w-[100px]">
             <span className="text-[#6F6F6F] text-[11px] sm:text-base">
               Geni хэтэвч:
             </span>
@@ -85,10 +85,10 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
               <Tooltip>
                 <TooltipTrigger className="h-full">
                   <Link
-                    className="border rounded-2xl p-2 sm:p-4 flex flex-wrap sm:flex-row gap-1 sm:gap-2 justify-center items-center h-full"
+                    className="border rounded-2xl p-2 sm:p-4 flex flex-col sm:flex-row gap-1 sm:gap-2 justify-center sm:items-center h-full"
                     href="/wallet"
                   >
-                    <span className="text-[#6F6F6F] text-[10px] sm:text-base">
+                    <span className="text-[#6F6F6F] text-[10px] sm:text-base text-start">
                       Geni Оноо:
                     </span>
                     <span className="text-base sm:text-2xl font-extrabold flex gap-1">
@@ -110,7 +110,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <div className="flex flex-col gap-1 sm:gap-2 min-w-[200px]">
+          <div className="flex flex-col gap-1 sm:gap-2 min-w-[100px]">
             <span className="text-[#6F6F6F] text-[11px] sm:text-base">
               Амжилтууд:
             </span>
@@ -156,7 +156,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <span className="text-xs">
+            <span className="text-[11px]">
               Дараагын түвшинд гарахад{" "}
               <b>{userInfoData?.NextLvlXP - userInfoData?.XP} XP</b> дутуу
             </span>

@@ -28,7 +28,7 @@ function StarRating({
           {averageRating}
         </span>
       </div>
-      <span className="text-[#2D262D] text-xs sm:text-base">
+      <span className="text-[#2D262D] text-xs sm:text-base hidden sm:block">
         ({contentCount} контент)
       </span>
     </div>
