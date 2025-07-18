@@ -55,7 +55,7 @@ const AchievementsPage = () => {
         ))}
       </div>
       <div className="mb-2 text-lg">Аваагүй цолнууд</div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 gap-4">
         {unearnedAchievements.map((ach, idx) => (
           <AchievementCard key={idx} achievement={ach} isEarned={false} />
         ))}

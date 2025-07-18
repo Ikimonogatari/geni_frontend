@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { BadgeProgress } from "@/components/ui/badge-progress";
 import Image from "next/image";
 import { LockIcon } from "lucide-react";
 import { BadgeProcess } from "@/app/profile/_components/creator/badge.services";
@@ -16,19 +16,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
   isEarned = true,
   big = false,
 }) => {
-  const currentNextTarget = achievement.NextTarget;
-  // achievement.CurrentLvl == achievement.NextLvl
-  //   ? achievement.NextTarget
-  //   : achievement.NextTarget - 1;
-
   const Wrapper = big ? "div" : Link;
-
-  const calculateProgress = () => {
-    if (achievement.NextTarget === 0) return 100;
-    return Math.round((achievement.CurrentTarget / currentNextTarget) * 100);
-  };
-
-  const progress = calculateProgress();
 
   return (
     <Wrapper
@@ -93,14 +81,10 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
           <div className={`text-sm mb-1 ${"text-[#6F6F6F]"}`}>
             Түвшин {achievement.CurrentLvl}
           </div>
-          {/* {achievement.NextTarget > 0 && (
-          <div className="text-xs text-[#666] mb-1">
-            {achievement.CurrentTarget} / {currentNextTarget}
-          </div>
-        )} */}
           <div className="flex items-center justify-center">
-            <Progress
-              value={progress}
+            <BadgeProgress
+              currentTarget={achievement.CurrentTarget}
+              nextTarget={achievement.NextTarget}
               className={`h-4 w-3/4 border border-black border-solid mt-2`}
               bgcolor={isEarned || big ? "bg-geni-green" : "bg-[#E0E0E0]"}
             />

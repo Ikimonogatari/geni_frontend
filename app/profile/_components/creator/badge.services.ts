@@ -43,4 +43,5 @@ export type BadgeRule = {
   ColorId: number;
   ColorCode: string;
   ImageUrl: string;
+  Condition: string;
 };

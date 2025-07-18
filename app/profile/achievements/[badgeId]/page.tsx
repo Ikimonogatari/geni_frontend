@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import AchievementCard from "@/components/AchievementCard";
 import { BadgeDetail } from "@/app/profile/_components/creator/badge.services";
+import { ClipLoader } from "react-spinners";
+import Loader from "@/components/common/Loader";
+import { Button } from "@/components/ui/shadcn-button";
 
 const AchievmentDetailPage = () => {
   const router = useRouter();
@@ -25,8 +28,11 @@ const AchievmentDetailPage = () => {
 
   if (!badgeDetail) {
     return (
-      <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container flex items-center justify-center">
-        <div>Badge not found</div>
+      <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container flex flex-col items-center justify-center gap-2">
+        <div>Цол олдсонгүй</div>
+        <Button variant="outline" onClick={() => router.back()}>
+          Буцах
+        </Button>
       </div>
     );
   }
@@ -80,10 +86,10 @@ const AchievmentDetailPage = () => {
                           height={24}
                           alt={`level-${idx + 1}`}
                         />
-                        <span className="font-bold text-lg">{idx + 1}</span>
+                        <span className="font-bold text-lg">{rule.LvlId}</span>
                       </span>
                     </td>
-                    <td className="py-2 px-2">{rule.LvlName}</td>
+                    <td className="py-2 px-2">{rule.Condition}</td>
                     <td className="py-2 px-2">
                       {rule.RewardValue} {rule.RewardType}
                     </td>
