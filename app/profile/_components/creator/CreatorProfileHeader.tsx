@@ -209,7 +209,7 @@ function CreatorProfileHeader({ userInfoData }: CreatorProfileHeaderProps) {
           <span className="text-[#6F6F6F] text-[11px] sm:text-base">
             Амжилтууд:
           </span>
-          <Link href="/profile/achievements">
+          <Link href="/profile/achievements" className="flex-1">
             <CreatorBadges />
           </Link>
         </div>

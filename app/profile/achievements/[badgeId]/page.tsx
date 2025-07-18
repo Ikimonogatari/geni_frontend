@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import AchievementCard from "@/components/AchievementCard";
 import { BadgeDetail } from "@/app/profile/_components/creator/badge.services";
-import { ClipLoader } from "react-spinners";
 import Loader from "@/components/common/Loader";
 import { Button } from "@/components/ui/shadcn-button";
+import { cn } from "@/lib/utils";
 
 const AchievmentDetailPage = () => {
   const router = useRouter();
@@ -19,11 +19,7 @@ const AchievmentDetailPage = () => {
   console.log("badge detail", badgeDetail);
 
   if (badgeDetailLoading) {
-    return (
-      <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container flex items-center justify-center">
-        <div>Loading...</div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!badgeDetail) {
@@ -70,27 +66,36 @@ const AchievmentDetailPage = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b">
-                  <th className="py-2 px-2 font-semibold">Түвшин</th>
+                  <th className="py-2 px-2 font-semibold text-center">
+                    Түвшин
+                  </th>
                   <th className="py-2 px-2 font-semibold">Нөхцөл</th>
                   <th className="py-2 px-2 font-semibold">Шагнал</th>
                 </tr>
               </thead>
               <tbody>
                 {detail.BadgeRules.map((rule, idx) => (
-                  <tr key={rule.LvlId} className="border-b last:border-b-0">
-                    <td className="py-2 px-2">
-                      <span className="inline-flex items-center gap-2">
-                        <Image
-                          src="/star.png"
-                          width={24}
-                          height={24}
-                          alt={`level-${idx + 1}`}
-                        />
-                        <span className="font-bold text-lg">{rule.LvlId}</span>
-                      </span>
+                  <tr
+                    key={rule.LvlId}
+                    className={cn("border-b last:border-b-0", {
+                      // "bg-gray-200": rule.LvlId < detail.CurrentLvl,
+                    })}
+                  >
+                    <td className="py-2 px-2 flex justify-center items-center">
+                      {/* <span className="inline-flex items-center gap-2"> */}
+                      <Image
+                        src={`/creator/star${idx + 1}.svg`}
+                        width={40}
+                        height={40}
+                        alt={`level-${idx + 1}`}
+                      />
+                      {/* <span className="font-bold text-lg">{rule.LvlId}</span> */}
+                      {/* </span> */}
                     </td>
-                    <td className="py-2 px-2">{rule.Condition}</td>
-                    <td className="py-2 px-2">
+                    <td className="py-2 px-2 text-[#6F6F6F]">
+                      {rule.Condition}
+                    </td>
+                    <td className="py-2 px-2 text-[#6F6F6F]">
                       {rule.RewardValue} {rule.RewardType}
                     </td>
                   </tr>

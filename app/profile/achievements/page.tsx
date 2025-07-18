@@ -5,6 +5,8 @@ import AchievementCard from "@/components/AchievementCard";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import _ from "lodash";
+import Loader from "@/components/common/Loader";
+import { Button } from "@/components/ui/shadcn-button";
 
 const AchievementsPage = () => {
   const router = useRouter();
@@ -14,22 +16,25 @@ const AchievementsPage = () => {
   const earnedAchievements = badgesData?.filter(
     (v) => v.CurrentTarget == v.NextTarget || v.CurrentLvl > 1
   );
-  const unearnedAchievements = _.differenceBy(badgesData, earnedAchievements, 'BadgeId');
+  const unearnedAchievements = _.differenceBy(
+    badgesData,
+    earnedAchievements,
+    "BadgeId"
+  );
 
   if (isLoading) {
-    return (
-      <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
-        <div className="text-center">Цолуудыг авч байна...</div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (error) {
     return (
-      <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container">
+      <div className="max-w-6xl min-h-screen mx-auto px-7 py-11 container flex flex-col items-center justify-center gap-2">
         <div className="text-center text-red-500">
           Цол авч байхад алдаа гарлаа
         </div>
+        <Button variant="outline" onClick={() => router.back()}>
+          Буцах
+        </Button>
       </div>
     );
   }
