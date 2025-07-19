@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import LoginButton from "./LoginButton";
 import ForgetPasswordModal from "./ForgetPasswordModal";
+import { useWebSocket } from "../context/WebsocketProvider";
 
 function Page() {
   const router = useRouter();
