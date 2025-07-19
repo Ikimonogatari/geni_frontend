@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import Loader from "@/components/common/Loader";
 import { Navbar } from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
+import { WebSocketProvider } from "./context/WebsocketProvider";
 
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <Provider store={store}>
@@ -19,13 +20,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
       reverseOrder={false}
     />
     <UserInfoProvider>
-      <Suspense fallback={<Loader />}>
-        <div className="flex flex-col min-h-screen h-full">
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </div>
-      </Suspense>
+      <WebSocketProvider>
+        <Suspense fallback={<Loader />}>
+          <div className="flex flex-col min-h-screen h-full">
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
+        </Suspense>
+      </WebSocketProvider>
     </UserInfoProvider>
   </Provider>
 );

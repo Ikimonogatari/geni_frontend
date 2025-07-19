@@ -112,26 +112,75 @@ module.exports = {
             height: "0",
           },
         },
-        "accordion-down": {
-          from: {
-            height: "0",
+        "slideInRight": {
+          "0%": {
+            transform: "translateX(100%)",
+            opacity: "0",
           },
-          to: {
-            height: "var(--radix-accordion-content-height)",
+          "50%": {
+            transform: "translateX(-10px)",
+            opacity: "0.8",
+          },
+          "100%": {
+            transform: "translateX(0)",
+            opacity: "1",
           },
         },
-        "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
+        "slideOutRight": {
+          "0%": {
+            transform: "translateX(0)",
+            opacity: "1",
           },
-          to: {
-            height: "0",
+          "100%": {
+            transform: "translateX(100%)",
+            opacity: "0",
+          },
+        },
+        "bounceIn": {
+          "0%": {
+            transform: "scale(0.3)",
+            opacity: "0",
+          },
+          "50%": {
+            transform: "scale(1.05)",
+            opacity: "0.8",
+          },
+          "70%": {
+            transform: "scale(0.9)",
+            opacity: "0.9",
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
+        },
+        "glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 5px rgba(251, 191, 36, 0.5)",
+          },
+          "50%": {
+            boxShadow: "0 0 20px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.6)",
+          },
+        },
+        "fadeIn": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
           },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "slideInRight": "slideInRight 0.5s ease-out",
+        "slideOutRight": "slideOutRight 0.3s ease-in",
+        "bounceIn": "bounceIn 0.6s ease-out",
+        "glow": "glow 2s ease-in-out infinite",
+        "fadeIn": "fadeIn 0.5s ease-out forwards",
       },
       fontFamily: {
         sans: ["var(--font-mabry-pro)"],

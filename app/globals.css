@@ -102,3 +102,73 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+/* Achievement Toast Animations */
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-10px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px hsl(var(--secondary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px hsl(var(--secondary) / 0.6), 0 0 30px hsl(var(--secondary) / 0.4);
+  }
+}
+
+/* Toast Background Fix */
+[data-testid="toast"] {
+  background: transparent !important;
+}
+
+.toast-container {
+  background: transparent !important;
+}
+
+/* Ensure gradient backgrounds work in toast context */
+div[style*="linear-gradient"] {
+  background-attachment: local !important;
+  background-clip: border-box !important;
+}

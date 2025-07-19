@@ -60,6 +60,8 @@ function Page() {
     },
   ] = useForgotPasswordMutation();
 
+  const { connectWebSocket } = useWebSocket();
+
   const emailForm = useFormik({
     initialValues: {
       forgotEmail: "",
@@ -272,6 +274,7 @@ function Page() {
 
       // Ensure navigation only after cookies are set
       router.push("/profile");
+      connectWebSocket(data.JWT);
     } else if (error) {
       toast.error(error?.data?.error);
     }
