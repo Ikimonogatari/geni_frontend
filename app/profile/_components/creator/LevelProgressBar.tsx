@@ -80,14 +80,6 @@ function LevelProgressBar({
       ? 100 // Max level reached
       : Math.min((progressInCurrentLevel / currentLevelRange) * 100, 100);
 
-  console.log("Current Level:", currentLevel);
-  console.log("Progress:", progress);
-  console.log("Current Level Threshold:", currentLevelThreshold);
-  console.log("Next Threshold:", nextThreshold);
-  console.log("Progress in Current Level:", progressInCurrentLevel);
-  console.log("Current Level Range:", currentLevelRange);
-  console.log("Progress Percentage:", progressPercentage);
-
   return (
     <TooltipProvider>
       <Tooltip>
