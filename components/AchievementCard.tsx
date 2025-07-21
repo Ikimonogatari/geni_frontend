@@ -2,7 +2,10 @@ import { Card } from "@/components/ui/card";
 import { BadgeProgress } from "@/components/ui/badge-progress";
 import Image from "next/image";
 import { LockIcon } from "lucide-react";
-import { BadgeProcess } from "@/app/profile/_components/creator/badge.services";
+import {
+  BADGE_STATE,
+  BadgeProcess,
+} from "@/app/profile/_components/creator/badge.services";
 import Link from "next/link";
 
 type AchievementCardProps = {
@@ -24,7 +27,7 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
       className={`${big ? "w-full" : ""}`}
     >
       <Card
-        className={`flex flex-col items-center p-4 pb-6 min-h-[200px]  ${
+        className={`h-full flex flex-col items-center p-4 pb-6 min-h-[200px]  ${
           big
             ? "border-[#E6E6E6] border-2"
             : "border-geni-gray cursor-pointer px-10"
@@ -46,21 +49,6 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
               big ? "w-[300px] h-[300px]" : "w-[150px] h-[150px]"
             } object-cover`}
           />
-          {/* Badge for earned achievements */}
-          {/* {isEarned && (
-          <span
-            className={`absolute -top-2 -right-2 flex items-center justify-center w-7 h-7 rounded-full border-2 border-white text-white text-base font-bold bg-[#4FB755]`}
-          >
-            <Image
-              src="/star.png"
-              alt="badge"
-              width={20}
-              height={20}
-              className="mr-1"
-            />
-            {achievement.CurrentLvl}
-          </span>
-        )} */}
           {/* Locked icon for unearned achievements */}
           {!isEarned && (
             <span className="absolute inset-0 flex items-center justify-center">
@@ -78,16 +66,26 @@ const AchievementCard: React.FC<AchievementCardProps> = ({
           >
             {achievement.BadgeName}
           </div>
-          <div className={`text-sm mb-1 ${"text-[#6F6F6F]"}`}>
-            Түвшин {achievement.CurrentLvl}
-          </div>
-          <div className="flex items-center justify-center">
-            <BadgeProgress
-              currentTarget={achievement.CurrentTarget}
-              nextTarget={achievement.NextTarget}
-              className={`h-4 w-3/4 border border-black border-solid mt-2`}
-              bgcolor={isEarned || big ? "bg-geni-green" : "bg-[#E0E0E0]"}
-            />
+          <div className="flex-basis-full">
+            {achievement.BadgeState == BADGE_STATE.MONTHLY ? (
+              <div className={`text-sm mb-1 ${"text-[#6F6F6F]"}`}>
+                {achievement.CurrentLvlName}
+              </div>
+            ) : (
+              <>
+                <div className={`text-sm mb-1 ${"text-[#6F6F6F]"}`}>
+                  Түвшин {achievement.CurrentLvl}
+                </div>
+                <div className="flex items-center justify-center">
+                  <BadgeProgress
+                    currentTarget={achievement.CurrentTarget}
+                    nextTarget={achievement.NextTarget}
+                    className={`h-4 w-3/4 border border-black border-solid mt-2`}
+                    bgcolor={isEarned || big ? "bg-geni-green" : "bg-[#E0E0E0]"}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Card>

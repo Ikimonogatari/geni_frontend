@@ -2,11 +2,17 @@ export type Badge = {
   BadgeProcess: BadgeProcess[];
 };
 
+export enum BADGE_STATE {
+  SHOW = 'show',
+  MONTHLY = 'Monthly'
+}
+
 export type BadgeProcess = {
   BadgeColorCode: string;
   BadgeImageUrl: string;
   BadgeName: string;
   BadgeId: number;
+  BadgeState: BADGE_STATE;
   CurrentLvlName: string;
   CurrentLvl: number;
   CurrentTarget: number;
