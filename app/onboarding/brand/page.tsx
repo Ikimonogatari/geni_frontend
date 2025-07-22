@@ -97,6 +97,10 @@ export default function BrandOnboarding() {
     avgProductSalesMonthly: Yup.number().min(0, "0-с их тоо оруулна уу"),
     avgPrice: Yup.number().min(0, "0-с их тоо оруулна уу"),
     hasMarketingPersonel: Yup.string().required("Сонголт хийнэ үү"),
+    instagramUsername: Yup.string(),
+    instagramChecked: Yup.boolean(),
+    facebookUsername: Yup.string(),
+    facebookChecked: Yup.boolean(),
     website: Yup.string().url("Зөв URL хаяг оруулна уу"),
   });
 
@@ -121,7 +125,9 @@ export default function BrandOnboarding() {
       avgPrice: "",
       hasMarketingPersonel: "",
       instagramUsername: "",
+      instagramChecked: false,
       facebookUsername: "",
+      facebookChecked: false,
       website: "",
     },
     validationSchema,
@@ -264,9 +270,6 @@ export default function BrandOnboarding() {
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 Сайн уу, daimaawork@gmail.com
-                <Link href="/onboarding" className="text-sm text-gray-500">
-                  Буцах
-                </Link>
               </div>
 
               {/* Progress Steps */}
@@ -719,71 +722,103 @@ export default function BrandOnboarding() {
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Instagram input */}
-                    <div className="flex items-center gap-2">
-                      <div className="w-full p-4 bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center gap-3">
-                        <Image
-                          src={"/Instagram.png"}
-                          width={24}
-                          height={24}
-                          alt="Instagram"
-                          className="w-6 h-6"
-                        />
-                        <input
-                          type="text"
-                          name="instagramUsername"
-                          placeholder="Instagram хэрэглэгчийн нэр"
-                          className="bg-transparent outline-none w-full"
-                          value={formik.values.instagramUsername}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                    <div className="flex-1">
+                      <div className="w-full bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center overflow-hidden">
+                        <div className="flex items-center gap-3 px-4 py-4 flex-1">
+                          <Image
+                            src={"/Instagram.png"}
+                            width={24}
+                            height={24}
+                            alt="Instagram"
+                            className="w-6 h-6"
+                          />
+                          <input
+                            type="text"
+                            name="instagramUsername"
+                            placeholder="Instagram хэрэглэгчийн нэр"
+                            className="bg-transparent outline-none w-full"
+                            value={formik.values.instagramUsername}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            formik.setFieldValue(
+                              "instagramChecked",
+                              !formik.values.instagramChecked
+                            )
+                          }
+                          className={`h-full aspect-square flex items-center justify-center transition-colors ${
+                            formik.values.instagramChecked
+                              ? "bg-green-500"
+                              : "bg-[#E6E6E6]"
+                          }`}
+                        >
+                          <Image
+                            src={"/check-icon.png"}
+                            width={16}
+                            height={16}
+                            className={`w-4 h-4 ${
+                              formik.values.instagramChecked
+                                ? "brightness-0 invert"
+                                : "brightness-0"
+                            }`}
+                            alt="check"
+                          />
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="w-8 h-8 bg-[#4D55F5] rounded-full flex items-center justify-center"
-                      >
-                        <Image
-                          src={"/check-icon.png"}
-                          width={16}
-                          height={16}
-                          className="w-4 h-4"
-                          alt="check"
-                        />
-                      </button>
                     </div>
 
                     {/* Facebook input */}
-                    <div className="flex items-center gap-2">
-                      <div className="w-full p-4 bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center gap-3">
-                        <Image
-                          src={"/Facebook.png"}
-                          width={24}
-                          height={24}
-                          alt="Facebook"
-                          className="w-6 h-6"
-                        />
-                        <input
-                          type="text"
-                          name="facebookUsername"
-                          placeholder="Facebook хэрэглэгчийн нэр"
-                          className="bg-transparent outline-none w-full"
-                          value={formik.values.facebookUsername}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                        />
+                    <div className="flex-1">
+                      <div className="w-full bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center overflow-hidden">
+                        <div className="flex items-center gap-3 px-4 py-4 flex-1">
+                          <Image
+                            src={"/Facebook.png"}
+                            width={24}
+                            height={24}
+                            alt="Facebook"
+                            className="w-6 h-6"
+                          />
+                          <input
+                            type="text"
+                            name="facebookUsername"
+                            placeholder="Facebook хэрэглэгчийн нэр"
+                            className="bg-transparent outline-none w-full"
+                            value={formik.values.facebookUsername}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            formik.setFieldValue(
+                              "facebookChecked",
+                              !formik.values.facebookChecked
+                            )
+                          }
+                          className={`h-full aspect-square flex items-center justify-center transition-colors ${
+                            formik.values.facebookChecked
+                              ? "bg-green-500"
+                              : "bg-[#E6E6E6]"
+                          }`}
+                        >
+                          <Image
+                            src={"/check-icon.png"}
+                            width={16}
+                            height={16}
+                            className={`w-4 h-4 ${
+                              formik.values.facebookChecked
+                                ? "brightness-0 invert"
+                                : "brightness-0"
+                            }`}
+                            alt="check"
+                          />
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="w-8 h-8 bg-[#4D55F5] rounded-full flex items-center justify-center"
-                      >
-                        <Image
-                          src={"/check-icon.png"}
-                          width={16}
-                          height={16}
-                          className="w-4 h-4"
-                          alt="check"
-                        />
-                      </button>
                     </div>
 
                     {/* Website input */}
