@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useTermCheckMutation } from "../services/service";
+import {
+  useTermCheckMutation,
+  useGetCreatorRequestsQuery,
+  useGetBrandRequestsQuery,
+} from "../services/service";
 import toast from "react-hot-toast";
 
 export default function Page() {
@@ -14,6 +18,8 @@ export default function Page() {
   const [selectedUserType, setSelectedUserType] = useState("");
   const [isTermsChecked, setIsTermsChecked] = useState(false);
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // Show only 3 items in preview
   const termsScrollRef = useRef<HTMLDivElement>(null);
 
   const [
@@ -25,6 +31,27 @@ export default function Page() {
       isSuccess: termCheckSuccess,
     },
   ] = useTermCheckMutation();
+
+  // API calls for requests
+  const {
+    data: creatorRequestsData,
+    isLoading: creatorRequestsLoading,
+    error: creatorRequestsError,
+  } = useGetCreatorRequestsQuery({
+    offset: 0,
+    limit: itemsPerPage,
+    status: "",
+  });
+
+  const {
+    data: brandRequestsData,
+    isLoading: brandRequestsLoading,
+    error: brandRequestsError,
+  } = useGetBrandRequestsQuery({
+    offset: 0,
+    limit: itemsPerPage,
+    status: "",
+  });
 
   useEffect(() => {
     if (termCheckSuccess) {
@@ -72,6 +99,153 @@ export default function Page() {
       termCheck({});
     }
   };
+
+  // Request status and display functions
+  const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "approved":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "rejected":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "approved":
+        return "Зөвшөөрөгдсөн";
+      case "rejected":
+        return "Татгалзсан";
+      case "pending":
+        return "Хүлээгдэж байна";
+      default:
+        return status;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("mn-MN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const renderCreatorRequestCard = (request: any) => (
+    <div
+      key={request.CreatorRequestId}
+      className="bg-white border border-[#CDCDCD] rounded-2xl p-4 hover:shadow-lg transition-shadow"
+    >
+      <div className="flex flex-col gap-3">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-1">
+            <h4 className="text-base font-bold">
+              {request.FirstName} {request.LastName}
+            </h4>
+            <p className="text-sm text-gray-600">@{request.Nickname}</p>
+          </div>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+              request.Status
+            )}`}
+          >
+            {getStatusText(request.Status)}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span className="font-medium text-gray-700">Регистр:</span>
+            <p className="text-gray-600">{request.RegNo}</p>
+          </div>
+          <div>
+            <span className="font-medium text-gray-700">Утас:</span>
+            <p className="text-gray-600">{request.PhoneNumber}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between text-xs text-gray-500">
+          <span>Илгээсэн: {formatDate(request.CreatedAt)}</span>
+          {request.ReasonRejected && (
+            <span className="text-red-600 text-xs">
+              Шалтгаан: {request.ReasonRejected}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderBrandRequestCard = (request: any) => (
+    <div
+      key={request.BrandRequestId}
+      className="bg-white border border-[#CDCDCD] rounded-2xl p-4 hover:shadow-lg transition-shadow"
+    >
+      <div className="flex flex-col gap-3">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-1">
+            <h4 className="text-base font-bold">{request.BrandName}</h4>
+            <p className="text-sm text-gray-600">{request.OrgName}</p>
+          </div>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+              request.Status
+            )}`}
+          >
+            {getStatusText(request.Status)}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span className="font-medium text-gray-700">Регистр:</span>
+            <p className="text-gray-600">{request.OrgRegNo}</p>
+          </div>
+          <div>
+            <span className="font-medium text-gray-700">Хариуцагч:</span>
+            <p className="text-gray-600">
+              {request.FirstName} {request.LastName}
+            </p>
+          </div>
+        </div>
+
+        {request.BrandTypeNames && request.BrandTypeNames.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {request.BrandTypeNames.slice(0, 2).map(
+              (typeName: string, index: number) => (
+                <span
+                  key={index}
+                  className="px-2 py-1 rounded-full text-xs bg-[#EBEEFF] text-[#4D55F5] border border-[#4D55F5]"
+                >
+                  {typeName}
+                </span>
+              )
+            )}
+            {request.BrandTypeNames.length > 2 && (
+              <span className="text-xs text-gray-500">
+                +{request.BrandTypeNames.length - 2}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between text-xs text-gray-500">
+          <span>Илгээсэн: {formatDate(request.CreatedAt)}</span>
+          {request.ReasonRejected && (
+            <span className="text-red-600 text-xs">
+              Шалтгаан: {request.ReasonRejected}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
   const getTermsContent = () => {
     if (selectedUserType === "Student") {
@@ -533,7 +707,16 @@ export default function Page() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full mt-4">
             {/* Student Card */}
-            <div className="bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4">
+            <div
+              className={`bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4 ${
+                (brandRequestsData?.Data &&
+                  brandRequestsData.Data.length > 0) ||
+                (creatorRequestsData?.Data &&
+                  creatorRequestsData.Data.length > 0)
+                  ? "opacity-50"
+                  : ""
+              }`}
+            >
               <div className="relative aspect-square w-full bg-[#E8FFE9] rounded-2xl flex items-center justify-center">
                 <Image
                   src="/student-character.svg"
@@ -555,7 +738,13 @@ export default function Page() {
                 </p>
                 <button
                   onClick={() => handleUserType("Student")}
-                  className="w-full bg-[#4FB755] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#3A8F44] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                  disabled={
+                    (brandRequestsData?.Data &&
+                      brandRequestsData.Data.length > 0) ||
+                    (creatorRequestsData?.Data &&
+                      creatorRequestsData.Data.length > 0)
+                  }
+                  className="w-full bg-[#4FB755] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#3A8F44] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_#3A8F44]"
                 >
                   Сурагч болох →
                 </button>
@@ -563,7 +752,13 @@ export default function Page() {
             </div>
 
             {/* Creator Card */}
-            <div className="bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4">
+            <div
+              className={`bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4 ${
+                brandRequestsData?.Data && brandRequestsData.Data.length > 0
+                  ? "opacity-50"
+                  : ""
+              }`}
+            >
               <div className="relative aspect-square w-full bg-[#F9EBFF] rounded-2xl flex items-center justify-center">
                 <Image
                   src="/creator-character.svg"
@@ -585,7 +780,10 @@ export default function Page() {
                 </p>
                 <button
                   onClick={() => handleUserType("Creator")}
-                  className="w-full bg-[#CA7FFE] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                  disabled={
+                    brandRequestsData?.Data && brandRequestsData.Data.length > 0
+                  }
+                  className="w-full bg-[#CA7FFE] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_#9C44DA]"
                 >
                   Бүтээгч болох →
                 </button>
@@ -613,17 +811,30 @@ export default function Page() {
                   Бүтээгдэхүүнээ өргөжүүлэх зорилготой байгаа аж ахуйн нэгж, үр
                   дүнтэй маркетинг хийх эрхэм
                 </p>
-                <button
-                  onClick={() => handleUserType("Brand")}
-                  className="w-full bg-[#4D55F5] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#1920B4] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-                >
-                  Брэнд болох →
-                </button>
+                {brandRequestsData?.Data &&
+                brandRequestsData.Data.length > 0 ? (
+                  <div className="w-full bg-[#EBEEFF] text-[#4D55F5] font-medium py-4 px-6 rounded-full border border-[#4D55F5] text-center text-sm">
+                    Өргөдөлийн хариу 1-2 өдөрт таны имэйл хаяг руу илгээгдэнэ.
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleUserType("Brand")}
+                    className="w-full bg-[#4D55F5] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#1920B4] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                  >
+                    Брэнд болох →
+                  </button>
+                )}
               </div>
             </div>
 
             {/* Coming Soon Card */}
-            <div className="bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4">
+            <div
+              className={`bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4 ${
+                brandRequestsData?.Data && brandRequestsData.Data.length > 0
+                  ? "opacity-50"
+                  : ""
+              }`}
+            >
               <div className="relative aspect-square w-full bg-[#FFF6F6] rounded-2xl flex items-center justify-center">
                 <Image
                   src="/coming-soon-character.svg"
@@ -648,6 +859,176 @@ export default function Page() {
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* Requests Section */}
+          <div className="w-full mt-8">
+            <h2 className="text-xl font-bold mb-6">Хүсэлтийн төлөв байдал</h2>
+
+            {/* Show based on which has data - prioritize brand, then creator, then show both empty states */}
+            {brandRequestsData?.Data && brandRequestsData.Data.length > 0 ? (
+              // Show only Brand Requests if brand has data
+              <div className="w-full">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#4D55F5] p-2 rounded-lg">
+                      <Image
+                        src="/brand-icon-white.png"
+                        width={20}
+                        height={20}
+                        alt="Brand"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <h3 className="text-lg font-semibold">Brand Хүсэлтүүд</h3>
+                  </div>
+
+                  {brandRequestsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4D55F5]"></div>
+                    </div>
+                  ) : brandRequestsError ? (
+                    <div className="text-center py-8">
+                      <p className="text-red-600 text-sm">Алдаа гарлаа</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {brandRequestsData.Data.slice(0, 6).map((request: any) =>
+                        renderBrandRequestCard(request)
+                      )}
+                      {brandRequestsData.Data.length > 6 && (
+                        <div className="col-span-full text-center">
+                          <p className="text-sm text-gray-500">
+                            +{brandRequestsData.Data.length - 6} дахин олон
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : creatorRequestsData?.Data &&
+              creatorRequestsData.Data.length > 0 ? (
+              // Show only Creator Requests if creator has data and brand doesn't
+              <div className="w-full">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#CA7FFE] p-2 rounded-lg">
+                      <Image
+                        src="/creator-icon-white.png"
+                        width={20}
+                        height={20}
+                        alt="Creator"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <h3 className="text-lg font-semibold">Creator Хүсэлтүүд</h3>
+                  </div>
+
+                  {creatorRequestsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#CA7FFE]"></div>
+                    </div>
+                  ) : creatorRequestsError ? (
+                    <div className="text-center py-8">
+                      <p className="text-red-600 text-sm">Алдаа гарлаа</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {creatorRequestsData.Data.slice(0, 6).map(
+                        (request: any) => renderCreatorRequestCard(request)
+                      )}
+                      {creatorRequestsData.Data.length > 6 && (
+                        <div className="col-span-full text-center">
+                          <p className="text-sm text-gray-500">
+                            +{creatorRequestsData.Data.length - 6} дахин олон
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              // Show both empty states if neither has data
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Creator Requests */}
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#CA7FFE] p-2 rounded-lg">
+                      <Image
+                        src="/creator-icon-white.png"
+                        width={20}
+                        height={20}
+                        alt="Creator"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <h3 className="text-lg font-semibold">Creator Хүсэлтүүд</h3>
+                  </div>
+
+                  {creatorRequestsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#CA7FFE]"></div>
+                    </div>
+                  ) : creatorRequestsError ? (
+                    <div className="text-center py-8">
+                      <p className="text-red-600 text-sm">Алдаа гарлаа</p>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="bg-[#F9EBFF] rounded-full p-4 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                        <Image
+                          src="/creator-character.svg"
+                          width={32}
+                          height={32}
+                          alt="Creator"
+                        />
+                      </div>
+                      <p className="text-gray-600 text-sm">Хүсэлт олдсонгүй</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Brand Requests */}
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#4D55F5] p-2 rounded-lg">
+                      <Image
+                        src="/brand-icon-white.png"
+                        width={20}
+                        height={20}
+                        alt="Brand"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                    <h3 className="text-lg font-semibold">Brand Хүсэлтүүд</h3>
+                  </div>
+
+                  {brandRequestsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4D55F5]"></div>
+                    </div>
+                  ) : brandRequestsError ? (
+                    <div className="text-center py-8">
+                      <p className="text-red-600 text-sm">Алдаа гарлаа</p>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="bg-[#EBEEFF] rounded-full p-4 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                        <Image
+                          src="/brand-character.svg"
+                          width={32}
+                          height={32}
+                          alt="Brand"
+                        />
+                      </div>
+                      <p className="text-gray-600 text-sm">Хүсэлт олдсонгүй</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

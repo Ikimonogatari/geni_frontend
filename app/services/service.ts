@@ -718,6 +718,20 @@ export const geniApi = createApi({
         body,
       }),
     }),
+    // Get creator request list
+    getCreatorRequests: builder.query({
+      query: ({ offset = 0, limit = 10, status = "" }) => ({
+        url: `/api/web/private/creator_request?offset=${offset}&limit=${limit}&status=${status}`,
+        method: "GET",
+      }),
+    }),
+    // Get brand request list
+    getBrandRequests: builder.query({
+      query: ({ offset = 0, limit = 10, status = "" }) => ({
+        url: `/api/web/private/brand_request?offset=${offset}&limit=${limit}&status=${status}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -825,4 +839,6 @@ export const {
   useCreatorRequestMutation,
   useStudentRequestMutation,
   useBrandRequestMutation,
+  useGetCreatorRequestsQuery,
+  useGetBrandRequestsQuery,
 } = geniApi;
