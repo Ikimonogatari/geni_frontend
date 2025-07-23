@@ -234,7 +234,6 @@ function StudentProfile({ getUserInfoData, getUserInfoLoading }) {
       {getUserInfoData && (
         <GuideModal
           hasSeenGuide={getUserInfoData?.HasSeenGuide}
-          hasAcceptedTerms={getUserInfoData?.HasAcceptedTerms}
           slides={guideSlides}
           theme="student"
         />

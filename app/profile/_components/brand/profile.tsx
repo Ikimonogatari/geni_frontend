@@ -440,7 +440,6 @@ function BrandProfile({
       {getUserInfoData && (
         <GuideModal
           hasSeenGuide={getUserInfoData?.HasSeenGuide}
-          hasAcceptedTerms={getUserInfoData?.HasAcceptedTerms}
           slides={guideSlides}
           theme="brand"
         />
