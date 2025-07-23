@@ -778,15 +778,26 @@ export default function Page() {
                   Чадварлаг хэрнээ цахим орчинд өөрийн гэсэн үзэгч хүрээтэй байх
                   creator болж хамтран бүтээх эрмэлзэлтэй бол бүртгүүлнэ үү
                 </p>
-                <button
-                  onClick={() => handleUserType("Creator")}
-                  disabled={
-                    brandRequestsData?.Data && brandRequestsData.Data.length > 0
-                  }
-                  className="w-full bg-[#CA7FFE] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_#9C44DA]"
-                >
-                  Бүтээгч болох →
-                </button>
+                {creatorRequestsData?.Data &&
+                creatorRequestsData.Data.length > 0 &&
+                !(
+                  brandRequestsData?.Data && brandRequestsData.Data.length > 0
+                ) ? (
+                  <div className="w-full bg-[#F9EBFF] text-[#CA7FFE] font-medium py-4 px-6 rounded-full border border-[#CA7FFE] text-center text-sm">
+                    Өргөдөлийн хариу 1-2 өдөрт таны имэйл хаяг руу илгээгдэнэ.
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleUserType("Creator")}
+                    disabled={
+                      brandRequestsData?.Data &&
+                      brandRequestsData.Data.length > 0
+                    }
+                    className="w-full bg-[#CA7FFE] text-white font-bold py-4 px-6 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_#9C44DA]"
+                  >
+                    Бүтээгч болох →
+                  </button>
+                )}
               </div>
             </div>
 
@@ -830,7 +841,10 @@ export default function Page() {
             {/* Coming Soon Card */}
             <div
               className={`bg-white border border-[#CDCDCD] rounded-[30px] p-6 flex flex-col gap-4 ${
-                brandRequestsData?.Data && brandRequestsData.Data.length > 0
+                (brandRequestsData?.Data &&
+                  brandRequestsData.Data.length > 0) ||
+                (creatorRequestsData?.Data &&
+                  creatorRequestsData.Data.length > 0)
                   ? "opacity-50"
                   : ""
               }`}
