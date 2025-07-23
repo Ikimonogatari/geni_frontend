@@ -696,6 +696,28 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    // Onboarding request APIs
+    creatorRequest: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/creator_request",
+        method: "POST",
+        body,
+      }),
+    }),
+    studentRequest: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/student_request",
+        method: "POST",
+        body,
+      }),
+    }),
+    brandRequest: builder.mutation({
+      query: (body) => ({
+        url: "/api/web/private/brand_request",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -800,4 +822,7 @@ export const {
   useGetBannedTimeQuery,
   useGetCreatorBadgesQuery,
   useGetCreatorBadgeByIdQuery,
+  useCreatorRequestMutation,
+  useStudentRequestMutation,
+  useBrandRequestMutation,
 } = geniApi;

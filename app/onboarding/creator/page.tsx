@@ -1,137 +1,143 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useDropzone } from "react-dropzone";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useDropzone } from "react-dropzone";
 import {
   useUploadFileMutation,
   useChangeProfilePictureMutation,
+  useCreatorRequestMutation,
 } from "@/app/services/service";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
 
 export default function CreatorOnboarding() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const totalSteps = 4;
-
-  // Image upload state
   const [profileImage, setProfileImage] = useState("/dummy-creator.png");
-
-  // Content upload state
-  const [contentFile, setContentFile] = useState(null);
+  const [contentFile, setContentFile] = useState<File | null>(null);
   const [contentFileName, setContentFileName] = useState("");
 
-  // API hooks
+  const [uploadFile, { isLoading: uploadFileLoading }] =
+    useUploadFileMutation();
+  const [changeProfilePicture, { isLoading: changeProfilePictureLoading }] =
+    useChangeProfilePictureMutation();
   const [
-    uploadFile,
+    creatorRequest,
     {
-      data: uploadFileData,
-      error: uploadFileError,
-      isLoading: uploadFileLoading,
-      isSuccess: uploadFileSuccess,
+      isLoading: creatorRequestLoading,
+      isSuccess: creatorRequestSuccess,
+      error: creatorRequestError,
     },
-  ] = useUploadFileMutation();
-
-  const [
-    changeProfilePicture,
-    {
-      data: changeProfilePictureData,
-      error: changeProfilePictureError,
-      isLoading: changeProfilePictureLoading,
-      isSuccess: changeProfilePictureSuccess,
-    },
-  ] = useChangeProfilePictureMutation();
-
-  // Effects for API responses
-  useEffect(() => {
-    if (uploadFileError) {
-      // @ts-ignore
-      toast.error(uploadFileError?.data?.error);
-    }
-  }, [uploadFileData, uploadFileError]);
-
-  useEffect(() => {
-    if (changeProfilePictureSuccess) {
-      toast.success("Амжилттай");
-    }
-    if (changeProfilePictureError) {
-      // @ts-ignore
-      toast.error(changeProfilePictureError?.data?.error);
-    }
-  }, [changeProfilePictureData, changeProfilePictureError]);
+  ] = useCreatorRequestMutation();
 
   // Validation schema
   const validationSchema = Yup.object({
-    // Step 1 fields
-    lastName: Yup.string().required("Овог оруулна уу"),
-    firstName: Yup.string().required("Нэр оруулна уу"),
-    regNo: Yup.string().required("Регистерийн дугаар оруулна уу"),
-    birthDate: Yup.string().required("Төрсөн он/сар/өдөр оруулна уу"),
-    phoneNumber: Yup.string().required("Утасны дугаар оруулна уу"),
-    gender: Yup.string().required("Хүйс сонгоно уу"),
+    // Step 1 fields - Personal Information
+    LastName: Yup.string().required("Овог оруулна уу"),
+    FirstName: Yup.string().required("Нэр оруулна уу"),
+    RegNo: Yup.string().required("Регистерийн дугаар оруулна уу"),
+    Birthday: Yup.string().required("Төрсөн он/сар/өдөр оруулна уу"),
+    PhoneNumber: Yup.string().required("Утасны дугаар оруулна уу"),
+    Gender: Yup.string().required("Хүйс сонгоно уу"),
 
-    // Step 2 fields
-    username: Yup.string().required("Хэрэглэгчийн нэр оруулна уу"),
-    instagramUsername: Yup.string(),
-    instagramChecked: Yup.boolean(),
-    facebookUsername: Yup.string(),
-    facebookChecked: Yup.boolean(),
-    bio: Yup.string()
+    // Step 2 fields - Registration Information
+    Nickname: Yup.string().required("Хэрэглэгчийн нэр оруулна уу"),
+    IgLink: Yup.string().url("Зөв Instagram хаяг оруулна уу"),
+    FbLink: Yup.string().url("Зөв Facebook хаяг оруулна уу"),
+    ShortInfo: Yup.string()
       .required("Богино танилцуулга оруулна уу")
       .max(600, "600 тэмдэгтээс хэтрэхгүй"),
 
-    // Step 3 fields
-    currentWork: Yup.string().required("Асуултад хариулна уу"),
-    techPlatforms: Yup.string().required(
-      "Технологийн платформын талаар бичнэ үү"
-    ),
-    whyGeniCreator: Yup.string().required(
+    // Step 3 fields - Q&A
+    CurrentWorkQA: Yup.string().required("Асуултад хариулна уу"),
+    TechsQA: Yup.string().required("Технологийн платформын талаар бичнэ үү"),
+    WhyGeniCreatorQA: Yup.string().required(
       "Geni creator болох шалтгаанаа бичнэ үү"
     ),
 
-    // Step 4 fields
-    contentLink: Yup.string().url("Зөв URL хаяг оруулна уу"),
-    contentFile: Yup.string(),
+    // Step 4 fields - Content Upload
+    ContentLink: Yup.string().url("Зөв URL хаяг оруулна уу"),
   });
 
   // Formik instance
   const formik = useFormik({
     initialValues: {
       // Step 1 fields
-      lastName: "",
-      firstName: "",
-      regNo: "",
-      birthDate: "",
-      phoneNumber: "",
-      gender: "",
+      LastName: "",
+      FirstName: "",
+      RegNo: "",
+      Birthday: "",
+      PhoneNumber: "",
+      Gender: "",
 
       // Step 2 fields
-      username: "",
-      instagramUsername: "",
-      instagramChecked: false,
-      facebookUsername: "",
-      facebookChecked: false,
-      bio: "",
+      Nickname: "",
+      IgLink: "",
+      FbLink: "",
+      ShortInfo: "",
 
       // Step 3 fields
-      currentWork: "",
-      techPlatforms: "",
-      whyGeniCreator: "",
+      CurrentWorkQA: "",
+      TechsQA: "",
+      WhyGeniCreatorQA: "",
 
       // Step 4 fields
-      contentLink: "http://",
-      contentFile: "",
+      ContentLink: "http://",
+      ContentFileId: null,
+      ProfilePictureId: null,
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form submitted:", values);
-      // Handle form submission here
+    onSubmit: async (values) => {
+      try {
+        // Ensure either ContentLink or ContentFileId is provided
+        if (!values.ContentLink || values.ContentLink === "http://") {
+          if (!values.ContentFileId) {
+            toast.error("Контент линк эсвэл файл оруулна уу");
+            return;
+          }
+        }
+
+        await creatorRequest({
+          LastName: values.LastName,
+          FirstName: values.FirstName,
+          RegNo: values.RegNo,
+          Birthday: values.Birthday,
+          PhoneNumber: values.PhoneNumber,
+          Gender: values.Gender,
+          Nickname: values.Nickname,
+          IgLink: values.IgLink,
+          FbLink: values.FbLink,
+          ShortInfo: values.ShortInfo,
+          CurrentWorkQA: values.CurrentWorkQA,
+          TechsQA: values.TechsQA,
+          WhyGeniCreatorQA: values.WhyGeniCreatorQA,
+          ContentLink:
+            values.ContentLink !== "http://" ? values.ContentLink : "",
+          ContentFileId: values.ContentFileId || 0,
+          ProfilePictureId: values.ProfilePictureId || 0,
+        }).unwrap();
+      } catch (error) {
+        console.error("Creator request failed:", error);
+      }
     },
   });
+
+  // Handle API success/error
+  useEffect(() => {
+    if (creatorRequestSuccess) {
+      toast.success("Таны хүсэлт амжилттай илгээгдлээ!");
+      router.push("/profile");
+    }
+    if (creatorRequestError) {
+      // @ts-ignore
+      toast.error(creatorRequestError?.data?.error || "Алдаа гарлаа");
+    }
+  }, [creatorRequestSuccess, creatorRequestError, router]);
 
   // Image upload functionality
   const { getRootProps, getInputProps } = useDropzone({
@@ -153,17 +159,39 @@ export default function CreatorOnboarding() {
             const id = response.data.FileId;
             const profileChangeRes = await changeProfilePicture({ FileId: id });
 
-            // Update the profile image state with the uploaded image URL
+            // Update the profile image state and formik
             if (profileChangeRes?.data?.url) {
               setProfileImage(profileChangeRes.data.url);
+              formik.setFieldValue("ProfilePictureId", id);
             }
           }
         } catch (error) {
-          console.error("File upload or profile picture update failed:", error);
+          console.error("File upload failed:", error);
+          toast.error("Зураг хуулахад алдаа гарлаа");
         }
       }
     },
   });
+
+  // Handle file upload for content
+  const handleContentFileUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "content");
+
+    try {
+      const response = await uploadFile(formData);
+      if (response.data) {
+        const id = response.data.FileId;
+        setContentFile(file);
+        setContentFileName(file.name);
+        formik.setFieldValue("ContentFileId", id);
+      }
+    } catch (error) {
+      console.error("Content file upload failed:", error);
+      toast.error("Файл хуулахад алдаа гарлаа");
+    }
+  };
 
   const steps = [
     "Хувийн мэдээлэл",
@@ -172,259 +200,227 @@ export default function CreatorOnboarding() {
     "Контент оруулах",
   ];
 
-  // Step validation functions
-  const validateStep1 = async () => {
-    const step1Fields = [
-      "lastName",
-      "firstName",
-      "regNo",
-      "birthDate",
-      "phoneNumber",
-      "gender",
-    ];
+  const handleNextStep = () => {
+    if (step < totalSteps) {
+      // Validate current step
+      let fieldsToValidate: string[] = [];
 
-    // Touch all step 1 fields
-    const touchedFields = {};
-    step1Fields.forEach((field) => {
-      touchedFields[field] = true;
-    });
-    formik.setTouched(touchedFields);
+      if (step === 1) {
+        fieldsToValidate = [
+          "LastName",
+          "FirstName",
+          "RegNo",
+          "Birthday",
+          "PhoneNumber",
+          "Gender",
+        ];
+      } else if (step === 2) {
+        fieldsToValidate = ["Nickname", "ShortInfo"];
+      } else if (step === 3) {
+        fieldsToValidate = ["CurrentWorkQA", "TechsQA", "WhyGeniCreatorQA"];
+      } else if (step === 4) {
+        // Final validation before submission
+        formik.handleSubmit();
+        return;
+      }
 
-    // Validate step 1 fields
-    await formik.validateForm();
+      // Mark fields as touched and validate
+      const touchedFields = fieldsToValidate.reduce((acc, field) => {
+        acc[field] = true;
+        return acc;
+      }, {} as any);
 
-    // Check if any step 1 fields have errors
-    const step1Errors = step1Fields.some((field) => formik.errors[field]);
-    return !step1Errors;
+      formik.setTouched({ ...formik.touched, ...touchedFields });
+
+      // Check if current step has validation errors
+      const hasErrors = fieldsToValidate.some(
+        (field) => formik.errors[field as keyof typeof formik.errors]
+      );
+
+      if (!hasErrors) {
+        setStep(step + 1);
+      }
+    }
   };
 
-  const validateStep2 = async () => {
-    const step2Fields = ["username", "bio"];
-
-    // Touch all step 2 fields
-    const touchedFields = {};
-    step2Fields.forEach((field) => {
-      touchedFields[field] = true;
-    });
-    formik.setTouched({ ...formik.touched, ...touchedFields });
-
-    // Validate step 2 fields
-    await formik.validateForm();
-
-    // Check if any step 2 fields have errors
-    const step2Errors = step2Fields.some((field) => formik.errors[field]);
-    return !step2Errors;
-  };
-
-  const validateStep3 = async () => {
-    const step3Fields = ["currentWork", "techPlatforms", "whyGeniCreator"];
-
-    // Touch all step 3 fields
-    const touchedFields = {};
-    step3Fields.forEach((field) => {
-      touchedFields[field] = true;
-    });
-    formik.setTouched({ ...formik.touched, ...touchedFields });
-
-    // Validate step 3 fields
-    await formik.validateForm();
-
-    // Check if any step 3 fields have errors
-    const step3Errors = step3Fields.some((field) => formik.errors[field]);
-    return !step3Errors;
-  };
-
-  const handleNextStep = async () => {
-    if (step === 1) {
-      const isValid = await validateStep1();
-      if (isValid) {
-        setStep(2);
-      }
-    } else if (step === 2) {
-      const isValid = await validateStep2();
-      if (isValid) {
-        setStep(3);
-      }
-    } else if (step === 3) {
-      const isValid = await validateStep3();
-      if (isValid) {
-        setStep(4);
-      }
+  const handlePrevStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="max-w-7xl mx-auto px-7 py-11 container">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="flex flex-col gap-8">
-            {/* Header with Progress */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                Сайн уу, daimaawork@gmail.com
+      <div className="container text-[#2D262D] max-w-4xl mx-auto px-7 py-10">
+        <div className="flex flex-col gap-6">
+          {/* Header */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row items-center gap-4">
+              <div className="bg-[#CA7FFE] p-3 rounded-xl">
+                <Image
+                  src="/creator-icon-white.png"
+                  width={32}
+                  height={32}
+                  alt="Creator"
+                  className="w-8 h-8"
+                />
               </div>
-
-              {/* Progress Steps */}
-              <div className="flex items-center gap-2">
-                {steps.map((stepName, index) => (
-                  <div key={index} className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-sm
-                          ${
-                            step > index + 1
-                              ? "bg-[#CA7FFE] text-white"
-                              : step === index + 1
-                              ? "bg-[#CA7FFE] text-white"
-                              : "bg-[#F5F5F5] text-gray-400"
-                          }`}
-                      >
-                        {step > index + 1 ? "✓" : index + 1}
-                      </div>
-                      <span
-                        className={`text-sm ${
-                          step === index + 1
-                            ? "text-[#CA7FFE] font-medium"
-                            : "text-gray-400"
-                        }`}
-                      >
-                        {stepName}
-                      </span>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div
-                        className={`h-[2px] mt-2 ${
-                          index < step - 1 ? "bg-[#CA7FFE]" : "bg-[#F5F5F5]"
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
+              <div className="flex flex-col">
+                <h1 className="text-2xl sm:text-3xl font-bold">
+                  Creator Бүртгэл
+                </h1>
+                <p className="text-gray-500">
+                  {step}/{totalSteps} - {steps[step - 1]}
+                </p>
               </div>
             </div>
 
-            {/* Step 1: Personal Info */}
+            {/* Progress Bar */}
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-[#CA7FFE] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${(step / totalSteps) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
+            {/* Step 1: Personal Information */}
             {step === 1 && (
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                   <h2 className="text-xl font-bold">Хувийн мэдээлэл</h2>
                   <p className="text-sm text-gray-500">
-                    Өөрийн мэдээллээ оруулна уу
+                    Та өөрийн хувийн мэдээллээ оруулна уу
                   </p>
                 </div>
-
-                {/* 6 inputs in 2 rows, 3 inputs per row */}
-                <div className="flex flex-col gap-4">
-                  {/* First row */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input
-                      name="lastName"
-                      label="Овог"
-                      placeholder="Овог"
-                      value={formik.values.lastName}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.lastName}
-                      errorVisible={
-                        !!(formik.touched.lastName && formik.errors.lastName)
-                      }
-                      layoutClassName="rounded-full"
-                    />
-                    <Input
-                      name="firstName"
-                      label="Нэр"
-                      placeholder="Нэр"
-                      value={formik.values.firstName}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.firstName}
-                      errorVisible={
-                        !!(formik.touched.firstName && formik.errors.firstName)
-                      }
-                      layoutClassName="rounded-full"
-                    />
-                    <Input
-                      name="regNo"
-                      label="Регистерийн дугаар"
-                      placeholder="Регистерийн дугаар"
-                      value={formik.values.regNo}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.regNo}
-                      errorVisible={
-                        !!(formik.touched.regNo && formik.errors.regNo)
-                      }
-                      layoutClassName="rounded-full"
-                    />
-                  </div>
-
-                  {/* Second row */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input
-                      name="birthDate"
-                      label="Төрсөн он/сар/өдөр"
-                      placeholder="YYYY/MM/DD"
-                      type="date"
-                      value={formik.values.birthDate}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.birthDate}
-                      errorVisible={
-                        !!(formik.touched.birthDate && formik.errors.birthDate)
-                      }
-                      layoutClassName="rounded-full"
-                    />
-                    <Input
-                      name="phoneNumber"
-                      label="Утасны дугаар"
-                      placeholder="Утасны дугаар"
-                      value={formik.values.phoneNumber}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.phoneNumber}
-                      errorVisible={
-                        !!(
-                          formik.touched.phoneNumber &&
-                          formik.errors.phoneNumber
-                        )
-                      }
-                      layoutClassName="rounded-full"
-                    />
-                    <div className="flex flex-col gap-3">
-                      <label className="font-bold">Хүйс</label>
-                      <select
-                        name="gender"
-                        value={formik.values.gender}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className="bg-white flex gap-1 items-center p-2 border-[1px] border-[#CDCDCD] rounded-full h-12 outline-none"
-                      >
-                        <option value="">Хүйс сонгоно уу</option>
-                        <option value="male">Эрэгтэй</option>
-                        <option value="female">Эмэгтэй</option>
-                      </select>
-                      {formik.touched.gender && formik.errors.gender && (
-                        <div className="text-red-500 text-sm">
-                          {formik.errors.gender}
-                        </div>
-                      )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    name="LastName"
+                    label="Овог"
+                    placeholder="Овог"
+                    value={formik.values.LastName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.LastName}
+                    errorVisible={
+                      !!(formik.touched.LastName && formik.errors.LastName)
+                    }
+                    layoutClassName="rounded-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                    className="text-base sm:text-xl w-full"
+                  />
+                  <Input
+                    name="FirstName"
+                    label="Нэр"
+                    placeholder="Нэр"
+                    value={formik.values.FirstName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.FirstName}
+                    errorVisible={
+                      !!(formik.touched.FirstName && formik.errors.FirstName)
+                    }
+                    layoutClassName="rounded-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                    className="text-base sm:text-xl w-full"
+                  />
+                  <Input
+                    name="RegNo"
+                    label="Регистерийн дугаар"
+                    placeholder="Регистерийн дугаар"
+                    value={formik.values.RegNo}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.RegNo}
+                    errorVisible={
+                      !!(formik.touched.RegNo && formik.errors.RegNo)
+                    }
+                    layoutClassName="rounded-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                    className="text-base sm:text-xl w-full"
+                  />
+                  <Input
+                    name="Birthday"
+                    label="Төрсөн он/сар/өдөр"
+                    placeholder="1990-01-01"
+                    type="date"
+                    value={formik.values.Birthday}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.Birthday}
+                    errorVisible={
+                      !!(formik.touched.Birthday && formik.errors.Birthday)
+                    }
+                    layoutClassName="rounded-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                    className="text-base sm:text-xl w-full"
+                  />
+                  <Input
+                    name="PhoneNumber"
+                    label="Утасны дугаар"
+                    placeholder="+976 99112233"
+                    value={formik.values.PhoneNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.PhoneNumber}
+                    errorVisible={
+                      !!(
+                        formik.touched.PhoneNumber && formik.errors.PhoneNumber
+                      )
+                    }
+                    layoutClassName="rounded-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                    className="text-base sm:text-xl w-full"
+                  />
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[#6F6F6F] text-lg font-normal">
+                      Хүйс
+                    </label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="Gender"
+                          value="M"
+                          checked={formik.values.Gender === "M"}
+                          onChange={formik.handleChange}
+                          className="w-4 h-4 text-[#CA7FFE]"
+                        />
+                        <span>Эрэгтэй</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="Gender"
+                          value="F"
+                          checked={formik.values.Gender === "F"}
+                          onChange={formik.handleChange}
+                          className="w-4 h-4 text-[#CA7FFE]"
+                        />
+                        <span>Эмэгтэй</span>
+                      </label>
                     </div>
+                    {formik.touched.Gender && formik.errors.Gender && (
+                      <span className="text-red-500 text-sm">
+                        {formik.errors.Gender}
+                      </span>
+                    )}
                   </div>
                 </div>
-
                 <div className="flex justify-end">
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9B4BD8] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
                   >
-                    Үргэлжлүүлэх →
+                    Үргэлжлүүлэх
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Step 2: Registration Info */}
+            {/* Step 2: Registration Information */}
             {step === 2 && (
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
@@ -433,10 +429,7 @@ export default function CreatorOnboarding() {
                     Бүртгэлийн дэлгэрэнгүй мэдээлэл
                   </p>
                 </div>
-
-                {/* Two column layout */}
                 <div className="flex flex-col sm:flex-row items-start justify-between w-full gap-6 sm:gap-11">
-                  {/* Left column - Image upload */}
                   <div className="flex flex-col items-center gap-4 sm:gap-7 w-full sm:max-w-[194px] xl:max-w-[258px]">
                     <Image
                       src={profileImage}
@@ -453,161 +446,100 @@ export default function CreatorOnboarding() {
                       Зураг оруулах
                     </div>
                   </div>
-
-                  {/* Right column - Form fields */}
                   <div className="flex flex-col gap-4 w-full">
-                    {/* First row - Username input */}
                     <Input
-                      name="username"
+                      name="Nickname"
                       label="Хэрэглэгчийн нэр"
                       placeholder="Хэрэглэгчийн нэр"
-                      value={formik.values.username}
+                      value={formik.values.Nickname}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      errorText={formik.errors.username}
+                      errorText={formik.errors.Nickname}
                       errorVisible={
-                        !!(formik.touched.username && formik.errors.username)
+                        !!(formik.touched.Nickname && formik.errors.Nickname)
                       }
                       layoutClassName="rounded-full"
                       labelClassName="text-[#6F6F6F] text-lg font-normal"
                       className="text-base sm:text-xl w-full"
                       wrapperClassName="w-full"
                     />
-
-                    {/* Second row - Social media */}
                     <div className="flex flex-col gap-3 w-full">
                       <label className="text-[#6F6F6F] text-lg font-normal">
                         Сошиал хаяг
                       </label>
                       <div className="flex flex-col sm:flex-row gap-4">
-                        {/* Instagram input */}
-                        <div className="flex-1">
-                          <div className="w-full bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center overflow-hidden">
-                            <div className="flex items-center gap-3 px-4 py-4 flex-1">
-                              <Image
-                                src={"/Instagram.png"}
-                                width={24}
-                                height={24}
-                                alt="Instagram"
-                                className="w-6 h-6"
-                              />
-                              <input
-                                type="text"
-                                name="instagramUsername"
-                                placeholder="Instagram хэрэглэгчийн нэр"
-                                className="bg-transparent outline-none w-full"
-                                value={formik.values.instagramUsername}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                              />
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                formik.setFieldValue(
-                                  "instagramChecked",
-                                  !formik.values.instagramChecked
-                                )
-                              }
-                              className={`h-full aspect-square flex items-center justify-center transition-colors ${
-                                formik.values.instagramChecked
-                                  ? "bg-green-500"
-                                  : "bg-[#E6E6E6]"
-                              }`}
-                            >
-                              <Image
-                                src={"/check-icon.png"}
-                                width={16}
-                                height={16}
-                                className={`w-4 h-4 ${
-                                  formik.values.instagramChecked
-                                    ? "brightness-0 invert"
-                                    : "brightness-0"
-                                }`}
-                                alt="check"
-                              />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Facebook input */}
-                        <div className="flex-1">
-                          <div className="w-full bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center overflow-hidden">
-                            <div className="flex items-center gap-3 px-4 py-4 flex-1">
-                              <Image
-                                src={"/Facebook.png"}
-                                width={24}
-                                height={24}
-                                alt="Facebook"
-                                className="w-6 h-6"
-                              />
-                              <input
-                                type="text"
-                                name="facebookUsername"
-                                placeholder="Facebook хэрэглэгчийн нэр"
-                                className="bg-transparent outline-none w-full"
-                                value={formik.values.facebookUsername}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                              />
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                formik.setFieldValue(
-                                  "facebookChecked",
-                                  !formik.values.facebookChecked
-                                )
-                              }
-                              className={`h-full aspect-square flex items-center justify-center transition-colors ${
-                                formik.values.facebookChecked
-                                  ? "bg-green-500"
-                                  : "bg-[#E6E6E6]"
-                              }`}
-                            >
-                              <Image
-                                src={"/check-icon.png"}
-                                width={16}
-                                height={16}
-                                className={`w-4 h-4 ${
-                                  formik.values.facebookChecked
-                                    ? "brightness-0 invert"
-                                    : "brightness-0"
-                                }`}
-                                alt="check"
-                              />
-                            </button>
-                          </div>
-                        </div>
+                        <Input
+                          name="IgLink"
+                          placeholder="Instagram хаяг"
+                          value={formik.values.IgLink}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          errorText={formik.errors.IgLink}
+                          errorVisible={
+                            !!(formik.touched.IgLink && formik.errors.IgLink)
+                          }
+                          layoutClassName="rounded-full"
+                          className="text-base sm:text-xl w-full"
+                          leftSection={
+                            <Image
+                              src="/Instagram.png"
+                              width={24}
+                              height={24}
+                              alt="Instagram"
+                              className="w-6 h-6"
+                            />
+                          }
+                        />
+                        <Input
+                          name="FbLink"
+                          placeholder="Facebook хаяг"
+                          value={formik.values.FbLink}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          errorText={formik.errors.FbLink}
+                          errorVisible={
+                            !!(formik.touched.FbLink && formik.errors.FbLink)
+                          }
+                          layoutClassName="rounded-full"
+                          className="text-base sm:text-xl w-full"
+                          leftSection={
+                            <Image
+                              src="/Facebook.png"
+                              width={24}
+                              height={24}
+                              alt="Facebook"
+                              className="w-6 h-6"
+                            />
+                          }
+                        />
                       </div>
                     </div>
-
-                    {/* Third row - Bio textarea */}
                     <Textarea
-                      name="bio"
-                      label="Брэндийн богино танилцуулга"
+                      name="ShortInfo"
+                      label="Богино танилцуулга"
                       placeholder="Өөрийн тухай богино мэдээлэл бичнэ үү..."
-                      value={formik.values.bio}
+                      value={formik.values.ShortInfo}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      errorText={formik.errors.bio}
-                      errorVisible={!!(formik.touched.bio && formik.errors.bio)}
+                      errorText={formik.errors.ShortInfo}
+                      errorVisible={
+                        !!(formik.touched.ShortInfo && formik.errors.ShortInfo)
+                      }
                       rows={4}
                       maxLength={600}
-                      charCount={formik.values.bio.length}
+                      charCount={formik.values.ShortInfo.length}
                       className="text-base sm:text-xl w-full"
-                      layoutClassName="bg-white p-4 sm:p-5 rounded-xl border-2 border-[#4D55F5]"
+                      layoutClassName="bg-white p-4 sm:p-5 rounded-xl border-2 border-[#CA7FFE]"
                       wrapperClassName="w-full"
                       labelClassName="text-[#6F6F6F] text-lg font-normal"
                       max={true}
                     />
                   </div>
                 </div>
-
                 <div className="flex justify-between">
                   <button
                     type="button"
-                    onClick={() => setStep(1)}
+                    onClick={handlePrevStep}
                     className="text-gray-500 font-medium"
                   >
                     ← Буцах
@@ -615,9 +547,9 @@ export default function CreatorOnboarding() {
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9B4BD8] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
                   >
-                    Үргэлжлүүлэх →
+                    Үргэлжлүүлэх
                   </button>
                 </div>
               </div>
@@ -629,98 +561,72 @@ export default function CreatorOnboarding() {
                 <div className="flex flex-col gap-2">
                   <h2 className="text-xl font-bold">Асуулт хариулах</h2>
                   <p className="text-sm text-gray-500">
-                    Асуулт хариултын хэсэг
+                    Доорх асуултуудад хариулна уу
                   </p>
                 </div>
-
                 <div className="flex flex-col gap-6">
-                  {/* First textarea */}
-                  <div className="flex flex-col gap-3">
-                    <label className="text-[#6F6F6F] text-lg font-normal">
-                      Одоо ажил эрхэлдэг үү?
-                    </label>
-                    <Textarea
-                      name="currentWork"
-                      placeholder="Тийм бол ямар ажил эрхэлдэг вэ? Үгүй бол шалтгаанаа хуваалцана уу"
-                      value={formik.values.currentWork}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.currentWork}
-                      errorVisible={
-                        !!(
-                          formik.touched.currentWork &&
-                          formik.errors.currentWork
-                        )
-                      }
-                      rows={4}
-                      maxLength={600}
-                      charCount={formik.values.currentWork.length}
-                      className="text-base sm:text-xl w-full"
-                      layoutClassName="bg-white p-4 sm:p-5"
-                      wrapperClassName="w-full"
-                      max={true}
-                    />
-                  </div>
-
-                  {/* Second textarea */}
-                  <div className="flex flex-col gap-3">
-                    <Textarea
-                      name="techPlatforms"
-                      label="Өөрийн өдөр тутамдаа хамгийн түгээмэл ашигладаг технологийн платформ, гар утасны апп зэргээ хуваалцаарай"
-                      placeholder="Технологийн платформын талаар дэлгэрэнгүй бичнэ үү..."
-                      value={formik.values.techPlatforms}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.techPlatforms}
-                      errorVisible={
-                        !!(
-                          formik.touched.techPlatforms &&
-                          formik.errors.techPlatforms
-                        )
-                      }
-                      rows={4}
-                      maxLength={600}
-                      charCount={formik.values.techPlatforms.length}
-                      className="text-base sm:text-xl w-full"
-                      layoutClassName="bg-white p-4 sm:p-5 border-2 border-[#CA7FFE]"
-                      wrapperClassName="w-full"
-                      labelClassName="text-[#6F6F6F] text-lg font-normal"
-                      max={true}
-                    />
-                  </div>
-
-                  {/* Third textarea */}
-                  <div className="flex flex-col gap-3">
-                    <Textarea
-                      name="whyGeniCreator"
-                      label={`Та яагаад Geni creator болохыг зорьж байна вэ? Хувийн "яагаад"-аа бидэнд хуваалцаарай`}
-                      placeholder="Өөрийн хувийн шалтгаанаа дэлгэрэнгүй бичнэ үү..."
-                      value={formik.values.whyGeniCreator}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorText={formik.errors.whyGeniCreator}
-                      errorVisible={
-                        !!(
-                          formik.touched.whyGeniCreator &&
-                          formik.errors.whyGeniCreator
-                        )
-                      }
-                      rows={4}
-                      maxLength={600}
-                      charCount={formik.values.whyGeniCreator.length}
-                      className="text-base sm:text-xl w-full"
-                      layoutClassName="bg-white p-4 sm:p-5"
-                      wrapperClassName="w-full"
-                      labelClassName="text-[#6F6F6F] text-lg font-normal"
-                      max={true}
-                    />
-                  </div>
+                  <Textarea
+                    name="CurrentWorkQA"
+                    label="Одоо ажил эрхэлдэг үү?"
+                    placeholder="Та одоо ямар ажил эрхэлж байгаа талаараа дэлгэрэнгүй бичнэ үү. Хэрэв ажилгүй бол яагаад ажилгүй байгаа шалтгаанаа бичнэ үү."
+                    value={formik.values.CurrentWorkQA}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.CurrentWorkQA}
+                    errorVisible={
+                      !!(
+                        formik.touched.CurrentWorkQA &&
+                        formik.errors.CurrentWorkQA
+                      )
+                    }
+                    rows={4}
+                    className="text-base sm:text-xl w-full"
+                    layoutClassName="bg-white p-4 sm:p-5 rounded-xl border-2 border-[#CA7FFE]"
+                    wrapperClassName="w-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                  />
+                  <Textarea
+                    name="TechsQA"
+                    label="Өөрийн өдөр тутамдаа хамгийн түгээмэл ашигладаг технологийн платформ, гар утасны апп зэргээ хуваалцаарай"
+                    placeholder="Жишээ: Instagram, TikTok, Canva, Adobe Photoshop, гэх мэт..."
+                    value={formik.values.TechsQA}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.TechsQA}
+                    errorVisible={
+                      !!(formik.touched.TechsQA && formik.errors.TechsQA)
+                    }
+                    rows={4}
+                    className="text-base sm:text-xl w-full"
+                    layoutClassName="bg-white p-4 sm:p-5 rounded-xl border-2 border-[#CA7FFE]"
+                    wrapperClassName="w-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                  />
+                  <Textarea
+                    name="WhyGeniCreatorQA"
+                    label={`Та яагаад Geni creator болохыг зорьж байна вэ? Хувийн "яагаад"-аа бидэнд хуваалцаарай`}
+                    placeholder="Та яагаад Geni creator болохыг хүсч байгаа шалтгаанаа дэлгэрэнгүй бичнэ үү..."
+                    value={formik.values.WhyGeniCreatorQA}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorText={formik.errors.WhyGeniCreatorQA}
+                    errorVisible={
+                      !!(
+                        formik.touched.WhyGeniCreatorQA &&
+                        formik.errors.WhyGeniCreatorQA
+                      )
+                    }
+                    rows={4}
+                    className="text-base sm:text-xl w-full"
+                    layoutClassName="bg-white p-4 sm:p-5 rounded-xl border-2 border-[#CA7FFE]"
+                    wrapperClassName="w-full"
+                    labelClassName="text-[#6F6F6F] text-lg font-normal"
+                  />
                 </div>
-
                 <div className="flex justify-between">
                   <button
                     type="button"
-                    onClick={() => setStep(2)}
+                    onClick={handlePrevStep}
                     className="text-gray-500 font-medium"
                   >
                     ← Буцах
@@ -728,9 +634,9 @@ export default function CreatorOnboarding() {
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9B4BD8] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
                   >
-                    Үргэлжлүүлэх →
+                    Үргэлжлүүлэх
                   </button>
                 </div>
               </div>
@@ -740,123 +646,101 @@ export default function CreatorOnboarding() {
             {step === 4 && (
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                  <h2 className="text-xl font-bold">
+                  <h2 className="text-xl font-bold text-[#CA7FFE]">
                     Бүтээгчийн чадварын сорилт
                   </h2>
-                  <p className="text-sm text-gray-500">
-                    Өөрийн өдөр тутамдаа хэрэглэдэг хамгийн дуртай, бусдад санал
-                    болгохыг хүсдэг бүтээгдэхүүнээ сонгон 1 минутын урттай UGC
-                    content бүтээж илгээгээрэй. UGC content нь хэрэглэгчийн
-                    сэтгэгдэл, хувийн үр дүн дээр суурилсан тухайн
-                    бүтээгдэхүүнийг таниулах маркетингийн зорилготой контент
-                    бөгөөд сурталчилгааны контентоос илүү органик, бүтээлч,
-                    хэрэглэгчдэд илүү ойр байдгаараа онцлогтой.
-                  </p>
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <p>
+                      Та энэхүү хэсэгт өөрийн бүтээсэн контентыг илгээх ёстой.
+                      Энэ нь таны бүтээлч чадварыг үнэлэх зорилготой юм.
+                    </p>
+                    <p>
+                      Контент нь UGC (User Generated Content) маягийн байх ёстой
+                      бөгөөд брэнд/бүтээгдэхүүний талаарх танын үнэн бодол санаа
+                      тусах ёстой.
+                    </p>
+                  </div>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p className="text-red-600 font-medium">
+                      Доорх 2 төрлийн аль нэгээр нь контентоо оруулна уу
+                    </p>
+                  </div>
                 </div>
-
-                {/* Red notice */}
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-red-700 text-sm font-medium">
-                    Доорх 2 төрлийн аль нэгээр нь контентоо оруулна уу
-                  </p>
-                </div>
-
-                {/* Content upload options */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex flex-col gap-3 flex-1">
-                      <label className="text-[#6F6F6F] text-lg font-normal">
-                        Контент линк оруулах
-                      </label>
-                      <Input
-                        name="contentLink"
-                        placeholder=""
-                        value={formik.values.contentLink}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        errorText={formik.errors.contentLink}
-                        errorVisible={
-                          !!(
-                            formik.touched.contentLink &&
-                            formik.errors.contentLink
-                          )
-                        }
-                        layoutClassName="rounded-full"
-                        className="text-base sm:text-xl w-full"
-                        wrapperClassName="w-full"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-3 flex-1">
-                      <label className="text-[#6F6F6F] text-lg font-normal">
-                        Контент файл оруулах
-                      </label>
-                      <div className="w-full bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center overflow-hidden h-12">
-                        <div className="flex items-center gap-3 px-4 py-4 flex-1">
-                          <span className="text-gray-500">
-                            {contentFileName || ""}
-                          </span>
-                        </div>
-                        <label className="h-full aspect-square bg-[#CA7FFE] flex items-center justify-center cursor-pointer transition-colors hover:bg-[#B666F0]">
-                          <input
-                            type="file"
-                            accept="video/*,image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                setContentFile(file);
-                                setContentFileName(file.name);
-                                formik.setFieldValue("contentFile", file.name);
-                              }
-                            }}
-                            className="hidden"
-                          />
-                          <Image
-                            src={"/plus-icon-white.png"}
-                            width={20}
-                            height={20}
-                            className="w-5 h-5"
-                            alt="Upload"
-                          />
-                        </label>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <label className="text-[#6F6F6F] text-lg font-normal block mb-2">
+                      Контентын хаяг (URL)
+                    </label>
+                    <Input
+                      name="ContentLink"
+                      placeholder="http://"
+                      value={formik.values.ContentLink}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorText={formik.errors.ContentLink}
+                      errorVisible={
+                        !!(
+                          formik.touched.ContentLink &&
+                          formik.errors.ContentLink
+                        )
+                      }
+                      layoutClassName="rounded-full"
+                      className="text-base sm:text-xl w-full"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-[#6F6F6F] text-lg font-normal block mb-2">
+                      Контент файл оруулах
+                    </label>
+                    <div className="w-full bg-white rounded-full border border-[#CDCDCD] text-base sm:text-xl flex flex-row items-center overflow-hidden h-12">
+                      <div className="flex items-center gap-3 px-4 py-4 flex-1">
+                        <span className="text-gray-500">
+                          {contentFileName || ""}
+                        </span>
                       </div>
-                      {contentFile && (
-                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                          <Image
-                            src={"/file-icon.png"}
-                            width={16}
-                            height={16}
-                            alt="File"
-                            className="w-4 h-4"
-                          />
-                          <span>
-                            Файл амжилттай сонгогдлоо: {contentFileName}
-                          </span>
-                        </div>
-                      )}
+                      <label className="h-full aspect-square bg-[#CA7FFE] flex items-center justify-center cursor-pointer transition-colors hover:bg-[#B666F0]">
+                        <input
+                          type="file"
+                          accept="video/*,image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleContentFileUpload(file);
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <Image
+                          src={"/plus-icon-white.png"}
+                          width={20}
+                          height={20}
+                          className="w-5 h-5"
+                          alt="Upload"
+                        />
+                      </label>
                     </div>
                   </div>
                 </div>
-
                 <div className="flex justify-between">
                   <button
                     type="button"
-                    onClick={() => setStep(3)}
+                    onClick={handlePrevStep}
                     className="text-gray-500 font-medium"
                   >
                     ← Буцах
                   </button>
                   <button
                     type="submit"
-                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9C44DA] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    disabled={creatorRequestLoading}
+                    className="bg-[#CA7FFE] text-white font-bold py-4 px-8 rounded-full border border-black shadow-[4px_4px_0px_0px_#9B4BD8] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Илгээх
+                    {creatorRequestLoading ? "Илгээж байна..." : "Илгээх"}
                   </button>
                 </div>
               </div>
             )}
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
