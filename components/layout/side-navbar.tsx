@@ -10,67 +10,66 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { 
-  Menu, 
-  Home, 
-  Check, 
-  Handshake, 
-  Package, 
-  Play, 
-  PieChart, 
-  CreditCard, 
+import {
+  Menu,
+  Home,
+  Check,
+  Handshake,
+  Package,
+  Play,
+  PieChart,
+  CreditCard,
   Link as LinkIcon,
-  Settings
+  Settings,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import UserButton from "./_components/user-button";
 
 export function SideNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const navItems = [
-    {
-      name: "Нүүр хуудас",
-      href: "/",
-      icon: Home,
-      isActive: pathname === "/",
-    },
-    {
-      name: "Хамтралууд",
-      href: "/partners",
-      icon: Handshake,
-      badge: "3",
-    },
-    {
-      name: "Бүтээгдэхүүн",
-      href: "/products",
-      icon: Package,
-    },
-    {
-      name: "Контентууд",
-      href: "/content",
-      icon: Play,
-    },
-    {
-      name: "Хянах самбар",
-      href: "/dashboard",
-      icon: PieChart,
-    },
-    {
-      name: "Төлбөр",
-      href: "/payment",
-      icon: CreditCard,
-    },
-    {
-      name: "API",
-      href: "/api",
-      icon: LinkIcon,
-    },
-  ];
+  const navItems: { name: string; href: string; icon: any; badge?: string }[] =
+    [
+      {
+        name: "Нүүр хуудас",
+        href: "/home",
+        icon: Home,
+        // isActive: pathname === "/dashboard",
+      },
+      {
+        name: "Хамтралууд",
+        href: "/collaboration",
+        icon: Handshake,
+        // badge: "3",
+      },
+      {
+        name: "Бүтээгдэхүүн",
+        href: "/products",
+        icon: Package,
+      },
+      {
+        name: "Контентууд",
+        href: "/content",
+        icon: Play,
+      },
+      {
+        name: "Хянах самбар",
+        href: "/dashboard",
+        icon: PieChart,
+      },
+      {
+        name: "Төлбөр",
+        href: "/payment",
+        icon: CreditCard,
+      },
+      {
+        name: "API",
+        href: "/api",
+        icon: LinkIcon,
+      },
+    ];
 
   return (
     <>
@@ -91,12 +90,13 @@ export function SideNavbar() {
                   href={item.href}
                   className={cn(
                     "flex items-center gap-4 text-gray-600 transition-colors hover:text-gray-800",
-                    item.isActive && "bg-gray-100 border border-gray-300 rounded-xl px-4 py-3"
+                    item.href === pathname &&
+                      "bg-gray-100 border border-gray-300 rounded-xl px-4 py-3"
                   )}
                 >
                   <div className="relative">
                     <item.icon className="h-5 w-5" />
-                    {item.isActive && (
+                    {item.href === pathname && (
                       <Check className="h-3 w-3 absolute -top-1 -right-1 text-green-600" />
                     )}
                   </div>
@@ -158,12 +158,13 @@ export function SideNavbar() {
                   onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center gap-4 text-gray-600 transition-colors hover:text-gray-800",
-                    item.isActive && "bg-gray-100 border border-gray-300 rounded-xl px-4 py-3"
+                    item.href === pathname &&
+                      "bg-gray-100 border border-gray-300 rounded-xl px-4 py-3"
                   )}
                 >
                   <div className="relative">
                     <item.icon className="h-5 w-5" />
-                    {item.isActive && (
+                    {item.href === pathname && (
                       <Check className="h-3 w-3 absolute -top-1 -right-1 text-green-600" />
                     )}
                   </div>
@@ -177,7 +178,7 @@ export function SideNavbar() {
               ))}
             </div>
           </nav>
-          
+
           {/* Settings Section */}
           <div className="px-6 pb-6">
             <Link

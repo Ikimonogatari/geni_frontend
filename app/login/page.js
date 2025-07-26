@@ -274,7 +274,11 @@ function Page() {
       geniApi.util.invalidateTags(["UserInfo"]);
 
       // Ensure navigation only after cookies are set
-      router.push("/profile");
+      if (userType === "Brand") {
+        router.push("/dashboard");
+      } else {
+        router.push("/profile");
+      }
       connectWebSocket(data.JWT);
     } else if (error) {
       toast.error(error?.data?.error);
