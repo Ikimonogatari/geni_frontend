@@ -143,6 +143,7 @@ function BrandWallet() {
                   "text-lg flex flex-row items-center justify-center py-4 w-full"
                 }
                 onCreditPurchase={handleCreditPurchase}
+                refetch={refetchBrandCreditInfo}
               />
             </div>
           </div>

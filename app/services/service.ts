@@ -696,6 +696,13 @@ export const geniApi = createApi({
         method: "GET",
       }),
     }),
+    subscribeStorepay: builder.mutation<StorepayResponse, StorepayBody>({
+      query: (body) => ({
+        url: `/api/web/private/subscribe/storepay`,
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -800,4 +807,5 @@ export const {
   useGetBannedTimeQuery,
   useGetCreatorBadgesQuery,
   useGetCreatorBadgeByIdQuery,
+  useSubscribeStorepayMutation,
 } = geniApi;
