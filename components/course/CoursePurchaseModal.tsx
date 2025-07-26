@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Loader from "@/components/common/Loader";
+import { ClipLoader } from "react-spinners";
 
 function CoursePurchaseModal({
   className,
@@ -240,7 +241,11 @@ function CoursePurchaseModal({
               disabled={purchaseCourseLoading}
               className={`flex ml-auto whitespace-nowrap flex-row text-xs sm:text-base items-center gap-2 bg-black px-3 sm:px-5 py-2 sm:py-3 rounded-full text-white font-bold`}
             >
-              {purchaseCourseLoading ? "..." : "Төлбөр төлөх"}
+              {purchaseCourseLoading ? (
+                <ClipLoader color="white" size={20} />
+              ) : (
+                "Төлбөр төлөх"
+              )}
               <Image
                 src={"/arrow-right-icon.png"}
                 width={10}

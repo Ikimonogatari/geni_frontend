@@ -15,6 +15,7 @@ import {
 } from "../ui/hover-card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import toast from "react-hot-toast";
+import { cn } from "@/lib/utils";
 
 interface PaymentUrl {
   name: string;
@@ -31,6 +32,7 @@ interface Step5Props {
     QrText?: string;
     Urls?: PaymentUrl[];
     UserTxnId?: string;
+    HasStorePayPromotion?: boolean;
   };
   onPaymentMethodSelect: (method: PaymentUrl | null) => void;
   shouldShowQR: boolean;
@@ -65,6 +67,12 @@ function Step5({
     setSelectedPaymentMethod(null);
     onPaymentMethodSelect(null);
     setSelectedPayment("invoice");
+  };
+
+  const handleStorepayClick = () => {
+    setSelectedPaymentMethod(null);
+    onPaymentMethodSelect(null);
+    setSelectedPayment("storepay");
   };
 
   const handleCheckPayment = async () => {
@@ -189,6 +197,9 @@ function Step5({
                 Та төлбөр төлөх нөхцөлөө сонгоно уу
               </span>
               <div className="border border-[#F5F4F0] p-6 rounded-3xl">
+                <span className="text-[#6F6F6F] text-xl mb-2 block">
+                  QR болон Банкны апп-аар төлөх
+                </span>
                 {subscribeData?.Urls && subscribeData.Urls.length > 0 ? (
                   <div className="flex flex-wrap gap-4">
                     {/* Show only QPay option on desktop */}
@@ -241,9 +252,42 @@ function Step5({
             </>
           )}
 
+          <div className="border border-[#F5F4F0] p-3 sm:p-6 rounded-3xl">
+            <span className="text-[#6F6F6F] text-xl block">Хуваан төлөх</span>
+            <div className="relative w-fit">
+              <Image
+                onClick={handleStorepayClick}
+                src={
+                  subscribeData.HasStorePayPromotion
+                    ? "/brand/storepay-button-promotion.svg"
+                    : "/brand/storepay-button.svg"
+                }
+                alt="PDF"
+                {...(subscribeData.HasStorePayPromotion
+                  ? {
+                      width: 320,
+                      height: 85,
+                    }
+                  : {
+                      width: 150,
+                      height: 40,
+                    })}
+                className={cn("object-contain rounded-lg cursor-pointer")}
+              />
+              {selectedPayment === "storepay" && (
+                <div
+                  className={cn(
+                    "absolute inset-0 border-2 border-geni-blue rounded-full pointer-events-none",
+                    subscribeData.HasStorePayPromotion && "mt-3"
+                  )}
+                ></div>
+              )}
+            </div>
+          </div>
+
           {/* Invoice Option */}
           <div className="border border-[#F5F4F0] p-3 sm:p-6 rounded-3xl">
-            <span className="text-[#6F6F6F] text-base sm:text-xl font-bold mb-3 sm:mb-4 block">
+            <span className="text-[#6F6F6F] text-xl mb-2 block">
               Нэхэмжлэхээр төлөх
             </span>
             <button
@@ -254,7 +298,7 @@ function Step5({
                   : "border-[#F5F4F0] hover:border-geni-blue"
               }`}
             >
-              <div className="w-full px-3 py-2 sm:px-4 sm:py-2 flex flex-row items-center justify-center gap-2 rounded-xl sm:rounded-full bg-white">
+              <div className="w-full px-2 py-1 flex flex-row items-center justify-center gap-2 rounded-xl sm:rounded-full bg-white">
                 <span className="text-xl sm:text-3xl text-center font-bold truncate">
                   PDF
                 </span>
