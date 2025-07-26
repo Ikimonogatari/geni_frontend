@@ -14,6 +14,8 @@ import toast from "react-hot-toast";
 import UploadSuccessModal from "./UploadSuccessModal";
 import useS3Upload from "./hooks/useUploadToS3";
 import ContentUploadProgress from "./common/ContentUploadProgress";
+import ContentUploadModalContent from "./content-progress/partials/ContentUploadModalContent";
+import HLSPlayer from "./common/HLSPlayer";
 
 function ContentUploadModal({ parsedUserInfo, contentId }) {
   const [contentThumbnail, setContentThumbnail] = useState(null);
@@ -185,13 +187,9 @@ function ContentUploadModal({ parsedUserInfo, contentId }) {
               <span className="text-lg">Контент</span>
 
               {contentVideo ? (
-                <video
-                  controls
-                  className="aspect-[9/16] w-full h-full rounded-2xl"
-                >
-                  <source src={contentVideo} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                <div className="aspect-[9/16] w-full h-full rounded-2xl overflow-hidden">
+                  <HLSPlayer src={contentVideo} />
+                </div>
               ) : isUploading.video ? (
                 <ContentUploadProgress
                   isLoading={isUploading.video}

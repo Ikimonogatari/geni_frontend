@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const VideoPlayer = ({ src }) => {
+const VideoPlayer = ({ src, autoPlay = false }) => {
   const videoRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -148,7 +148,7 @@ const VideoPlayer = ({ src }) => {
       <video
         ref={videoRef}
         controls
-        autoPlay
+        autoPlay={autoPlay}
         muted
         className="w-full h-full object-contain"
         style={{
