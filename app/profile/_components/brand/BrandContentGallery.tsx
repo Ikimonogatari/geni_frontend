@@ -1,13 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EmptyList from "@/components/common/EmptyList";
 import CreatorTier from "@/components/CreatorTier";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 function BrandContentGallery({ contentsGallery }) {
   const [showModal, setShowModal] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
+
+  // Debug logging
+  useEffect(() => {
+    if (contentsGallery) {
+      console.log("BrandContentGallery: Contents gallery:", contentsGallery);
+      contentsGallery.forEach((content, index) => {
+        console.log(`Content ${index} video URL:`, content?.ContentVideo);
+      });
+    }
+  }, [contentsGallery]);
+
   const handleMouseEnter = (e) => {
     const vid = e.target;
     vid.muted = true;
@@ -67,17 +79,11 @@ function BrandContentGallery({ contentsGallery }) {
                 <Dialog key={id}>
                   <DialogTrigger>
                     <div className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl">
-                      <video
-                        preload="metadata"
+                      <img
+                        src={content?.ContentThumbnail}
+                        alt="Video thumbnail"
                         className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-                        muted
-                        loop
-                        // onMouseEnter={handleMouseEnter}
-                        // onMouseLeave={handleMouseLeave}
-                        poster={content?.ContentThumbnail}
-                      >
-                        <source type="video/mp4" src={content?.ContentVideo} />
-                      </video>
+                      />
                       <div className="absolute z-10 w-full h-full top-0">
                         <button className="z-20 absolute top-3 right-3 p-2 rounded-lg bg-[#F5F4F0]">
                           <Image
@@ -122,14 +128,9 @@ function BrandContentGallery({ contentsGallery }) {
                   <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
                     <div className="flex flex-col gap-4 w-full h-full">
                       <span className="text-lg font-semibold">Контент</span>
-
-                      <video
-                        controls
-                        className="aspect-[9/16] w-full h-full rounded-2xl"
-                      >
-                        <source src={content?.ContentVideo} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
+                      <div className="w-full h-[500px] rounded-2xl overflow-hidden">
+                        <HLSPlayer src={content?.ContentVideo} />
+                      </div>
                     </div>
 
                     <div className="flex flex-col gap-4 w-full h-full">

@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Content, DialogType, STATUS_LIST } from "../content.services";
 import Image from "next/image";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 type ViewContentProps = {
   content: Content;
@@ -18,10 +19,9 @@ const ViewContent: React.FC<ViewContentProps> = ({
         <div className="lg:basis-1/2 flex flex-row gap-4">
           <div className="basis-1/2 flex flex-col min-h-0 gap-2">
             <p className="text-sm font-bold">Контент</p>
-            <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
-              <source src={content.ContentVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div className="aspect-[9/16] w-full h-full rounded-2xl overflow-hidden">
+              <HLSPlayer src={content.ContentVideo} />
+            </div>
             {/* <video
               src={content.ContentVideo}
               className="rounded-lg border-[1px] border-[#E6E6E6] flex-1 min-h-0"
