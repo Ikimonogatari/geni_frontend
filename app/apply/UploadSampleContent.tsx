@@ -11,6 +11,7 @@ import Image from "next/image";
 import Button from "@/components/ui/button";
 import useS3Upload from "@/components/hooks/useUploadToS3";
 import ContentUploadProgress from "@/components/common/ContentUploadProgress";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 function UploadSampleContent({ formik }) {
   const [contentVideo, setContentVideo] = useState(null);
@@ -129,13 +130,9 @@ function UploadSampleContent({ formik }) {
         errorVisible={formik.touched.ContentLink && formik.errors.ContentLink}
       />
       {contentVideo ? (
-        <video
-          controls
-          className="aspect-[9/16] w-full h-full rounded-2xl border border-primary"
-        >
-          <source src={contentVideo} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div className="aspect-[9/16] w-full h-full rounded-2xl overflow-hidden">
+          <HLSPlayer src={contentVideo} />
+        </div>
       ) : isUploading.video ? (
         <ContentUploadProgress
           isLoading={isUploading.video}

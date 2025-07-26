@@ -10,19 +10,7 @@ function ContentGallery({ contentsGallery }) {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedReel, setSelectedReel] = useState(null);
-  const handleMouseEnter = (e) => {
-    const vid = e.target;
-    vid.muted = true;
-    vid.play();
-    vid.poster = vid.dataset.thumbnail;
-  };
 
-  const handleMouseLeave = (e) => {
-    const vid = e.target;
-    vid.muted = false;
-    vid.currentTime = 0;
-    vid.pause();
-  };
   return (
     <>
       <div className="px-3 relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
@@ -35,17 +23,11 @@ function ContentGallery({ contentsGallery }) {
               key={id}
               className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl"
             >
-              <video
-                preload="metadata"
+              <img
+                src={content?.ContentThumbnail}
+                alt="Video thumbnail"
                 className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-                muted
-                loop
-                // onMouseEnter={handleMouseEnter}
-                // onMouseLeave={handleMouseLeave}
-                poster={content?.ContentThumbnail}
-              >
-                <source type="video/mp4" src={content?.ContentVideo} />
-              </video>
+              />
               <button className="z-50 absolute top-3 right-3 p-2 rounded-lg bg-[#F5F4F0]">
                 <Image
                   src={"/expand-icon.png"}
