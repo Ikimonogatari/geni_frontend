@@ -141,7 +141,7 @@ function BrandContentGallery({ contentsGallery }) {
                       <img
                         src={content?.ContentThumbnail}
                         alt=""
-                        className="aspect-[9/16] w-full h-full rounded-2xl"
+                        className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
                       />
                     </div>
 
