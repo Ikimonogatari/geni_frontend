@@ -27,6 +27,7 @@ function CreditPurchase({
   buttonIconSize,
   buttonText,
   onCreditPurchase,
+  refetch = null,
 }) {
   const router = useRouter();
   const [isMainDialogOpen, setMainDialogOpen] = useState(false);
@@ -173,10 +174,9 @@ function CreditPurchase({
       setCurrentStep((prevStep) => Math.min(prevStep + 1, 4));
     }
   };
-  
+
   const handleStorepayClose = () => {
     setShouldShowStorePay(false);
-    setMainDialogOpen(true);
   };
 
   const previousStep = () => {
@@ -348,6 +348,7 @@ function CreditPurchase({
       {/* StorePay Modal */}
       <StorapayModal
         onClose={handleStorepayClose}
+        onSuccess={refetch}
         open={shouldShowStorePay}
         planId={selectedPackageId}
         promoCode={couponCodeformik.values.couponCode}

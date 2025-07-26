@@ -12,6 +12,7 @@ type StorepayModalProps = {
   open?: boolean;
   planId: number;
   promoCode?: string;
+  onSuccess?: () => void | null;
 };
 
 const StorapayModal: React.FC<StorepayModalProps> = ({
@@ -19,6 +20,7 @@ const StorapayModal: React.FC<StorepayModalProps> = ({
   open = false,
   planId,
   promoCode,
+  onSuccess,
 }) => {
   const [phoneNumber, setPhoneNumber] = useState([
     "",
@@ -49,6 +51,7 @@ const StorapayModal: React.FC<StorepayModalProps> = ({
           toast.success("Төлбөр амжилттай төлөгдлөө");
           setStorePaySuccess(true);
           setLoading(false);
+          onSuccess?.();
         },
         (error) => {
           console.error("Payment error:", error);
