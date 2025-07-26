@@ -33,6 +33,7 @@ export type BadgeDetail = {
   CurrentTarget: number;
   NextLvl: number;
   NextTarget: number;
+  BadgeState: BADGE_STATE;
   BadgeRules: BadgeRule[];
 };
 
