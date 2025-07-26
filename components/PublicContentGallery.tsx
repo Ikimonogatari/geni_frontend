@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useGetPublicProfileContentGalleryByIdQuery } from "@/app/services/service";
 import { useDateFormatter } from "@/app/hooks/useDateFormatter";
 import { ClipLoader } from "react-spinners";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 interface PublicContentGalleryProps {
   contentsGallery: any[];
@@ -96,15 +97,11 @@ function PublicContentGallery({
             >
               <DialogTrigger>
                 <div className="cursor-pointer z-0 col-span-1 relative w-full h-full aspect-[9/16] rounded-2xl border">
-                  <video
-                    preload="metadata"
+                  <img
+                    src={content?.ContentThumbnail}
+                    alt="Video thumbnail"
                     className="border-[1px] border-black/15 aspect-[9/16] w-full h-full rounded-2xl object-cover"
-                    muted
-                    loop
-                    poster={content?.ContentThumbnail}
-                  >
-                    <source type="video/mp4" src={content?.ContentVideo} />
-                  </video>
+                  />
                   <div className="absolute z-10 w-full h-full top-0">
                     <button className="z-20 absolute top-3 right-3 p-2 rounded-lg bg-[#F5F4F0]">
                       <Image
@@ -145,14 +142,9 @@ function PublicContentGallery({
               <DialogContent className="overflow-y-auto flex flex-col lg:flex-row items-center lg:items-start gap-6 max-h-[739px] w-full sm:w-auto lg:w-full max-w-[1000px] rounded-3xl">
                 <div className="flex flex-col gap-4 w-full h-full">
                   <span className="text-lg font-semibold">Контент</span>
-
-                  <video
-                    controls
-                    className="aspect-[9/16] w-full h-full rounded-2xl"
-                  >
-                    <source src={content?.ContentVideo} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <div className="aspect-[9/16] w-full h-full rounded-2xl overflow-hidden">
+                    <HLSPlayer src={content?.ContentVideo} />
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-4 w-full h-full">

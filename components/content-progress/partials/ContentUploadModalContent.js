@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import useS3Upload from "@/components/hooks/useUploadToS3";
 import ContentUploadProgress from "@/components/common/ContentUploadProgress";
 import { useFormikContext } from "formik";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 function ContentUploadModalContent({
   parsedUserInfo,
@@ -204,10 +205,9 @@ function ContentUploadModalContent({
           <span className="text-lg">Контент</span>
 
           {contentVideo ? (
-            <video controls className="aspect-[9/16] w-full h-full rounded-2xl">
-              <source src={contentVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div className="aspect-[9/16] w-full h-full rounded-2xl overflow-hidden">
+              <HLSPlayer src={contentVideo} />
+            </div>
           ) : isUploading.video ? (
             <ContentUploadProgress
               isLoading={isUploading.video}

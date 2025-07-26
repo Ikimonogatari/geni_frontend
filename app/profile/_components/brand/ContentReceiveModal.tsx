@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Image from "next/image";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 interface ContentReceiveModalProps {
   contentVideoFileId: string;
@@ -116,15 +117,8 @@ function ContentReceiveModal({
               )}
             </div>
             {contentVideo ? (
-              <div className="relative">
-                <video
-                  controls
-                  controlsList="nodownload"
-                  className="aspect-[9/16] w-full h-full rounded-2xl"
-                >
-                  <source src={contentVideo} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+              <div className="relative aspect-[9/16] w-full h-full rounded-2xl overflow-hidden">
+                <HLSPlayer src={contentVideo} />
               </div>
             ) : (
               <></>

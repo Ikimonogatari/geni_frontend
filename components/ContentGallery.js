@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import HLSPlayer from "@/components/common/HLSPlayer";
 
 function ContentGallery({ contentsGallery }) {
   const userType = Cookies.get("userType");
@@ -98,15 +99,9 @@ function ContentGallery({ contentsGallery }) {
                 />
               </button>
 
-              <video
-                className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] rounded-2xl"
-                autoPlay
-                loop
-                preload="metadata"
-                controls="controls"
-              >
-                <source src={selectedReel} type="video/mp4" />
-              </video>
+              <div className="w-[300px] h-[533px] sm:w-[360px] sm:h-[640px] lg:w-[420px] lg:h-[746px] rounded-2xl overflow-hidden">
+                <HLSPlayer src={selectedReel} />
+              </div>
             </div>
           </motion.div>
         </div>
