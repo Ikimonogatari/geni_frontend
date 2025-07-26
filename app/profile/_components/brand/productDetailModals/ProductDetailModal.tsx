@@ -26,6 +26,7 @@ function ProductDetailModal({
   decrement,
   addSupply,
   count,
+  refetchBrandData,
 }) {
   return (
     <Dialog open={productDetailModal} onOpenChange={setProductDetailModal}>
@@ -105,6 +106,7 @@ function ProductDetailModal({
                 decrement={decrement}
                 increment={increment}
                 addSupply={addSupply}
+                refetchBrandData={refetchBrandData}
               />
             ) : (
               <DeleteProductModal

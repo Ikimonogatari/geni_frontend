@@ -23,11 +23,12 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
+import { Mail, User, Lock, Share2, LogOut, MapPin } from "lucide-react";
 import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
+import AddressSelection from "../AddressSelection";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import BackButton from "@/components/common/BackButton";
@@ -183,9 +184,6 @@ function EditProfileBrand() {
       RegNo: Yup.string()
         .matches(/^[0-9]{7}$/, "Регистрийн дугаар 7 оронтой тоо байх ёстой")
         .required("Регистрийн дугаараа оруулна уу"),
-      Address: Yup.string()
-        .min(5, "Хаяг хэт богино байна")
-        .required("Байршлаа оруулна уу"),
     }),
     onSubmit: async (values) => {
       // Create a copy of values to submit
@@ -572,6 +570,12 @@ function EditProfileBrand() {
       onClick: () => setActiveSection("socials"),
     },
     {
+      title: "Хаяг",
+      href: "#address",
+      icon: <MapPin className="h-4 w-4" />,
+      onClick: () => setActiveSection("address"),
+    },
+    {
       title: "Гарах",
       href: "#",
       icon: <LogOut className="h-4 w-4" />,
@@ -617,7 +621,7 @@ function EditProfileBrand() {
                   </div>
                   <div
                     {...getRootProps()}
-                    className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#4D55F5] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
+                    className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-primary border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                   >
                     <input {...getInputProps()} />
                     {parsedUserInfo && parsedUserInfo.ProfileLink
@@ -783,26 +787,9 @@ function EditProfileBrand() {
                 layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
                 className="bg-[#F5F4F0] text-base sm:text-xl"
               />
-              <Textarea
-                id="Address"
-                name="Address"
-                placeholder="Хаяг"
-                label="Хаяг"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.Address}
-                rows={4}
-                errorText={formik.errors.Address?.toString()}
-                errorVisible={
-                  !!formik.touched.Address && !!formik.errors.Address
-                }
-                labelClassName="text-[#6F6F6F] text-lg font-normal"
-                layoutClassName="bg-[#F5F4F0] p-3 sm:p-4"
-                className="bg-[#F5F4F0] text-base sm:text-xl"
-              />
               <button
                 type="submit"
-                className="bg-[#4D55F5] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+                className="bg-primary rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
               >
                 Хадгалах
               </button>
@@ -824,14 +811,7 @@ function EditProfileBrand() {
       case "password":
         return (
           <>
-            <BackButton />
             <div className="mt-4 flex flex-col">
-              <h1 className="text-3xl font-medium">Нууц үг</h1>
-              {passwordValidationMessage && (
-                <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm text-gray-600">
-                  {passwordValidationMessage}
-                </div>
-              )}
               <div className="mt-4">
                 <PasswordSettings
                   showNewPassword={showNewPassword}
@@ -852,6 +832,11 @@ function EditProfileBrand() {
                   </div>
                 )}
               </div>
+              {passwordValidationMessage && (
+                <div className="mt-4 p-4 bg-geni-orange w-auto sm:w-1/2 rounded-lg text-sm text-white">
+                  {passwordValidationMessage}
+                </div>
+              )}
             </div>
           </>
         );
@@ -864,12 +849,14 @@ function EditProfileBrand() {
             handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
           />
         );
+      case "address":
+        return <AddressSelection />;
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mb-12 py-11 container mx-auto">
+      <div className="mb-12 py-11 container max-w-7xl mx-auto">
         <BackButton />
         <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
           <Sidebar

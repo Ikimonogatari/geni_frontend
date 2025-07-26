@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,11 @@ import Image from "next/image";
 import CreditPurchase from "@/components/credit/CreditPurchaseModal";
 import FadeInAnimation from "@/components/common/FadeInAnimation";
 import { ErrorText } from "@/components/ui/error-text";
+import {
+  createPaymentStatusMonitor,
+  closePaymentMonitor,
+} from "@/utils/sseUtils";
+import toast from "react-hot-toast";
 
 function RestockProductModal({
   brandData,
@@ -18,7 +23,36 @@ function RestockProductModal({
   decrement,
   increment,
   addSupply,
+  refetchBrandData,
 }) {
+  const paymentMonitorRef = useRef(null);
+
+  // Cleanup function to close the payment monitor when unmounting
+  useEffect(() => {
+    return () => {
+      closePaymentMonitor(paymentMonitorRef.current);
+    };
+  }, []);
+
+  const handleCreditPurchase = () => {
+    // Start payment status monitoring via SSE
+    if (brandData?.UserTxnId) {
+      paymentMonitorRef.current = createPaymentStatusMonitor(
+        brandData.UserTxnId,
+        () => {
+          // On payment success
+          toast.success("Төлбөр амжилттай төлөгдлөө");
+          refetchBrandData();
+        },
+        (error) => {
+          // On error
+          console.error("Payment monitoring error:", error);
+          toast.error("Төлбөр шалгахад алдаа гарлаа");
+        }
+      );
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger className="w-full sm:w-1/2 rounded-xl bg-[#F5F4F0] border-[#2D262D] border flex flex-row justify-center items-center gap-2 py-3 px-6 whitespace-nowrap">
@@ -89,6 +123,7 @@ function RestockProductModal({
             className={
               "text-lg flex flex-row items-center justify-center py-4 w-full"
             }
+            onCreditPurchase={handleCreditPurchase}
           />
         </div>
         <button

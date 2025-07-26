@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import LoginButton from "./LoginButton";
 import ForgetPasswordModal from "./ForgetPasswordModal";
+import { useWebSocket } from "../context/WebsocketProvider";
 
 function Page() {
   const router = useRouter();
@@ -59,6 +60,8 @@ function Page() {
       isSuccess: forgotPasswordSuccess,
     },
   ] = useForgotPasswordMutation();
+
+  const { connectWebSocket } = useWebSocket();
 
   const emailForm = useFormik({
     initialValues: {
@@ -272,6 +275,7 @@ function Page() {
 
       // Ensure navigation only after cookies are set
       router.push("/profile");
+      connectWebSocket(data.JWT);
     } else if (error) {
       toast.error(error?.data?.error);
     }
@@ -327,7 +331,7 @@ function Page() {
                 Нэвтрэх
               </span>
 
-              <div className="z-50 -mb-[1px] flex flex-row text-sm sm:text-base w-full">
+              <div className="z-40 -mb-[1px] flex flex-row text-sm sm:text-base w-full">
                 <div
                   onClick={() => handleUserType("Student")}
                   className={`w-full p-2 cursor-pointer text-center rounded-t-[30px] ${
@@ -491,6 +495,46 @@ function Page() {
                     }
                   />
                 </div>
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 w-full max-w-sm sm:max-w-md mx-auto mt-4 py-2 px-4 border border-gray-300 rounded-xl shadow-sm bg-white hover:bg-gray-100 transition-colors"
+                  onClick={() => {
+                    // TODO: Implement Google login logic here
+                    // For example, redirect to your backend's Google OAuth endpoint
+                    window.location.href =
+                      process.env.NEXT_PUBLIC_AWS_URL +
+                      "/api/web/public/oauthlogin";
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="1em"
+                    style={{ flex: "none", lineHeight: "1" }}
+                    viewBox="0 0 24 24"
+                    width="1em"
+                  >
+                    <title>Google</title>
+                    <path
+                      d="M23 12.245c0-.905-.075-1.565-.236-2.25h-10.54v4.083h6.186c-.124 1.014-.797 2.542-2.294 3.569l-.021.136 3.332 2.53.23.022C21.779 18.417 23 15.593 23 12.245z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M12.225 23c3.03 0 5.574-.978 7.433-2.665l-3.542-2.688c-.948.648-2.22 1.1-3.891 1.1a6.745 6.745 0 01-6.386-4.572l-.132.011-3.465 2.628-.045.124C4.043 20.531 7.835 23 12.225 23z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M5.84 14.175A6.65 6.65 0 015.463 12c0-.758.138-1.491.361-2.175l-.006-.147-3.508-2.67-.115.054A10.831 10.831 0 001 12c0 1.772.436 3.447 1.197 4.938l3.642-2.763z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M12.225 5.253c2.108 0 3.529.892 4.34 1.638l3.167-3.031C17.787 2.088 15.255 1 12.225 1 7.834 1 4.043 3.469 2.197 7.062l3.63 2.763a6.77 6.77 0 016.398-4.572z"
+                      fill="#EB4335"
+                    />
+                  </svg>
+                  <span className="font-medium text-gray-700">
+                    Google-ээр нэвтрэх
+                  </span>
+                </button>
               </div>
             </div>
           </form>

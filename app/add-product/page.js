@@ -39,9 +39,15 @@ function Page() {
   const [productTypes, setProductTypes] = useState([]);
   const [availableProductTypes, setAvailableProductTypes] = useState([]);
 
-  const { data: userInfo, isLoading: userInfoLoading } = useGetUserInfoQuery(
-    {}
-  );
+  // Add state for "Бусад" (Other) options
+  const [customTypeInputs, setCustomTypeInputs] = useState([]);
+  const [customOutcomeInputs, setCustomOutcomeInputs] = useState([]);
+
+  const {
+    data: userInfo,
+    isLoading: userInfoLoading,
+    refetch: refetchUserInfo,
+  } = useGetUserInfoQuery({});
 
   // TODO product type remove add formik error fix, product edit fix
   const formik = useFormik({
@@ -212,32 +218,6 @@ function Page() {
           ...formik.values.contentInfo,
           newContentInfoItem,
         ]);
-      }
-    }
-  };
-
-  const removeContentItem = (name) => {
-    // Find the item in either listProductDictsTypeData or listProductDictsResultData
-    const item =
-      listProductDictsTypeData.find((c) => c.Name === name) ||
-      listProductDictsResultData.find((c) => c.Name === name);
-
-    if (item) {
-      // Remove from formik values based on Name and Type
-      formik.setFieldValue(
-        "contentInfo",
-        formik.values.contentInfo.filter(
-          (info) => !(info.Name === item.Name && info.Type === item.Type)
-        )
-      );
-
-      // Remove from state based on Val
-      if (item.Type === "Type") {
-        setSelectedContentTypes((prev) => prev.filter((n) => n !== item.Name));
-      } else if (item.Type === "Result") {
-        setSelectedContentOutcomes((prev) =>
-          prev.filter((n) => n !== item.Name)
-        );
       }
     }
   };
@@ -437,32 +417,8 @@ function Page() {
                     }
                   />
                 </label>
-                <Select
-                  name="contentType"
-                  value={selectedContentTypes}
-                  onValueChange={(value) => handleContentTypeOption(value)}
-                >
-                  <SelectTrigger>Сонгох</SelectTrigger>
-                  <SelectContent>
-                    {listProductDictsTypeData
-                      ? listProductDictsTypeData
-                          .filter(
-                            (c) =>
-                              c.Type === "Type" &&
-                              selectedContentTypes.indexOf(c.Name) === -1
-                          )
-                          .map((c) => (
-                            <SelectItem
-                              key={c.Val}
-                              value={c.Val}
-                              className="border border-geni-gray rounded-lg min-h-12 my-1 w-full text-start p-4"
-                            >
-                              {c.Name}
-                            </SelectItem>
-                          ))
-                      : null}
-                  </SelectContent>
-                </Select>
+
+                {/* Show selected content types */}
                 {selectedContentTypes.map((selected) => (
                   <div
                     key={selected}
@@ -472,12 +428,143 @@ function Page() {
                     <button
                       type="button"
                       className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
-                      onClick={() => removeContentItem(selected)}
+                      onClick={() => {
+                        // Remove from selectedContentTypes
+                        setSelectedContentTypes((prev) =>
+                          prev.filter((item) => item !== selected)
+                        );
+                        // Remove from formik values
+                        formik.setFieldValue(
+                          "contentInfo",
+                          formik.values.contentInfo.filter(
+                            (item) =>
+                              !(item.Type === "Type" && item.Name === selected)
+                          )
+                        );
+                      }}
                     >
                       <MinusIcon color="white" />
                     </button>
                   </div>
                 ))}
+
+                {/* Show custom input fields */}
+                {customTypeInputs.map((input, index) => (
+                  <div
+                    key={index}
+                    className="px-3 py-2 text-sm ring-offset-white min-h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
+                  >
+                    <input
+                      type="text"
+                      value={input}
+                      onChange={(e) => {
+                        const newInputs = [...customTypeInputs];
+                        newInputs[index] = e.target.value;
+                        setCustomTypeInputs(newInputs);
+                      }}
+                      placeholder="Контентийн төрлөө энд бичнэ үү"
+                      className="flex-1 outline-none bg-transparent"
+                    />
+                    <div className="flex flex-row gap-2">
+                      <button
+                        type="button"
+                        className="w-6 h-6 bg-green-500 hover:bg-green-600 rounded-full aspect-square flex items-center justify-center"
+                        onClick={() => {
+                          const trimmedText = input.trim();
+                          if (trimmedText) {
+                            // Add to selectedContentTypes
+                            setSelectedContentTypes((prev) => [
+                              ...prev,
+                              trimmedText,
+                            ]);
+
+                            // Add to contentInfo
+                            formik.setFieldValue("contentInfo", [
+                              ...formik.values.contentInfo,
+                              {
+                                Type: "Type",
+                                Name: trimmedText,
+                              },
+                            ]);
+
+                            // Remove this input from the array
+                            const newInputs = [...customTypeInputs];
+                            newInputs.splice(index, 1);
+                            setCustomTypeInputs(newInputs);
+                          }
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M20 6L9 17L4 12"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="w-6 h-6 bg-geni-blue rounded-full aspect-square flex items-center justify-center"
+                        onClick={() => {
+                          // Remove this input from the array
+                          const newInputs = [...customTypeInputs];
+                          newInputs.splice(index, 1);
+                          setCustomTypeInputs(newInputs);
+                        }}
+                      >
+                        <MinusIcon color="white" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                <Select
+                  name="contentType"
+                  value=""
+                  onValueChange={(value) => {
+                    if (value === "custom_other") {
+                      // Add a new empty input
+                      setCustomTypeInputs((prev) => [...prev, ""]);
+                    } else {
+                      handleContentTypeOption(value);
+                    }
+                  }}
+                >
+                  <SelectTrigger>Сонгох</SelectTrigger>
+                  <SelectContent>
+                    {listProductDictsTypeData
+                      ?.filter(
+                        (c) =>
+                          c.Type === "Type" &&
+                          !selectedContentTypes.includes(c.Name)
+                      )
+                      .map((c) => (
+                        <SelectItem
+                          key={c.Val}
+                          value={c.Val}
+                          className="border border-geni-gray rounded-lg min-h-12 my-1 w-full text-start p-4"
+                        >
+                          {c.Name}
+                        </SelectItem>
+                      ))}
+                    {/* Always show Бусад option */}
+                    <SelectItem
+                      value="custom_other"
+                      className="border border-geni-gray rounded-lg min-h-12 my-1 w-full text-start p-4"
+                    >
+                      Бусад (Custom)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
                 <ErrorText
                   text={
                     typeof formik.errors.contentInfo === "string"
@@ -521,32 +608,8 @@ function Page() {
                     }
                   />
                 </label>
-                <Select
-                  name="contentOutcome"
-                  value={selectedContentOutcomes}
-                  onValueChange={(value) => handleContentOutcomeOption(value)}
-                >
-                  <SelectTrigger>Сонгох</SelectTrigger>
-                  <SelectContent>
-                    {listProductDictsResultData
-                      ? listProductDictsResultData
-                          .filter(
-                            (c) =>
-                              c.Type === "Result" &&
-                              selectedContentOutcomes.indexOf(c.Name) === -1
-                          )
-                          .map((c) => (
-                            <SelectItem
-                              key={c.Val}
-                              value={c.Val}
-                              className="border-geni-gray border rounded-lg min-h-12 my-1 w-full text-start p-4"
-                            >
-                              {c.Name}
-                            </SelectItem>
-                          ))
-                      : null}
-                  </SelectContent>
-                </Select>
+
+                {/* Show selected content outcomes */}
                 {selectedContentOutcomes.map((selected) => (
                   <div
                     key={selected}
@@ -556,12 +619,146 @@ function Page() {
                     <button
                       type="button"
                       className="w-6 h-6 bg-geni-blue rounded-full aspect-square"
-                      onClick={() => removeContentItem(selected)}
+                      onClick={() => {
+                        // Remove from selectedContentOutcomes
+                        setSelectedContentOutcomes((prev) =>
+                          prev.filter((item) => item !== selected)
+                        );
+                        // Remove from formik values
+                        formik.setFieldValue(
+                          "contentInfo",
+                          formik.values.contentInfo.filter(
+                            (item) =>
+                              !(
+                                item.Type === "Result" && item.Name === selected
+                              )
+                          )
+                        );
+                      }}
                     >
                       <MinusIcon color="white" />
                     </button>
                   </div>
                 ))}
+
+                {/* Show custom input fields */}
+                {customOutcomeInputs.map((input, index) => (
+                  <div
+                    key={index}
+                    className="px-3 py-2 text-sm ring-offset-white min-h-10 w-full bg-white border-2 border-geni-blue rounded-md flex flex-row items-center justify-between"
+                  >
+                    <input
+                      type="text"
+                      value={input}
+                      onChange={(e) => {
+                        const newInputs = [...customOutcomeInputs];
+                        newInputs[index] = e.target.value;
+                        setCustomOutcomeInputs(newInputs);
+                      }}
+                      placeholder="Контентоос хүлээж буй үр дүнгээ энд бичнэ үү"
+                      className="flex-1 outline-none bg-transparent"
+                    />
+                    <div className="flex flex-row gap-2">
+                      <button
+                        type="button"
+                        className="w-6 h-6 bg-green-500 hover:bg-green-600 rounded-full aspect-square flex items-center justify-center"
+                        onClick={() => {
+                          const trimmedText = input.trim();
+                          if (trimmedText) {
+                            // Add to selectedContentOutcomes
+                            setSelectedContentOutcomes((prev) => [
+                              ...prev,
+                              trimmedText,
+                            ]);
+
+                            // Add to contentInfo
+                            formik.setFieldValue("contentInfo", [
+                              ...formik.values.contentInfo,
+                              {
+                                Type: "Result",
+                                Name: trimmedText,
+                              },
+                            ]);
+
+                            // Remove this input from the array
+                            const newInputs = [...customOutcomeInputs];
+                            newInputs.splice(index, 1);
+                            setCustomOutcomeInputs(newInputs);
+                          }
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M20 6L9 17L4 12"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="w-6 h-6 bg-geni-blue rounded-full aspect-square flex items-center justify-center"
+                        onClick={() => {
+                          // Remove this input from the array
+                          const newInputs = [...customOutcomeInputs];
+                          newInputs.splice(index, 1);
+                          setCustomOutcomeInputs(newInputs);
+                        }}
+                      >
+                        <MinusIcon color="white" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                <Select
+                  name="contentOutcome"
+                  value=""
+                  onValueChange={(value) => {
+                    if (value === "custom_other") {
+                      // Add a new empty input
+                      setCustomOutcomeInputs((prev) => [...prev, ""]);
+                    } else {
+                      handleContentOutcomeOption(value);
+                    }
+                  }}
+                >
+                  <SelectTrigger>Сонгох</SelectTrigger>
+                  <SelectContent>
+                    {listProductDictsResultData
+                      ?.filter(
+                        (c) =>
+                          c.Type === "Result" &&
+                          !selectedContentOutcomes.includes(c.Name)
+                      )
+                      .map((c) => (
+                        <SelectItem
+                          key={c.Val}
+                          value={c.Val}
+                          className="border-geni-gray border rounded-lg min-h-12 my-1 w-full text-start p-4"
+                        >
+                          {c.Name}
+                        </SelectItem>
+                      ))}
+                    {/* Always show Бусад option */}
+                    <SelectItem
+                      value="custom_other"
+                      className="border-geni-gray border rounded-lg min-h-12 my-1 w-full text-start p-4"
+                    >
+                      Бусад (Custom)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Remove old state variable references */}
                 <ErrorText
                   text={formik.errors.contentInfo}
                   visible={
@@ -673,6 +870,10 @@ function Page() {
                   className={
                     "text-lg flex flex-row items-center justify-center py-4 w-full"
                   }
+                  onCreditPurchase={() => {
+                    // Refetch user info
+                    refetchUserInfo();
+                  }}
                 />
               </div>
               <HandleButton

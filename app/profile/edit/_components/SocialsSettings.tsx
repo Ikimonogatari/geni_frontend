@@ -94,7 +94,7 @@ function SocialsSettings({
           </div>
           <div
             onClick={handleSaveOrUpdateSocialChannels}
-            className="cursor-pointer bg-[#F5F4F0] h-auto py-4 w-1/3 sm:w-[128px] text-center rounded-lg border border-[#2D262D] text-sm sm:text-xl"
+            className="cursor-pointer bg-primary h-auto py-4 w-1/3 sm:w-[128px] text-center rounded-lg border border-[#2D262D] text-sm sm:text-xl text-white"
           >
             Хадгалах
           </div>

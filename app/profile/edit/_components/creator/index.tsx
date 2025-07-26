@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Mail, User, Lock, Share2, LogOut } from "lucide-react";
+import { Mail, User, Lock, Share2, LogOut, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -28,6 +28,7 @@ import { Sidebar } from "@/components/common/Sidebar";
 import PasswordSettings from "../PasswordSettings";
 import EmailSettings from "../EmailSettings";
 import SocialsSettings from "../SocialsSettings";
+import AddressSelection from "../AddressSelection";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
@@ -540,6 +541,12 @@ function EditProfileCreator() {
       onClick: () => setActiveSection("socials"),
     },
     {
+      title: "Хаяг",
+      href: "#address",
+      icon: <MapPin className="h-4 w-4" />,
+      onClick: () => setActiveSection("address"),
+    },
+    {
       title: "Гарах",
       href: "#",
       icon: <LogOut className="h-4 w-4" />,
@@ -594,7 +601,7 @@ function EditProfileCreator() {
                   </div>
                   <div
                     {...getRootProps()}
-                    className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-[#CA7FFE] border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
+                    className="cursor-pointer mt-2 py-2 sm:py-3 text-center bg-primary border border-[#2D262D] rounded-lg text-white text-base sm:text-xl font-bold"
                   >
                     <input {...getInputProps()} />
                     {parsedUserInfo?.ProfileLink
@@ -732,7 +739,7 @@ function EditProfileCreator() {
               />
               <button
                 type="submit"
-                className="bg-[#CA7FFE] rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
+                className="bg-primary rounded-2xl border border-[#2D262D] text-white py-4 font-bold text-base sm:text-xl"
               >
                 Хадгалах
               </button>
@@ -754,14 +761,7 @@ function EditProfileCreator() {
       case "password":
         return (
           <>
-            <BackButton />
             <div className="mt-4 flex flex-col">
-              <h1 className="text-3xl font-medium">Нууц үг</h1>
-              {passwordValidationMessage && (
-                <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm text-gray-600">
-                  {passwordValidationMessage}
-                </div>
-              )}
               <div className="mt-4">
                 <PasswordSettings
                   showNewPassword={showNewPassword}
@@ -782,6 +782,11 @@ function EditProfileCreator() {
                   </div>
                 )}
               </div>
+              {passwordValidationMessage && (
+                <div className="mt-4 p-4 bg-geni-orange w-auto sm:w-1/2 rounded-lg text-sm text-white">
+                  {passwordValidationMessage}
+                </div>
+              )}
             </div>
           </>
         );
@@ -794,12 +799,14 @@ function EditProfileCreator() {
             handleSaveOrUpdateSocialChannels={handleSaveOrUpdateSocialChannels}
           />
         );
+      case "address":
+        return <AddressSelection />;
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-white">
-      <div className="mb-12 py-11 container mx-auto">
+      <div className="mb-12 py-11 container max-w-7xl mx-auto">
         <BackButton />
         <div className="flex flex-row items-center md:items-start gap-3 sm:gap-7 mt-7 sm:my-7">
           <Sidebar

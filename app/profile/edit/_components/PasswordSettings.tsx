@@ -101,7 +101,7 @@ function PasswordSettings({
 
         <div
           onClick={handleChangePassword}
-          className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
+          className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-primary rounded-lg text-sm sm:text-xl border border-[#2D262D] text-white"
         >
           Өөрчлөх
         </div>

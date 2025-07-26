@@ -35,7 +35,7 @@ function EmailSettings({
           />
           <div
             onClick={handleSendOtp}
-            className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
+            className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-primary rounded-lg text-sm sm:text-xl border border-[#2D262D] text-white"
           >
             Код илгээх
           </div>
@@ -58,7 +58,7 @@ function EmailSettings({
             />
             <div
               onClick={handleChangeEmail}
-              className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-[#F5F4F0] rounded-lg text-sm sm:text-xl border border-[#2D262D]"
+              className="cursor-pointer py-4 w-1/3 sm:w-[128px] text-center bg-primary rounded-lg text-sm sm:text-xl border border-[#2D262D] text-white"
             >
               Мэйл солих
             </div>
